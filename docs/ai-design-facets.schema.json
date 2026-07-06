@@ -1,0 +1,428 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/schemas/ai-design-facets.schema.json",
+  "title": "AI Design System Facets",
+  "description": "Metadata schema for meta.aiDesignSystem inside shadcn-compatible registry items.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["assetKind", "maturity", "source", "evidence"],
+  "properties": {
+    "assetKind": {
+      "type": "string",
+      "enum": [
+        "screen-pattern",
+        "block-pattern",
+        "component-pattern",
+        "flow-pattern",
+        "token-pack"
+      ]
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["canonical", "recommended", "community", "experimental", "deprecated"]
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "official-shadcn",
+        "internal",
+        "community-registry",
+        "external-design-system",
+        "generated"
+      ]
+    },
+    "screenType": {
+      "$ref": "#/definitions/screenType"
+    },
+    "blockRole": {
+      "$ref": "#/definitions/blockRole"
+    },
+    "blockRoles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/blockRole"
+      },
+      "uniqueItems": true
+    },
+    "userIntents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/userIntent"
+      },
+      "uniqueItems": true
+    },
+    "dataShapes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/dataShape"
+      },
+      "uniqueItems": true
+    },
+    "interactionModels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/interactionModel"
+      },
+      "uniqueItems": true
+    },
+    "layoutModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "shell": {
+          "type": "string",
+          "enum": ["none", "sidebar", "topnav", "split", "master-detail"]
+        },
+        "region": {
+          "type": "string",
+          "enum": [
+            "full-page",
+            "header",
+            "sidebar",
+            "main",
+            "footer",
+            "modal",
+            "drawer",
+            "popover",
+            "card",
+            "inline"
+          ]
+        },
+        "responsive": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["mobile", "tablet", "desktop", "wide"]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "density": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "visualTone": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "utilitarian",
+          "enterprise",
+          "editorial",
+          "premium",
+          "playful",
+          "developer",
+          "consumer",
+          "ai-native"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "stateCoverage": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/state"
+      },
+      "uniqueItems": true
+    },
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "keyboard": {
+          "type": "boolean"
+        },
+        "focusVisible": {
+          "type": "boolean"
+        },
+        "labels": {
+          "type": "boolean"
+        },
+        "contrastChecked": {
+          "type": "boolean"
+        },
+        "rtl": {
+          "type": "boolean"
+        },
+        "i18n": {
+          "type": "boolean"
+        },
+        "apgPattern": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "shadcn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "npm": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "registries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requiredBlocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/blockRole"
+          },
+          "uniqueItems": true
+        },
+        "optionalBlocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/blockRole"
+          },
+          "uniqueItems": true
+        },
+        "incompatibleWith": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "storybookStories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "interactionTests": {
+          "type": "boolean"
+        },
+        "accessibilityTests": {
+          "type": "boolean"
+        },
+        "visualSnapshots": {
+          "type": "boolean"
+        },
+        "lintTypecheck": {
+          "type": "boolean"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceCount", "confidence", "verifiedAt"],
+      "properties": {
+        "sourceCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "verifiedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "sourceUrls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "licenseReviewNeeded": {
+          "type": "boolean"
+        },
+        "maintenanceReviewNeeded": {
+          "type": "boolean"
+        },
+        "missingStates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/state"
+          },
+          "uniqueItems": true
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "screenType": {
+      "type": "string",
+      "enum": [
+        "auth",
+        "onboarding",
+        "dashboard",
+        "collection",
+        "detail",
+        "create-edit",
+        "settings-admin",
+        "workflow",
+        "report-analytics",
+        "conversation-assistant"
+      ]
+    },
+    "blockRole": {
+      "type": "string",
+      "enum": [
+        "app-shell-sidebar",
+        "app-shell-topnav",
+        "page-header-actions",
+        "breadcrumb-context",
+        "command-search",
+        "filter-toolbar",
+        "tabs-view-switcher",
+        "summary-metric-row",
+        "chart-panel",
+        "data-table-panel",
+        "collection-grid",
+        "detail-overview",
+        "form-section",
+        "settings-section",
+        "wizard-stepper",
+        "action-footer",
+        "empty-state",
+        "error-recovery",
+        "loading-skeleton",
+        "notification-center",
+        "modal-dialog",
+        "drawer-inspector",
+        "file-upload-area",
+        "activity-feed",
+        "comment-thread",
+        "ai-conversation-list",
+        "ai-prompt-composer",
+        "ai-explainability-label",
+        "pricing-plan-card",
+        "checkout-summary"
+      ]
+    },
+    "userIntent": {
+      "type": "string",
+      "enum": [
+        "authenticate",
+        "onboard",
+        "browse",
+        "search",
+        "filter",
+        "compare",
+        "monitor",
+        "analyze",
+        "create",
+        "edit",
+        "configure",
+        "review",
+        "approve",
+        "purchase",
+        "recover",
+        "communicate",
+        "delegate-to-ai"
+      ]
+    },
+    "dataShape": {
+      "type": "string",
+      "enum": [
+        "none",
+        "single-record",
+        "collection",
+        "hierarchy",
+        "relational",
+        "metric",
+        "time-series",
+        "categorical",
+        "geo",
+        "document",
+        "media",
+        "conversation",
+        "transaction",
+        "permission-model"
+      ]
+    },
+    "interactionModel": {
+      "type": "string",
+      "enum": [
+        "read-only",
+        "single-action",
+        "multi-action",
+        "form-submit",
+        "inline-edit",
+        "selection-single",
+        "selection-multiple",
+        "filter-sort",
+        "drag-drop",
+        "disclosure",
+        "modal-task",
+        "drawer-inspection",
+        "wizard",
+        "streaming",
+        "real-time",
+        "human-in-the-loop"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "default",
+        "loading",
+        "empty",
+        "error",
+        "success",
+        "disabled",
+        "validation-error",
+        "permission-denied",
+        "offline",
+        "overflow",
+        "mobile",
+        "dark-mode",
+        "rtl"
+      ]
+    }
+  }
+}
