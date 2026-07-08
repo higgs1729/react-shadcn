@@ -1,0 +1,120 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sidebar-07",
+  "type": "registry:block",
+  "title": "Sidebar 07",
+  "description": "A sidebar that collapses to icons.",
+  "categories": ["block:app-shell", "role:app-shell-sidebar"],
+  "registryDependencies": [
+    "sidebar",
+    "breadcrumb",
+    "separator",
+    "collapsible",
+    "dropdown-menu",
+    "avatar"
+  ],
+  "files": [
+    {
+      "path": "components/app-sidebar.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "components/nav-main.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "components/nav-projects.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "components/nav-user.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "components/team-switcher.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "app/dashboard/page.tsx",
+      "type": "registry:page",
+      "target": "app/dashboard/page.tsx"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "official-shadcn",
+      "blockRole": "app-shell-sidebar",
+      "userIntents": ["browse"],
+      "dataShapes": ["hierarchy"],
+      "interactionModels": ["disclosure", "selection-single"],
+      "layoutModel": {
+        "shell": "sidebar",
+        "region": "sidebar",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "rtl": false,
+        "i18n": false,
+        "notes": "Collapses to icon rail (SidebarRail); mobile renders as sheet via use-mobile hook. Keyboard/focus inherited from shadcn sidebar primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": [
+          "sidebar",
+          "breadcrumb",
+          "separator",
+          "collapsible",
+          "dropdown-menu",
+          "avatar"
+        ],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": ["breadcrumb-context", "command-search"],
+        "incompatibleWith": ["app-shell-topnav"]
+      },
+      "verification": {
+        "storybookStories": [],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 3,
+        "confidence": "high",
+        "verifiedAt": "2026-07-07",
+        "sourceUrls": [
+          "https://ui.shadcn.com/blocks",
+          "https://ui.shadcn.com/docs/registry/registry-item-json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "licenseReviewNeeded": false,
+        "maintenanceReviewNeeded": false,
+        "missingStates": ["rtl", "dark-mode"],
+        "notes": "Owns the currently installed components/app-sidebar.tsx and app/dashboard/page.tsx (demo page with placeholder grid), which collided with and overwrote dashboard-01's page during install. Nav data is hardcoded sample data."
+      },
+      "extensions": {
+        "localEvidence": [
+          "components/app-sidebar.tsx",
+          "components/nav-main.tsx",
+          "components/nav-projects.tsx",
+          "components/nav-user.tsx",
+          "components/team-switcher.tsx",
+          "app/dashboard/page.tsx"
+        ]
+      }
+    }
+  }
+}

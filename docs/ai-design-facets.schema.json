@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://example.local/schemas/ai-design-facets.schema.json",
-  "title": "AI Design System Facets",
-  "description": "Metadata schema for meta.aiDesignSystem inside shadcn-compatible registry items.",
+  "title": "AI\u30c7\u30b6\u30a4\u30f3\u30b7\u30b9\u30c6\u30e0Facets",
+  "description": "shadcn-compatible registry item\u5185\u306emeta.aiDesignSystem\u7528metadata schema\u3002",
   "type": "object",
   "additionalProperties": false,
   "required": ["assetKind", "maturity", "source", "evidence"],
@@ -48,6 +48,13 @@
       "type": "array",
       "items": {
         "$ref": "#/definitions/userIntent"
+      },
+      "uniqueItems": true
+    },
+    "jobMapStages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/jobMapStage"
       },
       "uniqueItems": true
     },
@@ -422,6 +429,19 @@
         "mobile",
         "dark-mode",
         "rtl"
+      ]
+    },
+    "jobMapStage": {
+      "type": "string",
+      "enum": [
+        "define",
+        "locate",
+        "prepare",
+        "confirm",
+        "execute",
+        "monitor",
+        "modify",
+        "conclude"
       ]
     }
   }

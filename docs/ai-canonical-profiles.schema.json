@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/schemas/ai-canonical-profiles.schema.json",
+  "title": "AI Canonical Facet Profiles",
+  "description": "Contract for docs/ai-canonical-profiles.json. Facet enums are referenced from ai-design-facets.schema.json so vocabularies stay single-sourced.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "generatedAt", "screenTypes", "blockRoles"],
+  "properties": {
+    "$comment": { "type": "string" },
+    "version": { "type": "string" },
+    "generatedAt": { "type": "string", "format": "date" },
+    "screenTypes": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/screenType"
+      },
+      "additionalProperties": { "$ref": "#/definitions/screenTypeProfile" }
+    },
+    "blockRoles": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/blockRole"
+      },
+      "additionalProperties": { "$ref": "#/definitions/blockRoleProfile" }
+    }
+  },
+  "definitions": {
+    "intentList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/userIntent"
+      }
+    },
+    "shapeList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/dataShape"
+      }
+    },
+    "interactionList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/interactionModel"
+      }
+    },
+    "roleList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/blockRole"
+      }
+    },
+    "screenTypeList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/screenType"
+      }
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["canonical", "recommended", "community", "experimental", "deprecated"]
+    },
+    "screenTypeProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed",
+        "maturity",
+        "userIntents",
+        "jobMapStages",
+        "dataShapes",
+        "interactionModels",
+        "density",
+        "typicalBlockRoles",
+        "notes"
+      ],
+      "properties": {
+        "reviewed": { "type": "boolean" },
+        "maturity": { "$ref": "#/definitions/maturity" },
+        "userIntents": { "$ref": "#/definitions/intentList" },
+        "jobMapStages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/jobMapStage"
+          }
+        },
+        "dataShapes": { "$ref": "#/definitions/shapeList" },
+        "interactionModels": { "$ref": "#/definitions/interactionList" },
+        "density": { "type": "string", "enum": ["low", "medium", "high"] },
+        "typicalBlockRoles": { "$ref": "#/definitions/roleList" },
+        "optionalBlockRoles": { "$ref": "#/definitions/roleList" },
+        "alternativeShells": { "$ref": "#/definitions/roleList" },
+        "notes": { "type": "string" }
+      }
+    },
+    "blockRoleProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed",
+        "maturity",
+        "layoutModel",
+        "userIntents",
+        "dataShapes",
+        "interactionModels",
+        "screenTypes",
+        "notes"
+      ],
+      "properties": {
+        "reviewed": { "type": "boolean" },
+        "maturity": { "$ref": "#/definitions/maturity" },
+        "layoutModel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["region"],
+          "properties": {
+            "region": {
+              "type": "string",
+              "enum": [
+                "full-page",
+                "header",
+                "sidebar",
+                "main",
+                "footer",
+                "modal",
+                "drawer",
+                "popover",
+                "card",
+                "inline"
+              ]
+            }
+          }
+        },
+        "userIntents": { "$ref": "#/definitions/intentList" },
+        "dataShapes": { "$ref": "#/definitions/shapeList" },
+        "interactionModels": { "$ref": "#/definitions/interactionList" },
+        "screenTypes": { "$ref": "#/definitions/screenTypeList" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

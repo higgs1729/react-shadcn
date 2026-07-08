@@ -1,0 +1,400 @@
+{
+  "$comment": "Canonical facet profiles = the answer key the selection layer matches against. screenType resolution (step 1 of ai-pattern-selection-instructions.md) compares an incoming step's facets to these profiles. All facet values use the enums in ai-design-facets.schema.json; this file itself is validated by ai-canonical-profiles.schema.json (npm run validate:profiles). Semantics: typicalBlockRoles = the default composition for the screen type; optionalBlockRoles = additionally allowed roles, kept mechanically in sync as { R | S in R.screenTypes } minus typical; alternativeShells = swap-in replacements for the default navigation shell (a screen has at most one shell). State roles (empty-state / error-recovery / loading-skeleton) are selected as blocks only when the whole page is in that state; states inside a block are covered via stateCoverage instead. maturity uses the facets-schema enum: entries start at 'experimental' and the human owner promotes to 'canonical' by review (reviewed: true).",
+  "version": "0.2.0",
+  "generatedAt": "2026-07-08",
+  "screenTypes": {
+    "auth": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["authenticate", "recover"],
+      "jobMapStages": ["prepare"],
+      "dataShapes": ["single-record", "none"],
+      "interactionModels": ["form-submit", "single-action"],
+      "density": "low",
+      "typicalBlockRoles": ["form-section", "action-footer", "error-recovery"],
+      "notes": "Login, signup, password reset, MFA. Single centered task, no nav shell, no dense data."
+    },
+    "onboarding": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["onboard", "configure", "create"],
+      "jobMapStages": ["define", "prepare"],
+      "dataShapes": ["single-record", "none"],
+      "interactionModels": ["wizard", "form-submit", "disclosure"],
+      "density": "low",
+      "typicalBlockRoles": ["wizard-stepper", "form-section", "action-footer", "empty-state"],
+      "optionalBlockRoles": ["file-upload-area"],
+      "notes": "First-run setup, guided setup, import/connect. Sequential steps, low density."
+    },
+    "dashboard": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["monitor", "analyze", "compare", "browse"],
+      "jobMapStages": ["monitor"],
+      "dataShapes": ["metric", "time-series", "collection", "categorical"],
+      "interactionModels": ["read-only", "filter-sort", "drawer-inspection", "real-time"],
+      "density": "high",
+      "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "summary-metric-row", "chart-panel", "data-table-panel", "filter-toolbar"],
+      "optionalBlockRoles": ["command-search", "notification-center", "drawer-inspector", "activity-feed", "ai-explainability-label", "empty-state", "error-recovery", "loading-skeleton"],
+      "alternativeShells": ["app-shell-topnav"],
+      "notes": "Operational overview with KPIs, charts, and a table. High density, nav shell present, continuously updating data (real-time). Distinguish from report-analytics: monitoring is time-sensitive at-a-glance consumption."
+    },
+    "collection": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["browse", "search", "filter", "compare"],
+      "jobMapStages": ["locate"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["filter-sort", "selection-multiple", "selection-single", "disclosure"],
+      "density": "high",
+      "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "tabs-view-switcher", "data-table-panel", "collection-grid", "empty-state", "loading-skeleton"],
+      "optionalBlockRoles": ["breadcrumb-context", "command-search", "notification-center", "modal-dialog", "drawer-inspector", "error-recovery"],
+      "alternativeShells": ["app-shell-topnav"],
+      "notes": "List/table/grid resource browser. Distinguish from dashboard: primary job is browsing many records, not monitoring metrics."
+    },
+    "detail": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["review", "edit", "browse"],
+      "jobMapStages": ["locate", "confirm"],
+      "dataShapes": ["single-record", "relational", "media", "document"],
+      "interactionModels": ["read-only", "disclosure", "inline-edit", "drawer-inspection"],
+      "density": "medium",
+      "typicalBlockRoles": ["page-header-actions", "breadcrumb-context", "detail-overview", "activity-feed", "comment-thread", "action-footer"],
+      "optionalBlockRoles": ["app-shell-sidebar", "app-shell-topnav", "command-search", "tabs-view-switcher", "notification-center", "modal-dialog", "drawer-inspector", "file-upload-area", "ai-explainability-label", "empty-state", "error-recovery", "loading-skeleton"],
+      "notes": "Entity/record/profile page. One primary record plus related context."
+    },
+    "create-edit": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["create", "edit", "configure"],
+      "jobMapStages": ["execute"],
+      "dataShapes": ["single-record", "relational"],
+      "interactionModels": ["form-submit", "inline-edit", "multi-action"],
+      "density": "medium",
+      "typicalBlockRoles": ["page-header-actions", "form-section", "action-footer", "file-upload-area"],
+      "optionalBlockRoles": ["modal-dialog"],
+      "notes": "Form page or editor for creating/updating one record. Not a multi-step wizard (use workflow/onboarding for that)."
+    },
+    "settings-admin": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["configure", "edit", "approve", "review"],
+      "jobMapStages": ["modify"],
+      "dataShapes": ["single-record", "permission-model", "relational"],
+      "interactionModels": ["form-submit", "inline-edit", "selection-single"],
+      "density": "medium",
+      "typicalBlockRoles": ["app-shell-sidebar", "settings-section", "form-section", "action-footer"],
+      "optionalBlockRoles": ["breadcrumb-context", "tabs-view-switcher", "modal-dialog", "pricing-plan-card"],
+      "notes": "Preferences, team/admin, billing, permissions. Sectioned settings, often with a secondary nav."
+    },
+    "workflow": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["approve", "review", "purchase", "create"],
+      "jobMapStages": ["confirm", "execute", "conclude"],
+      "dataShapes": ["transaction", "single-record"],
+      "interactionModels": ["wizard", "form-submit", "multi-action", "human-in-the-loop"],
+      "density": "medium",
+      "typicalBlockRoles": ["wizard-stepper", "form-section", "action-footer", "checkout-summary"],
+      "optionalBlockRoles": ["pricing-plan-card"],
+      "notes": "Stepper, approval flow, checkout-like transactional flow. Progress toward a committed transaction."
+    },
+    "report-analytics": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["analyze", "compare", "review"],
+      "jobMapStages": ["conclude"],
+      "dataShapes": ["metric", "time-series", "categorical", "collection"],
+      "interactionModels": ["read-only", "filter-sort"],
+      "density": "high",
+      "typicalBlockRoles": ["page-header-actions", "filter-toolbar", "chart-panel", "data-table-panel", "summary-metric-row"],
+      "optionalBlockRoles": ["app-shell-topnav", "empty-state", "error-recovery", "loading-skeleton"],
+      "notes": "Longer readout / exportable report over historical data. Distinguish from dashboard: deep analysis of trends, not time-sensitive monitoring; no real-time updates."
+    },
+    "conversation-assistant": {
+      "reviewed": true,
+      "maturity": "canonical",
+      "userIntents": ["communicate", "delegate-to-ai", "review"],
+      "jobMapStages": ["define", "execute"],
+      "dataShapes": ["conversation", "document", "media"],
+      "interactionModels": ["streaming", "real-time", "human-in-the-loop", "single-action"],
+      "density": "medium",
+      "typicalBlockRoles": ["ai-conversation-list", "ai-prompt-composer", "ai-explainability-label", "activity-feed"],
+      "optionalBlockRoles": ["comment-thread"],
+      "notes": "AI chat, support thread, agent workspace. Streaming turn-based interaction."
+    }
+  },
+  "blockRoles": {
+    "app-shell-sidebar": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "sidebar" },
+      "userIntents": ["browse"],
+      "dataShapes": ["hierarchy"],
+      "interactionModels": ["disclosure", "selection-single"],
+      "screenTypes": ["dashboard", "collection", "settings-admin", "detail"],
+      "notes": "Primary left navigation shell. Only one navigation shell per screen."
+    },
+    "app-shell-topnav": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "header" },
+      "userIntents": ["browse"],
+      "dataShapes": ["hierarchy"],
+      "interactionModels": ["disclosure", "selection-single"],
+      "screenTypes": ["dashboard", "collection", "detail", "report-analytics"],
+      "notes": "Top navigation shell. Alternative to sidebar (see alternativeShells); do not combine both. Prefer for shallow navigation structures."
+    },
+    "page-header-actions": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "header" },
+      "userIntents": ["create", "edit", "browse"],
+      "dataShapes": ["none"],
+      "interactionModels": ["multi-action", "single-action"],
+      "screenTypes": ["dashboard", "collection", "detail", "create-edit", "report-analytics"],
+      "notes": "Page title plus primary actions (create, export, etc.)."
+    },
+    "breadcrumb-context": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "header" },
+      "userIntents": ["browse"],
+      "dataShapes": ["hierarchy"],
+      "interactionModels": ["read-only", "disclosure"],
+      "screenTypes": ["detail", "collection", "settings-admin"],
+      "notes": "Location context within a hierarchy."
+    },
+    "command-search": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "popover" },
+      "userIntents": ["search", "browse"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["filter-sort", "modal-task"],
+      "screenTypes": ["dashboard", "collection", "detail"],
+      "notes": "Command palette / global search (cmd+k)."
+    },
+    "filter-toolbar": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "header" },
+      "userIntents": ["filter", "search", "compare"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["filter-sort"],
+      "screenTypes": ["collection", "dashboard", "report-analytics"],
+      "notes": "Filter/sort/search controls above a collection or chart."
+    },
+    "tabs-view-switcher": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["browse"],
+      "dataShapes": ["categorical"],
+      "interactionModels": ["disclosure", "selection-single"],
+      "screenTypes": ["collection", "detail", "settings-admin"],
+      "notes": "Switch between views/segments of the same data."
+    },
+    "summary-metric-row": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["monitor", "analyze"],
+      "dataShapes": ["metric"],
+      "interactionModels": ["read-only"],
+      "screenTypes": ["dashboard", "report-analytics"],
+      "notes": "Row of KPI/stat cards."
+    },
+    "chart-panel": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "card" },
+      "userIntents": ["analyze", "compare", "monitor"],
+      "dataShapes": ["time-series", "metric", "categorical"],
+      "interactionModels": ["read-only", "disclosure"],
+      "screenTypes": ["dashboard", "report-analytics"],
+      "notes": "A single chart with framing. Requires quantitative data shape."
+    },
+    "data-table-panel": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["browse", "filter", "compare", "edit"],
+      "dataShapes": ["collection", "relational"],
+      "interactionModels": ["filter-sort", "selection-multiple", "inline-edit"],
+      "screenTypes": ["collection", "dashboard", "report-analytics"],
+      "notes": "Sortable/selectable data table."
+    },
+    "collection-grid": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["browse", "search"],
+      "dataShapes": ["collection", "media"],
+      "interactionModels": ["selection-single", "disclosure"],
+      "screenTypes": ["collection"],
+      "notes": "Card/tile grid; good for media-rich collections."
+    },
+    "detail-overview": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["review", "browse"],
+      "dataShapes": ["single-record", "relational"],
+      "interactionModels": ["read-only", "disclosure"],
+      "screenTypes": ["detail"],
+      "notes": "Primary record summary with fields and related data."
+    },
+    "form-section": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["create", "edit", "configure"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["form-submit", "inline-edit"],
+      "screenTypes": ["create-edit", "auth", "onboarding", "settings-admin", "workflow"],
+      "notes": "A grouped set of form fields with validation."
+    },
+    "settings-section": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["configure", "edit"],
+      "dataShapes": ["single-record", "permission-model"],
+      "interactionModels": ["form-submit", "inline-edit", "selection-single"],
+      "screenTypes": ["settings-admin"],
+      "notes": "A settings group, often with inline-save toggles."
+    },
+    "wizard-stepper": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "header" },
+      "userIntents": ["onboard", "create", "configure"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["wizard", "disclosure"],
+      "screenTypes": ["onboarding", "workflow"],
+      "notes": "Multi-step progress indicator driving sequential forms."
+    },
+    "action-footer": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "footer" },
+      "userIntents": ["create", "edit", "approve"],
+      "dataShapes": ["none"],
+      "interactionModels": ["single-action", "multi-action", "form-submit"],
+      "screenTypes": ["create-edit", "auth", "onboarding", "detail", "settings-admin", "workflow"],
+      "notes": "Sticky/bottom primary+secondary actions (save/cancel/submit)."
+    },
+    "empty-state": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["create", "browse"],
+      "dataShapes": ["none"],
+      "interactionModels": ["single-action"],
+      "screenTypes": ["collection", "dashboard", "detail", "onboarding", "report-analytics"],
+      "notes": "No-data state with a call to action. Selected as a block when the whole page is empty; in-block empty states are covered via stateCoverage."
+    },
+    "error-recovery": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["recover"],
+      "dataShapes": ["none"],
+      "interactionModels": ["single-action"],
+      "screenTypes": ["auth", "collection", "detail", "dashboard", "report-analytics"],
+      "notes": "Error / permission-denied recovery. Selected as a block for whole-page failures; in-block errors are covered via stateCoverage."
+    },
+    "loading-skeleton": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["browse"],
+      "dataShapes": ["none"],
+      "interactionModels": ["read-only"],
+      "screenTypes": ["collection", "dashboard", "detail", "report-analytics"],
+      "notes": "Placeholder while data loads. Selected as a block for initial page load; in-block loading is covered via stateCoverage."
+    },
+    "notification-center": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "drawer" },
+      "userIntents": ["monitor", "review"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["read-only", "disclosure", "real-time"],
+      "screenTypes": ["dashboard", "detail", "collection"],
+      "notes": "Notifications/alerts panel, often real-time."
+    },
+    "modal-dialog": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "modal" },
+      "userIntents": ["edit", "approve", "create"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["modal-task", "form-submit", "single-action"],
+      "screenTypes": ["collection", "detail", "create-edit", "settings-admin"],
+      "notes": "Focused interruptive task in a dialog."
+    },
+    "drawer-inspector": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "drawer" },
+      "userIntents": ["review", "edit"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["drawer-inspection", "inline-edit"],
+      "screenTypes": ["collection", "dashboard", "detail"],
+      "notes": "Side panel to inspect/edit a row without leaving the list."
+    },
+    "file-upload-area": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "card" },
+      "userIntents": ["create", "edit"],
+      "dataShapes": ["media", "document"],
+      "interactionModels": ["drag-drop", "single-action"],
+      "screenTypes": ["create-edit", "onboarding", "detail"],
+      "notes": "Drag-and-drop or picker upload zone."
+    },
+    "activity-feed": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "card" },
+      "userIntents": ["monitor", "review", "communicate"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["read-only", "real-time"],
+      "screenTypes": ["detail", "dashboard", "conversation-assistant"],
+      "notes": "Chronological activity/audit stream (a time-ordered collection, not a quantitative time series)."
+    },
+    "comment-thread": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "card" },
+      "userIntents": ["communicate", "review"],
+      "dataShapes": ["conversation"],
+      "interactionModels": ["form-submit", "real-time"],
+      "screenTypes": ["detail", "conversation-assistant"],
+      "notes": "Threaded human comments on a record. Real-time updates from other users; streaming is reserved for AI token output."
+    },
+    "ai-conversation-list": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "sidebar" },
+      "userIntents": ["communicate", "delegate-to-ai"],
+      "dataShapes": ["conversation"],
+      "interactionModels": ["streaming", "real-time"],
+      "screenTypes": ["conversation-assistant"],
+      "notes": "List of AI chat sessions/threads."
+    },
+    "ai-prompt-composer": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "footer" },
+      "userIntents": ["communicate", "delegate-to-ai", "create"],
+      "dataShapes": ["conversation"],
+      "interactionModels": ["streaming", "form-submit", "human-in-the-loop"],
+      "screenTypes": ["conversation-assistant"],
+      "notes": "Prompt input with attachments/controls."
+    },
+    "ai-explainability-label": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "inline" },
+      "userIntents": ["review", "delegate-to-ai"],
+      "dataShapes": ["none"],
+      "interactionModels": ["read-only", "disclosure"],
+      "screenTypes": ["conversation-assistant", "dashboard", "detail"],
+      "notes": "AI provenance/uncertainty label. Required when AI output materially affects decisions."
+    },
+    "pricing-plan-card": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "card" },
+      "userIntents": ["purchase", "compare"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["selection-single", "single-action"],
+      "screenTypes": ["workflow", "settings-admin"],
+      "notes": "Plan/tier card for pricing or billing (a small collection of plan records)."
+    },
+    "checkout-summary": {
+      "reviewed": true, "maturity": "canonical",
+      "layoutModel": { "region": "card" },
+      "userIntents": ["purchase", "review"],
+      "dataShapes": ["transaction"],
+      "interactionModels": ["form-submit", "read-only"],
+      "screenTypes": ["workflow"],
+      "notes": "Order/line-item summary with total and confirm action."
+    }
+  }
+}

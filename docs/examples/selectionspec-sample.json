@@ -1,0 +1,147 @@
+{
+  "$comment": "SelectionSpec produced by manually executing docs/ai-pattern-selection-instructions.md against docs/examples/flowspec-sample.json on 2026-07-07. Inventory: registry/dashboard-01.json, registry/sidebar-07.json, registry/login-03.json (all maturity=experimental).",
+  "flowId": "ops-monitoring",
+  "screens": [
+    {
+      "stepId": "overview",
+      "resolvedScreenType": "dashboard",
+      "screenTypeResolution": {
+        "matched": ["dashboard", "report-analytics"],
+        "tiebreak": "Both profiles matched intents/dataShapes/interactions. Resolved by intent priority order: the step's primary intent 'monitor' is listed first in the dashboard profile and last in report-analytics.",
+        "confidence": "medium"
+      },
+      "screenPattern": {
+        "registryItem": "dashboard-01",
+        "score": 91,
+        "scoreBreakdown": {
+          "intent": 25,
+          "dataShape": 15,
+          "interaction": 15,
+          "stateCoverage": 15,
+          "accessibility": 7,
+          "dependency": 6,
+          "evidence": 8,
+          "notes": "accessibility=7: keyboard/focus inherited from primitives but not audited (contrastChecked=false). dependency=6: all shadcn/npm deps installed, but the pattern's page composition is not wired to a route (overwritten by sidebar-07 during install, see registry item risk.notes). evidence=8: official source, but maturity=experimental."
+        },
+        "rejected": []
+      },
+      "blocks": [
+        {
+          "blockRole": "app-shell-sidebar",
+          "registryItem": "sidebar-07",
+          "score": 77,
+          "scoreBreakdown": {
+            "intent": 15,
+            "dataShape": 10,
+            "interaction": 12,
+            "stateCoverage": 15,
+            "accessibility": 7,
+            "dependency": 10,
+            "evidence": 8,
+            "notes": "Navigation shells are structural; the step's content intents (monitor/analyze) do not directly apply. Scored on structural fit. See assumptions: shell-role scoring is a known rubric friction."
+          }
+        },
+        {
+          "blockRole": "page-header-actions",
+          "registryItem": "dashboard-01",
+          "fulfilledBy": "bundled",
+          "score": 91,
+          "scoreBreakdown": { "notes": "Bundled within dashboard-01 (components/site-header.tsx); inherits the screen pattern's score." }
+        },
+        {
+          "blockRole": "summary-metric-row",
+          "registryItem": "dashboard-01",
+          "fulfilledBy": "bundled",
+          "score": 91,
+          "scoreBreakdown": { "notes": "Bundled within dashboard-01 (components/section-cards.tsx); inherits the screen pattern's score." }
+        },
+        {
+          "blockRole": "chart-panel",
+          "registryItem": "dashboard-01",
+          "fulfilledBy": "bundled",
+          "score": 91,
+          "scoreBreakdown": { "notes": "Bundled within dashboard-01 (components/chart-area-interactive.tsx); inherits the screen pattern's score." }
+        },
+        {
+          "blockRole": "data-table-panel",
+          "registryItem": "dashboard-01",
+          "fulfilledBy": "bundled",
+          "score": 91,
+          "scoreBreakdown": { "notes": "Bundled within dashboard-01 (components/data-table.tsx); inherits the screen pattern's score." }
+        }
+      ],
+      "registryDependencies": [
+        "avatar", "badge", "breadcrumb", "button", "card", "chart", "checkbox",
+        "collapsible", "drawer", "dropdown-menu", "input", "label", "select",
+        "separator", "sidebar", "table", "tabs", "toggle-group"
+      ],
+      "stateCoveragePlan": ["default", "mobile"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType near-tie (dashboard vs report-analytics) resolved by intent priority order of the canonical profiles; profiles are still reviewed:false drafts, so this tiebreak needs confirmation during profile review.",
+        "Block roles bundled inside a shadcn screen pattern are treated as fulfilled by the pattern itself and inherit its score; only app-shell-sidebar had a standalone candidate (sidebar-07).",
+        "Shell-role scoring against content intents is a rubric friction: structural roles (app-shell-*) were scored on structural fit rather than intent overlap. Consider a separate rubric for structural roles."
+      ],
+      "risks": [
+        "Selection rule violation (recorded, not blocking for experimental inventory): data-driven screen lacks empty/loading/error/permission-denied coverage (dashboard-01 stateCoverage is default+mobile only).",
+        "dashboard-01's page composition is not currently wired to any route; implementation layer must re-add the block with --overwrite into a dedicated route before use.",
+        "Single-candidate selection: no alternatives existed per role, so scores were not competitive. Inventory expansion needed before scores are meaningful comparatively."
+      ]
+    },
+    {
+      "stepId": "signin",
+      "resolvedScreenType": "auth",
+      "screenTypeResolution": {
+        "matched": ["auth"],
+        "tiebreak": null,
+        "confidence": "high"
+      },
+      "screenPattern": {
+        "registryItem": "login-03",
+        "score": 95,
+        "scoreBreakdown": {
+          "intent": 25,
+          "dataShape": 15,
+          "interaction": 15,
+          "stateCoverage": 15,
+          "accessibility": 7,
+          "dependency": 10,
+          "evidence": 8,
+          "notes": "accessibility=7: labeled fields via field primitive, but no error announcement implemented. evidence=8: official source, maturity=experimental."
+        },
+        "rejected": []
+      },
+      "blocks": [
+        {
+          "blockRole": "form-section",
+          "registryItem": "login-03",
+          "fulfilledBy": "bundled",
+          "score": 95,
+          "scoreBreakdown": { "notes": "Bundled within login-03 (components/login-form.tsx); inherits the screen pattern's score." }
+        }
+      ],
+      "registryDependencies": ["button", "card", "field", "input"],
+      "stateCoveragePlan": ["default"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [],
+      "risks": [
+        "login-03 is a visual pattern only: no submit handler, validation, or error state. Auth wiring is implementation-layer work.",
+        "Single-candidate selection: no alternative auth patterns in inventory."
+      ]
+    }
+  ],
+  "unresolved": [],
+  "selfReview": {
+    "executedAt": "2026-07-07",
+    "result": "pass",
+    "failureLoopRuns": 0,
+    "checklist": {
+      "everyStepResolvedOrUnresolved": "pass — overview resolved to dashboard (tiebreak recorded), signin resolved to auth",
+      "blockRolesFromRequiredBlocks": "pass — roles read from composition.requiredBlocks of each selected pattern, not derived from raw facets",
+      "everySelectedItemAtOrAbove70": "pass — dashboard-01: 91, sidebar-07: 77, login-03: 95",
+      "componentsNotSelected": "pass — registryDependencies listed as information only; no component selection performed",
+      "rejectedAlternativesAndAssumptionsRecorded": "pass — no rejected candidates existed (single-candidate inventory, noted as risk); assumptions recorded per step",
+      "requiredStatesInStateCoveragePlan": "pass — required ['default'] present in both stateCoveragePlans; broader state gaps recorded as risks"
+    }
+  }
+}

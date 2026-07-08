@@ -1,50 +1,50 @@
-# AI-Ready Design System Research
+# AI対応デザインシステム調査
 
-Last reviewed: 2026-07-06
+最終確認日: 2026-07-06
 
-This document captures the current working model for an AI-usable design system based on shadcn/ui, registry items, Storybook, and faceted classification.
+この文書は、shadcn/ui、registry items、Storybook、faceted classificationを土台にした、AIが利用しやすいデザインシステムの現在の設計方針をまとめる。
 
-Companion files:
+関連ファイル:
 
-- `docs/ai-pattern-selection-instructions.md`: short agent instructions for selecting patterns.
-- `docs/ai-design-facets.schema.json`: JSON Schema for `meta.aiDesignSystem`.
+- `docs/ai-pattern-selection-instructions.md`: pattern selection用の短いagent指示書。
+- `docs/ai-design-facets.schema.json`: `meta.aiDesignSystem` 用JSON Schema。
 
-## Working Conclusion
+## 作業結論
 
-Use shadcn/ui as the code and registry substrate, then add an AI-readable metadata layer.
+shadcn/uiをcodeとregistryの基盤として使い、その上にAIが読めるmetadata layerを追加する。
 
-The recommended stack is:
+推奨stack:
 
-1. shadcn/ui components and official blocks for concrete React/Tailwind code.
-2. A custom shadcn-compatible registry for screen and block patterns.
-3. Storybook stories and manifests for component documentation, state coverage, and AI retrieval.
-4. Design tokens in DTCG-compatible JSON, transformed into Tailwind v4 `@theme` variables.
-5. Figma Code Connect only when Figma handoff or Figma MCP accuracy matters.
-6. A layered generation pipeline:
-   - flow layer: decide the user flow and emit a `FlowSpec`.
-   - selection layer: resolve each flow step to screen and block registry items, then emit a `SelectionSpec`.
-   - implementation layer: install dependencies, generate code, create Storybook stories, and run checks.
+1. shadcn/ui componentsとofficial blocksを、React/Tailwindの具体的なcodeとして使う。
+2. screen / block patterns用にcustom shadcn-compatible registryを作る。
+3. Storybook storiesとmanifestsを、component documentation、state coverage、AI retrievalに使う。
+4. design tokensはDTCG-compatible JSONで持ち、Tailwind v4の `@theme` variablesへ変換する。
+5. Figma handoffやFigma MCPの精度が重要な場合だけFigma Code Connectを使う。
+6. 生成pipelineをlayer化する。
+   - flow layer: user flowを決定し、`FlowSpec` を出力する。
+   - selection layer: 各flow stepをscreen / block registry itemsへ解決し、`SelectionSpec` を出力する。
+   - implementation layer: dependenciesをinstallし、codeを生成し、Storybook storiesを作り、checksを実行する。
 
-Do not rely on one large static instruction file as the only AI context. A short `DESIGN.md` can help with visual direction and portability, but registry metadata, Storybook manifests, tests, and lint rules should be the main production control surfaces.
+AI contextを1つの大きな静的指示書だけに依存させない。短い `DESIGN.md` はvisual directionやportabilityには役立つが、production control surfaceの中心はregistry metadata、Storybook manifests、tests、lint rulesにする。
 
-## Source Strategy
+## 情報源の扱い方
 
-Priority order:
+優先順位:
 
-1. Official specifications and docs: shadcn/ui, Storybook, W3C/DTCG, Tailwind, W3C WAI, Radix, Figma.
-2. Mature design systems: Carbon, Material, Polaris, Primer, Spectrum/React Aria, Fluent, Atlassian.
-3. Registry directory and ecosystem sources: shadcn registry directory, AI UI registries, specialized shadcn-compatible registries.
-4. Articles and case studies only as supporting evidence, not as sole basis for schema decisions.
+1. official specifications / docs: shadcn/ui、Storybook、W3C/DTCG、Tailwind、W3C WAI、Radix、Figma。
+2. mature design systems: Carbon、Material、Polaris、Primer、Spectrum/React Aria、Fluent、Atlassian。
+3. registry directory / ecosystem sources: shadcn registry directory、AI UI registries、specialized shadcn-compatible registries。
+4. articles / case studiesは補助情報として使い、schema decisionの唯一の根拠にはしない。
 
-Rule for adopting a facet or pattern:
+facetやpatternを採用するルール:
 
-- Adopt when it is supported by at least two independent sources, or by one official source plus direct implementation need.
-- Mark as `experimental` when it comes mainly from ecosystem practice or one source.
-- Prefer machine-readable evidence over prose-only guidance.
+- 少なくとも2つの独立した情報源で支持される、または1つのofficial sourceと明確な実装上の必要性がある場合に採用する。
+- 主にecosystem practiceや単一情報源に基づく場合は `experimental` とする。
+- prose-only guidanceより、machine-readable evidenceを優先する。
 
-## shadcn/ui Components Confirmed
+## 確認済みshadcn/ui components
 
-Extracted from the current shadcn/ui components docs.
+現在のshadcn/ui components docsから抽出したもの。
 
 ### Actions And Controls
 
@@ -119,7 +119,7 @@ Extracted from the current shadcn/ui components docs.
 - spinner
 - toast
 
-### AI/Conversation-Oriented Components
+### AI / Conversation-Oriented Components
 
 - attachment
 - bubble
@@ -127,45 +127,45 @@ Extracted from the current shadcn/ui components docs.
 - message
 - message-scroller
 
-### Other Utility/Direction Components
+### Other Utility / Direction Components
 
 - direction
 
-## shadcn/ui Official Blocks Confirmed
+## 確認済みshadcn/ui official blocks
 
-Official block categories currently exposed from the blocks page:
+official blocks pageで確認できたcategory:
 
 - featured
 - sidebar
 - login
 - signup
 
-Official block item IDs confirmed:
+確認済みofficial block item IDs:
 
 - dashboard-01
 - sidebar-01 through sidebar-16
 - login-01 through login-05
 - signup-01 through signup-05
 
-Interpretation:
+解釈:
 
-- Official shadcn blocks are good seed examples, not enough by themselves for a full 10 screen x 30 block pattern library.
-- Treat `dashboard-01`, sidebar variants, login variants, and signup variants as canonical examples of registry-installable screen/block items.
-- Build the larger AI pattern set as custom registry items with `meta` and `categories`.
+- official shadcn blocksは優れたseed examplesだが、10 screen x 30 block pattern libraryをそれだけで満たすには足りない。
+- `dashboard-01`、sidebar variants、login variants、signup variantsは、registry-installable screen/block itemsのcanonical examplesとして扱う。
+- より大きなAI pattern setは、`meta` と `categories` を持つcustom registry itemsとして作る。
 
-## shadcn Registry Metadata Fit
+## shadcn registry metadataとの適合
 
-The current `registry-item.json` schema supports:
+現在の `registry-item.json` schemaは以下をサポートしている。
 
-- `type`: use `registry:page`, `registry:block`, `registry:component`, `registry:ui`, `registry:base`, etc.
-- `registryDependencies`: use for shadcn primitives and namespaced registry items.
-- `files`: installable payload.
-- `cssVars`: token/theme values.
-- `categories`: simple search grouping.
-- `meta`: arbitrary metadata. This is where AI facets should live.
-- `docs`: markdown guidance shown when installing.
+- `type`: `registry:page`、`registry:block`、`registry:component`、`registry:ui`、`registry:base` など。
+- `registryDependencies`: shadcn primitivesやnamespaced registry itemsを参照する。
+- `files`: installable payload。
+- `cssVars`: token / theme values。
+- `categories`: simple search grouping。
+- `meta`: 任意metadata。AI facetsはここに入れる。
+- `docs`: install時に表示できるmarkdown guidance。
 
-Recommended shape:
+推奨形:
 
 ```json
 {
@@ -213,46 +213,46 @@ Recommended shape:
 }
 ```
 
-## Optimized Facets
+## 最適化したfacets
 
-Keep facets orthogonal. Do not make every tag a top-level dimension. The AI should first narrow by task and product structure, then by interaction and visual constraints.
+facetsは直交性を保つ。すべてのtagをtop-level dimensionにしない。AIはまずtaskとproduct structureで絞り込み、その後interactionとvisual constraintsで調整する。
 
 ### Core Facets
 
-Use these on every screen/block registry item:
+すべてのscreen/block registry itemに使う。
 
 - `assetKind`: `screen-pattern`, `block-pattern`, `component-pattern`, `flow-pattern`, `token-pack`
 - `maturity`: `canonical`, `recommended`, `community`, `experimental`, `deprecated`
 - `source`: `official-shadcn`, `internal`, `community-registry`, `external-design-system`, `generated`
-- `screenType`: primary page type when applicable
-- `blockRole`: functional role of the block
-- `userIntents`: what the user is trying to do
-- `dataShapes`: kind of information being displayed or edited
-- `interactionModel`: how the user interacts
-- `layoutModel`: placement and structural behavior
+- `screenType`: screenに適用されるprimary page type
+- `blockRole`: blockの機能的役割
+- `userIntents`: ユーザーが達成しようとしていること
+- `dataShapes`: 表示または編集する情報の型
+- `interactionModel`: ユーザーがどう操作するか
+- `layoutModel`: placementとstructural behavior
 - `density`: `low`, `medium`, `high`
-- `stateCoverage`: which UI states are implemented
-- `accessibility`: keyboard, focus, label, contrast, ARIA/APG, RTL/I18n notes
-- `dependencies`: shadcn components, npm packages, registry dependencies
-- `composition`: required, optional, and incompatible companion blocks
-- `verification`: stories, tests, a11y checks, visual snapshots
-- `evidence`: source count, source URLs, confidence, verified date
-- `risk`: known risks, missing states, license or maintenance concerns
+- `stateCoverage`: 実装済みUI states
+- `accessibility`: keyboard、focus、label、contrast、ARIA/APG、RTL/I18n notes
+- `dependencies`: shadcn components、npm packages、registry dependencies
+- `composition`: required / optional / incompatible companion blocks
+- `verification`: stories、tests、a11y checks、visual snapshots
+- `evidence`: source count、source URLs、confidence、verified date
+- `risk`: known risks、missing states、license / maintenance concerns
 
 ### Screen Types
 
-Initial 10 screen types:
+初期10 screen types:
 
-1. `auth`: login, signup, password reset, MFA.
-2. `onboarding`: first-run setup, guided setup, import/connect accounts.
-3. `dashboard`: summary, KPIs, monitoring, operational overview.
-4. `collection`: list, table, grid, searchable resource browser.
-5. `detail`: entity detail, profile, record overview, object page.
-6. `create-edit`: form page, editor, configuration creation.
-7. `settings-admin`: preferences, team/admin, billing settings, permissions.
-8. `workflow`: stepper, approval flow, checkout-like transactional flow.
-9. `report-analytics`: longer readout, charts, insights, exportable report.
-10. `conversation-assistant`: AI chat, support thread, agent workspace.
+1. `auth`: login、signup、password reset、MFA。
+2. `onboarding`: first-run setup、guided setup、import/connect accounts。
+3. `dashboard`: summary、KPIs、monitoring、operational overview。
+4. `collection`: list、table、grid、searchable resource browser。
+5. `detail`: entity detail、profile、record overview、object page。
+6. `create-edit`: form page、editor、configuration creation。
+7. `settings-admin`: preferences、team/admin、billing settings、permissions。
+8. `workflow`: stepper、approval flow、checkout-like transactional flow。
+9. `report-analytics`: longer readout、charts、insights、exportable report。
+10. `conversation-assistant`: AI chat、support thread、agent workspace。
 
 Optional overlays:
 
@@ -265,11 +265,11 @@ Optional overlays:
 - `media`
 - `developer-tools`
 
-Use overlays instead of creating too many primary screen types.
+primary screen typeを増やしすぎないために、overlaysを使う。
 
 ### Block Roles
 
-Initial 30 block roles:
+初期30 block roles:
 
 1. `app-shell-sidebar`
 2. `app-shell-topnav`
@@ -302,7 +302,7 @@ Initial 30 block roles:
 29. `pricing-plan-card`
 30. `checkout-summary`
 
-This set covers the official shadcn seed blocks plus gaps observed in Carbon patterns, enterprise systems, and AI UI registries.
+このsetはofficial shadcn seed blocksに加えて、Carbon patterns、enterprise systems、AI UI registriesで見えた不足を補う。
 
 ### User Intents
 
@@ -362,7 +362,7 @@ This set covers the official shadcn seed blocks plus gaps observed in Carbon pat
 
 ### State Coverage
 
-Every screen/block should explicitly state coverage for:
+すべてのscreen/blockは以下のcoverageを明示する。
 
 - `default`
 - `loading`
@@ -378,34 +378,34 @@ Every screen/block should explicitly state coverage for:
 - `dark-mode`
 - `rtl`
 
-Not every item must implement every state, but missing states must be visible in metadata.
+すべてのitemがすべてのstateを実装する必要はない。ただし未対応stateはmetadata上で見えるようにする。
 
 ## Selection Layer Contract
 
-The selection layer no longer starts from a broad app brief. It receives an already-decided `FlowSpec` from the flow layer and emits a `SelectionSpec`.
+selection layerは広いapp briefから開始しない。すでにflow layerで決定された `FlowSpec` を受け取り、`SelectionSpec` を出力する。
 
-The flow layer owns:
+flow layerの責務:
 
 - product domain interpretation
 - user journey design
 - step ordering
 - transition design
-- deciding which flow exists
+- どのflowが存在するかの決定
 
-The selection layer owns:
+selection layerの責務:
 
-- resolving each flow step to one `screenType`
-- selecting one screen pattern per resolved step
-- reading required block roles from the selected screen pattern
-- selecting one block pattern per required role
-- reporting registry dependencies as information for the implementation layer
-- recording assumptions, rejected alternatives, risks, and unresolved steps
+- 各flow stepを1つの `screenType` に解決する
+- 解決済みstepごとに1つのscreen patternを選ぶ
+- 選ばれたscreen patternからrequired block rolesを読む
+- required roleごとに1つのblock patternを選ぶ
+- implementation layer向けにregistry dependenciesを情報として報告する
+- assumptions、rejected alternatives、risks、unresolved stepsを記録する
 
-The selection layer must stop at block level. It does not select individual shadcn/ui components. Components remain registry dependencies declared by selected screen and block items.
+selection layerはblock levelで止める。個別のshadcn/ui componentsは選定しない。componentsは、選ばれたscreen/block itemsが宣言するregistry dependenciesとして残す。
 
-### Input: FlowSpec
+### 入力: FlowSpec
 
-Each flow step is one screen and carries facet signals. `screenType` is intentionally not provided by the flow layer; the selection layer resolves it.
+各flow stepは1画面を表し、facet signalsを持つ。`screenType` はflow layerからは入力されず、selection layerが解決する。
 
 ```json
 {
@@ -428,13 +428,13 @@ Each flow step is one screen and carries facet signals. `screenType` is intentio
 }
 ```
 
-### Per-Step Procedure
+### stepごとの手順
 
-1. Resolve `screenType` by matching `userIntents`, `dataShapes`, and `interactionModels` against canonical screen profiles.
-2. On a near-tie, put the step in `unresolved` with tied candidates. Do not guess.
-3. Retrieve `screen-pattern` candidates by resolved `screenType`, then filter by `userIntents` and `dataShapes`.
-4. Drop screen patterns with missing `registryDependencies`, declared incompatibilities, or insufficient `requiredStates`.
-5. Score screen patterns from 0 to 100:
+1. `userIntents`、`dataShapes`、`interactionModels` をcanonical screen profilesに照合して `screenType` を解決する。
+2. 僅差の場合は、そのstepを tied candidates とともに `unresolved` に入れる。推測しない。
+3. 解決済み `screenType` で `screen-pattern` 候補を取得し、その後 `userIntents` と `dataShapes` でfilterする。
+4. `registryDependencies` 不足、declared incompatibilities、`requiredStates` 不足があるscreen patternは除外する。
+5. 100点満点でscreen patternを採点する。
    - intent match: 25
    - data shape match: 15
    - interaction match: 15
@@ -442,14 +442,14 @@ Each flow step is one screen and carries facet signals. `screenType` is intentio
    - accessibility coverage: 10
    - dependency fit: 10
    - evidence confidence: 10
-6. Reject candidates below 70.
-7. Read required block roles from the selected screen pattern's `composition.requiredBlocks`. Do not derive structural block roles directly from raw facets.
-8. Add `composition.optionalBlocks` only when a step facet clearly calls for one, such as `filter` intent requiring `filter-toolbar`.
-9. Retrieve `block-pattern` candidates by `blockRole` and score with the same rubric.
-10. Reject block candidates below 70 and keep rejected alternatives for traceability.
-11. Emit `SelectionSpec`; do not install dependencies, generate code, or run tests in this layer.
+6. 70点未満を拒否する。
+7. 選ばれたscreen patternの `composition.requiredBlocks` からrequired block rolesを読む。structural block rolesをraw facetsから直接導出しない。
+8. `filter` intentが `filter-toolbar` を明確に要求するような場合だけ `composition.optionalBlocks` を追加する。
+9. `blockRole` で `block-pattern` 候補を取得し、同じrubricで採点する。
+10. 70点未満のblock候補を拒否し、traceabilityのためrejected alternativesを保持する。
+11. `SelectionSpec` を出力する。このlayerではdependencies install、code生成、test実行を行わない。
 
-### Output: SelectionSpec
+### 出力: SelectionSpec
 
 ```json
 {
@@ -492,11 +492,11 @@ Each flow step is one screen and carries facet signals. `screenType` is intentio
 }
 ```
 
-`checksPlanned` records which checks the implementation layer should run later. The selection layer does not run them.
+`checksPlanned` は、implementation layerが後で実行すべきchecksを記録する。このselection layerでは実行しない。
 
 ### Canonical Screen Profiles
 
-Use these profiles to resolve `screenType` from FlowSpec facets. They are intentionally heuristic; unresolved near-ties are better than forced guesses.
+FlowSpec facetsから `screenType` を解決するために使うprofile。これはheuristicであり、無理な推測よりもunresolved near-tieのほうがよい。
 
 | screenType | strongest signals |
 | --- | --- |
@@ -513,48 +513,50 @@ Use these profiles to resolve `screenType` from FlowSpec facets. They are intent
 
 ## Evidence And Review Loop
 
-Use this rule in agent instructions:
+agent instructionでは次のルールを使う。
 
 ```txt
 Do not select a pattern from a single weak source. Prefer official registry items, internal canonical patterns, Storybook manifests, and tested examples. If only one weak source supports a choice, mark it experimental and ask for review or provide a safer canonical fallback.
 ```
 
-Self-review checklist:
+セルフレビューchecklist:
 
-- Is every FlowSpec step resolved to exactly one `screenType`, or explicitly listed in `unresolved`?
-- Was `screenType` resolved from `userIntents`, `dataShapes`, and `interactionModels`, not copied from upstream?
-- Did required block roles come from `composition.requiredBlocks`, not direct facet inference?
-- Are optional block roles justified by a clear facet signal?
-- Is every selected screen and block pattern scored at 70 or higher?
-- Are components left unselected, with registry dependencies listed only as information?
-- Are rejected alternatives, assumptions, and unresolved near-ties recorded?
-- Are all `requiredStates` covered by `stateCoveragePlan`, or listed as risks?
-- Are external/community sources marked with maturity and risk?
-- Is `visualTone` treated only as a tiebreaker?
-- Are install/codegen/test actions deferred to the implementation layer?
+- すべてのFlowSpec stepが1つの `screenType` に解決されているか、または明示的に `unresolved` に入っているか。
+- `screenType` はupstreamからcopyされたのではなく、`userIntents`、`dataShapes`、`interactionModels` から解決されたか。
+- required block rolesはdirect facet inferenceではなく、`composition.requiredBlocks` から来ているか。
+- optional block rolesは明確なfacet signalで正当化されているか。
+- 選定されたscreen / block patternはすべて70点以上か。
+- componentsは選定せず、registry dependenciesが情報として列挙されているだけか。
+- rejected alternatives、assumptions、unresolved near-tiesが記録されているか。
+- すべての `requiredStates` が `stateCoveragePlan` でcoverされているか、またはrisksに記録されているか。
+- external/community sourcesにmaturityとriskが付いているか。
+- `visualTone` はtie breakerとしてのみ扱われているか。
+- install / codegen / test actionsはimplementation layerに遅延されているか。
+
+セルフレビューが失敗した場合は、その `SelectionSpec` をemitしない。失敗項目を内部的に列挙し、candidateの再取得、score再計算、block roleの読み直し、assumptions / risks / rejected alternativesの追記によって修正する。その後、セルフレビューを最初から再実行する。すべてのcheckが成功するまで改善とレビューを繰り返す。このselection layer内で修正不能な候補不足、解消不能なtie、依存関係不足は該当stepを `unresolved` に移して理由を記録し、再レビューする。
 
 ## External Registry Candidates
 
-Use these as expansion sources, not as unquestioned defaults:
+これらは拡張sourceとして使う。無条件のdefaultにはしない。
 
-- `@ai-elements`: AI-native conversation/message components.
-- `@assistant-ui`: AI chat primitives and adapters.
-- `@agents-ui`: AI agent interfaces.
-- `@ai-blocks`: browser-side AI blocks.
-- `@gaia`, `@inferencesh`, `@extend`, `@tool-ui`: assistant, agent, document, and tool-call UIs.
-- `@billingsdk`: SaaS billing and subscription UI.
-- `@formcn`: production form workflows.
-- `@better-upload`: upload workflows.
-- `@bklit`, `@evilcharts`, `@gpt-vis`: visualization gaps.
-- `@mapcn`: map/location UI.
-- `@clerk`, `@auth0`: auth/user-management blocks.
-- `@supabase`: backend-connected blocks.
-- `@bundui`, `@blocks-so`, `@beste-ui`, `@hextaui`: broader shadcn block sources.
-- `@react-aria`, `@baselayer`, `@diceui`, `@intentui`: accessibility-oriented alternatives.
+- `@ai-elements`: AI-native conversation/message components。
+- `@assistant-ui`: AI chat primitives and adapters。
+- `@agents-ui`: AI agent interfaces。
+- `@ai-blocks`: browser-side AI blocks。
+- `@gaia`, `@inferencesh`, `@extend`, `@tool-ui`: assistant、agent、document、tool-call UIs。
+- `@billingsdk`: SaaS billing and subscription UI。
+- `@formcn`: production form workflows。
+- `@better-upload`: upload workflows。
+- `@bklit`, `@evilcharts`, `@gpt-vis`: visualization gaps。
+- `@mapcn`: map/location UI。
+- `@clerk`, `@auth0`: auth/user-management blocks。
+- `@supabase`: backend-connected blocks。
+- `@bundui`, `@blocks-so`, `@beste-ui`, `@hextaui`: broader shadcn block sources。
+- `@react-aria`, `@baselayer`, `@diceui`, `@intentui`: accessibility-oriented alternatives。
 
-Adoption rule:
+採用ルール:
 
-- Bring external items into the custom registry only after checking license, maintenance, dependencies, accessibility, and fit with local tokens.
+- external itemsをcustom registryへ取り込むのは、license、maintenance、dependencies、accessibility、local tokensとの適合を確認した後にする。
 
 ## Sources Used
 
@@ -583,14 +585,14 @@ Adoption rule:
 - Ant Design: https://ant.design/
 - Atlassian DESIGN.md / AI context findings: https://www.atlassian.com/blog/how-we-build/atlassians-design-md-is-here-what-we-learned-testing-portable-design-context-in-practice
 
-## Current Review Result
+## 現在のレビュー結果
 
-No blocking issue found in the proposed structure.
+提案構造にblocking issueは見つかっていない。
 
-Known caveats:
+既知の注意点:
 
-- Official shadcn blocks do not cover all desired screen and block roles.
-- Community registries require quality review before adoption.
-- Storybook AI features are currently documented as preview and React-focused.
-- DTCG 2025.10 is stable, but Style Dictionary support for the latest 2025.10 format is still noted as in progress; use DTCG-compatible structure carefully.
-- `DESIGN.md` should be treated as a portable snapshot, not the production authority.
+- official shadcn blocksだけでは、必要なscreen / block rolesすべてをcoverできない。
+- community registriesは採用前にquality reviewが必要。
+- Storybook AI featuresは、現時点ではpreviewかつReact-focusedとして文書化されている。
+- DTCG 2025.10はstableだが、Style Dictionaryの最新2025.10 format supportはin progressとされているため、DTCG-compatible structureは慎重に使う。
+- `DESIGN.md` はportable snapshotとして扱い、production authorityにはしない。

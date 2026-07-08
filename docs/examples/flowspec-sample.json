@@ -1,0 +1,30 @@
+{
+  "$comment": "Test FlowSpec for verifying the selection layer (docs/ai-pattern-selection-instructions.md). Two steps: an operational-dashboard screen and a sign-in screen. requiredStates is limited to what the current experimental inventory actually implements; expanding state coverage is tracked as inventory work, not flow work.",
+  "flowId": "ops-monitoring",
+  "flowArchetype": "monitoring",
+  "steps": [
+    {
+      "stepId": "overview",
+      "order": 1,
+      "userIntents": ["monitor", "analyze"],
+      "dataShapes": ["metric", "time-series", "collection"],
+      "interactionModels": ["read-only", "filter-sort"],
+      "density": "high",
+      "requiredStates": ["default"],
+      "accessibilityConstraints": { "keyboard": true },
+      "visualTone": ["enterprise"],
+      "transitions": { "onSessionExpired": "signin" }
+    },
+    {
+      "stepId": "signin",
+      "order": 2,
+      "userIntents": ["authenticate"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["form-submit"],
+      "density": "low",
+      "requiredStates": ["default"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onSuccess": "overview" }
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 # AI Pattern Selection Instructions
 
-Select screen patterns and block patterns for an already-decided flow. Input is a `FlowSpec`, output is a `SelectionSpec`. Resolve as mechanically as possible so the next layer can install dependencies and generate code without further interpretation.
+Select screen patterns and block patterns for an already-decided flow. Input is a `FlowSpec`; output is a `SelectionSpec`. Resolve as mechanically as possible so the next implementation layer can install dependencies and generate code without further interpretation.
 
 ## Input: FlowSpec
 
-The flow is already decided. Each step is one screen and carries only facet signals. `screenType` is not provided; resolve it in step 1.
+The flow is already decided. Each step represents one screen and carries only facet signals. `screenType` is not provided; resolve it in step 1.
 
 ```jsonc
 {
@@ -15,6 +15,7 @@ The flow is already decided. Each step is one screen and carries only facet sign
       "stepId": "list",
       "order": 1,
       "userIntents": ["browse", "filter"],
+      "jobMapStages": ["locate"],
       "dataShapes": ["collection"],
       "interactionModels": ["filter-sort", "selection-multiple"],
       "density": "high",
@@ -27,24 +28,37 @@ The flow is already decided. Each step is one screen and carries only facet sign
 }
 ```
 
-Facet vocabularies are defined in `docs/ai-design-facets.schema.json`. Canonical screen profiles are documented in `docs/ai-design-system-research.md`. Reject any value outside those enums. If a facet is missing, infer conservatively from the other facets and record the assumption on the output.
+Facet vocabularies are defined in `docs/ai-design-facets.schema.json`. Canonical screen profiles live in `docs/ai-canonical-profiles.json` (validated by `npm run validate:profiles`). Reject any value outside those enums. If a facet is missing, infer conservatively from the other facets and record the assumption in the output.
 
 ## Procedure Per Step
 
-1. **Resolve screenType.** Match `userIntents` + `dataShapes` + `interactionModels` against each `screenType`'s canonical facet profile and pick the best. On a near-tie, put the step in `unresolved` with the tied candidates and escalate; do not guess.
-2. **Retrieve and score screen patterns.** Filter `screen-pattern` items by resolved `screenType`, then `userIntents`, then `dataShapes`. Drop items with missing `registryDependencies`, declared incompatibilities, or that cannot cover `requiredStates`. Score 0-100: Intent 25 / DataShape 15 / Interaction 15 / State 15 / A11y 10 / Dependency 10 / Evidence 10. Reject below 70. Take the top; keep rejected alternatives.
-3. **Read required block roles** from the chosen pattern's `composition.requiredBlocks`. These are structural; do not derive them from facets. Add `optionalBlocks` only when a step facet clearly calls for one, such as `filter` intent -> `filter-toolbar`.
-4. **Select a block pattern per role.** Retrieve `block-pattern` candidates by `blockRole` and score with the same rubric as step 2. Reject below 70. Take the top per role.
-5. **Stop at block level.** List each selected item's `registryDependencies` as information only; do not select components.
+1. **Resolve screenType.** Score every canonical profile in `docs/ai-canonical-profiles.json` against the step and pick the highest:
+
+   ```
+   score(step, S) = 40*C_intent + 20*C_shape + 15*C_interaction + 25*C_stage
+
+   C_x = |step.x ∩ S.x| / |step.x|   (coverage of the step's facets by the profile;
+                                       if the step omits an axis, redistribute its
+                                       points proportionally across the other axes)
+   ```
+
+   `jobMapStages` on the step comes mechanically from the upstream Job Map decomposition;
+   never infer it here. If the top two scores differ by less than 8 (near-tie), break the
+   tie in this order: (1) exact `jobMapStages` set match, (2) `density` match, (3) put the
+   step in `unresolved` with the tied candidates and escalate; do not guess.
+2. **Retrieve and score screen patterns.** Filter `screen-pattern` items by resolved `screenType`, then `userIntents`, then `dataShapes`. Drop items with missing `registryDependencies`, declared incompatibilities, or insufficient `requiredStates` coverage. Score 0-100: Intent 25 / DataShape 15 / Interaction 15 / State 15 / A11y 10 / Dependency 10 / Evidence 10. Reject below 70. Take the top candidate and keep rejected alternatives.
+3. **Read required block roles.** Read roles from the chosen screen pattern's `composition.requiredBlocks`. These are structural; do not derive them directly from raw facets. Add `optionalBlocks` only when a step facet clearly calls for one, such as `filter` intent -> `filter-toolbar`.
+4. **Select a block pattern per role.** Retrieve `block-pattern` candidates by `blockRole` and score with the same rubric as step 2. Reject below 70. Take the top candidate for each role.
+5. **Stop at block level.** List each selected item's `registryDependencies` as information only. Do not select individual components.
 
 ## Selection Rules
 
-- Prefer higher `maturity`: internal canonical -> official shadcn -> project Storybook items -> mature design-system guidance -> community items only after risk review.
-- If a choice rests on one weak source, mark it `experimental` and give a safer canonical fallback in `assumptions`.
+- Prefer higher `maturity`: internal canonical -> official shadcn -> project Storybook items -> mature design-system guidance -> community items after risk review.
+- If a choice rests on one weak source, mark it `experimental` and provide a safer canonical fallback in `assumptions`.
 - Do not combine multiple navigation shells unless the pattern explicitly supports it.
-- Do not add charts unless the data shape includes `metric`, `time-series`, or `categorical`, or a comparison intent is present.
+- Do not add charts unless `dataShapes` includes `metric`, `time-series`, or `categorical`, or a comparison intent is present.
 - Do not use dense data blocks for `auth` or `onboarding` screen types.
-- Do not recreate shadcn primitives that a registry dependency already provides.
+- Do not recreate shadcn primitives already provided by a registry dependency.
 - Require `empty`, `loading`, `error`, and `permission-denied` coverage for data-driven screens.
 - Include an AI explainability block when AI output materially affects user decisions.
 - Treat `visualTone` as a tiebreaker only.
@@ -92,15 +106,30 @@ Facet vocabularies are defined in `docs/ai-design-facets.schema.json`. Canonical
 }
 ```
 
-- `registryDependencies` is the informational union of selected items' declared dependencies.
-- `checksPlanned` records which checks should run later; do not run them here.
-- `unresolved` holds any step with no candidate above 70, an unbroken tie, or missing dependencies. Escalate these; do not force a low-confidence pick.
+- `registryDependencies` is the informational union of dependencies declared by selected items.
+- `checksPlanned` records checks that should run later. Do not run them in this layer.
+- `unresolved` holds steps with no candidate above 70, an unbroken tie, or missing dependencies. Escalate these; do not force a low-confidence pick.
 
 ## Self-Review Before Emitting
 
-- Is every step resolved to one `screenType`, or explicitly in `unresolved`?
-- Did block roles come from `requiredBlocks`, not raw facets?
-- Is every selected item at or above 70?
-- Are components left unselected, with dependencies listed only?
-- Are rejected alternatives and assumptions recorded?
-- Are all `requiredStates` present in `stateCoveragePlan`, or listed as risks?
+Before emitting, verify all of the following:
+
+- Every step is resolved to one `screenType`, or explicitly listed in `unresolved`.
+- Block roles came from `requiredBlocks`, not raw facets.
+- Every selected item is at or above 70.
+- Components are not selected; dependencies are listed only as information.
+- Rejected alternatives and assumptions are recorded.
+- Every `requiredStates` value is present in `stateCoveragePlan`, or listed as a risk.
+
+## Self-Review Failure Loop
+
+If any self-review item fails, do not emit that `SelectionSpec`. Run this loop:
+
+1. List the failed checks internally as `reviewFailures`.
+2. Fix correctable failures by retrieving candidates again, recalculating scores, rereading block roles, or adding missing `assumptions`, `risks`, and rejected alternatives.
+3. After fixing, rerun Self-Review Before Emitting from the beginning.
+4. Repeat improvement and review until every check succeeds.
+5. If a failure cannot be fixed inside this selection layer, such as missing candidates, an unbroken tie, or missing dependencies, move the affected step to `unresolved`, record the reason, and rerun self-review.
+6. Emit only a `SelectionSpec` that has passed self-review.
+
+This loop does not run implementation-layer checks. It only improves selection-layer output consistency until self-review succeeds.
