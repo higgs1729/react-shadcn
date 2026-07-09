@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/schemas/ai-buildreport.schema.json",
+  "title": "BuildReport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["flowId", "generatedAt", "screens", "checks", "iterations", "status"],
+  "properties": {
+    "$comment": { "type": "string" },
+    "flowId": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date" },
+    "screens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stepId", "route", "status", "filesCreated", "storiesCreated"],
+        "properties": {
+          "stepId": { "type": "string" },
+          "route": { "type": "string" },
+          "status": { "type": "string", "enum": ["built", "failed", "skipped"] },
+          "filesCreated": {
+            "type": "array",
+            "items": { "type": "string" },
+            "uniqueItems": true
+          },
+          "storiesCreated": {
+            "type": "array",
+            "items": { "type": "string" },
+            "uniqueItems": true
+          },
+          "installed": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "shadcn": {
+                "type": "array",
+                "items": { "type": "string" },
+                "uniqueItems": true
+              },
+              "npm": {
+                "type": "array",
+                "items": { "type": "string" },
+                "uniqueItems": true
+              }
+            }
+          },
+          "checkFailures": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "command", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "command": { "type": "string" },
+          "status": { "type": "string", "enum": ["pass", "fail"] },
+          "attempts": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "iterations": { "type": "integer", "minimum": 1 },
+    "status": { "type": "string", "enum": ["verified", "partial", "failed"] },
+    "unresolved": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

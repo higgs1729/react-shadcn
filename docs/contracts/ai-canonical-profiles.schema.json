@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://example.local/schemas/ai-canonical-profiles.schema.json",
   "title": "AI Canonical Facet Profiles",
-  "description": "Contract for docs/layers/20-selection/ai-canonical-profiles.json. Facet enums are referenced from ai-design-facets.schema.json (same folder) so vocabularies stay single-sourced.",
+  "description": "Contract for ai-canonical-profiles.json (the selection layer's canonical profiles; locate files by name under docs/). Facet enums are referenced from ai-design-facets.schema.json via its $id so vocabularies stay single-sourced.",
   "type": "object",
   "additionalProperties": false,
   "required": ["version", "generatedAt", "screenTypes", "blockRoles"],

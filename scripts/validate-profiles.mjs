@@ -8,16 +8,13 @@
 //     - direction-1 symmetry: S lists R (typical/optional/shell) -> R.screenTypes contains S
 //     - typical and optional are disjoint
 // Run: npm run validate:profiles  (exit 1 on any failure)
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
+import { readDoc } from './lib/paths.mjs'
 
-const read = (p) => JSON.parse(readFileSync(join(process.cwd(), 'docs', p), 'utf8'))
-
-const facetsSchema = read('contracts/ai-design-facets.schema.json')
-const profilesSchema = read('contracts/ai-canonical-profiles.schema.json')
-const profiles = read('layers/20-selection/ai-canonical-profiles.json')
+const facetsSchema = readDoc('ai-design-facets.schema.json')
+const profilesSchema = readDoc('ai-canonical-profiles.schema.json')
+const profiles = readDoc('ai-canonical-profiles.json')
 
 const errors = []
 

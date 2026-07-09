@@ -1,0 +1,31 @@
+{
+  "$comment": "Hand-written minimal BuildReport sample for schema/contract verification (task 01). Not a real build.",
+  "flowId": "dryrun-saas-ops-01",
+  "generatedAt": "2026-07-09",
+  "screens": [
+    {
+      "stepId": "login",
+      "route": "/flows/dryrun-saas-ops-01/login",
+      "status": "built",
+      "filesCreated": [
+        "app/flows/dryrun-saas-ops-01/login/page.tsx",
+        "components/patterns/form-section-login-01.tsx"
+      ],
+      "storiesCreated": ["patterns-auth-login-03--default"],
+      "installed": {
+        "shadcn": ["button", "card", "field", "input"],
+        "npm": []
+      }
+    }
+  ],
+  "checks": [
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "a11y", "command": "npm run build-storybook -- --test", "status": "pass", "attempts": 1 },
+    { "name": "story", "command": "npm run storybook -- --smoke-test", "status": "pass", "attempts": 1 },
+    { "name": "validate", "command": "npm run validate", "status": "pass", "attempts": 1 }
+  ],
+  "iterations": 1,
+  "status": "verified",
+  "unresolved": ["invoice-list"]
+}

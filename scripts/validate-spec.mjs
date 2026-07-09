@@ -1,6 +1,6 @@
-// Validates FlowSpec / SelectionSpec documents against their JSON Schema contracts.
-// Type is auto-detected: a document with `steps` is a FlowSpec, one with `screens`
-// is a SelectionSpec.
+// Validates FlowSpec / SelectionSpec / BuildReport documents against their JSON Schema
+// contracts. Type is auto-detected: `steps` -> FlowSpec, `checks` -> BuildReport,
+// `screens` -> SelectionSpec.
 //
 // Run: npm run validate:spec -- <file.json> [more.json ...]
 //      npm run validate:specs   (validates everything under docs/examples/)
@@ -8,6 +8,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
+import { readDoc } from './lib/paths.mjs'
 
 const ROOT = process.cwd()
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'))
@@ -16,9 +17,10 @@ const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'))
 // registers under http:// only.
 const ajv = new Ajv({ allErrors: true, strict: false, validateSchema: false })
 addFormats(ajv)
-ajv.addSchema(readJson(join(ROOT, 'docs', 'contracts', 'ai-design-facets.schema.json')))
-const validateFlow = ajv.compile(readJson(join(ROOT, 'docs', 'contracts', 'ai-flowspec.schema.json')))
-const validateSelection = ajv.compile(readJson(join(ROOT, 'docs', 'contracts', 'ai-selectionspec.schema.json')))
+ajv.addSchema(readDoc('ai-design-facets.schema.json'))
+const validateFlow = ajv.compile(readDoc('ai-flowspec.schema.json'))
+const validateSelection = ajv.compile(readDoc('ai-selectionspec.schema.json'))
+const validateBuildReport = ajv.compile(readDoc('ai-buildreport.schema.json'))
 
 let targets = process.argv.slice(2)
 if (targets.length === 0) {
@@ -42,13 +44,14 @@ for (const t of targets) {
     failed++
     continue
   }
-  const kind = doc.steps ? 'FlowSpec' : doc.screens ? 'SelectionSpec' : null
+  const kind = doc.steps ? 'FlowSpec' : doc.checks ? 'BuildReport' : doc.screens ? 'SelectionSpec' : null
   if (!kind) {
-    console.error(`✗ ${t}: neither FlowSpec (steps) nor SelectionSpec (screens)`)
+    console.error(`✗ ${t}: neither FlowSpec (steps), BuildReport (checks), nor SelectionSpec (screens)`)
     failed++
     continue
   }
-  const validate = kind === 'FlowSpec' ? validateFlow : validateSelection
+  const validate =
+    kind === 'FlowSpec' ? validateFlow : kind === 'BuildReport' ? validateBuildReport : validateSelection
   if (validate(doc)) {
     console.log(`✓ ${t}: valid ${kind}`)
   } else {

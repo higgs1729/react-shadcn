@@ -28,11 +28,11 @@ The flow is already decided. Each step represents one screen and carries only fa
 }
 ```
 
-Facet vocabularies are defined in `docs/contracts/ai-design-facets.schema.json`. Canonical screen profiles live in `docs/layers/20-selection/ai-canonical-profiles.json` (validated by `npm run validate:profiles`). Reject any value outside those enums. If a facet is missing, infer conservatively from the other facets and record the assumption in the output.
+Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical screen profiles in `ai-canonical-profiles.json` (both located by filename under `docs/`; validated by `npm run validate:profiles`). Reject any value outside those enums. If a facet is missing, infer conservatively from the other facets and record the assumption in the output.
 
 ## Procedure Per Step
 
-1. **Resolve screenType.** Score every canonical profile in `docs/layers/20-selection/ai-canonical-profiles.json` against the step and pick the highest:
+1. **Resolve screenType.** Score every canonical profile in `ai-canonical-profiles.json` against the step and pick the highest:
 
    ```
    score(step, S) = 40*C_intent + 20*C_shape + 15*C_interaction + 25*C_stage

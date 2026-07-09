@@ -315,5 +315,5 @@ invoice managementなど、1つの完全なexampleを実装する。
 - AJV: https://ajv.js.org/
 - JSON Schema: https://json-schema.org/
 - Local research: `docs/ai-design-system-research.md`
-- Local selection instructions: `docs/layers/20-selection/ai-pattern-selection-instructions.md`
-- Local facet schema: `docs/contracts/ai-design-facets.schema.json`
+    - Local selection instructions: `docs/layers/20-selection/ai-pattern-selection-instructions.md`
+    - Local facet schema: `docs/contracts/ai-design-facets.schema.json`

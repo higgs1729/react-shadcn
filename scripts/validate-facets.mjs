@@ -7,13 +7,12 @@ import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
+import { readDoc } from './lib/paths.mjs'
 
 const ROOT = process.cwd()
-const SCHEMA_PATH = join(ROOT, 'docs', 'contracts', 'ai-design-facets.schema.json')
-const PROFILES_PATH = join(ROOT, 'docs', 'layers', '20-selection', 'ai-canonical-profiles.json')
 const REGISTRY_DIR = join(ROOT, 'registry')
 
-const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'))
+const schema = readDoc('ai-design-facets.schema.json')
 // The schema declares draft-07 with an https:// $schema URI; ajv registers the
 // draft-07 meta-schema under http://, so drop the key rather than edit the file.
 delete schema.$schema
@@ -23,7 +22,7 @@ const validate = ajv.compile(schema)
 
 // Canonical profiles are the answer key: every screenType/blockRole an item
 // claims must exist there, or the selection layer can never retrieve the item.
-const profiles = JSON.parse(readFileSync(PROFILES_PATH, 'utf8'))
+const profiles = readDoc('ai-canonical-profiles.json')
 const screenTypeKeys = new Set(Object.keys(profiles.screenTypes))
 const blockRoleKeys = new Set(Object.keys(profiles.blockRoles))
 
