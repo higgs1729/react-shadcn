@@ -11,6 +11,7 @@ runnable acceptance criteria — the executor should not need this conversation'
 | 03 | [task-03-page-composition.md](task-03-page-composition.md) | `app/flows/<flowId>/...` routes | 01, 02 |
 | 04 | [task-04-story-generation.md](task-04-story-generation.md) | `scripts/gen-pattern-stories.mjs` + `components/patterns/` stories | 03 |
 | 05 | [task-05-check-loop.md](task-05-check-loop.md) | `scripts/run-checks.mjs` + final BuildReport | 01–04 |
+| 06 | [task-06-collection-inventory.md](task-06-collection-inventory.md) | `filter-toolbar` block + `collection-table-01` pattern (inventory) | 01–05 |
 
 Shared ground rules for every executor:
 
