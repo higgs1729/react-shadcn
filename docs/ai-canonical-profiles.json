@@ -237,11 +237,11 @@
     "form-section": {
       "reviewed": true, "maturity": "canonical",
       "layoutModel": { "region": "main" },
-      "userIntents": ["create", "edit", "configure"],
+      "userIntents": ["create", "edit", "configure", "authenticate"],
       "dataShapes": ["single-record"],
       "interactionModels": ["form-submit", "inline-edit"],
       "screenTypes": ["create-edit", "auth", "onboarding", "settings-admin", "workflow"],
-      "notes": "A grouped set of form fields with validation."
+      "notes": "A grouped set of form fields with validation. Includes authenticate because form-section is the typical body of auth screens (dry-run finding, 2026-07-08)."
     },
     "settings-section": {
       "reviewed": true, "maturity": "canonical",

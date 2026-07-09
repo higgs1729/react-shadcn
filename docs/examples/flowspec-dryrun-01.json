@@ -1,0 +1,42 @@
+{
+  "$comment": "Dry-run FlowSpec #1 (human+AI co-authored). Exercises all three outcomes with the current inventory: a resolvable auth screen, a resolvable dashboard screen, and a collection screen expected to escalate to unresolved (no collection stock yet).",
+  "flowId": "dryrun-saas-ops-01",
+  "flowArchetype": "monitoring",
+  "steps": [
+    {
+      "stepId": "login",
+      "order": 1,
+      "userIntents": ["authenticate"],
+      "jobMapStages": ["prepare"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["form-submit"],
+      "density": "low",
+      "requiredStates": ["default"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onSuccess": "overview" }
+    },
+    {
+      "stepId": "overview",
+      "order": 2,
+      "userIntents": ["monitor", "analyze"],
+      "jobMapStages": ["monitor"],
+      "dataShapes": ["metric", "time-series", "collection"],
+      "interactionModels": ["read-only", "filter-sort"],
+      "density": "high",
+      "requiredStates": ["default"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onRowSelect": "invoice-list" }
+    },
+    {
+      "stepId": "invoice-list",
+      "order": 3,
+      "userIntents": ["browse", "filter"],
+      "jobMapStages": ["locate"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["filter-sort", "selection-multiple"],
+      "density": "high",
+      "requiredStates": ["default", "loading", "empty", "error"],
+      "accessibilityConstraints": { "keyboard": true }
+    }
+  ]
+}

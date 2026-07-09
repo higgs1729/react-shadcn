@@ -3,7 +3,7 @@
   "name": "dashboard-01",
   "type": "registry:block",
   "title": "Dashboard 01",
-  "description": "A dashboard with sidebar, charts and data table.",
+  "description": "A dashboard composition skeleton: page layout wiring the sidebar shell, header, metric row, chart panel, and data table via standalone block items.",
   "categories": ["screen:dashboard", "intent:monitor", "density:high"],
   "registryDependencies": [
     "badge",
@@ -46,22 +46,6 @@
       "type": "registry:component"
     },
     {
-      "path": "components/site-header.tsx",
-      "type": "registry:component"
-    },
-    {
-      "path": "components/section-cards.tsx",
-      "type": "registry:component"
-    },
-    {
-      "path": "components/chart-area-interactive.tsx",
-      "type": "registry:component"
-    },
-    {
-      "path": "components/data-table.tsx",
-      "type": "registry:component"
-    },
-    {
       "path": "components/nav-documents.tsx",
       "type": "registry:component"
     },
@@ -84,6 +68,7 @@
         "data-table-panel"
       ],
       "userIntents": ["monitor", "analyze", "browse"],
+      "jobMapStages": ["monitor"],
       "dataShapes": ["metric", "time-series", "collection"],
       "interactionModels": [
         "read-only",
@@ -137,7 +122,13 @@
           "zod",
           "lucide-react"
         ],
-        "registries": []
+        "registries": [
+          "sidebar-07",
+          "page-header-actions-01",
+          "summary-metric-row-01",
+          "chart-panel-01",
+          "data-table-panel-01"
+        ]
       },
       "composition": {
         "requiredBlocks": [

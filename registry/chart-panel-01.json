@@ -1,0 +1,74 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "chart-panel-01",
+  "type": "registry:block",
+  "title": "Chart Panel 01",
+  "description": "An interactive time-series area chart with range toggle (extracted from dashboard-01).",
+  "categories": ["block:data-display", "role:chart-panel"],
+  "registryDependencies": ["card", "chart", "select", "toggle-group"],
+  "files": [
+    {
+      "path": "components/chart-area-interactive.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "official-shadcn",
+      "blockRole": "chart-panel",
+      "userIntents": ["analyze", "compare", "monitor"],
+      "dataShapes": ["time-series"],
+      "interactionModels": ["read-only", "disclosure", "filter-sort"],
+      "layoutModel": {
+        "region": "card",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "high",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Range toggle is keyboard-operable; chart itself is visual-only (no data table fallback). Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "chart", "select", "toggle-group"],
+        "npm": ["recharts"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": ["filter-toolbar"],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": [],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "high",
+        "verifiedAt": "2026-07-08",
+        "sourceUrls": [
+          "https://ui.shadcn.com/blocks",
+          "https://ui.shadcn.com/docs/registry/registry-item-json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["loading", "empty", "error"],
+        "notes": "Chart data is hardcoded sample data; no loading/empty variants; no non-visual data fallback."
+      },
+      "extensions": {
+        "localEvidence": ["components/chart-area-interactive.tsx"],
+        "extractedFrom": "dashboard-01"
+      }
+    }
+  }
+}

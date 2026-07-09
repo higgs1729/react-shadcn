@@ -1,0 +1,74 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "summary-metric-row-01",
+  "type": "registry:block",
+  "title": "Summary Metric Row 01",
+  "description": "A responsive row of KPI stat cards with trend badges (extracted from dashboard-01).",
+  "categories": ["block:data-display", "role:summary-metric-row"],
+  "registryDependencies": ["card", "badge"],
+  "files": [
+    {
+      "path": "components/section-cards.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "official-shadcn",
+      "blockRole": "summary-metric-row",
+      "userIntents": ["monitor", "analyze"],
+      "dataShapes": ["metric"],
+      "interactionModels": ["read-only"],
+      "layoutModel": {
+        "region": "main",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "high",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Static cards; no interactive elements beyond layout. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "badge"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": [],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "high",
+        "verifiedAt": "2026-07-08",
+        "sourceUrls": [
+          "https://ui.shadcn.com/blocks",
+          "https://ui.shadcn.com/docs/registry/registry-item-json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["loading", "empty", "error"],
+        "notes": "Metric values are hardcoded sample data; no loading/empty variants yet."
+      },
+      "extensions": {
+        "localEvidence": ["components/section-cards.tsx"],
+        "extractedFrom": "dashboard-01"
+      }
+    }
+  }
+}

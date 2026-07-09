@@ -1,54 +1,48 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
-  "name": "login-03",
+  "name": "form-section-login-01",
   "type": "registry:block",
-  "title": "Login 03",
-  "description": "A login page with a muted background color.",
-  "categories": ["screen:auth", "intent:authenticate", "density:low"],
+  "title": "Form Section Login 01",
+  "description": "A card-framed email/password login form with field labels and submit action (extracted from login-03).",
+  "categories": ["block:forms", "role:form-section"],
   "registryDependencies": ["button", "card", "field", "input"],
   "files": [
     {
-      "path": "app/login/page.tsx",
-      "type": "registry:page",
-      "target": "app/login/page.tsx"
+      "path": "components/login-form.tsx",
+      "type": "registry:component"
     }
   ],
   "meta": {
     "aiDesignSystem": {
-      "assetKind": "screen-pattern",
+      "assetKind": "block-pattern",
       "maturity": "experimental",
       "source": "official-shadcn",
-      "screenType": "auth",
-      "blockRoles": ["form-section", "action-footer"],
+      "blockRole": "form-section",
       "userIntents": ["authenticate"],
-      "jobMapStages": ["prepare"],
       "dataShapes": ["single-record"],
-      "interactionModels": ["form-submit", "single-action"],
+      "interactionModels": ["form-submit"],
       "layoutModel": {
-        "shell": "none",
-        "region": "full-page",
+        "region": "main",
         "responsive": ["mobile", "desktop"]
       },
       "density": "low",
-      "stateCoverage": ["default"],
+      "stateCoverage": ["default", "mobile", "dark-mode"],
       "accessibility": {
         "keyboard": true,
         "focusVisible": true,
         "labels": true,
         "contrastChecked": false,
-        "rtl": false,
-        "i18n": false,
         "notes": "Uses field/label primitives for labeled inputs. No error/validation announcement implemented yet. Not independently audited."
       },
       "dependencies": {
         "shadcn": ["button", "card", "field", "input"],
         "npm": [],
-        "registries": ["form-section-login-01"]
+        "registries": []
       },
       "composition": {
-        "requiredBlocks": ["form-section"],
+        "requiredBlocks": [],
         "optionalBlocks": ["action-footer", "error-recovery"],
-        "incompatibleWith": ["app-shell-sidebar", "app-shell-topnav", "data-table-panel"]
+        "incompatibleWith": []
       },
       "verification": {
         "storybookStories": [],
@@ -58,9 +52,9 @@
         "lintTypecheck": false
       },
       "evidence": {
-        "sourceCount": 3,
+        "sourceCount": 2,
         "confidence": "high",
-        "verifiedAt": "2026-07-07",
+        "verifiedAt": "2026-07-08",
         "sourceUrls": [
           "https://ui.shadcn.com/blocks",
           "https://ui.shadcn.com/docs/registry/registry-item-json"
@@ -68,13 +62,12 @@
       },
       "risk": {
         "level": "low",
-        "licenseReviewNeeded": false,
-        "maintenanceReviewNeeded": false,
-        "missingStates": ["error", "validation-error", "loading", "dark-mode", "rtl"],
-        "notes": "Form has no submit handler, validation, or error state; it is a visual pattern only. Auth wiring is downstream work."
+        "missingStates": ["validation-error", "error", "loading"],
+        "notes": "No client-side validation or error states yet; submit is a plain form action."
       },
       "extensions": {
-        "localEvidence": ["app/login/page.tsx", "components/login-form.tsx"]
+        "localEvidence": ["components/login-form.tsx"],
+        "extractedFrom": "login-03"
       }
     }
   }

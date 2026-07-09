@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/schemas/ai-selectionspec.schema.json",
+  "title": "SelectionSpec",
+  "description": "Output contract of the pattern-selection layer. Every screen carries the resolved screenType, the selected screen pattern with rejected alternatives, one block selection per required role, and informational registry dependencies. Steps that could not be resolved deterministically go to `unresolved`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["flowId", "screens", "unresolved"],
+  "properties": {
+    "$comment": { "type": "string" },
+    "flowId": { "type": "string", "minLength": 1 },
+    "screens": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/screen" }
+    },
+    "unresolved": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/unresolvedStep" }
+    }
+  },
+  "definitions": {
+    "score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "screen": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stepId",
+        "resolvedScreenType",
+        "screenPattern",
+        "blocks",
+        "registryDependencies",
+        "stateCoveragePlan",
+        "checksPlanned",
+        "assumptions",
+        "risks"
+      ],
+      "properties": {
+        "stepId": { "type": "string" },
+        "resolvedScreenType": {
+          "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/screenType"
+        },
+        "screenTypeScore": { "$ref": "#/definitions/score" },
+        "screenPattern": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["registryItem", "score"],
+          "properties": {
+            "registryItem": { "type": "string" },
+            "score": { "$ref": "#/definitions/score" },
+            "rejected": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["registryItem", "score", "reason"],
+                "properties": {
+                  "registryItem": { "type": "string" },
+                  "score": { "$ref": "#/definitions/score" },
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["blockRole", "registryItem", "score"],
+            "properties": {
+              "blockRole": {
+                "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/blockRole"
+              },
+              "registryItem": { "type": "string" },
+              "score": { "$ref": "#/definitions/score" }
+            }
+          }
+        },
+        "registryDependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "stateCoveragePlan": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/state" }
+        },
+        "checksPlanned": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "assumptions": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "unresolvedStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stepId", "reason"],
+      "properties": {
+        "stepId": { "type": "string" },
+        "resolvedScreenType": {
+          "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/screenType"
+        },
+        "reason": { "type": "string" },
+        "candidates": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

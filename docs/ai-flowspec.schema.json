@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/schemas/ai-flowspec.schema.json",
+  "title": "FlowSpec",
+  "description": "Input contract of the pattern-selection layer. Produced upstream (currently human+AI co-authored); each step is one screen carrying only facet signals. screenType is intentionally absent - the selection layer resolves it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["flowId", "steps"],
+  "properties": {
+    "$comment": { "type": "string" },
+    "flowId": { "type": "string", "minLength": 1 },
+    "flowArchetype": { "type": "string" },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/step" }
+    }
+  },
+  "definitions": {
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stepId", "order", "userIntents", "jobMapStages", "dataShapes", "interactionModels"],
+      "properties": {
+        "stepId": { "type": "string", "minLength": 1 },
+        "order": { "type": "integer", "minimum": 1 },
+        "userIntents": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/userIntent" }
+        },
+        "jobMapStages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/jobMapStage" }
+        },
+        "dataShapes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/dataShape" }
+        },
+        "interactionModels": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/interactionModel" }
+        },
+        "density": { "type": "string", "enum": ["low", "medium", "high"] },
+        "requiredStates": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "https://example.local/schemas/ai-design-facets.schema.json#/definitions/state" }
+        },
+        "accessibilityConstraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "keyboard": { "type": "boolean" },
+            "focusVisible": { "type": "boolean" },
+            "labels": { "type": "boolean" },
+            "contrastChecked": { "type": "boolean" },
+            "rtl": { "type": "boolean" },
+            "i18n": { "type": "boolean" },
+            "apgPattern": { "type": "string" }
+          }
+        },
+        "visualTone": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["utilitarian", "enterprise", "editorial", "premium", "playful", "developer", "consumer", "ai-native"]
+          }
+        },
+        "transitions": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

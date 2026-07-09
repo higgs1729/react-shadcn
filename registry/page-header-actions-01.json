@@ -1,0 +1,74 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "page-header-actions-01",
+  "type": "registry:block",
+  "title": "Page Header Actions 01",
+  "description": "A sticky site header with sidebar trigger, page title, and action slot (extracted from dashboard-01).",
+  "categories": ["block:navigation", "role:page-header-actions"],
+  "registryDependencies": ["button", "separator", "sidebar"],
+  "files": [
+    {
+      "path": "components/site-header.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "official-shadcn",
+      "blockRole": "page-header-actions",
+      "userIntents": ["browse"],
+      "dataShapes": ["none"],
+      "interactionModels": ["single-action"],
+      "layoutModel": {
+        "region": "header",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Sidebar trigger inherits a11y from shadcn sidebar primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["button", "separator", "sidebar"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": ["breadcrumb-context", "command-search"],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": [],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "high",
+        "verifiedAt": "2026-07-08",
+        "sourceUrls": [
+          "https://ui.shadcn.com/blocks",
+          "https://ui.shadcn.com/docs/registry/registry-item-json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": [],
+        "notes": "Depends on being placed inside a SidebarProvider (uses SidebarTrigger); title/actions are hardcoded sample content."
+      },
+      "extensions": {
+        "localEvidence": ["components/site-header.tsx"],
+        "extractedFrom": "dashboard-01"
+      }
+    }
+  }
+}

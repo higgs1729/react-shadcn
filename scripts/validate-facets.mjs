@@ -10,6 +10,7 @@ import addFormats from 'ajv-formats'
 
 const ROOT = process.cwd()
 const SCHEMA_PATH = join(ROOT, 'docs', 'ai-design-facets.schema.json')
+const PROFILES_PATH = join(ROOT, 'docs', 'ai-canonical-profiles.json')
 const REGISTRY_DIR = join(ROOT, 'registry')
 
 const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'))
@@ -19,6 +20,29 @@ delete schema.$schema
 const ajv = new Ajv({ allErrors: true })
 addFormats(ajv)
 const validate = ajv.compile(schema)
+
+// Canonical profiles are the answer key: every screenType/blockRole an item
+// claims must exist there, or the selection layer can never retrieve the item.
+const profiles = JSON.parse(readFileSync(PROFILES_PATH, 'utf8'))
+const screenTypeKeys = new Set(Object.keys(profiles.screenTypes))
+const blockRoleKeys = new Set(Object.keys(profiles.blockRoles))
+
+function referentialErrors(facets) {
+  const errs = []
+  if (facets.screenType && !screenTypeKeys.has(facets.screenType)) {
+    errs.push(`screenType "${facets.screenType}" has no canonical profile`)
+  }
+  const roles = [
+    ...(facets.blockRole ? [facets.blockRole] : []),
+    ...(facets.blockRoles ?? []),
+    ...(facets.composition?.requiredBlocks ?? []),
+    ...(facets.composition?.optionalBlocks ?? []),
+  ]
+  for (const r of roles) {
+    if (!blockRoleKeys.has(r)) errs.push(`blockRole "${r}" has no canonical profile`)
+  }
+  return errs
+}
 
 let files
 try {
@@ -33,6 +57,19 @@ if (files.length === 0) {
   process.exit(1)
 }
 
+// Inventory-first policy: collect which blockRoles have standalone block-pattern
+// items, so screen-pattern requiredBlocks can be checked against real inventory.
+const items = files.map((f) => ({
+  f,
+  item: JSON.parse(readFileSync(join(REGISTRY_DIR, f), 'utf8')),
+}))
+const stockedRoles = new Set(
+  items
+    .map(({ item }) => item?.meta?.aiDesignSystem)
+    .filter((m) => m?.assetKind === 'block-pattern' && m.blockRole)
+    .map((m) => m.blockRole),
+)
+
 let failed = 0
 for (const f of files) {
   const item = JSON.parse(readFileSync(join(REGISTRY_DIR, f), 'utf8'))
@@ -42,14 +79,28 @@ for (const f of files) {
     failed++
     continue
   }
-  if (validate(facets)) {
+  const schemaOk = validate(facets)
+  const refErrs = referentialErrors(facets)
+  // Inventory-first: a screen pattern's required roles must each be stocked as
+  // a standalone block-pattern item, or step 4 of the selection layer starves.
+  if (facets.assetKind === 'screen-pattern') {
+    for (const r of facets.composition?.requiredBlocks ?? []) {
+      if (!stockedRoles.has(r)) {
+        refErrs.push(`requiredBlocks "${r}" has no standalone block-pattern item in the registry`)
+      }
+    }
+  }
+  if (schemaOk && refErrs.length === 0) {
     console.log(`✓ ${f}: valid (${facets.assetKind}, maturity=${facets.maturity})`)
   } else {
     failed++
     console.error(`✗ ${f}: INVALID`)
-    for (const err of validate.errors) {
-      console.error(`    ${err.instancePath || '(root)'} ${err.message}`)
+    if (!schemaOk) {
+      for (const err of validate.errors) {
+        console.error(`    ${err.instancePath || '(root)'} ${err.message}`)
+      }
     }
+    for (const e of refErrs) console.error(`    ${e}`)
   }
 }
 

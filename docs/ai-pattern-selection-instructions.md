@@ -48,7 +48,23 @@ Facet vocabularies are defined in `docs/ai-design-facets.schema.json`. Canonical
    step in `unresolved` with the tied candidates and escalate; do not guess.
 2. **Retrieve and score screen patterns.** Filter `screen-pattern` items by resolved `screenType`, then `userIntents`, then `dataShapes`. Drop items with missing `registryDependencies`, declared incompatibilities, or insufficient `requiredStates` coverage. Score 0-100: Intent 25 / DataShape 15 / Interaction 15 / State 15 / A11y 10 / Dependency 10 / Evidence 10. Reject below 70. Take the top candidate and keep rejected alternatives.
 3. **Read required block roles.** Read roles from the chosen screen pattern's `composition.requiredBlocks`. These are structural; do not derive them directly from raw facets. Add `optionalBlocks` only when a step facet clearly calls for one, such as `filter` intent -> `filter-toolbar`.
-4. **Select a block pattern per role.** Retrieve `block-pattern` candidates by `blockRole` and score with the same rubric as step 2. Reject below 70. Take the top candidate for each role.
+4. **Select a block pattern per role.**
+   - Retrieve `block-pattern` candidates by `blockRole`.
+   - **Role-fit scoring.** Do not score block candidates against the step's content facets —
+     a block's vocation is defined by its role, not by the page's overall intent (a header
+     block never shares a monitoring step's intents). Score each candidate against the
+     role's canonical profile using consistency coverage `K_x = |item.x ∩ roleProfile.x| /
+     |item.x|` (an item narrower than its role is fine; off-role claims are penalized):
+     intents `25*K_intent` + dataShapes `15*K_shape` + interactions `15*K_interaction`,
+     plus step-driven components: required-state coverage (15), accessibility (10),
+     dependency fit (10), evidence (10). Reject below 70. Take the top candidate per role.
+   - **Shell hard filter.** For `app-shell-*` roles, additionally require `layoutModel.shell`
+     compatibility with the chosen screen pattern, honor `incompatibleWith`, and select at
+     most one shell per screen.
+   - **Inventory-first policy.** Screen patterns are composition skeletons, not bundles:
+     every required role resolves to a standalone `block-pattern` item (this invariant is
+     enforced by `npm run validate:facets`). An imported monolithic block must be decomposed
+     into block items before promotion beyond `experimental`.
 5. **Stop at block level.** List each selected item's `registryDependencies` as information only. Do not select individual components.
 
 ## Selection Rules

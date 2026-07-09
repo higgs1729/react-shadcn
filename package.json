@@ -13,7 +13,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "validate:facets": "node scripts/validate-facets.mjs",
-    "validate:profiles": "node scripts/validate-profiles.mjs"
+    "validate:profiles": "node scripts/validate-profiles.mjs",
+    "validate": "npm run validate:profiles && npm run validate:facets && npm run validate:specs",
+    "validate:specs": "node scripts/validate-spec.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

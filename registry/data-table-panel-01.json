@@ -1,0 +1,114 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "data-table-panel-01",
+  "type": "registry:block",
+  "title": "Data Table Panel 01",
+  "description": "A sortable, selectable data table with drag-reorder, tabs, and a row inspector drawer (extracted from dashboard-01).",
+  "categories": ["block:data-display", "role:data-table-panel"],
+  "registryDependencies": [
+    "table",
+    "tabs",
+    "badge",
+    "button",
+    "checkbox",
+    "drawer",
+    "dropdown-menu",
+    "input",
+    "label",
+    "select",
+    "separator",
+    "toggle-group"
+  ],
+  "files": [
+    {
+      "path": "components/data-table.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "official-shadcn",
+      "blockRole": "data-table-panel",
+      "userIntents": ["browse", "filter", "compare", "edit"],
+      "dataShapes": ["collection"],
+      "interactionModels": [
+        "filter-sort",
+        "selection-multiple",
+        "inline-edit",
+        "drag-drop",
+        "drawer-inspection"
+      ],
+      "layoutModel": {
+        "region": "main",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "high",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Row selection and menus keyboard-operable via shadcn primitives; drag-reorder has no keyboard alternative yet. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": [
+          "table",
+          "tabs",
+          "badge",
+          "button",
+          "checkbox",
+          "drawer",
+          "dropdown-menu",
+          "input",
+          "label",
+          "select",
+          "separator",
+          "toggle-group"
+        ],
+        "npm": [
+          "@tanstack/react-table",
+          "@dnd-kit/core",
+          "@dnd-kit/modifiers",
+          "@dnd-kit/sortable",
+          "@dnd-kit/utilities",
+          "zod",
+          "lucide-react"
+        ],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": ["filter-toolbar", "drawer-inspector"],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": [],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "high",
+        "verifiedAt": "2026-07-08",
+        "sourceUrls": [
+          "https://ui.shadcn.com/blocks",
+          "https://ui.shadcn.com/docs/registry/registry-item-json"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "missingStates": ["loading", "empty", "error", "permission-denied"],
+        "notes": "Table data comes from a static JSON prop; drag-reorder lacks keyboard support; no loading/empty/error variants."
+      },
+      "extensions": {
+        "localEvidence": ["components/data-table.tsx"],
+        "extractedFrom": "dashboard-01"
+      }
+    }
+  }
+}
