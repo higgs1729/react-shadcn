@@ -1,0 +1,2 @@
+task-06 を executor に委任してください（手順書は自己完結です）。
+完了報告が来たら、私が ステップC（FlowSpec再選定 → 3画面SelectionSpec発行 → executorに task-02〜05 スクリプト再実行を委任 → unresolved ゼロの BuildReport）を進めます。
