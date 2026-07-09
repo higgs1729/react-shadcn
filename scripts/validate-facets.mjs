@@ -9,8 +9,8 @@ import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 
 const ROOT = process.cwd()
-const SCHEMA_PATH = join(ROOT, 'docs', 'ai-design-facets.schema.json')
-const PROFILES_PATH = join(ROOT, 'docs', 'ai-canonical-profiles.json')
+const SCHEMA_PATH = join(ROOT, 'docs', 'contracts', 'ai-design-facets.schema.json')
+const PROFILES_PATH = join(ROOT, 'docs', 'layers', '20-selection', 'ai-canonical-profiles.json')
 const REGISTRY_DIR = join(ROOT, 'registry')
 
 const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'))

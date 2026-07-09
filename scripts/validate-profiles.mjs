@@ -15,9 +15,9 @@ import addFormats from 'ajv-formats'
 
 const read = (p) => JSON.parse(readFileSync(join(process.cwd(), 'docs', p), 'utf8'))
 
-const facetsSchema = read('ai-design-facets.schema.json')
-const profilesSchema = read('ai-canonical-profiles.schema.json')
-const profiles = read('ai-canonical-profiles.json')
+const facetsSchema = read('contracts/ai-design-facets.schema.json')
+const profilesSchema = read('contracts/ai-canonical-profiles.schema.json')
+const profiles = read('layers/20-selection/ai-canonical-profiles.json')
 
 const errors = []
 

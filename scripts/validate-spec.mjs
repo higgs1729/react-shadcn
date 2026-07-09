@@ -16,9 +16,9 @@ const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'))
 // registers under http:// only.
 const ajv = new Ajv({ allErrors: true, strict: false, validateSchema: false })
 addFormats(ajv)
-ajv.addSchema(readJson(join(ROOT, 'docs', 'ai-design-facets.schema.json')))
-const validateFlow = ajv.compile(readJson(join(ROOT, 'docs', 'ai-flowspec.schema.json')))
-const validateSelection = ajv.compile(readJson(join(ROOT, 'docs', 'ai-selectionspec.schema.json')))
+ajv.addSchema(readJson(join(ROOT, 'docs', 'contracts', 'ai-design-facets.schema.json')))
+const validateFlow = ajv.compile(readJson(join(ROOT, 'docs', 'contracts', 'ai-flowspec.schema.json')))
+const validateSelection = ajv.compile(readJson(join(ROOT, 'docs', 'contracts', 'ai-selectionspec.schema.json')))
 
 let targets = process.argv.slice(2)
 if (targets.length === 0) {
