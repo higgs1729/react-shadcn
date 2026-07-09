@@ -7,7 +7,7 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   render: () => (
-    <TooltipProvider><Tooltip><TooltipTrigger asChild><Button variant="outline">Hover me</Button></TooltipTrigger><TooltipContent>Add to library</TooltipContent></Tooltip></TooltipProvider>
+    <TooltipProvider><Tooltip><TooltipTrigger render={<Button variant="outline">Hover me</Button>} /><TooltipContent>Add to library</TooltipContent></Tooltip></TooltipProvider>
   ),
 } satisfies Meta
 

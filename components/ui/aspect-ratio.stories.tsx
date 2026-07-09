@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import * as UI from '@/components/ui/aspect-ratio'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 
 const meta = {
   title: 'Components/Layout & Navigation/Aspect Ratio',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   render: () => (
-    <UI.AspectRatio />
+    <div className="w-80"><AspectRatio ratio={16 / 9} className="flex items-center justify-center rounded-md bg-muted text-sm">16 : 9</AspectRatio></div>
   ),
 } satisfies Meta
 

@@ -7,7 +7,7 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   render: () => (
-    <Popover><PopoverTrigger asChild><Button variant="outline">Open</Button></PopoverTrigger><PopoverContent>Popover content.</PopoverContent></Popover>
+    <Popover><PopoverTrigger render={<Button variant="outline">Open</Button>} /><PopoverContent>Popover content.</PopoverContent></Popover>
   ),
 } satisfies Meta
 

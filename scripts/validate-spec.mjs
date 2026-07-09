@@ -11,7 +11,8 @@ import addFormats from 'ajv-formats'
 import { readDoc } from './lib/paths.mjs'
 
 const ROOT = process.cwd()
-const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'))
+// BOM-tolerant: files written by Windows tools may carry a UTF-8 BOM.
+const readJson = (p) => JSON.parse(readFileSync(p, 'utf8').replace(/^﻿/, ''))
 
 // validateSchema: false — schemas declare draft-07 via https:// which ajv
 // registers under http:// only.
@@ -23,7 +24,11 @@ const validateSelection = ajv.compile(readDoc('ai-selectionspec.schema.json'))
 const validateBuildReport = ajv.compile(readDoc('ai-buildreport.schema.json'))
 
 let targets = process.argv.slice(2)
-if (targets.length === 0) {
+// In directory-scan mode, JSON files that are not contract documents (e.g. the
+// run-checks scratch output {checks, passed}) are skipped instead of failing;
+// explicitly passed files are always validated strictly.
+const scanMode = targets.length === 0
+if (scanMode) {
   const dir = join(ROOT, 'docs', 'examples')
   targets = existsSync(dir)
     ? readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => join(dir, f))
@@ -44,9 +49,21 @@ for (const t of targets) {
     failed++
     continue
   }
-  const kind = doc.steps ? 'FlowSpec' : doc.checks ? 'BuildReport' : doc.screens ? 'SelectionSpec' : null
+  // BuildReport requires flowId as well, so the run-checks scratch output
+  // ({checks, passed} without flowId) is not misclassified.
+  const kind = doc.steps
+    ? 'FlowSpec'
+    : doc.checks && doc.flowId
+      ? 'BuildReport'
+      : doc.screens
+        ? 'SelectionSpec'
+        : null
   if (!kind) {
-    console.error(`✗ ${t}: neither FlowSpec (steps), BuildReport (checks), nor SelectionSpec (screens)`)
+    if (scanMode) {
+      console.log(`- ${t}: skipped (not a contract document)`)
+      continue
+    }
+    console.error(`✗ ${t}: neither FlowSpec (steps), BuildReport (flowId+checks), nor SelectionSpec (screens)`)
     failed++
     continue
   }

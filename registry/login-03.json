@@ -51,7 +51,7 @@
         "incompatibleWith": ["app-shell-sidebar", "app-shell-topnav", "data-table-panel"]
       },
       "verification": {
-        "storybookStories": [],
+        "storybookStories": ["patterns-auth-login-03--default"],
         "interactionTests": false,
         "accessibilityTests": false,
         "visualSnapshots": false,

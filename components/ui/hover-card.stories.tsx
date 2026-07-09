@@ -7,7 +7,7 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   render: () => (
-    <HoverCard><HoverCardTrigger asChild><Button variant="link">@shadcn</Button></HoverCardTrigger><HoverCardContent>The React framework catalog.</HoverCardContent></HoverCard>
+    <HoverCard><HoverCardTrigger render={<Button variant="link">@shadcn</Button>} /><HoverCardContent>The React framework catalog.</HoverCardContent></HoverCard>
   ),
 } satisfies Meta
 

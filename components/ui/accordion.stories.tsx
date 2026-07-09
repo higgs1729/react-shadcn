@@ -6,7 +6,7 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   render: () => (
-    <Accordion type="single" className="w-80"><AccordionItem value="item-1"><AccordionTrigger>Is it accessible?</AccordionTrigger><AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent></AccordionItem></Accordion>
+    <Accordion className="w-80"><AccordionItem value="item-1"><AccordionTrigger>Is it accessible?</AccordionTrigger><AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent></AccordionItem></Accordion>
   ),
 } satisfies Meta
 

@@ -45,7 +45,7 @@
         "incompatibleWith": []
       },
       "verification": {
-        "storybookStories": [],
+        "storybookStories": ["blocks-form-section-form-section-login-01--default"],
         "interactionTests": false,
         "accessibilityTests": false,
         "visualSnapshots": false,

@@ -45,7 +45,7 @@
         "incompatibleWith": []
       },
       "verification": {
-        "storybookStories": [],
+        "storybookStories": ["blocks-chart-panel-chart-panel-01--default"],
         "interactionTests": false,
         "accessibilityTests": false,
         "visualSnapshots": false,

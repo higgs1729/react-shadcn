@@ -103,11 +103,11 @@ const OVERRIDES = {
   },
   accordion: {
     imports: `import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'`,
-    render: `<Accordion type="single" className="w-80"><AccordionItem value="item-1"><AccordionTrigger>Is it accessible?</AccordionTrigger><AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent></AccordionItem></Accordion>`,
+    render: `<Accordion className="w-80"><AccordionItem value="item-1"><AccordionTrigger>Is it accessible?</AccordionTrigger><AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent></AccordionItem></Accordion>`,
   },
   tooltip: {
     imports: `import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'\nimport { Button } from '@/components/ui/button'`,
-    render: `<TooltipProvider><Tooltip><TooltipTrigger asChild><Button variant="outline">Hover me</Button></TooltipTrigger><TooltipContent>Add to library</TooltipContent></Tooltip></TooltipProvider>`,
+    render: `<TooltipProvider><Tooltip><TooltipTrigger render={<Button variant="outline">Hover me</Button>} /><TooltipContent>Add to library</TooltipContent></Tooltip></TooltipProvider>`,
   },
   'radio-group': {
     imports: `import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'\nimport { Label } from '@/components/ui/label'`,
@@ -119,7 +119,7 @@ const OVERRIDES = {
   },
   'toggle-group': {
     imports: `import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'`,
-    render: `<ToggleGroup type="single"><ToggleGroupItem value="a">A</ToggleGroupItem><ToggleGroupItem value="b">B</ToggleGroupItem><ToggleGroupItem value="c">C</ToggleGroupItem></ToggleGroup>`,
+    render: `<ToggleGroup><ToggleGroupItem value="a">A</ToggleGroupItem><ToggleGroupItem value="b">B</ToggleGroupItem><ToggleGroupItem value="c">C</ToggleGroupItem></ToggleGroup>`,
   },
   breadcrumb: {
     imports: `import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'`,
@@ -147,11 +147,15 @@ const OVERRIDES = {
   },
   popover: {
     imports: `import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'\nimport { Button } from '@/components/ui/button'`,
-    render: `<Popover><PopoverTrigger asChild><Button variant="outline">Open</Button></PopoverTrigger><PopoverContent>Popover content.</PopoverContent></Popover>`,
+    render: `<Popover><PopoverTrigger render={<Button variant="outline">Open</Button>} /><PopoverContent>Popover content.</PopoverContent></Popover>`,
   },
   'hover-card': {
     imports: `import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'\nimport { Button } from '@/components/ui/button'`,
-    render: `<HoverCard><HoverCardTrigger asChild><Button variant="link">@shadcn</Button></HoverCardTrigger><HoverCardContent>The React framework catalog.</HoverCardContent></HoverCard>`,
+    render: `<HoverCard><HoverCardTrigger render={<Button variant="link">@shadcn</Button>} /><HoverCardContent>The React framework catalog.</HoverCardContent></HoverCard>`,
+  },
+  'aspect-ratio': {
+    imports: `import { AspectRatio } from '@/components/ui/aspect-ratio'`,
+    render: `<div className="w-80"><AspectRatio ratio={16 / 9} className="flex items-center justify-center rounded-md bg-muted text-sm">16 : 9</AspectRatio></div>`,
   },
   'button-group': {
     imports: `import { ButtonGroup } from '@/components/ui/button-group'\nimport { Button } from '@/components/ui/button'`,

@@ -16,7 +16,10 @@
     "validate:profiles": "node scripts/validate-profiles.mjs",
     "validate": "npm run validate:profiles && npm run validate:facets && npm run validate:specs",
     "validate:specs": "node scripts/validate-spec.mjs",
-    "install:selection": "node scripts/install-selection.mjs"
+    "install:selection": "node scripts/install-selection.mjs",
+    "gen:pattern-stories": "node scripts/gen-pattern-stories.mjs",
+    "checks": "node scripts/run-checks.mjs",
+    "validate:spec": "node scripts/validate-spec.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

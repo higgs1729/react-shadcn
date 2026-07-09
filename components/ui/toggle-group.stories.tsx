@@ -6,7 +6,7 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   render: () => (
-    <ToggleGroup type="single"><ToggleGroupItem value="a">A</ToggleGroupItem><ToggleGroupItem value="b">B</ToggleGroupItem><ToggleGroupItem value="c">C</ToggleGroupItem></ToggleGroup>
+    <ToggleGroup><ToggleGroupItem value="a">A</ToggleGroupItem><ToggleGroupItem value="b">B</ToggleGroupItem><ToggleGroupItem value="c">C</ToggleGroupItem></ToggleGroup>
   ),
 } satisfies Meta
 

@@ -85,7 +85,7 @@
         "incompatibleWith": []
       },
       "verification": {
-        "storybookStories": [],
+        "storybookStories": ["blocks-data-table-panel-data-table-panel-01--default"],
         "interactionTests": false,
         "accessibilityTests": false,
         "visualSnapshots": false,

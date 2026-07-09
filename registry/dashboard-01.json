@@ -142,7 +142,7 @@
         "incompatibleWith": ["app-shell-topnav"]
       },
       "verification": {
-        "storybookStories": [],
+        "storybookStories": ["patterns-dashboard-dashboard-01--default"],
         "interactionTests": false,
         "accessibilityTests": false,
         "visualSnapshots": false,
