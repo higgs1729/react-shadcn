@@ -1,0 +1,17 @@
+[
+  { "id": "INV-1001", "customer": "Northwind Traders", "amount": 1234.50, "status": "paid", "date": "2026-06-01" },
+  { "id": "INV-1002", "customer": "Contoso Ltd", "amount": 892.00, "status": "pending", "date": "2026-06-03" },
+  { "id": "INV-1003", "customer": "Fabrikam Inc", "amount": 4521.75, "status": "overdue", "date": "2026-05-20" },
+  { "id": "INV-1004", "customer": "Adventure Works", "amount": 310.20, "status": "paid", "date": "2026-06-05" },
+  { "id": "INV-1005", "customer": "Tailspin Toys", "amount": 1580.00, "status": "pending", "date": "2026-06-10" },
+  { "id": "INV-1006", "customer": "Wingtip Toys", "amount": 725.40, "status": "paid", "date": "2026-06-12" },
+  { "id": "INV-1007", "customer": "Northwind Traders", "amount": 210.00, "status": "overdue", "date": "2026-05-28" },
+  { "id": "INV-1008", "customer": "Litware Inc", "amount": 3300.99, "status": "paid", "date": "2026-06-15" },
+  { "id": "INV-1009", "customer": "Contoso Ltd", "amount": 640.10, "status": "pending", "date": "2026-06-18" },
+  { "id": "INV-1010", "customer": "Proseware Inc", "amount": 990.00, "status": "paid", "date": "2026-06-20" },
+  { "id": "INV-1011", "customer": "Fabrikam Inc", "amount": 1755.25, "status": "overdue", "date": "2026-06-02" },
+  { "id": "INV-1012", "customer": "Adventure Works", "amount": 480.00, "status": "pending", "date": "2026-06-22" },
+  { "id": "INV-1013", "customer": "Wingtip Toys", "amount": 2200.00, "status": "paid", "date": "2026-06-24" },
+  { "id": "INV-1014", "customer": "Litware Inc", "amount": 150.75, "status": "overdue", "date": "2026-06-06" },
+  { "id": "INV-1015", "customer": "Proseware Inc", "amount": 675.60, "status": "pending", "date": "2026-06-26" }
+]

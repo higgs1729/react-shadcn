@@ -1,0 +1,97 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "collection-table-01",
+  "type": "registry:block",
+  "title": "Collection Table 01",
+  "description": "A collection screen composition: sidebar shell, header, filter toolbar, and a searchable/filterable invoice table with table/grid views and full loading/empty/error state coverage.",
+  "categories": ["screen:collection", "intent:browse", "density:high"],
+  "registryDependencies": ["sidebar", "input-group", "select", "toggle-group", "button", "table", "checkbox", "card", "empty", "alert", "skeleton"],
+  "files": [
+    {
+      "path": "app/collection-01/page.tsx",
+      "type": "registry:page",
+      "target": "app/collection-01/page.tsx"
+    },
+    {
+      "path": "app/collection-01/collection-screen.tsx",
+      "type": "registry:component",
+      "target": "app/collection-01/collection-screen.tsx"
+    },
+    {
+      "path": "app/collection-01/data.json",
+      "type": "registry:file",
+      "target": "app/collection-01/data.json"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "screen-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "screenType": "collection",
+      "blockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "data-table-panel"],
+      "userIntents": ["browse", "search", "filter"],
+      "jobMapStages": ["locate"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["filter-sort", "selection-multiple", "disclosure"],
+      "layoutModel": {
+        "shell": "sidebar",
+        "region": "full-page",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "high",
+      "stateCoverage": ["default", "loading", "empty", "error", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Keyboard/focus behavior inherited from shadcn/base-ui primitives (table, select, toggle-group, checkbox). Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["sidebar", "input-group", "select", "toggle-group", "button", "table", "checkbox", "card", "empty", "alert", "skeleton"],
+        "npm": ["lucide-react"],
+        "registries": ["sidebar-07", "page-header-actions-01", "filter-toolbar-01", "data-table-panel-01"]
+      },
+      "composition": {
+        "requiredBlocks": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "data-table-panel"],
+        "optionalBlocks": ["tabs-view-switcher", "collection-grid", "empty-state", "loading-skeleton", "drawer-inspector", "modal-dialog"],
+        "incompatibleWith": ["app-shell-topnav"]
+      },
+      "verification": {
+        "storybookStories": [
+          "patterns-collection-collection-table-01--default",
+          "patterns-collection-collection-table-01--loading",
+          "patterns-collection-collection-table-01--empty",
+          "patterns-collection-collection-table-01--error"
+        ],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-11",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Sample data is a static JSON fixture (app/collection-01/data.json); loading/empty/error states are simulated via the ?state= query param, not real network conditions."
+      },
+      "extensions": {
+        "localEvidence": [
+          "app/collection-01/page.tsx",
+          "app/collection-01/collection-screen.tsx",
+          "app/collection-01/data.json",
+          "components/filter-toolbar.tsx"
+        ]
+      }
+    }
+  }
+}

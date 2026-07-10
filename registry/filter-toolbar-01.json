@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "filter-toolbar-01",
+  "type": "registry:block",
+  "title": "Filter Toolbar 01",
+  "description": "A presentational, controlled filter toolbar with search, status select, and a table/grid view switcher.",
+  "categories": ["block:filter", "role:filter-toolbar"],
+  "registryDependencies": ["input-group", "select", "toggle-group", "button"],
+  "files": [
+    {
+      "path": "components/filter-toolbar.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "filter-toolbar",
+      "userIntents": ["filter", "search"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["filter-sort"],
+      "layoutModel": {
+        "region": "header"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Search input and both view-switcher toggles carry aria-label; keyboard operability comes from the underlying shadcn/base-ui primitives. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["input-group", "select", "toggle-group", "button"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-filter-toolbar-filter-toolbar-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-11",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or persistence."
+      },
+      "extensions": {
+        "localEvidence": ["components/filter-toolbar.tsx"]
+      }
+    }
+  }
+}
