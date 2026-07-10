@@ -1,0 +1,72 @@
+{
+  "$comment": "Implementation-layer BuildReport for dryrun-saas-ops-01, produced by re-executing task-02 through task-05 against docs/examples/selectionspec-dryrun-02.json (which resolves invoice-list to collection-table-01 following task-06's inventory addition). login and overview are unchanged from buildreport-dryrun-saas-ops-01.json; invoice-list is now built.",
+  "flowId": "dryrun-saas-ops-01",
+  "generatedAt": "2026-07-11",
+  "screens": [
+    {
+      "stepId": "login",
+      "route": "/flows/dryrun-saas-ops-01/login",
+      "status": "built",
+      "filesCreated": [
+        "app/flows/dryrun-saas-ops-01/page.tsx",
+        "app/flows/dryrun-saas-ops-01/login/page.tsx",
+        "components/patterns/form-section-login-01.stories.tsx",
+        "components/patterns/login-03-screen.stories.tsx"
+      ],
+      "storiesCreated": [
+        "blocks-form-section-form-section-login-01--default",
+        "patterns-auth-login-03--default"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "overview",
+      "route": "/flows/dryrun-saas-ops-01/overview",
+      "status": "built",
+      "filesCreated": [
+        "app/flows/dryrun-saas-ops-01/overview/page.tsx",
+        "components/patterns/sidebar-07.stories.tsx",
+        "components/patterns/page-header-actions-01.stories.tsx",
+        "components/patterns/summary-metric-row-01.stories.tsx",
+        "components/patterns/chart-panel-01.stories.tsx",
+        "components/patterns/data-table-panel-01.stories.tsx",
+        "components/patterns/dashboard-01-screen.stories.tsx"
+      ],
+      "storiesCreated": [
+        "blocks-app-shell-sidebar-sidebar-07--default",
+        "blocks-page-header-actions-page-header-actions-01--default",
+        "blocks-summary-metric-row-summary-metric-row-01--default",
+        "blocks-chart-panel-chart-panel-01--default",
+        "blocks-data-table-panel-data-table-panel-01--default",
+        "patterns-dashboard-dashboard-01--default"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "invoice-list",
+      "route": "/flows/dryrun-saas-ops-01/invoice-list",
+      "status": "built",
+      "filesCreated": [
+        "app/flows/dryrun-saas-ops-01/invoice-list/page.tsx"
+      ],
+      "storiesCreated": [
+        "patterns-collection-collection-table-01--default",
+        "patterns-collection-collection-table-01--loading",
+        "patterns-collection-collection-table-01--empty",
+        "patterns-collection-collection-table-01--error",
+        "blocks-filter-toolbar-filter-toolbar-01--default"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "pass", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "pass", "attempts": 1 }
+  ],
+  "iterations": 1,
+  "status": "verified",
+  "unresolved": []
+}

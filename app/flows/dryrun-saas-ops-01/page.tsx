@@ -11,6 +11,9 @@ export default function FlowIndexPage() {
         <Link href="/flows/dryrun-saas-ops-01/overview" className="underline underline-offset-4">
           2. overview
         </Link>
+        <Link href="/flows/dryrun-saas-ops-01/invoice-list" className="underline underline-offset-4">
+          3. invoice-list
+        </Link>
       </nav>
     </div>
   )

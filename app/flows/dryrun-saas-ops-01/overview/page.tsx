@@ -27,7 +27,7 @@ export default function OverviewPage() {
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
-              {/* transition: overview.onRowSelect -> invoice-list (unresolved) */}
+              {/* transition: overview.onRowSelect -> /flows/dryrun-saas-ops-01/invoice-list */}
               <DataTable data={data} />
             </div>
           </div>
