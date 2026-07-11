@@ -80,3 +80,5 @@ an unhandled native form submit, which navigates and kills the test).
 ## BuildReport Emission
 
 Write the result to `docs/examples/buildreport-<flowId>.json` and validate it with `npm run validate:spec -- docs/examples/buildreport-<flowId>.json`.
+
+Then run `npm run validate:pipeline` (cross-artifact invariants over FlowSpec + SelectionSpec + this BuildReport; pass `--flow/--spec/--build` if the filenames differ from the defaults). Both must exit 0 before the BuildReport is considered emitted.

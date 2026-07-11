@@ -28,3 +28,5 @@
 - 新 screenType の在庫追加
 - maturity 昇格レビュー(人間レビュー)
 - 上流 Flow 層(brief→JTBD→FlowSpec)の自動化
+- 20-selection / 30-implementation 各層専用サブエージェントの定義
+  (brief 側で読むファイル一覧を渡す運用もこの時に整備)

@@ -4,31 +4,9 @@ Select screen patterns and block patterns for an already-decided flow. Input is 
 
 ## Input: FlowSpec
 
-The flow is already decided. Each step represents one screen and carries only facet signals. `screenType` is not provided; resolve it in step 1.
+The flow is already decided (schema: `docs/contracts/`; worked example: `docs/examples/flowspec-*.json`). Each step represents one screen and carries only facet signals — `stepId`, `userIntents`, `jobMapStages`, `dataShapes`, `interactionModels`, `density`, `requiredStates`, `accessibilityConstraints`, `visualTone`, `transitions`. `screenType` is not provided; resolve it in step 1.
 
-```jsonc
-{
-  "flowId": "invoice-management",
-  "flowArchetype": "crud",
-  "steps": [
-    {
-      "stepId": "list",
-      "order": 1,
-      "userIntents": ["browse", "filter"],
-      "jobMapStages": ["locate"],
-      "dataShapes": ["collection"],
-      "interactionModels": ["filter-sort", "selection-multiple"],
-      "density": "high",
-      "requiredStates": ["default", "loading", "empty", "error"],
-      "accessibilityConstraints": { "keyboard": true, "apgPattern": "grid" },
-      "visualTone": ["enterprise"],
-      "transitions": { "onSelect": "detail" }
-    }
-  ]
-}
-```
-
-Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical screen profiles in `ai-canonical-profiles.json` (both located by filename under `docs/`; validated by `npm run validate:profiles`). Reject any value outside those enums. If a facet is missing, infer conservatively from the other facets and record the assumption in the output.
+Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical screen profiles in `ai-canonical-profiles.json` (both located by filename under `docs/`). Reject any value outside those enums. If a facet is missing, infer conservatively from the other facets and record the assumption in the output.
 
 ## Procedure Per Step
 
@@ -104,11 +82,6 @@ Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical s
           "blockRole": "filter-toolbar",
           "registryItem": "filter-toolbar-02",
           "score": 91
-        },
-        {
-          "blockRole": "data-table-panel",
-          "registryItem": "data-table-panel-01",
-          "score": 85
         }
       ],
       "registryDependencies": ["sidebar", "table", "checkbox", "button", "input", "select"],
@@ -123,8 +96,13 @@ Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical s
 ```
 
 - `registryDependencies` is the informational union of dependencies declared by selected items.
-- `checksPlanned` records checks that should run later. Do not run them in this layer.
+- `checksPlanned` records check IDs that should run later (registry: `scripts/lib/check-registry.mjs`). Do not run them in this layer.
 - `unresolved` holds steps with no candidate above 70, an unbroken tie, or missing dependencies. Escalate these; do not force a low-confidence pick.
+
+Write the result to `docs/examples/selectionspec-<flowId>.json` and validate it with
+`npm run validate:spec -- <file>` (must exit 0 before handoff). Cross-artifact validation
+(`npm run validate:pipeline`) runs only after the implementation layer emits a BuildReport,
+not here.
 
 ## Self-Review Before Emitting
 
@@ -137,15 +115,8 @@ Before emitting, verify all of the following:
 - Rejected alternatives and assumptions are recorded.
 - Every `requiredStates` value is present in `stateCoveragePlan`, or listed as a risk.
 
-## Self-Review Failure Loop
-
-If any self-review item fails, do not emit that `SelectionSpec`. Run this loop:
-
-1. List the failed checks internally as `reviewFailures`.
-2. Fix correctable failures by retrieving candidates again, recalculating scores, rereading block roles, or adding missing `assumptions`, `risks`, and rejected alternatives.
-3. After fixing, rerun Self-Review Before Emitting from the beginning.
-4. Repeat improvement and review until every check succeeds.
-5. If a failure cannot be fixed inside this selection layer, such as missing candidates, an unbroken tie, or missing dependencies, move the affected step to `unresolved`, record the reason, and rerun self-review.
-6. Emit only a `SelectionSpec` that has passed self-review.
-
-This loop does not run implementation-layer checks. It only improves selection-layer output consistency until self-review succeeds.
+If any self-review item fails, do not emit: fix correctable failures (re-retrieve candidates,
+recalculate scores, reread block roles, add missing `assumptions`/`risks`/rejected alternatives)
+and rerun the full self-review. Failures unfixable in this layer (missing candidates, unbroken
+tie, missing dependencies) move the step to `unresolved` with the reason. Emit only after every
+check passes. This loop never runs implementation-layer checks.

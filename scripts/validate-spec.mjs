@@ -3,7 +3,7 @@
 // `screens` -> SelectionSpec.
 //
 // Run: npm run validate:spec -- <file.json> [more.json ...]
-//      npm run validate:specs   (validates everything under docs/examples/)
+//      npm run validate:spec    (no args: validates everything under docs/examples/)
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { createContractAjv, getContractValidator, registerContractSchemas } from './lib/ajv.mjs'
