@@ -43,23 +43,29 @@ test.describe("golden flow: dryrun-saas-ops-01", () => {
     await expect(page.getByLabel("Search")).toBeVisible()
   })
 
-  // PENDING: docs/examples/selectionspec-dryrun-02.json declares
-  // stateCoveragePlan ["default", "loading", "empty", "error"] for invoice-list,
-  // and app/collection-01/collection-screen.tsx's CollectionTableScreen accepts
-  // a `state` prop implementing all four (loading skeleton / Empty block / Alert
-  // block / populated table). BUT app/flows/dryrun-saas-ops-01/invoice-list/page.tsx
-  // hardcodes `state="default"` and does not read a `?state=` query param (or any
-  // other route-level switch), so the loading/empty/error states are NOT reachable
-  // through the golden route today. This is a route-composition gap (task-03
-  // territory), not a test gap: there is nothing at this URL for a smoke test to
-  // assert against. Once the route wires `?state=` (or equivalent) through to
-  // CollectionTableScreen, replace this fixme with three real navigation assertions
-  // (?state=loading / ?state=empty / ?state=error), each checking the state-specific
-  // landmark (skeleton rows / Empty block copy / Alert block copy).
-  test.fixme(
-    "invoice-list route exposes loading/empty/error states",
-    async () => {
-      // Intentionally left unimplemented; see the comment above.
-    },
-  )
+  // invoice-list's stateCoveragePlan (default/loading/empty/error) is reachable
+  // through the route via `?state=` (app/flows/dryrun-saas-ops-01/invoice-list/
+  // page.tsx). Each state renders a distinct landmark from CollectionTableScreen.
+  test("invoice-list route exposes the empty state", async ({ page }) => {
+    const response = await page.goto("/flows/dryrun-saas-ops-01/invoice-list?state=empty")
+    expect(response?.ok(), "expected a successful navigation response").toBeTruthy()
+    await expect(page.getByText("No invoices found")).toBeVisible()
+    await expect(page.getByRole("button", { name: "Clear filters" })).toBeVisible()
+  })
+
+  test("invoice-list route exposes the error state", async ({ page }) => {
+    const response = await page.goto("/flows/dryrun-saas-ops-01/invoice-list?state=error")
+    expect(response?.ok(), "expected a successful navigation response").toBeTruthy()
+    await expect(page.getByText("Couldn't load invoices")).toBeVisible()
+    await expect(page.getByRole("button", { name: "Retry" })).toBeVisible()
+  })
+
+  test("invoice-list route exposes the loading state", async ({ page }) => {
+    const response = await page.goto("/flows/dryrun-saas-ops-01/invoice-list?state=loading")
+    expect(response?.ok(), "expected a successful navigation response").toBeTruthy()
+    // The loading state swaps the populated table body for skeleton rows; the
+    // filter toolbar's search input stays mounted as the route-specific landmark.
+    await expect(page.getByLabel("Search")).toBeVisible()
+    await expect(page.getByRole("cell", { name: /\$/ })).toHaveCount(0)
+  })
 })

@@ -72,11 +72,11 @@ per-screen; `smoke` should stay off `checksPlanned` until it clears its stabilit
 - **invoice-list states**: `docs/examples/selectionspec-dryrun-02.json` plans
   `stateCoveragePlan: ["default", "loading", "empty", "error"]` for invoice-list, and
   `app/collection-01/collection-screen.tsx`'s `CollectionTableScreen` implements all four via a
-  `state` prop. But `app/flows/dryrun-saas-ops-01/invoice-list/page.tsx` hardcodes
-  `state="default"` and does not read a `?state=` query param or any other route-level switch -
-  loading/empty/error are not reachable through the golden route today. The suite documents this
-  gap with a `test.fixme(...)` (not a silent skip) instead of asserting against a URL that cannot
-  reach those states; wiring `?state=` through the route is task-03 territory, out of scope here.
+  `state` prop. `app/flows/dryrun-saas-ops-01/invoice-list/page.tsx` reads a `?state=` query param
+  (an absent or unrecognized value falls back to `default`) and forwards it, so all four states are
+  reachable through the golden route. The suite asserts each via a state-specific landmark:
+  `?state=empty` (Empty block copy), `?state=error` (Alert block copy), `?state=loading` (skeleton
+  rows replacing the populated table).
 - **Runner**: `scripts/run-smoke.mjs` first does a real `chromium.launch()`/`close()` to prove the
   Playwright browser binary is actually installed, and exits 1 with a classified
   `(classification: environment)` message plus `npm run setup:playwright` guidance if it isn't -
