@@ -1,0 +1,119 @@
+{
+  "$comment": "Output of dry-run #2, produced by executing ai-pattern-selection-instructions.md against flowspec-dryrun-01.json and the 10-item registry (2026-07-11), after task-06 landed the collection inventory. login/overview inputs are unchanged from dry-run #1 and re-resolve identically. invoice-list screenType scores: collection=100 (2nd: dashboard 47.5) - no near-tie. Screen-pattern and block scores use the same rubric as dry-run #1 (K-coverage; evidence confidence high=10, medium=5).",
+  "flowId": "dryrun-saas-ops-01",
+  "screens": [
+    {
+      "stepId": "login",
+      "resolvedScreenType": "auth",
+      "screenTypeScore": 100,
+      "screenPattern": {
+        "registryItem": "login-03",
+        "score": 100,
+        "rejected": []
+      },
+      "blocks": [
+        {
+          "blockRole": "form-section",
+          "registryItem": "form-section-login-01",
+          "score": 100
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "card",
+        "field",
+        "input"
+      ],
+      "stateCoveragePlan": [
+        "default"
+      ],
+      "checksPlanned": [
+        "lint",
+        "typecheck",
+        "a11y",
+        "story"
+      ],
+      "assumptions": [
+        "login-03 was the sole auth screen-pattern candidate; its score reflects coverage, not comparison."
+      ],
+      "risks": [
+        "Inventory lacks validation-error/error/loading states for the login form (form-section-login-01 risk.missingStates); add before production use."
+      ]
+    },
+    {
+      "stepId": "overview",
+      "resolvedScreenType": "dashboard",
+      "screenTypeScore": 100,
+      "screenPattern": {
+        "registryItem": "dashboard-01",
+        "score": 100,
+        "rejected": []
+      },
+      "blocks": [
+        {
+          "blockRole": "app-shell-sidebar",
+          "registryItem": "sidebar-07",
+          "score": 100
+        },
+        {
+          "blockRole": "page-header-actions",
+          "registryItem": "page-header-actions-01",
+          "score": 100
+        },
+        {
+          "blockRole": "summary-metric-row",
+          "registryItem": "summary-metric-row-01",
+          "score": 100
+        },
+        {
+          "blockRole": "chart-panel",
+          "registryItem": "chart-panel-01",
+          "score": 95
+        },
+        {
+          "blockRole": "data-table-panel",
+          "registryItem": "data-table-panel-01",
+          "score": 94
+        }
+      ],
+      "registryDependencies": [
+        "avatar",
+        "badge",
+        "breadcrumb",
+        "button",
+        "card",
+        "chart",
+        "checkbox",
+        "collapsible",
+        "drawer",
+        "dropdown-menu",
+        "input",
+        "label",
+        "select",
+        "separator",
+        "sidebar",
+        "table",
+        "tabs",
+        "toggle-group"
+      ],
+      "stateCoveragePlan": [
+        "default"
+      ],
+      "checksPlanned": [
+        "lint",
+        "typecheck",
+        "a11y",
+        "story"
+      ],
+      "assumptions": [
+        "dashboard-01 was the sole dashboard screen-pattern candidate; its score reflects coverage, not comparison.",
+        "Shell hard filter passed: sidebar-07 shell 'sidebar' matches dashboard-01 layoutModel.shell; app-shell-topnav excluded via incompatibleWith."
+      ],
+      "risks": [
+        "Inventory lacks loading/empty/error/permission-denied variants across all selected dashboard blocks (declared in their risk.missingStates); required by the data-driven-screen rule before production use.",
+        "data-table-panel-01 drag-reorder has no keyboard alternative (accessibility risk)."
+      ]
+    }
+  ],
+  "unresolved": []
+}

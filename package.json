@@ -24,8 +24,10 @@
     "checks:planned": "node scripts/run-planned-checks.mjs",
     "setup:playwright": "playwright install chromium",
     "validate:spec": "node scripts/validate-spec.mjs",
+    "validate:pipeline": "node scripts/validate-pipeline.mjs",
     "test:validators": "node scripts/test-validators.mjs",
-    "test:planned-checks": "node scripts/run-planned-checks.test.mjs"
+    "test:planned-checks": "node scripts/run-planned-checks.test.mjs",
+    "test:pipeline": "node scripts/test-pipeline.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
