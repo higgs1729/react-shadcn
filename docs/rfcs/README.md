@@ -1,5 +1,7 @@
 # RFCs
 
+Completed RFCs are archived in `docs/archive/rfcs/`; this directory contains active RFCs only.
+
 このディレクトリは、横断的な改善について「なぜ変えるか」「何を変えるか」「どう成功を
 判定するか」を実装前に残す場所。`docs/tasks/` の実行briefや `docs/STATUS.md` の短い
 進捗索引とは役割を分ける。
