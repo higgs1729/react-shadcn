@@ -7,7 +7,22 @@ import { join } from 'node:path'
 
 const ROOT = process.cwd()
 
-export const KNOWN_CHECK_IDS = ['lint', 'typecheck', 'a11y', 'story']
+export const KNOWN_CHECK_IDS = [
+  'lint',
+  'typecheck',
+  'a11y',
+  'story',
+  // task-12-runtime-quality-and-security.md additions. These are flow-level /
+  // repo-wide, not per-screen (a single browser smoke run covers all golden
+  // routes; dependency/secret scanning covers the whole repo), so they run
+  // the same way `lint`/`typecheck` do regardless of which screen plans
+  // them. See docs/layers/30-implementation/ai-implementation-instructions.md
+  // "Runtime quality and security checks" for required-now vs observational
+  // status and flake/false-positive trade-offs.
+  'smoke',
+  'deps-audit',
+  'secret-scan',
+]
 
 export class UnsupportedCheckError extends Error {
   constructor(checkId) {
@@ -74,6 +89,12 @@ export function resolveCheck(checkId, screen) {
       return screenStoryCheck('a11y', screen)
     case 'story':
       return screenStoryCheck('story', screen)
+    case 'smoke':
+      return repoWideCheck('smoke', 'test:smoke')
+    case 'deps-audit':
+      return repoWideCheck('deps-audit', 'audit:deps')
+    case 'secret-scan':
+      return repoWideCheck('secret-scan', 'scan:secrets')
     default:
       throw new UnsupportedCheckError(checkId)
   }

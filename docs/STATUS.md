@@ -22,6 +22,12 @@
 - Task 10（provenance/再現性）完了。BuildReport とは別の独立 manifest
   `docs/provenance/ai-provenance.schema.json` + sidecar 生成/検証（`npm run gen:provenance` /
   `validate:provenance` / `test:provenance`）。digest照合とfailure分類(code|environment|dependency|policy)。
+- Task 12（実行時品質・セキュリティ）完了。golden 3ルートの browser smoke（`npm run test:smoke`）、
+  Task 07 の `a11y` を再利用しつつ違反検出を保証する known-violation fixture
+  （`components/a11y-fixtures/` + `npm run test:a11y-known-violation`）、依存監査
+  （`npm run audit:deps`）、決定論的シークレットスキャン（`npm run scan:secrets` / `test:scan-secrets`）。
+  check-registry に `smoke`(observational) / `deps-audit`・`secret-scan`(required-now) を登録。
+  invoice-list の loading/empty/error はルート未配線のため `test.fixme` で pending 明記(task-03領域)。
 
 ## 文書構成
 
@@ -34,13 +40,7 @@
 
 ## 次のタスク
 
-レビューで採用した信頼性改善。理由・範囲・完了条件はリンク先RFCを正本とし、実装着手時に
-RFCから自己完結briefを `docs/tasks/` に1件ずつ作る。RFC 002/003/004/005 は完了済み。
-
-### 残り
-
-- [実行時品質・セキュリティ検査を段階的に追加する](rfcs/006-runtime-quality-and-security.md)
-  — brief は `docs/tasks/task-12-runtime-quality-and-security.md`（pending、次の着手候補）。
+レビュー由来の信頼性改善 RFC(002/003/004/005/006)はすべて完了。`docs/tasks/` に pending brief は無し。
 
 ## 次の候補(未選択)
 
