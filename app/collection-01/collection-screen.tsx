@@ -111,7 +111,9 @@ export function CollectionTableScreen({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-10" />
+                      <TableHead className="w-10">
+                        <span className="sr-only">Selection</span>
+                      </TableHead>
                       <TableHead>Invoice</TableHead>
                       <TableHead>Customer</TableHead>
                       <TableHead>Status</TableHead>

@@ -125,7 +125,7 @@ function DragHandle({ id }: { id: number }) {
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     id: "drag",
-    header: () => null,
+    header: () => <span className="sr-only">Reorder</span>,
     cell: ({ row }) => <DragHandle id={row.original.id} />,
   },
   {
@@ -280,6 +280,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     id: "actions",
+    header: () => <span className="sr-only">Actions</span>,
     cell: () => (
       <DropdownMenu>
         <DropdownMenuTrigger

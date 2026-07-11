@@ -1,0 +1,12 @@
+{
+  "flowId": "negative-flow",
+  "steps": [{
+    "stepId": "first",
+    "order": 1,
+    "userIntents": ["browse"],
+    "jobMapStages": ["locate"],
+    "dataShapes": ["collection"],
+    "interactionModels": ["read-only"],
+    "unexpected": true
+  }]
+}

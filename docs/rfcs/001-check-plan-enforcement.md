@@ -1,6 +1,6 @@
 # RFC 001: planned checksと実行checksを一致させる
 
-- Status: in-progress
+- Status: completed
 - Priority: A
 - Created: 2026-07-11
 - Owners: human owner / orchestrator AI
@@ -50,4 +50,7 @@ a11yとstoryはbuildではなく、描画結果に対する実検査とする。
 
 ## Outcome
 
-未実装。
+- Implemented a single planned-check registry and a SelectionSpec-driven runner that rejects unknown IDs.
+- Added browser-rendered Storybook interaction and axe checks, with Playwright Chromium setup documented for local, Windows, and CI use.
+- Migrated the runner to the shared strict Ajv contract factory and added regression coverage for unsupported IDs and golden-spec execution.
+- Verified with `npm run validate`, `npm run checks`, `npm run test:planned-checks`, and `npm run checks:planned` (all pass).

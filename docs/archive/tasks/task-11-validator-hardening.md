@@ -1,7 +1,33 @@
 # Task 11: Harden validators and add negative regression tests
 
-Prerequisite: read "Shared ground rules for every executor" in `docs/tasks/README.md`
-before starting. They apply to this task.
+## Executor contract
+
+This file is the complete task specification. Do not read `docs/STATUS.md`, `docs/rfcs/`,
+`docs/tasks/README.md`, other task briefs, or anything under `docs/archive/`. Read only the files
+listed in **Allowed reads**, files you create, and files you must edit to satisfy this task.
+
+`AGENTS.md` may be injected automatically by the execution environment. Treat it only as
+repository-wide safety and edit-boundary rules; this brief is authoritative for this task's scope,
+allowed reads, requirements, and acceptance criteria. If an unavoidable conflict or missing fact
+prevents completion, stop and report it rather than expanding repository discovery.
+
+Do not edit `components/ui/*`, `docs/contracts/*`, `docs/layers/20-selection/*`, or registry facet
+values. Do not commit or push. Preserve all pre-existing uncommitted changes, including changes in
+`.storybook/preview.tsx`, `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/STATUS.md`,
+`docs/rfcs/007-documentation-and-agent-instructions.md`, `package.json`, `vitest.config.ts`, and
+`scripts/check-agent-instructions.mjs`. If this task needs one of those files, make the smallest
+additive edit and do not discard or reformat unrelated changes.
+
+Finish by reporting changed files, commands run with exit codes, and every unsatisfied requirement.
+
+## Allowed reads
+
+- `package.json`, `package-lock.json`, `vitest.config.ts`
+- `scripts/validate-spec.mjs`, `scripts/validate-profiles.mjs`, `scripts/validate-facets.mjs`,
+  `scripts/install-selection.mjs`, `scripts/gen-pattern-stories.mjs`, and `scripts/lib/**`
+- `docs/contracts/*.json`, `docs/examples/*.json`, `docs/layers/20-selection/ai-canonical-profiles.json`
+- `registry/*.json`
+- Files created by this task
 
 ## Objective
 

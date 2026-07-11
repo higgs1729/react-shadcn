@@ -7,9 +7,7 @@
 // Run: node scripts/gen-pattern-stories.mjs <selectionspec.json> [--force]
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { join, basename } from 'node:path'
-import Ajv from 'ajv'
-import addFormats from 'ajv-formats'
-import { readDoc } from './lib/paths.mjs'
+import { createContractAjv, getContractValidator, registerContractSchemas } from './lib/ajv.mjs'
 
 const ROOT = process.cwd()
 const PATTERNS_DIR = join(ROOT, 'components', 'patterns')
@@ -23,10 +21,8 @@ if (!specPath) {
   process.exit(1)
 }
 
-const ajv = new Ajv({ allErrors: true, strict: false, validateSchema: false })
-addFormats(ajv)
-ajv.addSchema(readDoc('ai-design-facets.schema.json'))
-const validateSelection = ajv.compile(readDoc('ai-selectionspec.schema.json'))
+const ajv = registerContractSchemas(createContractAjv())
+const validateSelection = getContractValidator(ajv, 'ai-selectionspec.schema.json')
 
 let spec
 try {

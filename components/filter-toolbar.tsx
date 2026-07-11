@@ -52,7 +52,7 @@ export function FilterToolbar({
         }}
         items={statusOptions}
       >
-        <SelectTrigger className="w-40">
+        <SelectTrigger aria-label="Filter by status" className="w-40">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>

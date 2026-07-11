@@ -1,6 +1,6 @@
 # RFC 007: READMEとエージェント指示の情報構造を整える
 
-- Status: in-progress
+- Status: completed
 - Priority: C
 - Created: 2026-07-11
 - Owners: human owner / orchestrator AI
@@ -49,4 +49,9 @@ READMEを人間向けの短い入口にし、目的、architecture、quick start
 
 ## Outcome
 
-未実装。
+Task 13完了（コミット `c432b56`）。
+
+- READMEをプロジェクト固有の入口に刷新し、purpose / pipeline / repository map / quick start / golden flow / validation / human approval boundariesを明記。
+- `AGENTS.md` をroot agent rulesの正本、`CLAUDE.md` を固定 `@AGENTS.md` shimとする方式を採用。
+- `scripts/check-agent-instructions.mjs` と `npm run validate:agents` を追加し、`npm run validate` に組み込んだ。
+- path-specific instructionsは、root-level noiseを減らす反復的・具体的ルールが出た時点で採用する方針にした。

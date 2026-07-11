@@ -6,9 +6,7 @@
 //      npm run validate:specs   (validates everything under docs/examples/)
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
-import Ajv from 'ajv'
-import addFormats from 'ajv-formats'
-import { readDoc } from './lib/paths.mjs'
+import { createContractAjv, getContractValidator, registerContractSchemas } from './lib/ajv.mjs'
 
 const ROOT = process.cwd()
 // BOM-tolerant: files written by Windows tools may carry a UTF-8 BOM.
@@ -16,14 +14,15 @@ const readJson = (p) => JSON.parse(readFileSync(p, 'utf8').replace(/^﻿/, ''))
 
 // validateSchema: false — schemas declare draft-07 via https:// which ajv
 // registers under http:// only.
-const ajv = new Ajv({ allErrors: true, strict: false, validateSchema: false })
-addFormats(ajv)
-ajv.addSchema(readDoc('ai-design-facets.schema.json'))
-const validateFlow = ajv.compile(readDoc('ai-flowspec.schema.json'))
-const validateSelection = ajv.compile(readDoc('ai-selectionspec.schema.json'))
-const validateBuildReport = ajv.compile(readDoc('ai-buildreport.schema.json'))
+const ajv = registerContractSchemas(createContractAjv())
+const validateFlow = getContractValidator(ajv, 'ai-flowspec.schema.json')
+const validateSelection = getContractValidator(ajv, 'ai-selectionspec.schema.json')
+const validateBuildReport = getContractValidator(ajv, 'ai-buildreport.schema.json')
 
 let targets = process.argv.slice(2)
+// Scan mode is fail-closed. Add a filename here only for a documented,
+// non-contract sidecar format (for example a future provenance sidecar).
+const EXAMPLE_JSON_ALLOWLIST = new Set([])
 // In directory-scan mode, JSON files that are not contract documents (e.g. the
 // run-checks scratch output {checks, passed}) are skipped instead of failing;
 // explicitly passed files are always validated strictly.
@@ -59,8 +58,8 @@ for (const t of targets) {
         ? 'SelectionSpec'
         : null
   if (!kind) {
-    if (scanMode) {
-      console.log(`- ${t}: skipped (not a contract document)`)
+    if (scanMode && EXAMPLE_JSON_ALLOWLIST.has(t.split(/[\\/]/).pop())) {
+      console.log(`- ${t}: allowlisted non-contract JSON`)
       continue
     }
     console.error(`✗ ${t}: neither FlowSpec (steps), BuildReport (flowId+checks), nor SelectionSpec (screens)`)

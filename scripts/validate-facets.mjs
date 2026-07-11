@@ -5,20 +5,14 @@
 // Run: npm run validate:facets
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
-import Ajv from 'ajv'
-import addFormats from 'ajv-formats'
 import { readDoc } from './lib/paths.mjs'
+import { createContractAjv, getContractValidator, registerContractSchemas } from './lib/ajv.mjs'
 
 const ROOT = process.cwd()
 const REGISTRY_DIR = join(ROOT, 'registry')
 
-const schema = readDoc('ai-design-facets.schema.json')
-// The schema declares draft-07 with an https:// $schema URI; ajv registers the
-// draft-07 meta-schema under http://, so drop the key rather than edit the file.
-delete schema.$schema
-const ajv = new Ajv({ allErrors: true })
-addFormats(ajv)
-const validate = ajv.compile(schema)
+const ajv = registerContractSchemas(createContractAjv())
+const validate = getContractValidator(ajv, 'ai-design-facets.schema.json')
 
 // Canonical profiles are the answer key: every screenType/blockRole an item
 // claims must exist there, or the selection layer can never retrieve the item.

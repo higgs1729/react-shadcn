@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/schemas/invalid-keyword.schema.json",
+  "type": "object",
+  "notAKeyword": true
+}

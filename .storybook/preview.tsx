@@ -12,8 +12,12 @@ const preview: Preview = {
       },
     },
     a11y: {
-      // Show accessibility violations in the a11y panel without failing tests yet.
-      test: 'todo',
+      // 'error' fails the portable-story test run on any axe violation; used by
+      // the `a11y` planned check (scripts/lib/check-registry.mjs). Default to
+      // 'todo' (report without failing) everywhere else, e.g. `npm run storybook`.
+      // Vite only exposes env vars to the browser bundle under import.meta.env
+      // with a VITE_ prefix -- plain process.env.* is not defined client-side.
+      test: import.meta.env.VITE_SB_A11Y_MODE === 'error' ? 'error' : 'todo',
     },
   },
   decorators: [
