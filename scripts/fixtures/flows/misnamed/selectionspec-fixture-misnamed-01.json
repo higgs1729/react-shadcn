@@ -1,0 +1,5 @@
+{
+  "$comment": "Fixture for scripts/test-flows.mjs: correctly named for flowId fixture-misnamed-01, but its sibling FlowSpec in this directory is misnamed, so discovery must fail before this file's own triple could ever complete.",
+  "flowId": "fixture-misnamed-01",
+  "screens": []
+}

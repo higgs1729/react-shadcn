@@ -1,0 +1,5 @@
+{
+  "$comment": "Fixture for scripts/test-flows.mjs: this file's own flowId is 'fixture-wrongname-01', but it is deliberately named as if its flowId were 'fixture-misnamed-01'. Discovery must fail naming this file and its expected name flowspec-fixture-wrongname-01.json.",
+  "flowId": "fixture-wrongname-01",
+  "steps": []
+}

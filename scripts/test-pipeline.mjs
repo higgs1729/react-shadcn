@@ -13,9 +13,9 @@ const ROOT = process.cwd()
 const EX = join(ROOT, 'docs', 'examples')
 const FIX = join(ROOT, 'scripts', 'fixtures', 'pipeline')
 
-const GOLDEN_FLOW = join(EX, 'flowspec-dryrun-01.json')
-const GOLDEN_SELECTION = join(EX, 'selectionspec-dryrun-02.json')
-const GOLDEN_BUILD = join(EX, 'buildreport-dryrun-saas-ops-02.json')
+const GOLDEN_FLOW = join(EX, 'flowspec-dryrun-saas-ops-01.json')
+const GOLDEN_SELECTION = join(EX, 'selectionspec-dryrun-saas-ops-01.json')
+const GOLDEN_BUILD = join(EX, 'buildreport-dryrun-saas-ops-01.json')
 
 const run = ({ flow = GOLDEN_FLOW, selection = GOLDEN_SELECTION, build = GOLDEN_BUILD }) =>
   spawnSync(

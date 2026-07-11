@@ -10,6 +10,12 @@ const DOCS = join(process.cwd(), 'docs')
 const index = new Map()
 for (const rel of readdirSync(DOCS, { recursive: true }).map(String)) {
   if (!/\.(json|md)$/.test(rel)) continue
+  // docs/archive/ holds superseded artifacts (completed briefs, old specs). It
+  // is off-limits to agents (AGENTS.md) and must never be a resolution source:
+  // indexing it would let a stale basename resolve silently, and a name shared
+  // between a live file and its archived copy would make every consumer throw
+  // "ambiguous" at startup. Skip it so live docs/ is the only resolution space.
+  if (/^archive[\\/]/.test(rel)) continue
   const name = basename(rel)
   index.set(name, index.has(name) ? null : join(DOCS, rel))
 }

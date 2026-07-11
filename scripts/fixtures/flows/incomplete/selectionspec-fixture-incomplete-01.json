@@ -1,0 +1,5 @@
+{
+  "$comment": "Fixture for scripts/test-flows.mjs: paired with flowspec-fixture-incomplete-01.json; no buildreport-fixture-incomplete-01.json exists, so discovery must fail naming the flowId and the missing BuildReport kind.",
+  "flowId": "fixture-incomplete-01",
+  "screens": []
+}

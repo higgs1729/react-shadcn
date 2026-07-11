@@ -6,18 +6,20 @@
 ## 現在地
 
 - golden flow `dryrun-saas-ops-01`(login / overview / invoice-list)は3画面とも built。
-  BuildReport `docs/examples/buildreport-dryrun-saas-ops-02.json` = verified / unresolved 0。
+  BuildReport `docs/examples/buildreport-dryrun-saas-ops-01.json` = verified / unresolved 0。
   invoice-list は `?state=` 配線済みで default/loading/empty/error すべて到達可能。
 - パイプライン全段に検証がある: 契約スキーマ(`npm run validate`)、横断意味検証
   (`validate:pipeline`)、planned checks(lint/typecheck/story/a11y、`checks:planned`)、
   実行時・セキュリティ(smoke / deps-audit / secret-scan)、provenance(`validate:provenance`)、
   agent eval golden dataset(`npm run eval`)。`npm run validate` / `checks` = 全 pass。
+- 検証系は複数フロー対応済み(RFC 008): 引数なし実行は `docs/examples/` の三つ組を全数
+  自動発見(`scripts/lib/flows.mjs`、三つ組欠落・命名不一致は fail-loud)。
 
 ## 文書構成
 
 - `docs/contracts/` = 4契約スキーマ(immutable)。`docs/provenance/` = provenance manifest 契約。
 - `docs/layers/20-selection/` = 選定手順 + canonical profiles。`30-implementation/` = 実装規約。
-- `docs/examples/` = 現行 golden flow 成果物のみ(flowspec-01 / selectionspec-02 / buildreport-02 + sidecar)。
+- `docs/examples/` = 現行 golden flow 成果物のみ(`<artifact>-<flowId>.json` 命名、現在は flowspec / selectionspec / buildreport-dryrun-saas-ops-01 + sidecar)。
 - `docs/tasks/README.md` = brief テンプレ + 共通規約(pending brief 置き場、現在は空)。
 - `docs/rfcs/` = 横断改善の設計文書(なぜ・何を・成功判定)。実行 brief とは分離。
 - `docs/archive/{tasks,examples,notes,rfcs}/` = 完了 brief・旧 spec・研究ノート・完了 RFC(通常は不可視)。

@@ -17,11 +17,11 @@ import { spawnSync } from 'node:child_process'
 const ROOT = process.cwd()
 const EX = join(ROOT, 'docs', 'examples')
 const REG = join(ROOT, 'registry')
-const MANIFEST = 'buildreport-dryrun-saas-ops-02.provenance.json'
+const MANIFEST = 'buildreport-dryrun-saas-ops-01.provenance.json'
 const INPUTS = [
-  'flowspec-dryrun-01.json',
-  'selectionspec-dryrun-02.json',
-  'buildreport-dryrun-saas-ops-02.json',
+  'flowspec-dryrun-saas-ops-01.json',
+  'selectionspec-dryrun-saas-ops-01.json',
+  'buildreport-dryrun-saas-ops-01.json',
 ]
 
 const run = (args) => spawnSync(process.execPath, ['scripts/validate-provenance.mjs', ...args], { cwd: ROOT, encoding: 'utf8' })
@@ -67,7 +67,7 @@ try {
   // Negative: a changed BuildReport input is rejected, naming buildReport.
   const mutBuild = stageWorkspace()
   try {
-    const p = join(mutBuild, 'buildreport-dryrun-saas-ops-02.json')
+    const p = join(mutBuild, 'buildreport-dryrun-saas-ops-01.json')
     const doc = JSON.parse(readFileSync(p, 'utf8'))
     doc.iterations = doc.iterations + 1 // real content change
     writeFileSync(p, JSON.stringify(doc, null, 2))

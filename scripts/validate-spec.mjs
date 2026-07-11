@@ -20,12 +20,13 @@ const validateSelection = getContractValidator(ajv, 'ai-selectionspec.schema.jso
 const validateBuildReport = getContractValidator(ajv, 'ai-buildreport.schema.json')
 
 let targets = process.argv.slice(2)
-// Scan mode is fail-closed. Add a filename here only for a documented,
-// non-contract sidecar format (for example a future provenance sidecar).
-const EXAMPLE_JSON_ALLOWLIST = new Set(['buildreport-dryrun-saas-ops-02.provenance.json'])
-// In directory-scan mode, JSON files that are not contract documents (e.g. the
-// run-checks scratch output {checks, passed}) are skipped instead of failing;
-// explicitly passed files are always validated strictly.
+// Scan mode is fail-closed: any docs/examples JSON that is not a recognizable
+// contract document FAILS the scan, with one documented exception — provenance
+// sidecars (`*.provenance.json`), recognized by suffix so every flow's sidecar
+// is covered without editing this file. Their content is strictly validated by
+// `npm run validate:provenance`, not here. Explicitly passed files are always
+// validated as contract documents, sidecar or not.
+const isAllowlistedSidecar = (name) => name.endsWith('.provenance.json')
 const scanMode = targets.length === 0
 if (scanMode) {
   const dir = join(ROOT, 'docs', 'examples')
@@ -58,8 +59,8 @@ for (const t of targets) {
         ? 'SelectionSpec'
         : null
   if (!kind) {
-    if (scanMode && EXAMPLE_JSON_ALLOWLIST.has(t.split(/[\\/]/).pop())) {
-      console.log(`- ${t}: allowlisted non-contract JSON`)
+    if (scanMode && isAllowlistedSidecar(t.split(/[\\/]/).pop())) {
+      console.log(`- ${t}: provenance sidecar (validated by validate:provenance)`)
       continue
     }
     console.error(`✗ ${t}: neither FlowSpec (steps), BuildReport (flowId+checks), nor SelectionSpec (screens)`)

@@ -1,0 +1,5 @@
+{
+  "$comment": "Fixture for scripts/test-flows.mjs: an incomplete triple (no BuildReport) must fail discovery naming the flowId and the missing kind.",
+  "flowId": "fixture-incomplete-01",
+  "steps": []
+}

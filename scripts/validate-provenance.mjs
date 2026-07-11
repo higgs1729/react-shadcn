@@ -13,9 +13,13 @@
 //        [--manifest <path|basename>]
 //        [--flow <path>] [--selection <path>] [--build <path>]
 //        [--registry-dir <dir>] [--base-dir <dir>]
-//   Defaults to the golden sidecar and the golden source artifacts. --base-dir
-//   resolves every input basename from one directory (used by the regression
-//   test against copied/mutated inputs).
+//   With --manifest given, validates exactly that one sidecar against the
+//   golden source artifacts (or --flow/--selection/--build/--base-dir
+//   overrides), as today. With none given, every flow triple discovered under
+//   docs/examples/ (see scripts/lib/flows.mjs) must have a sidecar
+//   (buildreport-<flowId>.provenance.json) and it is validated against that
+//   flow's own artifacts; a complete triple with no sidecar fails, naming the
+//   flowId. Any failure in any flow is non-zero.
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { createContractAjv } from './lib/ajv.mjs'
@@ -26,6 +30,7 @@ import {
   resolveInput,
   findProhibitedKeys,
 } from './lib/provenance.mjs'
+import { discoverFlows, FlowDiscoveryError } from './lib/flows.mjs'
 
 const ROOT = process.cwd()
 const argv = process.argv.slice(2)
@@ -34,80 +39,137 @@ function opt(name, fallback) {
   return i !== -1 ? argv[i + 1] : fallback
 }
 
-const baseDir = opt('--base-dir', null)
-const manifestArg = opt('--manifest', 'buildreport-dryrun-saas-ops-02.provenance.json')
-const manifestPath = existsSync(manifestArg)
-  ? manifestArg
-  : baseDir && existsSync(join(baseDir, manifestArg))
-    ? join(baseDir, manifestArg)
-    : docPath(manifestArg)
-
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8').replace(/^﻿/, ''))
 
-let manifest
-try {
-  manifest = readJson(manifestPath)
-} catch (e) {
-  console.error(`✗ ${manifestPath}: invalid JSON (${e.message})`)
-  process.exit(1)
-}
-
-// ---- gate 1a: schema ------------------------------------------------------
 const ajv = createContractAjv()
-const validate = ajv.compile(readDoc('ai-provenance.schema.json'))
-if (!validate(manifest)) {
-  console.error(`✗ ${manifestPath}: INVALID provenance manifest`)
-  for (const err of validate.errors) console.error(`    ${err.instancePath || '(root)'} ${err.message}`)
-  process.exit(1)
-}
+const validateSchema = ajv.compile(readDoc('ai-provenance.schema.json'))
 
-// ---- gate 1b: privacy (defense-in-depth over additionalProperties:false) --
-const prohibited = findProhibitedKeys(manifest)
-if (prohibited.length > 0) {
-  console.error(`✗ ${manifestPath}: prohibited sensitive key(s): ${prohibited.join(', ')}`)
-  process.exit(1)
-}
-
-// ---- gate 2: digest verification against source artifacts -----------------
-const registryDir = opt('--registry-dir', baseDir ? join(baseDir, 'registry') : join(ROOT, 'registry'))
-const overrides = {
-  flowSpec: opt('--flow', null),
-  selectionSpec: opt('--selection', null),
-  buildReport: opt('--build', null),
-}
-
-const mismatches = []
-for (const key of ['flowSpec', 'selectionSpec', 'buildReport']) {
-  const entry = manifest.inputs[key]
-  let sourcePath
+/**
+ * Validate one manifest file against its own source artifacts. Never exits;
+ * returns { ok, flowId, messages }.
+ */
+function validateManifest(manifestPath, { registryDir, overrides = {}, baseDir = null }) {
+  let manifest
   try {
-    sourcePath = overrides[key] ? resolveInput(overrides[key]) : resolveInput(entry.path, baseDir)
+    manifest = readJson(manifestPath)
   } catch (e) {
-    mismatches.push(`${key} (${entry.path}): source not found (${e.message})`)
-    continue
+    return { ok: false, flowId: null, messages: [`${manifestPath}: invalid JSON (${e.message})`] }
   }
-  const actual = canonicalDigest(readJson(sourcePath))
-  if (actual !== entry.digest) {
-    mismatches.push(`${key} (${entry.path}): recorded ${entry.digest.slice(0, 12)}… != actual ${actual.slice(0, 12)}…`)
+
+  // ---- gate 1a: schema ------------------------------------------------------
+  if (!validateSchema(manifest)) {
+    const details = validateSchema.errors.map((err) => `${err.instancePath || '(root)'} ${err.message}`)
+    return { ok: false, flowId: manifest.flowId ?? null, messages: [`${manifestPath}: INVALID provenance manifest`, ...details] }
   }
+
+  // ---- gate 1b: privacy (defense-in-depth over additionalProperties:false) --
+  const prohibited = findProhibitedKeys(manifest)
+  if (prohibited.length > 0) {
+    return {
+      ok: false,
+      flowId: manifest.flowId,
+      messages: [`${manifestPath}: prohibited sensitive key(s): ${prohibited.join(', ')}`],
+    }
+  }
+
+  // ---- gate 2: digest verification against source artifacts -----------------
+  const mismatches = []
+  for (const key of ['flowSpec', 'selectionSpec', 'buildReport']) {
+    const entry = manifest.inputs[key]
+    let sourcePath
+    try {
+      sourcePath = overrides[key] ? resolveInput(overrides[key]) : resolveInput(entry.path, baseDir)
+    } catch (e) {
+      mismatches.push(`${key} (${entry.path}): source not found (${e.message})`)
+      continue
+    }
+    const actual = canonicalDigest(readJson(sourcePath))
+    if (actual !== entry.digest) {
+      mismatches.push(`${key} (${entry.path}): recorded ${entry.digest.slice(0, 12)}… != actual ${actual.slice(0, 12)}…`)
+    }
+  }
+
+  // registry inventory digest
+  const actualRegistry = digestRegistryInventory(registryDir).digest
+  if (actualRegistry !== manifest.inputs.registryInventory.digest) {
+    mismatches.push(
+      `registryInventory (registry/): recorded ${manifest.inputs.registryInventory.digest.slice(0, 12)}… != actual ${actualRegistry.slice(0, 12)}…`,
+    )
+  }
+
+  if (mismatches.length > 0) {
+    return {
+      ok: false,
+      flowId: manifest.flowId,
+      messages: [`${manifestPath}: ${mismatches.length} digest mismatch(es)`, ...mismatches.map((m) => `[DIGEST_MISMATCH] ${m}`)],
+    }
+  }
+
+  return { ok: true, flowId: manifest.flowId, messages: [] }
 }
 
-// registry inventory digest
-const actualRegistry = digestRegistryInventory(registryDir).digest
-if (actualRegistry !== manifest.inputs.registryInventory.digest) {
-  mismatches.push(
-    `registryInventory (registry/): recorded ${manifest.inputs.registryInventory.digest.slice(0, 12)}… != actual ${actualRegistry.slice(0, 12)}…`,
-  )
-}
+const manifestArg = opt('--manifest', null)
 
-if (mismatches.length > 0) {
-  console.error(`✗ ${manifestPath}: ${mismatches.length} digest mismatch(es)`)
-  for (const m of mismatches) console.error(`    [DIGEST_MISMATCH] ${m}`)
-  process.exit(1)
-}
+if (manifestArg) {
+  const baseDir = opt('--base-dir', null)
+  const manifestPath = existsSync(manifestArg)
+    ? manifestArg
+    : baseDir && existsSync(join(baseDir, manifestArg))
+      ? join(baseDir, manifestArg)
+      : docPath(manifestArg)
 
-console.log(`✓ provenance valid: ${manifest.flowId}`)
-console.log(`    manifest: ${manifestPath}`)
-console.log(`    git:      ${manifest.git.commit}`)
-console.log(`    inputs:   flowSpec/selectionSpec/buildReport/registryInventory digests match`)
-process.exit(0)
+  const registryDir = opt('--registry-dir', baseDir ? join(baseDir, 'registry') : join(ROOT, 'registry'))
+  const overrides = {
+    flowSpec: opt('--flow', null),
+    selectionSpec: opt('--selection', null),
+    buildReport: opt('--build', null),
+  }
+
+  const result = validateManifest(manifestPath, { registryDir, overrides, baseDir })
+  if (!result.ok) {
+    for (const m of result.messages) console.error(`✗ ${m}`)
+    process.exit(1)
+  }
+  console.log(`✓ provenance valid: ${result.flowId}`)
+  console.log(`    manifest: ${manifestPath}`)
+  process.exit(0)
+} else {
+  let discovered
+  try {
+    discovered = discoverFlows()
+  } catch (e) {
+    if (e instanceof FlowDiscoveryError) {
+      console.error(`✗ flow discovery failed: ${e.message}`)
+      process.exit(1)
+    }
+    throw e
+  }
+  if (discovered.length === 0) {
+    console.error('✗ no flow triples discovered under docs/examples/')
+    process.exit(1)
+  }
+
+  const registryDir = join(ROOT, 'registry')
+  let anyFailed = false
+  for (const flow of discovered) {
+    if (!flow.provenancePath) {
+      anyFailed = true
+      console.error(`✗ flowId "${flow.flowId}": no provenance sidecar found (expected buildreport-${flow.flowId}.provenance.json). Run 'npm run gen:provenance'.`)
+      continue
+    }
+    const overrides = {
+      flowSpec: flow.flowSpecPath,
+      selectionSpec: flow.selectionSpecPath,
+      buildReport: flow.buildReportPath,
+    }
+    const result = validateManifest(flow.provenancePath, { registryDir, overrides })
+    if (!result.ok) {
+      anyFailed = true
+      for (const m of result.messages) console.error(`✗ ${m}`)
+    } else {
+      console.log(`✓ provenance valid: ${result.flowId}`)
+      console.log(`    manifest: ${flow.provenancePath}`)
+    }
+  }
+  process.exit(anyFailed ? 1 : 0)
+}

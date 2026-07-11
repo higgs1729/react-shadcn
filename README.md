@@ -42,9 +42,9 @@ API is unclear.
 
 The current golden flow is `dryrun-saas-ops-01`.
 
-- FlowSpec: [docs/examples/flowspec-dryrun-01.json](docs/examples/flowspec-dryrun-01.json)
-- SelectionSpec: [docs/examples/selectionspec-dryrun-02.json](docs/examples/selectionspec-dryrun-02.json)
-- BuildReport: [docs/examples/buildreport-dryrun-saas-ops-02.json](docs/examples/buildreport-dryrun-saas-ops-02.json)
+- FlowSpec: [docs/examples/flowspec-dryrun-saas-ops-01.json](docs/examples/flowspec-dryrun-saas-ops-01.json)
+- SelectionSpec: [docs/examples/selectionspec-dryrun-saas-ops-01.json](docs/examples/selectionspec-dryrun-saas-ops-01.json)
+- BuildReport: [docs/examples/buildreport-dryrun-saas-ops-01.json](docs/examples/buildreport-dryrun-saas-ops-01.json)
 
 It covers three built screens: login, overview, and invoice-list. The latest BuildReport is verified
 with zero unresolved issues.

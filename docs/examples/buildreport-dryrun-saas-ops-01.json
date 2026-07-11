@@ -1,5 +1,5 @@
 {
-  "$comment": "Implementation-layer BuildReport for dryrun-saas-ops-01, produced by re-executing task-02 through task-05 against docs/examples/selectionspec-dryrun-02.json (which resolves invoice-list to collection-table-01 following task-06's inventory addition). login and overview are unchanged from buildreport-dryrun-saas-ops-01.json; invoice-list is now built.",
+  "$comment": "Implementation-layer BuildReport for dryrun-saas-ops-01, produced by re-executing task-02 through task-05 against docs/examples/selectionspec-dryrun-saas-ops-01.json (which resolves invoice-list to collection-table-01 following task-06's inventory addition). login and overview are unchanged from buildreport-dryrun-saas-ops-01.json; invoice-list is now built.",
   "flowId": "dryrun-saas-ops-01",
   "generatedAt": "2026-07-11",
   "screens": [

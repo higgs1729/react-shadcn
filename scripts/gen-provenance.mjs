@@ -10,15 +10,21 @@
 //        [--generator-revision <str>] [--instruction-revision <str>]
 //        [--status verified|partial|failed] [--duration-ms <int>]
 //        [--failure code|environment|dependency|policy] [--retryable]
-//   Inputs default to the current golden artifacts; --out defaults to the golden
-//   sidecar beside the BuildReport in docs/examples/.
-import { writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+//   With any of --flow/--selection/--build/--out given, generates exactly one
+//   manifest as today (inputs default to the golden dryrun-saas-ops-01
+//   artifacts; --out defaults to the golden sidecar beside its BuildReport).
+//   With none given, every flow triple discovered under docs/examples/ (see
+//   scripts/lib/flows.mjs) gets its sidecar (re)generated as
+//   docs/examples/buildreport-<flowId>.provenance.json; the CLI overrides
+//   above (status/duration/failure/revision) do not apply in this bulk mode.
+import { readFileSync, writeFileSync } from 'node:fs'
+import { join, basename } from 'node:path'
 import os from 'node:os'
 import { spawnSync } from 'node:child_process'
 import { createContractAjv } from './lib/ajv.mjs'
 import { readDoc } from './lib/paths.mjs'
 import { digestArtifact, digestRegistryInventory, resolveInput, findProhibitedKeys } from './lib/provenance.mjs'
+import { discoverFlows, FlowDiscoveryError } from './lib/flows.mjs'
 
 const ROOT = process.cwd()
 const PROVENANCE_VERSION = '1.0.0'
@@ -29,16 +35,75 @@ function opt(name, fallback) {
   return i !== -1 ? argv[i + 1] : fallback
 }
 const has = (name) => argv.includes(name)
+const hasExplicitArgs = ['--flow', '--selection', '--build', '--out'].some((f) => argv.includes(f))
 
-const flowPath = resolveInput(opt('--flow', 'flowspec-dryrun-01.json'))
-const selectionPath = resolveInput(opt('--selection', 'selectionspec-dryrun-02.json'))
-const buildBasename = opt('--build', 'buildreport-dryrun-saas-ops-02.json')
-const buildPath = resolveInput(buildBasename)
-const registryDir = opt('--registry-dir', join(ROOT, 'registry'))
-const outPath = opt('--out', join(ROOT, 'docs', 'examples', 'buildreport-dryrun-saas-ops-02.provenance.json'))
+// BOM-tolerant, like scripts/validate-spec.mjs.
+const readJson = (p) => JSON.parse(readFileSync(p, 'utf8').replace(/^﻿/, ''))
 
-// BuildReport is the anchor: flowId and terminal status come from it.
-const build = readDoc(buildBasename)
+const ajv = createContractAjv()
+const validateManifest = ajv.compile(readDoc('ai-provenance.schema.json'))
+
+/**
+ * Build and write one provenance manifest.
+ *   build            - the parsed BuildReport doc (anchor: flowId + terminal status)
+ *   flowLabel/flowPath, selectionLabel/selectionPath, buildLabel/buildPath -
+ *                      the recorded basename and resolved absolute path of each input
+ *   registryDir, outPath - as documented above
+ *   cli              - optional CLI overrides (status/durationMs/failure/revision),
+ *                      only honored in explicit single-target mode
+ */
+function generateOne({ build, flowLabel, flowPath, selectionLabel, selectionPath, buildLabel, buildPath, registryDir, outPath, cli = {} }) {
+  const status = cli.status ?? build.status
+  const durationMs = cli.durationMs ?? 0
+  let failure = null
+  if (cli.failureClass) {
+    failure = { classification: cli.failureClass, retryable: !!cli.retryable }
+    if (cli.failureSummary) failure.summary = cli.failureSummary
+  }
+
+  const manifest = {
+    provenanceVersion: PROVENANCE_VERSION,
+    flowId: build.flowId,
+    createdAt: new Date().toISOString(),
+    git: { commit: gitCommit() },
+    runtime: {
+      node: process.version,
+      npm: npmVersion(),
+      os: `${os.type()} ${os.release()} ${os.arch()}`,
+    },
+    inputs: {
+      flowSpec: digestArtifact(flowLabel, flowPath),
+      selectionSpec: digestArtifact(selectionLabel, selectionPath),
+      buildReport: digestArtifact(buildLabel, buildPath),
+      registryInventory: digestRegistryInventory(registryDir),
+    },
+    result: { status, durationMs: Number.isFinite(durationMs) ? durationMs : 0, failure },
+  }
+
+  if (cli.generatorRevision || cli.instructionRevision) {
+    manifest.revision = {}
+    if (cli.generatorRevision) manifest.revision.generator = cli.generatorRevision
+    if (cli.instructionRevision) manifest.revision.instruction = cli.instructionRevision
+  }
+
+  const prohibited = findProhibitedKeys(manifest)
+  if (prohibited.length > 0) {
+    console.error(`✗ refusing to write manifest: prohibited key(s): ${prohibited.join(', ')}`)
+    process.exit(1)
+  }
+
+  if (!validateManifest(manifest)) {
+    console.error('✗ generated manifest is not schema-valid:')
+    for (const err of validateManifest.errors) console.error(`    ${err.instancePath || '(root)'} ${err.message}`)
+    process.exit(1)
+  }
+
+  writeFileSync(outPath, `${JSON.stringify(manifest, null, 2)}\n`)
+  console.log(`✓ provenance written: ${outPath}`)
+  console.log(`    flowId:   ${manifest.flowId}`)
+  console.log(`    git:      ${manifest.git.commit}`)
+  console.log(`    inputs:   flowSpec ${manifest.inputs.flowSpec.digest.slice(0, 12)}… / registry ${manifest.inputs.registryInventory.digest.slice(0, 12)}…`)
+}
 
 // --- git commit (never fail a local run over missing metadata) --------------
 function gitCommit() {
@@ -62,62 +127,69 @@ function npmVersion() {
   }
 }
 
-// --- result / failure classification ----------------------------------------
-const status = opt('--status', build.status)
-const durationMs = Number.parseInt(opt('--duration-ms', '0'), 10)
-const failureClass = opt('--failure', null)
-let failure = null
-if (failureClass) {
-  failure = { classification: failureClass, retryable: has('--retryable') }
-  const summary = opt('--failure-summary', null)
-  if (summary) failure.summary = summary
-}
+if (hasExplicitArgs) {
+  const flowLabel = opt('--flow', 'flowspec-dryrun-saas-ops-01.json')
+  const selectionLabel = opt('--selection', 'selectionspec-dryrun-saas-ops-01.json')
+  const buildLabel = opt('--build', 'buildreport-dryrun-saas-ops-01.json')
+  const flowPath = resolveInput(flowLabel)
+  const selectionPath = resolveInput(selectionLabel)
+  const buildPath = resolveInput(buildLabel)
+  const registryDir = opt('--registry-dir', join(ROOT, 'registry'))
+  const outPath = opt('--out', join(ROOT, 'docs', 'examples', 'buildreport-dryrun-saas-ops-01.provenance.json'))
 
-const manifest = {
-  provenanceVersion: PROVENANCE_VERSION,
-  flowId: build.flowId,
-  createdAt: new Date().toISOString(),
-  git: { commit: gitCommit() },
-  runtime: {
-    node: process.version,
-    npm: npmVersion(),
-    os: `${os.type()} ${os.release()} ${os.arch()}`,
-  },
-  inputs: {
-    flowSpec: digestArtifact('flowspec-dryrun-01.json', flowPath),
-    selectionSpec: digestArtifact('selectionspec-dryrun-02.json', selectionPath),
-    buildReport: digestArtifact(buildBasename, buildPath),
-    registryInventory: digestRegistryInventory(registryDir),
-  },
-  result: { status, durationMs: Number.isFinite(durationMs) ? durationMs : 0, failure },
-}
+  // BuildReport is the anchor: flowId and terminal status come from it.
+  const build = readJson(buildPath)
 
-const generatorRevision = opt('--generator-revision', null)
-const instructionRevision = opt('--instruction-revision', null)
-if (generatorRevision || instructionRevision) {
-  manifest.revision = {}
-  if (generatorRevision) manifest.revision.generator = generatorRevision
-  if (instructionRevision) manifest.revision.instruction = instructionRevision
+  const failureClass = opt('--failure', null)
+  generateOne({
+    build,
+    flowLabel: basename(flowLabel),
+    flowPath,
+    selectionLabel: basename(selectionLabel),
+    selectionPath,
+    buildLabel: basename(buildLabel),
+    buildPath,
+    registryDir,
+    outPath,
+    cli: {
+      status: opt('--status', null),
+      durationMs: Number.parseInt(opt('--duration-ms', '0'), 10),
+      failureClass,
+      retryable: has('--retryable'),
+      failureSummary: opt('--failure-summary', null),
+      generatorRevision: opt('--generator-revision', null),
+      instructionRevision: opt('--instruction-revision', null),
+    },
+  })
+} else {
+  let discovered
+  try {
+    discovered = discoverFlows()
+  } catch (e) {
+    if (e instanceof FlowDiscoveryError) {
+      console.error(`✗ flow discovery failed: ${e.message}`)
+      process.exit(1)
+    }
+    throw e
+  }
+  if (discovered.length === 0) {
+    console.error('✗ no flow triples discovered under docs/examples/')
+    process.exit(1)
+  }
+  const registryDir = join(ROOT, 'registry')
+  for (const flow of discovered) {
+    const build = readJson(flow.buildReportPath)
+    const outPath = join(ROOT, 'docs', 'examples', `buildreport-${flow.flowId}.provenance.json`)
+    generateOne({
+      build,
+      flowLabel: basename(flow.flowSpecPath),
+      flowPath: flow.flowSpecPath,
+      selectionLabel: basename(flow.selectionSpecPath),
+      selectionPath: flow.selectionSpecPath,
+      buildLabel: basename(flow.buildReportPath),
+      buildPath: flow.buildReportPath,
+      registryDir,
+      outPath,
+    })
+  }
 }
-
-// --- privacy guard: never emit a manifest carrying a prohibited key ---------
-const prohibited = findProhibitedKeys(manifest)
-if (prohibited.length > 0) {
-  console.error(`✗ refusing to write manifest: prohibited key(s): ${prohibited.join(', ')}`)
-  process.exit(1)
-}
-
-// --- schema gate: the generated manifest must be format-valid ---------------
-const ajv = createContractAjv()
-const validate = ajv.compile(readDoc('ai-provenance.schema.json'))
-if (!validate(manifest)) {
-  console.error('✗ generated manifest is not schema-valid:')
-  for (const err of validate.errors) console.error(`    ${err.instancePath || '(root)'} ${err.message}`)
-  process.exit(1)
-}
-
-writeFileSync(outPath, `${JSON.stringify(manifest, null, 2)}\n`)
-console.log(`✓ provenance written: ${outPath}`)
-console.log(`    flowId:   ${manifest.flowId}`)
-console.log(`    git:      ${manifest.git.commit}`)
-console.log(`    inputs:   flowSpec ${manifest.inputs.flowSpec.digest.slice(0, 12)}… / registry ${manifest.inputs.registryInventory.digest.slice(0, 12)}…`)

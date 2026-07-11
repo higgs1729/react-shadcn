@@ -3,7 +3,7 @@
   "class": "baseline",
   "metadata": {
     "description": "Immutable baseline sourced from the current golden flow. Locks in the invoice-list selection so any future drift in the selection instructions or inventory is caught as a regression.",
-    "inputProvenance": "FlowSpec docs/examples/flowspec-dryrun-01.json (step 'invoice-list') resolved by docs/layers/20-selection/ai-pattern-selection-instructions.md into docs/examples/selectionspec-dryrun-02.json (screen 'invoice-list'); dry-run #2, 2026-07-11. Do not edit; add new cases as separate files instead."
+    "inputProvenance": "Golden flow dryrun-saas-ops-01: its FlowSpec step 'invoice-list' resolved by docs/layers/20-selection/ai-pattern-selection-instructions.md into its SelectionSpec screen 'invoice-list' (current artifacts live under docs/examples/, one per contract per flowId); dry-run #2, 2026-07-11. Do not edit; add new cases as separate files instead."
   },
   "input": {
     "stepId": "invoice-list",

@@ -17,7 +17,7 @@ import { readDoc, docPath } from './lib/paths.mjs'
 test('an unsupported planned check ID fails loudly and names the ID', () => {
   const dir = mkdtempSync(join(tmpdir(), 'check-plan-'))
   try {
-    const base = readDoc('selectionspec-dryrun-02.json')
+    const base = readDoc('selectionspec-dryrun-saas-ops-01.json')
     const fixture = {
       ...base,
       screens: [{ ...base.screens[0], checksPlanned: ['lint', 'visual-regression'] }],
@@ -39,7 +39,7 @@ test(
   'every planned check in the golden dry-run SelectionSpec actually executes',
   { timeout: 300_000 },
   () => {
-    const specPath = docPath('selectionspec-dryrun-02.json')
+    const specPath = docPath('selectionspec-dryrun-saas-ops-01.json')
     const spec = JSON.parse(readFileSync(specPath, 'utf8'))
     const dir = mkdtempSync(join(tmpdir(), 'check-plan-'))
     try {

@@ -1,0 +1,5 @@
+{
+  "$comment": "Fixture for scripts/test-flows.mjs: the second of two complete triples in this directory, proving discovery finds every flow, not just the first.",
+  "flowId": "fixture-multi-b",
+  "screens": []
+}

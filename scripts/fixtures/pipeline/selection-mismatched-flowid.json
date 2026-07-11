@@ -1,5 +1,5 @@
 {
-  "$comment": "Output of dry-run #2, produced by executing ai-pattern-selection-instructions.md against flowspec-dryrun-01.json and the 10-item registry (2026-07-11), after task-06 landed the collection inventory. login/overview inputs are unchanged from dry-run #1 and re-resolve identically. invoice-list screenType scores: collection=100 (2nd: dashboard 47.5) - no near-tie. Screen-pattern and block scores use the same rubric as dry-run #1 (K-coverage; evidence confidence high=10, medium=5).",
+  "$comment": "Output of dry-run #2, produced by executing ai-pattern-selection-instructions.md against flowspec-dryrun-saas-ops-01.json and the 10-item registry (2026-07-11), after task-06 landed the collection inventory. login/overview inputs are unchanged from dry-run #1 and re-resolve identically. invoice-list screenType scores: collection=100 (2nd: dashboard 47.5) - no near-tie. Screen-pattern and block scores use the same rubric as dry-run #1 (K-coverage; evidence confidence high=10, medium=5).",
   "flowId": "wrong-flow-99",
   "screens": [
     {

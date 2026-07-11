@@ -82,3 +82,5 @@ an unhandled native form submit, which navigates and kills the test).
 Write the result to `docs/examples/buildreport-<flowId>.json` and validate it with `npm run validate:spec -- docs/examples/buildreport-<flowId>.json`.
 
 Then run `npm run validate:pipeline` (cross-artifact invariants over FlowSpec + SelectionSpec + this BuildReport; pass `--flow/--spec/--build` if the filenames differ from the defaults). Both must exit 0 before the BuildReport is considered emitted.
+
+**Provenance sidecar invalidation:** the sidecar's registry digest covers all of `registry/`, so adding or editing any registry item makes every existing sidecar fail `npm run validate:provenance` as input drift. After any inventory change, regenerate affected sidecars with `npm run gen:provenance` — do not widen the digest to compensate.
