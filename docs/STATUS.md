@@ -27,7 +27,7 @@
   （`components/a11y-fixtures/` + `npm run test:a11y-known-violation`）、依存監査
   （`npm run audit:deps`）、決定論的シークレットスキャン（`npm run scan:secrets` / `test:scan-secrets`）。
   check-registry に `smoke`(observational) / `deps-audit`・`secret-scan`(required-now) を登録。
-  invoice-list の loading/empty/error はルート未配線のため `test.fixme` で pending 明記(task-03領域)。
+  invoice-list の loading/empty/error はルートを配線完了、全状態到達可能。
 
 ## 文書構成
 

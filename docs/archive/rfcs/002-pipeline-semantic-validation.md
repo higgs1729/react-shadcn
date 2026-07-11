@@ -50,4 +50,4 @@ registryを同時に読む横断validatorを追加する。
 
 ## Outcome
 
-未実装。
+完了
