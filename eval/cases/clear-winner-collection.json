@@ -1,0 +1,39 @@
+{
+  "id": "clear-winner-collection",
+  "class": "clear-winner",
+  "metadata": {
+    "description": "A collection step whose top screen-pattern candidate wins by a wide margin. The runner must accept the decisive pick and confirm the weaker alternative is recorded as rejected.",
+    "inputProvenance": "Synthetic, derived from the invoice-list facet profile in docs/layers/20-selection/ai-pattern-selection-instructions.md scoring rubric."
+  },
+  "input": {
+    "stepId": "orders",
+    "userIntents": ["browse", "filter"],
+    "dataShapes": ["collection"],
+    "interactionModels": ["filter-sort", "selection-multiple"],
+    "density": "high",
+    "requiredStates": ["default", "loading", "empty", "error"]
+  },
+  "candidate": {
+    "status": "resolved",
+    "stepId": "orders",
+    "resolvedScreenType": "collection",
+    "screenPattern": {
+      "registryItem": "collection-table-01",
+      "score": 95,
+      "rejected": [
+        { "registryItem": "dashboard-01", "score": 48, "reason": "screenType mismatch: dashboard profile scores far below collection for a browse/filter collection step" }
+      ]
+    },
+    "stateCoveragePlan": ["default", "loading", "empty", "error"],
+    "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+    "editedPaths": [],
+    "risks": []
+  },
+  "expect": {
+    "status": "resolved",
+    "selected": "collection-table-01",
+    "rejected": ["dashboard-01"],
+    "checkPlanKnown": true,
+    "stateCoverageSatisfied": true
+  }
+}

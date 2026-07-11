@@ -1,0 +1,29 @@
+{
+  "id": "below-threshold-collection",
+  "class": "below-threshold",
+  "metadata": {
+    "description": "No screen-pattern candidate reaches the score-70 acceptance bar. The selection instructions require escalating to `unresolved` rather than forcing a low-confidence pick.",
+    "inputProvenance": "Synthetic: a niche kanban step with no matching inventory; exercises the 'Reject below 70' rule in ai-pattern-selection-instructions.md step 2."
+  },
+  "input": {
+    "stepId": "kanban-board",
+    "userIntents": ["organize", "prioritize"],
+    "dataShapes": ["collection"],
+    "interactionModels": ["drag-drop"],
+    "density": "medium",
+    "requiredStates": ["default", "loading", "empty"]
+  },
+  "candidate": {
+    "status": "unresolved",
+    "stepId": "kanban-board",
+    "unresolved": {
+      "category": "below-threshold",
+      "reason": "top screen-pattern candidate collection-table-01 scored 62 (< 70 threshold): no drag-drop board inventory; interaction and dataShape fit too weak to accept.",
+      "droppedCandidates": []
+    }
+  },
+  "expect": {
+    "status": "unresolved",
+    "unresolvedReason": { "category": "below-threshold", "textIncludes": "62" }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "baseline-golden-invoice-list",
+  "class": "baseline",
+  "metadata": {
+    "description": "Immutable baseline sourced from the current golden flow. Locks in the invoice-list selection so any future drift in the selection instructions or inventory is caught as a regression.",
+    "inputProvenance": "FlowSpec docs/examples/flowspec-dryrun-01.json (step 'invoice-list') resolved by docs/layers/20-selection/ai-pattern-selection-instructions.md into docs/examples/selectionspec-dryrun-02.json (screen 'invoice-list'); dry-run #2, 2026-07-11. Do not edit; add new cases as separate files instead."
+  },
+  "input": {
+    "stepId": "invoice-list",
+    "userIntents": ["browse", "filter"],
+    "dataShapes": ["collection"],
+    "interactionModels": ["filter-sort", "selection-multiple"],
+    "density": "high",
+    "requiredStates": ["default", "loading", "empty", "error"]
+  },
+  "candidate": {
+    "status": "resolved",
+    "stepId": "invoice-list",
+    "resolvedScreenType": "collection",
+    "screenPattern": { "registryItem": "collection-table-01", "score": 95, "rejected": [] },
+    "stateCoveragePlan": ["default", "loading", "empty", "error"],
+    "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+    "editedPaths": [],
+    "risks": [
+      "collection-table-01 lacks permission-denied and rtl coverage (risk.missingStates); the data-driven-screen rule requires permission-denied before production use."
+    ]
+  },
+  "expect": {
+    "status": "resolved",
+    "selected": "collection-table-01",
+    "rejected": [],
+    "checkPlanKnown": true,
+    "stateCoverageSatisfied": true
+  }
+}

@@ -22,7 +22,7 @@ const validateBuildReport = getContractValidator(ajv, 'ai-buildreport.schema.jso
 let targets = process.argv.slice(2)
 // Scan mode is fail-closed. Add a filename here only for a documented,
 // non-contract sidecar format (for example a future provenance sidecar).
-const EXAMPLE_JSON_ALLOWLIST = new Set([])
+const EXAMPLE_JSON_ALLOWLIST = new Set(['buildreport-dryrun-saas-ops-02.provenance.json'])
 // In directory-scan mode, JSON files that are not contract documents (e.g. the
 // run-checks scratch output {checks, passed}) are skipped instead of failing;
 // explicitly passed files are always validated strictly.

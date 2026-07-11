@@ -27,7 +27,13 @@
     "validate:pipeline": "node scripts/validate-pipeline.mjs",
     "test:validators": "node scripts/test-validators.mjs",
     "test:planned-checks": "node scripts/run-planned-checks.test.mjs",
-    "test:pipeline": "node scripts/test-pipeline.mjs"
+    "test:pipeline": "node scripts/test-pipeline.mjs",
+    "eval": "node scripts/run-eval.mjs",
+    "eval:fixture": "node scripts/run-eval.mjs eval/fixtures/failing-wrong-winner.json",
+    "test:eval": "node scripts/run-eval.test.mjs",
+    "gen:provenance": "node scripts/gen-provenance.mjs",
+    "validate:provenance": "node scripts/validate-provenance.mjs",
+    "test:provenance": "node scripts/test-provenance.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

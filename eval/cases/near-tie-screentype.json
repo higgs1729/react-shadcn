@@ -1,0 +1,30 @@
+{
+  "id": "near-tie-screentype",
+  "class": "near-tie",
+  "metadata": {
+    "description": "Two screenType profiles score within 8 of each other and the documented tie-break (jobMapStages, then density) does not separate them. The step must go to `unresolved` with the tied candidates, not a guess.",
+    "inputProvenance": "Synthetic: a hybrid monitor/browse step engineered to trigger the near-tie branch in ai-pattern-selection-instructions.md step 1."
+  },
+  "input": {
+    "stepId": "activity",
+    "userIntents": ["monitor", "browse"],
+    "dataShapes": ["collection", "metric"],
+    "jobMapStages": ["monitor"],
+    "density": "high",
+    "requiredStates": ["default", "loading", "empty", "error"]
+  },
+  "candidate": {
+    "status": "unresolved",
+    "stepId": "activity",
+    "unresolved": {
+      "category": "near-tie",
+      "reason": "top two screenType scores within 8 (collection 82 vs dashboard 78); tie-break exhausted: jobMapStages sets differ from both, density matches both. Escalating rather than guessing.",
+      "tiedCandidates": ["collection", "dashboard"]
+    }
+  },
+  "expect": {
+    "status": "unresolved",
+    "unresolvedReason": { "category": "near-tie" },
+    "tiedCandidates": ["collection", "dashboard"]
+  }
+}

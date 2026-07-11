@@ -1,0 +1,30 @@
+{
+  "id": "missing-dependency-collection",
+  "class": "missing-dependency",
+  "metadata": {
+    "description": "The otherwise-best candidate declares a registryDependency that is absent from the inventory. Step 2 says drop items with missing registryDependencies; with no fallback the step escalates to `unresolved`.",
+    "inputProvenance": "Synthetic: a data-grid-dependent variant used to exercise the 'Drop items with missing registryDependencies' rule in ai-pattern-selection-instructions.md step 2."
+  },
+  "input": {
+    "stepId": "ledger",
+    "userIntents": ["browse", "filter"],
+    "dataShapes": ["collection"],
+    "interactionModels": ["filter-sort"],
+    "density": "high",
+    "requiredStates": ["default", "loading", "empty", "error"]
+  },
+  "candidate": {
+    "status": "unresolved",
+    "stepId": "ledger",
+    "unresolved": {
+      "category": "missing-dependency",
+      "reason": "dropped collection-table-01: required registryDependency 'data-grid' is absent from the registry inventory; no alternative collection screen-pattern remains.",
+      "droppedCandidates": ["collection-table-01"]
+    }
+  },
+  "expect": {
+    "status": "unresolved",
+    "unresolvedReason": { "category": "missing-dependency", "textIncludes": "data-grid" },
+    "rejected": ["collection-table-01"]
+  }
+}

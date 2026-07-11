@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/schemas/ai-provenance.schema.json",
+  "title": "ProvenanceManifest",
+  "$comment": "Versioned sidecar manifest that makes a generated flow's BuildReport traceable to its inputs and execution environment. This is a SEPARATE format from the immutable docs/contracts/* schemas and never extends BuildReport. PRIVACY RULE (enforced by scripts/validate-provenance.mjs): the manifest MUST NOT contain credentials, secrets, tokens, API keys, environment-variable VALUES, raw prompts, user data, or model chain-of-thought/reasoning. Only content digests, coarse runtime identifiers, and bounded status codes are permitted. additionalProperties:false at every level keeps undeclared (and therefore un-reviewed) fields out.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provenanceVersion",
+    "flowId",
+    "createdAt",
+    "git",
+    "runtime",
+    "inputs",
+    "result"
+  ],
+  "properties": {
+    "$comment": { "type": "string" },
+    "provenanceVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "$comment": "Semantic version of THIS manifest format; consumers gate on the major."
+    },
+    "flowId": { "type": "string", "minLength": 1 },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "$comment": "ISO-8601 UTC timestamp of when this manifest was generated."
+    },
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit"],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "$comment": "Full commit SHA, or the literal 'unavailable' when git metadata cannot be read. A missing repo must never fail a local run.",
+          "anyOf": [
+            { "const": "unavailable" },
+            { "pattern": "^[0-9a-f]{40}$" }
+          ]
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "npm", "os"],
+      "$comment": "Coarse execution-environment identifiers. Deliberately excludes any environment-variable VALUES.",
+      "properties": {
+        "node": { "type": "string", "minLength": 1 },
+        "npm": { "type": "string", "minLength": 1 },
+        "os": { "type": "string", "minLength": 1 }
+      }
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "$comment": "Generator / instruction revisions, recorded only when supplied by the caller.",
+      "properties": {
+        "generator": { "type": "string", "minLength": 1 },
+        "instruction": { "type": "string", "minLength": 1 }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flowSpec", "selectionSpec", "buildReport", "registryInventory"],
+      "$comment": "Content digests of every source artifact the BuildReport derives from. Digests are over CANONICAL JSON (recursively key-sorted, no insignificant whitespace) so they are stable across formatting, BOM, and CRLF/LF differences.",
+      "properties": {
+        "flowSpec": { "$ref": "#/definitions/digestEntry" },
+        "selectionSpec": { "$ref": "#/definitions/digestEntry" },
+        "buildReport": { "$ref": "#/definitions/digestEntry" },
+        "registryInventory": {
+          "allOf": [{ "$ref": "#/definitions/digestEntry" }],
+          "$comment": "Single digest over the whole registry/ inventory: a key-sorted map of {filename -> canonical digest}, then digested."
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "durationMs", "failure"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["verified", "partial", "failed"],
+          "$comment": "Mirrors the BuildReport terminal status."
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0,
+          "$comment": "Wall-clock duration of the check/verification phase in milliseconds."
+        },
+        "failure": {
+          "$comment": "null on success. On failure, a BOUNDED classification (never an opaque free-text-only field) plus a retry hint.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["classification", "retryable"],
+              "properties": {
+                "classification": {
+                  "type": "string",
+                  "enum": ["code", "environment", "dependency", "policy"],
+                  "$comment": "code=source/logic defect; environment=host/runtime issue; dependency=external package/tool; policy=contract or governance rejection."
+                },
+                "retryable": {
+                  "type": "boolean",
+                  "$comment": "Whether an unchanged re-run could plausibly succeed (true for environment/dependency, usually false for code/policy)."
+                },
+                "summary": {
+                  "type": "string",
+                  "maxLength": 280,
+                  "$comment": "Optional short, non-sensitive human label. MUST NOT contain secrets, prompts, user data, or reasoning."
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "digestEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "algorithm", "digest"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "Basename of the source artifact, resolved location-independently via scripts/lib/paths.mjs."
+        },
+        "algorithm": { "type": "string", "enum": ["sha256"] },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

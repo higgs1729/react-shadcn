@@ -1,0 +1,30 @@
+{
+  "id": "failing-wrong-winner",
+  "class": "intentional-failure",
+  "metadata": {
+    "description": "Intentional failing fixture: the candidate resolves the clear-winner collection step to the WRONG screen pattern (dashboard-01) while the expectation demands collection-table-01. Proves the runner detects a regressed selection and exits non-zero, naming this case ID. Not part of the positive dataset.",
+    "inputProvenance": "Copy of clear-winner-collection with a deliberately wrong candidate.screenPattern.registryItem."
+  },
+  "input": {
+    "stepId": "orders",
+    "userIntents": ["browse", "filter"],
+    "dataShapes": ["collection"],
+    "requiredStates": ["default", "loading", "empty", "error"]
+  },
+  "candidate": {
+    "status": "resolved",
+    "stepId": "orders",
+    "resolvedScreenType": "collection",
+    "screenPattern": { "registryItem": "dashboard-01", "score": 71, "rejected": [] },
+    "stateCoveragePlan": ["default", "loading", "empty", "error"],
+    "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+    "editedPaths": [],
+    "risks": []
+  },
+  "expect": {
+    "status": "resolved",
+    "selected": "collection-table-01",
+    "checkPlanKnown": true,
+    "stateCoverageSatisfied": true
+  }
+}

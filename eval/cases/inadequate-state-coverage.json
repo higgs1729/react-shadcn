@@ -1,0 +1,34 @@
+{
+  "id": "inadequate-state-coverage",
+  "class": "inadequate-required-state-coverage",
+  "metadata": {
+    "description": "A data-driven step requires `permission-denied`, which the chosen pattern cannot cover in its stateCoveragePlan. The self-review rule permits emitting only if the gap is recorded as a risk; the grader confirms coverage is satisfied via that risk, not silently dropped.",
+    "inputProvenance": "Synthetic: the invoice-list profile extended with the data-driven-screen 'permission-denied' requirement from ai-pattern-selection-instructions.md Selection Rules."
+  },
+  "input": {
+    "stepId": "billing",
+    "userIntents": ["browse", "filter"],
+    "dataShapes": ["collection"],
+    "interactionModels": ["filter-sort"],
+    "density": "high",
+    "requiredStates": ["default", "loading", "empty", "error", "permission-denied"]
+  },
+  "candidate": {
+    "status": "resolved",
+    "stepId": "billing",
+    "resolvedScreenType": "collection",
+    "screenPattern": { "registryItem": "collection-table-01", "score": 95, "rejected": [] },
+    "stateCoveragePlan": ["default", "loading", "empty", "error"],
+    "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+    "editedPaths": [],
+    "risks": [
+      "collection-table-01 does not cover permission-denied (risk.missingStates); the data-driven-screen rule requires permission-denied before production use. Flagged as a risk rather than claimed as covered."
+    ]
+  },
+  "expect": {
+    "status": "resolved",
+    "selected": "collection-table-01",
+    "checkPlanKnown": true,
+    "stateCoverageSatisfied": true
+  }
+}
