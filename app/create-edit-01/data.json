@@ -1,0 +1,10 @@
+{
+  "record": {
+    "name": "Acme Q3 Launch Plan",
+    "owner": "Dana Whitfield",
+    "summary": "Coordinate the Q3 product launch across marketing, sales, and support.",
+    "attachments": [
+      { "id": "f1", "name": "launch-brief.pdf", "size": "182 KB" }
+    ]
+  }
+}

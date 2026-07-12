@@ -1,0 +1,94 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "workflow-01",
+  "type": "registry:block",
+  "title": "Workflow 01",
+  "description": "A transactional upgrade/checkout flow with a step indicator, plan selection, a billing form, an order summary, and progress-to-commit actions.",
+  "categories": ["screen:workflow", "intent:purchase", "density:medium"],
+  "registryDependencies": ["alert", "badge", "button", "button-group", "card", "field", "input", "separator", "skeleton"],
+  "files": [
+    {
+      "path": "app/workflow-01/workflow-screen.tsx",
+      "type": "registry:component",
+      "target": "app/workflow-01/workflow-screen.tsx"
+    },
+    {
+      "path": "app/workflow-01/data.json",
+      "type": "registry:file",
+      "target": "app/workflow-01/data.json"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "screen-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "screenType": "workflow",
+      "blockRoles": ["wizard-stepper", "form-section", "action-footer", "checkout-summary", "pricing-plan-card"],
+      "userIntents": ["purchase", "review", "approve", "create"],
+      "jobMapStages": ["confirm", "execute", "conclude"],
+      "dataShapes": ["transaction", "single-record"],
+      "interactionModels": ["wizard", "form-submit", "multi-action", "human-in-the-loop"],
+      "layoutModel": {
+        "shell": "none",
+        "region": "full-page",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "loading", "empty", "error"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Composed from labelled shadcn/base-ui primitives (stepper with aria-current, labelled billing fields, plan-selection and confirm buttons); the composed screen has not received an independent accessibility audit."
+      },
+      "dependencies": {
+        "shadcn": ["alert", "badge", "button", "button-group", "card", "field", "input", "separator", "skeleton"],
+        "npm": ["lucide-react"],
+        "registries": ["wizard-stepper-01", "form-section-login-01", "action-footer-01", "checkout-summary-01", "pricing-plan-card-01"]
+      },
+      "composition": {
+        "requiredBlocks": ["wizard-stepper", "form-section", "action-footer", "checkout-summary"],
+        "optionalBlocks": ["pricing-plan-card"],
+        "incompatibleWith": ["app-shell-sidebar", "app-shell-topnav"]
+      },
+      "verification": {
+        "storybookStories": [
+          "patterns-workflow-workflow-01--default",
+          "patterns-workflow-workflow-01--loading",
+          "patterns-workflow-workflow-01--empty",
+          "patterns-workflow-workflow-01--error"
+        ],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://www.nngroup.com/articles/checkout-flow-guidelines/",
+          "https://baymard.com/blog/checkout-flow-average-form-fields"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "licenseReviewNeeded": false,
+        "maintenanceReviewNeeded": false,
+        "missingStates": ["validation-error", "permission-denied", "offline", "rtl"],
+        "notes": "The form-section region is composed from shadcn Field primitives tailored to billing because the only stocked form-section block (form-section-login-01) is login-specific and does not fit billing fields. Plan selection, billing input, and confirm mutate only local component state; there is no payment processing, persistence, or backend wired in."
+      },
+      "extensions": {
+        "localEvidence": [
+          "app/workflow-01/workflow-screen.tsx",
+          "app/workflow-01/data.json",
+          "components/patterns/workflow-01-screen.stories.tsx"
+        ],
+        "taxonomyDecision": "workflow drives progress toward a committed transaction (plan → billing → confirm) with a checkout summary, distinct from onboarding (first-run setup with no transactional commit) and create-edit (editing one record without a staged multi-step commit)."
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "breadcrumbPath": ["Settings"],
+  "profile": {
+    "name": "Dana Whitfield",
+    "email": "dana@northwind.example.app",
+    "role": "Workspace admin"
+  },
+  "notifications": [
+    { "id": "email", "label": "Email notifications", "description": "Receive account updates via email.", "checked": true },
+    { "id": "digest", "label": "Weekly digest", "description": "A summary of workspace activity every Monday.", "checked": true },
+    { "id": "marketing", "label": "Product updates", "description": "Occasional emails about new features.", "checked": false }
+  ],
+  "security": [
+    { "id": "mfa", "label": "Require two-factor auth", "description": "Enforce 2FA for every member.", "checked": true },
+    { "id": "sso", "label": "SSO only", "description": "Disable password sign-in for this workspace.", "checked": false }
+  ]
+}

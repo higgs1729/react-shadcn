@@ -23,9 +23,23 @@ encoding:"UTF-8"
   5不変条件。在庫充足は `npm run report:coverage`(観測のみ・exit 0)で可視化。
 - block-pattern 棚は全充足: **32/32 blockRole 在庫**(各 role に experimental
   block-pattern を1つ、vendored primitive で合成。3ファイル/件 = component + registry +
-  hand-written story)。screenType は **5/12 在庫**、空き7(conversation-assistant /
-  create-edit / detail / onboarding / report-analytics / settings-admin / workflow)は
-  task-16 で screen-pattern を追加(必要 block は揃済み)。
+  hand-written story)。screenType は **12/12 在庫**、gap 0(全 screenType に experimental
+  screen-pattern が1つ以上)。`npm run report:coverage` = 12/12・32/32。
+- task-16 を7画面分連続実行し、`detail` / `onboarding` / `create-edit` / `workflow` /
+  `conversation-assistant` / `report-analytics` / `settings-admin` の experimental
+  screen-pattern を新規追加。各 registry item は既存 canonical profile の typicalBlockRoles を
+  既存在庫の block-pattern で合成し、default/loading/empty/error の hand-written Storybook story を
+  持つ。enum・profile は既に canonical で存在していたため語彙は不変(facets schema の diff 無し)。
+  回帰は `scripts/test-screentype-inventory.mjs <type>`(enum 存在・profile・role 対称・在庫充足の
+  positive 5 + SCREENTYPE_MATCH negative 1)を7 type 分 `npm run test:<type>` で追加。
+  form-section が必要な onboarding/create-edit/workflow/settings-admin は、唯一の在庫
+  `form-section-login-01` が login 専用で汎用フォームに不適合のため、同じ shadcn Field primitive で
+  本文を合成(新 block 在庫は作らず、inventory-first は既存在庫充足で満たす)。人間レビューと
+  実バックエンド接続は未実施。
+- 既知メモ: 共有 block `file-upload-area-01` は「Browse files」ボタンが `Button render={<label/>}`
+  で Base UI の nativeButton dev 警告を1件出す(描画は正常・例外ではない)。既存の
+  `document-workspace-01` でも同一で発生する先行事象で、`file-upload-area` を使う
+  onboarding/create-edit にも現れる。修正は共有 block の変更を伴うため別タスク。
 - `inbox-communication` を experimental ScreenType として追加済み。registry item
   `inbox-communication-01` は sidebar/header/filter/conversation triage/comment thread を合成し、
   default/loading/empty/error の Storybook story を持つ。人間レビューと実バックエンド接続は未実施。
@@ -42,6 +56,12 @@ encoding:"UTF-8"
 ## 文書構成
 
 - `docs/contracts/` = 4契約スキーマ(immutable)。`docs/provenance/` = provenance manifest 契約。
+- `docs/layers/10-upstream/` = 上流 FlowSpec の単独置き場(選定前の入力契約のみ)。
+  **`validate:spec` の scan モードと flow 三つ組発見(`scripts/lib/flows.mjs`)は `docs/examples/`
+  しかスキャンしない**ため、ここのファイルは `npm run validate`(scan)の自動検証対象外。
+  検証は必ず明示ファイル指定で回す:
+  `npm run validate:spec -- docs/layers/10-upstream/<file>.json`。
+  例: `flowspec-studio-portfolio-01.json`(本体アプリの1本化 FlowSpec、schema 検証 pass 済み)。
 - `docs/layers/20-selection/` = 選定手順 + canonical profiles。`30-implementation/` = 実装規約。
 - `docs/examples/` = 現行 golden flow 成果物のみ(`<artifact>-<flowId>.json` 命名、現在は flowspec / selectionspec / buildreport-dryrun-saas-ops-01 + sidecar)。
 - `docs/tasks/README.md` = brief テンプレ + 共通規約。追加作業は3分割:
@@ -71,7 +91,7 @@ encoding:"UTF-8"
 新roleが必要なら候補台帳へ登録してTask 19を先行し、完了後にTask 16を再実行する。
 
 - アプリの本体の作成
-  - 資料は`docs/archive/person/tomoy/AI-Design-System-Studio.md`
+  - 資料は`docs/archive/personal/tomoy/AI-Design-System-Studio.md`
     - 例外措置としてこのタスクにかかわっている間のみはこのファイルのみReadとEditを許可する
 
 ## 次の候補(未選択)

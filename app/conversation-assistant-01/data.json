@@ -1,0 +1,16 @@
+{
+  "conversations": [
+    { "id": "c1", "title": "Q3 launch checklist", "preview": "Draft the go-to-market steps", "timestamp": "Just now" },
+    { "id": "c2", "title": "Refund policy summary", "preview": "Summarize the refund rules", "timestamp": "2h ago" },
+    { "id": "c3", "title": "SQL for churn cohort", "preview": "Write a churn query", "timestamp": "Yesterday" }
+  ],
+  "activeConversationId": "c1",
+  "messages": [
+    { "id": "m1", "role": "user", "body": "Draft a go-to-market checklist for the Q3 launch." },
+    { "id": "m2", "role": "assistant", "body": "Here's a checklist: 1) Finalize positioning, 2) Brief sales, 3) Prepare support macros, 4) Schedule the announcement, 5) Set launch-day metrics.", "confidence": "medium", "explanation": "Synthesized from your launch brief and prior playbooks" }
+  ],
+  "activity": [
+    { "id": "a1", "actor": "Assistant", "action": "Read launch-brief.pdf", "timestamp": "Just now" },
+    { "id": "a2", "actor": "Assistant", "action": "Searched prior launch playbooks", "timestamp": "Just now" }
+  ]
+}

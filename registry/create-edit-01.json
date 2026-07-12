@@ -1,0 +1,94 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "create-edit-01",
+  "type": "registry:block",
+  "title": "Create Edit 01",
+  "description": "A single-record create/edit form page with a header, grouped fields, an attachments upload area, and dirty-aware save/cancel actions.",
+  "categories": ["screen:create-edit", "intent:edit", "density:medium"],
+  "registryDependencies": ["alert", "attachment", "button", "button-group", "card", "field", "input", "sidebar", "skeleton", "textarea"],
+  "files": [
+    {
+      "path": "app/create-edit-01/create-edit-screen.tsx",
+      "type": "registry:component",
+      "target": "app/create-edit-01/create-edit-screen.tsx"
+    },
+    {
+      "path": "app/create-edit-01/data.json",
+      "type": "registry:file",
+      "target": "app/create-edit-01/data.json"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "screen-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "screenType": "create-edit",
+      "blockRoles": ["page-header-actions", "form-section", "action-footer", "file-upload-area"],
+      "userIntents": ["create", "edit", "configure"],
+      "jobMapStages": ["execute"],
+      "dataShapes": ["single-record", "relational"],
+      "interactionModels": ["form-submit", "inline-edit", "multi-action"],
+      "layoutModel": {
+        "shell": "none",
+        "region": "full-page",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "loading", "empty", "error"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Composed from labelled shadcn/base-ui primitives (labelled name/owner/summary fields, upload control); the composed screen has not received an independent accessibility audit."
+      },
+      "dependencies": {
+        "shadcn": ["alert", "attachment", "button", "button-group", "card", "field", "input", "sidebar", "skeleton", "textarea"],
+        "npm": ["lucide-react"],
+        "registries": ["page-header-actions-01", "form-section-login-01", "action-footer-01", "file-upload-area-01"]
+      },
+      "composition": {
+        "requiredBlocks": ["page-header-actions", "form-section", "action-footer"],
+        "optionalBlocks": ["file-upload-area", "modal-dialog", "document-body-editor"],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": [
+          "patterns-create-edit-create-edit-01--default",
+          "patterns-create-edit-create-edit-01--loading",
+          "patterns-create-edit-create-edit-01--empty",
+          "patterns-create-edit-create-edit-01--error"
+        ],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://m3.material.io/components/text-fields/guidelines",
+          "https://www.nngroup.com/articles/web-form-design/"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "licenseReviewNeeded": false,
+        "maintenanceReviewNeeded": false,
+        "missingStates": ["validation-error", "permission-denied", "offline", "rtl"],
+        "notes": "The form-section region is composed from shadcn Field primitives tailored to the record because the only stocked form-section block (form-section-login-01) is login-specific and does not fit generic edit fields. Field edits and file selection mutate only local component state; there is no persistence, server-side validation, or backend wired in."
+      },
+      "extensions": {
+        "localEvidence": [
+          "app/create-edit-01/create-edit-screen.tsx",
+          "app/create-edit-01/data.json",
+          "components/patterns/create-edit-01-screen.stories.tsx"
+        ],
+        "taxonomyDecision": "create-edit is a single non-wizard record form whose primary job is submitting discrete validated field changes, distinct from onboarding/workflow (sequential stepper flows) and document-workspace (free-form document body authoring)."
+      }
+    }
+  }
+}

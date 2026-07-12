@@ -1,0 +1,147 @@
+{
+  "$comment": "Studio portfolio app as ONE hub-and-spoke FlowSpec. Root/hub = 'overview'. The three journeys are transition-label paths, not separate flows: Reviewer Discovery (overview->pattern-library->pattern-detail->live-demo->quality-report->case-study), Studio Pipeline (studio-composer->ai-assistant?->flow-checkpoint->result-report->pattern-detail), First Visit (orientation->overview). screenType intentionally absent - selection layer resolves it from facets. The 5-item global nav is an app-shell block on each screen, NOT a transition. Per-step rationale lives in docs/archive/personal/tomoy/AI-Design-System-Studio.md (step $comment is disallowed by the contract's additionalProperties:false). Notes: pattern-detail carries the default/loading/empty/error switch (P0) and deep-links to storybook-static via registry verification.storybookStories; live-demo embeds an already-built screen with ?state= switching; ai-assistant is optional; flow-checkpoint is the human confirmation gate.",
+  "flowId": "studio-portfolio-01",
+  "flowArchetype": "showcase",
+  "steps": [
+    {
+      "stepId": "overview",
+      "order": 1,
+      "userIntents": ["monitor", "analyze", "browse"],
+      "jobMapStages": ["monitor", "locate"],
+      "dataShapes": ["metric", "categorical", "collection"],
+      "interactionModels": ["read-only", "filter-sort"],
+      "density": "high",
+      "requiredStates": ["default", "loading"],
+      "accessibilityConstraints": { "keyboard": true, "focusVisible": true },
+      "visualTone": ["developer", "ai-native"],
+      "transitions": {
+        "onReviewerTour": "pattern-library",
+        "onOpenStudio": "studio-composer",
+        "onViewQuality": "quality-report",
+        "onViewCaseStudy": "case-study",
+        "onOrientation": "orientation"
+      }
+    },
+    {
+      "stepId": "pattern-library",
+      "order": 2,
+      "userIntents": ["browse", "search", "filter"],
+      "jobMapStages": ["locate"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["filter-sort", "selection-single"],
+      "density": "high",
+      "requiredStates": ["default", "loading", "empty", "error"],
+      "accessibilityConstraints": { "keyboard": true, "labels": true },
+      "transitions": { "onSelectPattern": "pattern-detail" }
+    },
+    {
+      "stepId": "pattern-detail",
+      "order": 3,
+      "userIntents": ["review", "compare"],
+      "jobMapStages": ["locate", "define"],
+      "dataShapes": ["single-record", "collection"],
+      "interactionModels": ["read-only", "disclosure", "selection-single"],
+      "density": "medium",
+      "requiredStates": ["default", "loading", "empty", "error"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onLiveDemo": "live-demo", "onBack": "pattern-library" }
+    },
+    {
+      "stepId": "live-demo",
+      "order": 4,
+      "userIntents": ["review", "browse"],
+      "jobMapStages": ["monitor"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["read-only", "filter-sort"],
+      "density": "medium",
+      "requiredStates": ["default", "loading", "empty", "error"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onContinue": "quality-report" }
+    },
+    {
+      "stepId": "quality-report",
+      "order": 5,
+      "userIntents": ["analyze", "review"],
+      "jobMapStages": ["monitor", "conclude"],
+      "dataShapes": ["metric", "categorical"],
+      "interactionModels": ["read-only", "disclosure"],
+      "density": "high",
+      "requiredStates": ["default", "loading"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onCaseStudy": "case-study" }
+    },
+    {
+      "stepId": "case-study",
+      "order": 6,
+      "userIntents": ["review", "analyze"],
+      "jobMapStages": ["conclude"],
+      "dataShapes": ["document", "single-record"],
+      "interactionModels": ["read-only", "disclosure"],
+      "density": "medium",
+      "visualTone": ["editorial"],
+      "requiredStates": ["default"],
+      "accessibilityConstraints": { "keyboard": true }
+    },
+    {
+      "stepId": "studio-composer",
+      "order": 7,
+      "userIntents": ["create", "edit"],
+      "jobMapStages": ["define", "prepare"],
+      "dataShapes": ["document"],
+      "interactionModels": ["form-submit", "inline-edit"],
+      "density": "medium",
+      "requiredStates": ["default", "validation-error"],
+      "accessibilityConstraints": { "keyboard": true, "labels": true },
+      "transitions": { "onAssist": "ai-assistant", "onGenerate": "flow-checkpoint" }
+    },
+    {
+      "stepId": "ai-assistant",
+      "order": 8,
+      "userIntents": ["delegate-to-ai", "communicate"],
+      "jobMapStages": ["prepare", "define"],
+      "dataShapes": ["conversation"],
+      "interactionModels": ["streaming", "human-in-the-loop"],
+      "density": "medium",
+      "visualTone": ["ai-native"],
+      "requiredStates": ["default", "loading"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onApplyToBrief": "studio-composer", "onGenerate": "flow-checkpoint" }
+    },
+    {
+      "stepId": "flow-checkpoint",
+      "order": 9,
+      "userIntents": ["review", "approve"],
+      "jobMapStages": ["confirm"],
+      "dataShapes": ["hierarchy", "single-record"],
+      "interactionModels": ["disclosure", "human-in-the-loop", "single-action"],
+      "density": "medium",
+      "requiredStates": ["default", "loading"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onApprove": "result-report" }
+    },
+    {
+      "stepId": "result-report",
+      "order": 10,
+      "userIntents": ["analyze", "review", "compare"],
+      "jobMapStages": ["conclude"],
+      "dataShapes": ["metric", "categorical", "collection"],
+      "interactionModels": ["read-only", "disclosure"],
+      "density": "high",
+      "requiredStates": ["default", "loading", "empty"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onOpenSelectedPattern": "pattern-detail" }
+    },
+    {
+      "stepId": "orientation",
+      "order": 11,
+      "userIntents": ["onboard"],
+      "jobMapStages": ["prepare"],
+      "dataShapes": ["none"],
+      "interactionModels": ["disclosure", "single-action"],
+      "density": "low",
+      "requiredStates": ["default"],
+      "accessibilityConstraints": { "keyboard": true },
+      "transitions": { "onContinue": "overview", "onSkip": "overview" }
+    }
+  ]
+}

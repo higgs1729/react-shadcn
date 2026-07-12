@@ -1,0 +1,14 @@
+{
+  "steps": [
+    { "id": "profile", "label": "Profile" },
+    { "id": "workspace", "label": "Workspace" },
+    { "id": "invite", "label": "Invite team" },
+    { "id": "finish", "label": "Finish" }
+  ],
+  "currentStepId": "workspace",
+  "completedStepIds": ["profile"],
+  "workspace": {
+    "name": "Northwind Ops",
+    "subdomain": "northwind"
+  }
+}

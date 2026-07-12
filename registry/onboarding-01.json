@@ -1,0 +1,94 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "onboarding-01",
+  "type": "registry:block",
+  "title": "Onboarding 01",
+  "description": "A guided first-run workspace setup flow with a step progress indicator, a details form, a logo upload, an invite empty state, and back/continue actions.",
+  "categories": ["screen:onboarding", "intent:onboard", "density:low"],
+  "registryDependencies": ["alert", "attachment", "badge", "button", "button-group", "card", "empty", "field", "input", "separator", "skeleton"],
+  "files": [
+    {
+      "path": "app/onboarding-01/onboarding-screen.tsx",
+      "type": "registry:component",
+      "target": "app/onboarding-01/onboarding-screen.tsx"
+    },
+    {
+      "path": "app/onboarding-01/data.json",
+      "type": "registry:file",
+      "target": "app/onboarding-01/data.json"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "screen-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "screenType": "onboarding",
+      "blockRoles": ["wizard-stepper", "form-section", "action-footer", "empty-state", "file-upload-area"],
+      "userIntents": ["onboard", "configure", "create"],
+      "jobMapStages": ["define", "prepare"],
+      "dataShapes": ["single-record", "none"],
+      "interactionModels": ["wizard", "form-submit", "disclosure"],
+      "layoutModel": {
+        "shell": "none",
+        "region": "full-page",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "low",
+      "stateCoverage": ["default", "loading", "empty", "error"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Composed from labelled shadcn/base-ui primitives (labelled workspace fields, upload control, stepper with aria-current); the composed screen has not received an independent accessibility audit."
+      },
+      "dependencies": {
+        "shadcn": ["alert", "attachment", "badge", "button", "button-group", "card", "empty", "field", "input", "separator", "skeleton"],
+        "npm": ["lucide-react"],
+        "registries": ["wizard-stepper-01", "form-section-login-01", "action-footer-01", "empty-state-01", "file-upload-area-01"]
+      },
+      "composition": {
+        "requiredBlocks": ["wizard-stepper", "form-section", "action-footer", "empty-state"],
+        "optionalBlocks": ["file-upload-area"],
+        "incompatibleWith": ["app-shell-sidebar", "app-shell-topnav"]
+      },
+      "verification": {
+        "storybookStories": [
+          "patterns-onboarding-onboarding-01--default",
+          "patterns-onboarding-onboarding-01--loading",
+          "patterns-onboarding-onboarding-01--empty",
+          "patterns-onboarding-onboarding-01--error"
+        ],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://www.nngroup.com/articles/onboarding-tutorials/",
+          "https://m3.material.io/foundations/content-design/onboarding"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "licenseReviewNeeded": false,
+        "maintenanceReviewNeeded": false,
+        "missingStates": ["permission-denied", "offline", "rtl"],
+        "notes": "The form-section region is composed from shadcn Field primitives tailored to workspace setup because the only stocked form-section block (form-section-login-01) is login-specific and does not fit generic onboarding fields. Progress, upload, and invite actions mutate only local component state; there is no persistence or backend wired in."
+      },
+      "extensions": {
+        "localEvidence": [
+          "app/onboarding-01/onboarding-screen.tsx",
+          "app/onboarding-01/data.json",
+          "components/patterns/onboarding-01-screen.stories.tsx"
+        ],
+        "taxonomyDecision": "onboarding is a sequential first-run setup wizard (stepper-driven, low density), distinct from create-edit (a single non-wizard record form) and workflow (progress toward a committed transaction rather than initial account/workspace setup)."
+      }
+    }
+  }
+}

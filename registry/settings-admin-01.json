@@ -1,0 +1,94 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "settings-admin-01",
+  "type": "registry:block",
+  "title": "Settings Admin 01",
+  "description": "A workspace settings/admin screen with a sidebar shell, tabbed sections, a profile form, notification and security toggle sections, and dirty-aware save actions.",
+  "categories": ["screen:settings-admin", "intent:configure", "density:medium"],
+  "registryDependencies": ["alert", "breadcrumb", "button", "button-group", "card", "field", "input", "separator", "sidebar", "skeleton", "switch", "tabs"],
+  "files": [
+    {
+      "path": "app/settings-admin-01/settings-admin-screen.tsx",
+      "type": "registry:component",
+      "target": "app/settings-admin-01/settings-admin-screen.tsx"
+    },
+    {
+      "path": "app/settings-admin-01/data.json",
+      "type": "registry:file",
+      "target": "app/settings-admin-01/data.json"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "screen-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "screenType": "settings-admin",
+      "blockRoles": ["app-shell-sidebar", "settings-section", "form-section", "action-footer", "breadcrumb-context", "tabs-view-switcher"],
+      "userIntents": ["configure", "edit", "review"],
+      "jobMapStages": ["modify"],
+      "dataShapes": ["single-record", "permission-model", "relational"],
+      "interactionModels": ["form-submit", "inline-edit", "selection-single"],
+      "layoutModel": {
+        "shell": "sidebar",
+        "region": "full-page",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "loading", "empty", "error"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Composed from labelled shadcn/base-ui primitives (labelled profile fields, labelled setting toggles, tab list, breadcrumb nav); the composed screen has not received an independent accessibility audit."
+      },
+      "dependencies": {
+        "shadcn": ["alert", "breadcrumb", "button", "button-group", "card", "field", "input", "separator", "sidebar", "skeleton", "switch", "tabs"],
+        "npm": ["lucide-react"],
+        "registries": ["sidebar-07", "settings-section-01", "form-section-login-01", "action-footer-01", "breadcrumb-context-01", "tabs-view-switcher-01"]
+      },
+      "composition": {
+        "requiredBlocks": ["app-shell-sidebar", "settings-section", "form-section", "action-footer"],
+        "optionalBlocks": ["breadcrumb-context", "tabs-view-switcher", "modal-dialog", "pricing-plan-card"],
+        "incompatibleWith": ["app-shell-topnav"]
+      },
+      "verification": {
+        "storybookStories": [
+          "patterns-settings-admin-settings-admin-01--default",
+          "patterns-settings-admin-settings-admin-01--loading",
+          "patterns-settings-admin-settings-admin-01--empty",
+          "patterns-settings-admin-settings-admin-01--error"
+        ],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://m3.material.io/foundations/layout/canonical-layouts/list-detail",
+          "https://www.nngroup.com/articles/settings-menu/"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "licenseReviewNeeded": false,
+        "maintenanceReviewNeeded": false,
+        "missingStates": ["validation-error", "permission-denied", "offline", "rtl"],
+        "notes": "The form-section region is composed from shadcn Field primitives tailored to the profile because the only stocked form-section block (form-section-login-01) is login-specific and does not fit generic settings fields. Field edits and toggles mutate only local component state; there is no persistence, permission enforcement, or backend wired in."
+      },
+      "extensions": {
+        "localEvidence": [
+          "app/settings-admin-01/settings-admin-screen.tsx",
+          "app/settings-admin-01/data.json",
+          "components/patterns/settings-admin-01-screen.stories.tsx"
+        ],
+        "taxonomyDecision": "settings-admin is a sectioned preferences/admin surface (profile, notifications, security policies) under a persistent secondary nav, distinct from create-edit (a single record form) and detail (a read-mostly record page); toggles carry permission-model and workspace-wide policy semantics rather than editing one business record."
+      }
+    }
+  }
+}

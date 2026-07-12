@@ -1,0 +1,94 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "conversation-assistant-01",
+  "type": "registry:block",
+  "title": "Conversation Assistant 01",
+  "description": "An AI assistant workspace with a conversation list, a streaming chat transcript with explainability labels, an agent activity feed, and a prompt composer.",
+  "categories": ["screen:conversation-assistant", "intent:delegate-to-ai", "density:medium"],
+  "registryDependencies": ["alert", "avatar", "badge", "button", "input-group", "item", "scroll-area", "skeleton", "tooltip"],
+  "files": [
+    {
+      "path": "app/conversation-assistant-01/conversation-assistant-screen.tsx",
+      "type": "registry:component",
+      "target": "app/conversation-assistant-01/conversation-assistant-screen.tsx"
+    },
+    {
+      "path": "app/conversation-assistant-01/data.json",
+      "type": "registry:file",
+      "target": "app/conversation-assistant-01/data.json"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "screen-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "screenType": "conversation-assistant",
+      "blockRoles": ["ai-conversation-list", "ai-prompt-composer", "ai-explainability-label", "activity-feed"],
+      "userIntents": ["communicate", "delegate-to-ai", "review"],
+      "jobMapStages": ["define", "execute"],
+      "dataShapes": ["conversation", "document", "media"],
+      "interactionModels": ["streaming", "real-time", "human-in-the-loop", "single-action"],
+      "layoutModel": {
+        "shell": "split",
+        "region": "full-page",
+        "responsive": ["mobile", "desktop"]
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "loading", "empty", "error"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Composed from labelled shadcn/base-ui primitives (aria-current conversation list, labelled prompt textarea and send control, explainability tooltip); the composed screen has not received an independent accessibility audit."
+      },
+      "dependencies": {
+        "shadcn": ["alert", "avatar", "badge", "button", "input-group", "item", "scroll-area", "skeleton", "tooltip"],
+        "npm": ["lucide-react"],
+        "registries": ["ai-conversation-list-01", "ai-prompt-composer-01", "ai-explainability-label-01", "activity-feed-01"]
+      },
+      "composition": {
+        "requiredBlocks": ["ai-conversation-list", "ai-prompt-composer", "ai-explainability-label", "activity-feed"],
+        "optionalBlocks": ["comment-thread"],
+        "incompatibleWith": ["app-shell-topnav"]
+      },
+      "verification": {
+        "storybookStories": [
+          "patterns-conversation-assistant-conversation-assistant-01--default",
+          "patterns-conversation-assistant-conversation-assistant-01--loading",
+          "patterns-conversation-assistant-conversation-assistant-01--empty",
+          "patterns-conversation-assistant-conversation-assistant-01--error"
+        ],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://www.nngroup.com/articles/generative-ui/",
+          "https://spectrum.chat/"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "licenseReviewNeeded": false,
+        "maintenanceReviewNeeded": false,
+        "missingStates": ["permission-denied", "offline", "rtl"],
+        "notes": "The chat transcript is simulated locally with a fixed seed; there is no model backend, token streaming transport, or tool execution wired in. Sending a prompt appends a local user turn only."
+      },
+      "extensions": {
+        "localEvidence": [
+          "app/conversation-assistant-01/conversation-assistant-screen.tsx",
+          "app/conversation-assistant-01/data.json",
+          "components/patterns/conversation-assistant-01-screen.stories.tsx"
+        ],
+        "taxonomyDecision": "conversation-assistant is a turn-based AI delegation workspace with prompt composer, explainability labeling, and agent activity, distinct from inbox-communication (human correspondence triage with ownership/resolution lifecycle rather than AI token streaming)."
+      }
+    }
+  }
+}

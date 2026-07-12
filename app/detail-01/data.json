@@ -1,0 +1,24 @@
+{
+  "breadcrumbPath": ["Invoices", "Outstanding"],
+  "record": {
+    "title": "Invoice INV-2043",
+    "status": "Pending approval",
+    "statusVariant": "secondary",
+    "fields": [
+      { "id": "customer", "label": "Customer", "value": "Northwind Trading Co." },
+      { "id": "amount", "label": "Amount", "value": "$4,820.00" },
+      { "id": "issued", "label": "Issued", "value": "Jul 2, 2026" },
+      { "id": "due", "label": "Due", "value": "Jul 16, 2026" },
+      { "id": "owner", "label": "Account owner", "value": "Dana Whitfield" }
+    ]
+  },
+  "activity": [
+    { "id": "a1", "actor": "Dana Whitfield", "action": "Sent the invoice to the customer", "timestamp": "Jul 2, 2026" },
+    { "id": "a2", "actor": "System", "action": "Payment reminder scheduled", "timestamp": "Jul 9, 2026" },
+    { "id": "a3", "actor": "Marcus Lee", "action": "Flagged for approval before write-off", "timestamp": "Jul 11, 2026" }
+  ],
+  "comments": [
+    { "id": "c1", "author": "Marcus Lee", "body": "Customer asked for a 5-day extension. Holding approval until finance confirms.", "timestamp": "2 days ago" },
+    { "id": "c2", "author": "Dana Whitfield", "body": "Finance is fine with the extension. Ready to approve.", "timestamp": "4 hours ago" }
+  ]
+}

@@ -74,3 +74,83 @@ Quality／Result → report-analytics
 これは選定結果ではなく上流仮説です。実際のscreenTypeはFlowSpecのfacetから選定レイヤーに解決させます。
 Product Designの整理手順により、見栄えのために全screenTypeを無理やり使用せず、実際のJTBDがある機能だけを本体に採用する方針にしています。残りはPattern Gallery内のデモとして紹介します。
 次は利用上限の解除後、この定義と3本のFlowSpecを docs/layers/10-upstream/ に保存してスキーマ検証します。
+
+## 決定事項（2026-07-12時点）
+
+- FlowSpecは3本に分割せず、**1本のhub-and-spoke構成**にまとめる（flowId: `studio-portfolio-01`）。
+  root/hubは`overview`。Reviewer Discovery / Studio Pipeline / First Visitの3ジャーニーは
+  別flowではなく`transitions`のラベル付きパスとして表現する。理由: 検証系がflowId単位で
+  flowspec/selectionspec/buildreportの三つ組を発見する設計のため、画面が複数flowにまたがると
+  同一画面が重複定義されbuildreportも複数に割れてしまう。
+- グローバルナビ5項目はtransitionではなく、各画面に載る`app-shell-sidebar`/`app-shell-topnav`
+  ブロックとして扱う（journeyの経路とは別レイヤー）。
+- 画面遷移図はテキスト形式(Mermaid)で本ファイルに保持し、機能追加のたびに更新する
+  （正本はこの図。生成物としてのFlowSpec JSONは`docs/layers/10-upstream/`に別途保存する）。
+- 先行在庫化(detail / report-analytics / create-edit / conversation-assistant / workflow /
+  onboarding)はユーザー側で並行して進める。
+- データ層はruntime読み取り（registry/*.json・coverageをServer Componentがrequest時に読む）。
+- 言語はJA/EN両対応（`app/[lang]/...`のlocaleセグメント想定）。
+- Storybookへはdeep-link。registry itemの`verification.storybookStories`を唯一の連結キーとし、
+  `storybook-static`への外部リンクとして`pattern-detail`から参照する。
+- verified（完成）の判定は人間（ユーザー）が行う。自動チェックの全pass=完成ではない。
+
+## 画面遷移図（1本化FlowSpec, Mermaid）
+
+機能追加・画面追加のたびにこの図を更新すること。ノードのjourney色分け:
+Reviewer Discovery=緑系、Studio Pipeline=紫系、First Visit=橙系、hub=灰系。
+
+```mermaid
+flowchart TD
+    orientation["orientation<br/>(onboarding・任意)"]:::firstVisit
+    overview["overview<br/>(root / dashboard)"]:::hub
+    patternLibrary["pattern-library<br/>(collection)"]:::reviewer
+    patternDetail["pattern-detail<br/>(detail・共有ノード)"]:::reviewer
+    liveDemo["live-demo<br/>(既存build embed)"]:::reviewer
+    qualityReport["quality-report<br/>(report-analytics)"]:::reviewer
+    caseStudy["case-study<br/>(report-analytics/detail)"]:::reviewer
+    studioComposer["studio-composer<br/>(create-edit)"]:::studio
+    aiAssistant["ai-assistant<br/>(conversation-assistant・任意)"]:::studio
+    flowCheckpoint["flow-checkpoint<br/>(workflow・承認ゲート)"]:::studio
+    resultReport["result-report<br/>(report-analytics)"]:::studio
+
+    orientation -- "onContinue / onSkip" --> overview
+
+    overview -- "onReviewerTour" --> patternLibrary
+    patternLibrary -- "onSelectPattern" --> patternDetail
+    patternDetail -- "onLiveDemo" --> liveDemo
+    liveDemo -- "onContinue" --> qualityReport
+    qualityReport -- "onCaseStudy" --> caseStudy
+
+    overview -- "onOpenStudio" --> studioComposer
+    studioComposer -- "onAssist" --> aiAssistant
+    aiAssistant -- "onApplyToBrief" --> studioComposer
+    studioComposer -- "onGenerate" --> flowCheckpoint
+    aiAssistant -- "onGenerate" --> flowCheckpoint
+    flowCheckpoint -- "onApprove" --> resultReport
+    resultReport -. "onOpenSelectedPattern (共有ノード再利用)" .-> patternDetail
+
+    overview -. "onOrientation" .-> orientation
+
+    classDef hub fill:#eee,stroke:#888,color:#222
+    classDef reviewer fill:#e1f5ee,stroke:#0f6e56,color:#04342c
+    classDef studio fill:#eeedfe,stroke:#3c3489,color:#26215c
+    classDef firstVisit fill:#faece7,stroke:#993c1d,color:#4a1b0c
+```
+
+### stepId ⇔ screenType仮説 ⇔ 在庫状況（図の補足表）
+
+| stepId | screenType仮説 | journey | 在庫 |
+| --- | --- | --- | --- |
+| overview | dashboard | root/hub | 済 |
+| pattern-library | collection | Reviewer | 済 |
+| pattern-detail | detail | Reviewer ∩ Studio(共有) | 済 |
+| live-demo | detail/workflow相当 | Reviewer | 既存build流用 |
+| quality-report | report-analytics | Reviewer | 済 |
+| case-study | report-analytics/detail | Reviewer | 済 |
+| studio-composer | create-edit | Studio | 済 |
+| ai-assistant | conversation-assistant | Studio(任意) | 済 |
+| flow-checkpoint | workflow | Studio | 済 |
+| result-report | report-analytics | Studio | 済 |
+| orientation | onboarding | First Visit | 済 |
+
+新しいstepを追加する時は、上のMermaidノード・エッジと下の表を両方更新すること。
