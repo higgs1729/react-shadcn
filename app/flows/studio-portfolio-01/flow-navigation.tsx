@@ -6,19 +6,20 @@ import { usePathname } from "next/navigation"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-import { studioContent } from "./studio-content"
+import { studioContent, type FlowAction } from "./studio-content"
 
 const FLOW_ROOT = "/flows/studio-portfolio-01"
+const actionsByStep: Record<string, readonly FlowAction[]> = studioContent.actionsByStep
 
 function stepFromPath(pathname: string) {
   const segment = pathname.split("/").filter(Boolean).at(-1)
-  return segment && studioContent.actionsByStep[segment] ? segment : "overview"
+  return segment && actionsByStep[segment] ? segment : "overview"
 }
 
 export function StudioPortfolioNavigation() {
   const pathname = usePathname()
   const step = stepFromPath(pathname)
-  const actions = studioContent.actionsByStep[step]
+  const actions = actionsByStep[step]
 
   return (
     <nav

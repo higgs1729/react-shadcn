@@ -1,0 +1,1312 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    "docs/contracts/ai-design-facets.schema.json",
+    "registry/*.json",
+    "docs/examples/flowspec-studio-portfolio-01.json",
+    "docs/examples/selectionspec-studio-portfolio-01.json",
+    "docs/examples/buildreport-studio-portfolio-01.json",
+    "docs/examples/buildreport-dryrun-saas-ops-01.json"
+  ],
+  "inventory": {
+    "screenTypes": 13,
+    "blockRoles": 33,
+    "registryItems": 46,
+    "maturity": {
+      "experimental": 46
+    },
+    "screenPatterns": [
+      {
+        "name": "collection-table-01",
+        "title": "Collection Table 01",
+        "description": "A collection screen composition: sidebar shell, header, filter toolbar, and a searchable/filterable invoice table with table/grid views and full loading/empty/error state coverage.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "collection",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "patterns-collection-collection-table-01--default",
+          "patterns-collection-collection-table-01--loading",
+          "patterns-collection-collection-table-01--empty",
+          "patterns-collection-collection-table-01--error"
+        ]
+      },
+      {
+        "name": "conversation-assistant-01",
+        "title": "Conversation Assistant 01",
+        "description": "An AI assistant workspace with a conversation list, a streaming chat transcript with explainability labels, an agent activity feed, and a prompt composer.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "conversation-assistant",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error"
+        ],
+        "storybookStories": [
+          "patterns-conversation-assistant-conversation-assistant-01--default",
+          "patterns-conversation-assistant-conversation-assistant-01--loading",
+          "patterns-conversation-assistant-conversation-assistant-01--empty",
+          "patterns-conversation-assistant-conversation-assistant-01--error"
+        ]
+      },
+      {
+        "name": "create-edit-01",
+        "title": "Create Edit 01",
+        "description": "A single-record create/edit form page with a header, grouped fields, an attachments upload area, and dirty-aware save/cancel actions.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "create-edit",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error"
+        ],
+        "storybookStories": [
+          "patterns-create-edit-create-edit-01--default",
+          "patterns-create-edit-create-edit-01--loading",
+          "patterns-create-edit-create-edit-01--empty",
+          "patterns-create-edit-create-edit-01--error"
+        ]
+      },
+      {
+        "name": "dashboard-01",
+        "title": "Dashboard 01",
+        "description": "A dashboard composition skeleton: page layout wiring the sidebar shell, header, metric row, chart panel, and data table via standalone block items.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "dashboard",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error",
+          "mobile"
+        ],
+        "storybookStories": [
+          "patterns-dashboard-dashboard-01--default",
+          "patterns-dashboard-dashboard-01--loading",
+          "patterns-dashboard-dashboard-01--empty",
+          "patterns-dashboard-dashboard-01--error"
+        ]
+      },
+      {
+        "name": "detail-01",
+        "title": "Detail 01",
+        "description": "An entity detail page presenting one primary record with its fields, activity history, threaded comments, and approve/reject actions.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "detail",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error"
+        ],
+        "storybookStories": [
+          "patterns-detail-detail-01--default",
+          "patterns-detail-detail-01--loading",
+          "patterns-detail-detail-01--empty",
+          "patterns-detail-detail-01--error"
+        ]
+      },
+      {
+        "name": "document-workspace-01",
+        "title": "Document Workspace 01",
+        "description": "A long-form document authoring workspace combining an inline-editable document body with in-context comments and file attachments.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "document-workspace",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error",
+          "validation-error"
+        ],
+        "storybookStories": [
+          "patterns-document-workspace-document-workspace-01--default",
+          "patterns-document-workspace-document-workspace-01--loading",
+          "patterns-document-workspace-document-workspace-01--empty",
+          "patterns-document-workspace-document-workspace-01--error",
+          "patterns-document-workspace-document-workspace-01--validation-error"
+        ]
+      },
+      {
+        "name": "inbox-communication-01",
+        "title": "Inbox Communication 01",
+        "description": "A high-density human communication inbox for searching, filtering, assigning, and resolving incoming conversations.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "inbox-communication",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "patterns-inbox-communication-inbox-communication-01--default",
+          "patterns-inbox-communication-inbox-communication-01--loading",
+          "patterns-inbox-communication-inbox-communication-01--empty",
+          "patterns-inbox-communication-inbox-communication-01--error"
+        ]
+      },
+      {
+        "name": "login-03",
+        "title": "Login 03",
+        "description": "A login page with a muted background color.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "auth",
+        "blockRole": null,
+        "stateCoverage": [
+          "default"
+        ],
+        "storybookStories": [
+          "patterns-auth-login-03--default"
+        ]
+      },
+      {
+        "name": "onboarding-01",
+        "title": "Onboarding 01",
+        "description": "A guided first-run workspace setup flow with a step progress indicator, a details form, a logo upload, an invite empty state, and back/continue actions.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "onboarding",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error"
+        ],
+        "storybookStories": [
+          "patterns-onboarding-onboarding-01--default",
+          "patterns-onboarding-onboarding-01--loading",
+          "patterns-onboarding-onboarding-01--empty",
+          "patterns-onboarding-onboarding-01--error"
+        ]
+      },
+      {
+        "name": "planning-board-01",
+        "title": "Planning Board 01",
+        "description": "A high-density planning board for moving work items across workflow-status columns.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "planning-board",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "patterns-planning-board-planning-board-01--default",
+          "patterns-planning-board-planning-board-01--loading",
+          "patterns-planning-board-planning-board-01--empty",
+          "patterns-planning-board-planning-board-01--error"
+        ]
+      },
+      {
+        "name": "report-analytics-01",
+        "title": "Report Analytics 01",
+        "description": "A historical revenue report combining a period filter, a KPI metric row, a trend chart, and a detailed data table for deep analysis.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "report-analytics",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error"
+        ],
+        "storybookStories": [
+          "patterns-report-analytics-report-analytics-01--default",
+          "patterns-report-analytics-report-analytics-01--loading",
+          "patterns-report-analytics-report-analytics-01--empty",
+          "patterns-report-analytics-report-analytics-01--error"
+        ]
+      },
+      {
+        "name": "settings-admin-01",
+        "title": "Settings Admin 01",
+        "description": "A workspace settings/admin screen with a sidebar shell, tabbed sections, a profile form, notification and security toggle sections, and dirty-aware save actions.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "settings-admin",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error"
+        ],
+        "storybookStories": [
+          "patterns-settings-admin-settings-admin-01--default",
+          "patterns-settings-admin-settings-admin-01--loading",
+          "patterns-settings-admin-settings-admin-01--empty",
+          "patterns-settings-admin-settings-admin-01--error"
+        ]
+      },
+      {
+        "name": "workflow-01",
+        "title": "Workflow 01",
+        "description": "A transactional upgrade/checkout flow with a step indicator, plan selection, a billing form, an order summary, and progress-to-commit actions.",
+        "assetKind": "screen-pattern",
+        "maturity": "experimental",
+        "screenType": "workflow",
+        "blockRole": null,
+        "stateCoverage": [
+          "default",
+          "loading",
+          "empty",
+          "error"
+        ],
+        "storybookStories": [
+          "patterns-workflow-workflow-01--default",
+          "patterns-workflow-workflow-01--loading",
+          "patterns-workflow-workflow-01--empty",
+          "patterns-workflow-workflow-01--error"
+        ]
+      }
+    ],
+    "blockPatterns": [
+      {
+        "name": "action-footer-01",
+        "title": "Action Footer 01",
+        "description": "A presentational, controlled sticky footer with a primary and secondary action.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "action-footer",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-action-footer-action-footer-01--default"
+        ]
+      },
+      {
+        "name": "activity-feed-01",
+        "title": "Activity Feed 01",
+        "description": "A presentational, controlled chronological activity/audit stream with actor avatars.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "activity-feed",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-activity-feed-activity-feed-01--default"
+        ]
+      },
+      {
+        "name": "ai-conversation-list-01",
+        "title": "AI Conversation List 01",
+        "description": "A presentational, controlled list of AI chat threads with active selection and a new-conversation action.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "ai-conversation-list",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-ai-conversation-list-ai-conversation-list-01--default"
+        ]
+      },
+      {
+        "name": "ai-explainability-label-01",
+        "title": "AI Explainability Label 01",
+        "description": "A presentational, controlled inline AI-generated/confidence provenance label with a tooltip explanation.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "ai-explainability-label",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-ai-explainability-label-ai-explainability-label-01--default"
+        ]
+      },
+      {
+        "name": "ai-prompt-composer-01",
+        "title": "AI Prompt Composer 01",
+        "description": "A presentational, controlled prompt input with attach and send controls.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "ai-prompt-composer",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-ai-prompt-composer-ai-prompt-composer-01--default"
+        ]
+      },
+      {
+        "name": "app-shell-topnav-01",
+        "title": "App Shell Topnav 01",
+        "description": "A presentational, controlled top navigation bar shell with a brand mark, nav links, and sign-out action.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "app-shell-topnav",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-app-shell-topnav-app-shell-topnav-01--default"
+        ]
+      },
+      {
+        "name": "board-column-01",
+        "title": "Board Column 01",
+        "description": "A controlled workflow-status lane with ordered work-item cards and drag-and-drop status transitions.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "board-column",
+        "stateCoverage": [
+          "default",
+          "empty",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-board-column-board-column-01--default"
+        ]
+      },
+      {
+        "name": "breadcrumb-context-01",
+        "title": "Breadcrumb Context 01",
+        "description": "A presentational, controlled breadcrumb trail showing location context within a hierarchy, with the current page as the final crumb.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "breadcrumb-context",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-breadcrumb-context-breadcrumb-context-01--default"
+        ]
+      },
+      {
+        "name": "chart-panel-01",
+        "title": "Chart Panel 01",
+        "description": "An interactive time-series area chart with range toggle (extracted from dashboard-01).",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "chart-panel",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-chart-panel-chart-panel-01--default"
+        ]
+      },
+      {
+        "name": "checkout-summary-01",
+        "title": "Checkout Summary 01",
+        "description": "A presentational, controlled order line-item summary with total and a confirm action.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "checkout-summary",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-checkout-summary-checkout-summary-01--default"
+        ]
+      },
+      {
+        "name": "collection-grid-01",
+        "title": "Collection Grid 01",
+        "description": "A presentational, controlled responsive card grid for browsing and selecting a collection item.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "collection-grid",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-collection-grid-collection-grid-01--default"
+        ]
+      },
+      {
+        "name": "command-search-01",
+        "title": "Command Search 01",
+        "description": "A presentational, controlled cmd+k command palette dialog with grouped, searchable items.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "command-search",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-command-search-command-search-01--default"
+        ]
+      },
+      {
+        "name": "comment-thread-01",
+        "title": "Comment Thread 01",
+        "description": "A presentational, controlled threaded comment list with a reply composer.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "comment-thread",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-comment-thread-comment-thread-01--default"
+        ]
+      },
+      {
+        "name": "conversation-triage-list-01",
+        "title": "Conversation Triage List 01",
+        "description": "A controlled high-density inbox queue for prioritizing human conversations and applying assignment, snooze, or close actions.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "conversation-triage-list",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-conversation-triage-list-conversation-triage-list-01--default"
+        ]
+      },
+      {
+        "name": "data-table-panel-01",
+        "title": "Data Table Panel 01",
+        "description": "A sortable, selectable data table with drag-reorder, tabs, and a row inspector drawer (extracted from dashboard-01).",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "data-table-panel",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-data-table-panel-data-table-panel-01--default"
+        ]
+      },
+      {
+        "name": "detail-overview-01",
+        "title": "Detail Overview 01",
+        "description": "A presentational, controlled record summary card with labelled fields and a status badge.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "detail-overview",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-detail-overview-detail-overview-01--default"
+        ]
+      },
+      {
+        "name": "document-body-editor-01",
+        "title": "Document Body Editor 01",
+        "description": "A presentational, controlled inline-editable long-form document body with a title field, save-state indicator, and in-context attachments.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "document-body-editor",
+        "stateCoverage": [
+          "default",
+          "empty",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-document-body-editor-document-body-editor-01--default"
+        ]
+      },
+      {
+        "name": "drawer-inspector-01",
+        "title": "Drawer Inspector 01",
+        "description": "A presentational, controlled side panel for inspecting and editing one record without leaving the list.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "drawer-inspector",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-drawer-inspector-drawer-inspector-01--default"
+        ]
+      },
+      {
+        "name": "empty-state-01",
+        "title": "Empty State 01",
+        "description": "A presentational, controlled no-data illustration with a title, description, and a primary call-to-action.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "empty-state",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-empty-state-empty-state-01--default"
+        ]
+      },
+      {
+        "name": "error-recovery-01",
+        "title": "Error Recovery 01",
+        "description": "A presentational, controlled error/permission-denied message with a retry action.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "error-recovery",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-error-recovery-error-recovery-01--default"
+        ]
+      },
+      {
+        "name": "file-upload-area-01",
+        "title": "File Upload Area 01",
+        "description": "A presentational, controlled drag-and-drop / picker upload zone with a file list.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "file-upload-area",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-file-upload-area-file-upload-area-01--default"
+        ]
+      },
+      {
+        "name": "filter-toolbar-01",
+        "title": "Filter Toolbar 01",
+        "description": "A presentational, controlled filter toolbar with search, status select, and a table/grid view switcher.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "filter-toolbar",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-filter-toolbar-filter-toolbar-01--default"
+        ]
+      },
+      {
+        "name": "form-section-login-01",
+        "title": "Form Section Login 01",
+        "description": "A card-framed email/password login form with field labels and submit action (extracted from login-03).",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "form-section",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-form-section-form-section-login-01--default"
+        ]
+      },
+      {
+        "name": "loading-skeleton-01",
+        "title": "Loading Skeleton 01",
+        "description": "A presentational placeholder of skeleton rows for a loading region.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "loading-skeleton",
+        "stateCoverage": [
+          "default",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-loading-skeleton-loading-skeleton-01--default"
+        ]
+      },
+      {
+        "name": "modal-dialog-01",
+        "title": "Modal Dialog 01",
+        "description": "A presentational, controlled focused edit task in a dialog, with a labelled field and confirm/cancel actions.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "modal-dialog",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-modal-dialog-modal-dialog-01--default"
+        ]
+      },
+      {
+        "name": "notification-center-01",
+        "title": "Notification Center 01",
+        "description": "A presentational, controlled bell-trigger popover listing notifications with an unread-count badge.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "notification-center",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-notification-center-notification-center-01--default"
+        ]
+      },
+      {
+        "name": "page-header-actions-01",
+        "title": "Page Header Actions 01",
+        "description": "A sticky site header with sidebar trigger, page title, and action slot (extracted from dashboard-01).",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "page-header-actions",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-page-header-actions-page-header-actions-01--default"
+        ]
+      },
+      {
+        "name": "pricing-plan-card-01",
+        "title": "Pricing Plan Card 01",
+        "description": "A presentational, controlled plan/tier card set with features and a select action.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "pricing-plan-card",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-pricing-plan-card-pricing-plan-card-01--default"
+        ]
+      },
+      {
+        "name": "settings-section-01",
+        "title": "Settings Section 01",
+        "description": "A presentational, controlled grouped settings card with inline toggle rows.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "settings-section",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-settings-section-settings-section-01--default"
+        ]
+      },
+      {
+        "name": "sidebar-07",
+        "title": "Sidebar 07",
+        "description": "A sidebar that collapses to icons.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "app-shell-sidebar",
+        "stateCoverage": [
+          "default",
+          "mobile"
+        ],
+        "storybookStories": [
+          "blocks-app-shell-sidebar-sidebar-07--default"
+        ]
+      },
+      {
+        "name": "summary-metric-row-01",
+        "title": "Summary Metric Row 01",
+        "description": "A responsive row of KPI stat cards with trend badges (extracted from dashboard-01).",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "summary-metric-row",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-summary-metric-row-summary-metric-row-01--default"
+        ]
+      },
+      {
+        "name": "tabs-view-switcher-01",
+        "title": "Tabs View Switcher 01",
+        "description": "A presentational, controlled segmented-tabs switcher for toggling between views/segments of the same data.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "tabs-view-switcher",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-tabs-view-switcher-tabs-view-switcher-01--default"
+        ]
+      },
+      {
+        "name": "wizard-stepper-01",
+        "title": "Wizard Stepper 01",
+        "description": "A presentational, controlled horizontal step indicator with active and complete states, composed from separator and badge.",
+        "assetKind": "block-pattern",
+        "maturity": "experimental",
+        "screenType": null,
+        "blockRole": "wizard-stepper",
+        "stateCoverage": [
+          "default",
+          "mobile",
+          "dark-mode"
+        ],
+        "storybookStories": [
+          "blocks-wizard-stepper-wizard-stepper-01--default"
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "flowId": "dryrun-saas-ops-01",
+      "status": "verified",
+      "screens": 3,
+      "unresolved": 0
+    },
+    {
+      "flowId": "studio-portfolio-01",
+      "status": "verified",
+      "screens": 16,
+      "unresolved": 0
+    }
+  ],
+  "studioSteps": [
+    {
+      "stepId": "overview",
+      "route": "/flows/studio-portfolio-01/overview",
+      "status": "built",
+      "resolvedScreenType": "dashboard",
+      "screenPattern": "dashboard-01",
+      "blockPatterns": [
+        "sidebar-07",
+        "page-header-actions-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01",
+        "filter-toolbar-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading"
+      ],
+      "transitions": {
+        "onReviewerTour": "pattern-library",
+        "onOpenStudio": "studio-composer",
+        "onViewQuality": "quality-report",
+        "onViewCaseStudy": "case-study",
+        "onOrientation": "orientation",
+        "onExploreContracts": "contract-explorer",
+        "onViewCoverage": "coverage-matrix"
+      }
+    },
+    {
+      "stepId": "pattern-library",
+      "route": "/flows/studio-portfolio-01/pattern-library",
+      "status": "built",
+      "resolvedScreenType": "collection",
+      "screenPattern": "collection-table-01",
+      "blockPatterns": [
+        "sidebar-07",
+        "page-header-actions-01",
+        "filter-toolbar-01",
+        "data-table-panel-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "transitions": {
+        "onSelectPattern": "pattern-detail"
+      }
+    },
+    {
+      "stepId": "pattern-detail",
+      "route": "/flows/studio-portfolio-01/pattern-detail",
+      "status": "built",
+      "resolvedScreenType": "detail",
+      "screenPattern": "detail-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "breadcrumb-context-01",
+        "detail-overview-01",
+        "activity-feed-01",
+        "comment-thread-01",
+        "action-footer-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "transitions": {
+        "onLiveDemo": "live-demo",
+        "onBack": "pattern-library",
+        "onWhyThisPattern": "selection-rationale"
+      }
+    },
+    {
+      "stepId": "live-demo",
+      "route": "/flows/studio-portfolio-01/live-demo",
+      "status": "built",
+      "resolvedScreenType": "dashboard",
+      "screenPattern": "dashboard-01",
+      "blockPatterns": [
+        "sidebar-07",
+        "page-header-actions-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01",
+        "filter-toolbar-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "transitions": {
+        "onContinue": "quality-report"
+      }
+    },
+    {
+      "stepId": "quality-report",
+      "route": "/flows/studio-portfolio-01/quality-report",
+      "status": "built",
+      "resolvedScreenType": "report-analytics",
+      "screenPattern": "report-analytics-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "filter-toolbar-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading"
+      ],
+      "transitions": {
+        "onCaseStudy": "case-study",
+        "onVerifyProvenance": "provenance-trail",
+        "onExploreContracts": "contract-explorer"
+      }
+    },
+    {
+      "stepId": "case-study",
+      "route": "/flows/studio-portfolio-01/case-study",
+      "status": "built",
+      "resolvedScreenType": "report-analytics",
+      "screenPattern": "report-analytics-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "filter-toolbar-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01"
+      ],
+      "requiredStates": [
+        "default"
+      ],
+      "stateCoveragePlan": [
+        "default"
+      ],
+      "transitions": {}
+    },
+    {
+      "stepId": "studio-composer",
+      "route": "/flows/studio-portfolio-01/studio-composer",
+      "status": "built",
+      "resolvedScreenType": "document-workspace",
+      "screenPattern": "document-workspace-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "breadcrumb-context-01",
+        "document-body-editor-01",
+        "comment-thread-01",
+        "file-upload-area-01"
+      ],
+      "requiredStates": [
+        "default",
+        "validation-error"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "validation-error"
+      ],
+      "transitions": {
+        "onAssist": "ai-assistant",
+        "onGenerate": "flow-checkpoint"
+      }
+    },
+    {
+      "stepId": "ai-assistant",
+      "route": "/flows/studio-portfolio-01/ai-assistant",
+      "status": "built",
+      "resolvedScreenType": "conversation-assistant",
+      "screenPattern": "conversation-assistant-01",
+      "blockPatterns": [
+        "ai-conversation-list-01",
+        "ai-prompt-composer-01",
+        "ai-explainability-label-01",
+        "activity-feed-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading"
+      ],
+      "transitions": {
+        "onApplyToBrief": "studio-composer",
+        "onGenerate": "flow-checkpoint"
+      }
+    },
+    {
+      "stepId": "flow-checkpoint",
+      "route": "/flows/studio-portfolio-01/flow-checkpoint",
+      "status": "built",
+      "resolvedScreenType": "workflow",
+      "screenPattern": "workflow-01",
+      "blockPatterns": [
+        "wizard-stepper-01",
+        "form-section-login-01",
+        "action-footer-01",
+        "checkout-summary-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading"
+      ],
+      "transitions": {
+        "onApprove": "result-report"
+      }
+    },
+    {
+      "stepId": "result-report",
+      "route": "/flows/studio-portfolio-01/result-report",
+      "status": "built",
+      "resolvedScreenType": "report-analytics",
+      "screenPattern": "report-analytics-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "filter-toolbar-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "empty"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "empty"
+      ],
+      "transitions": {
+        "onOpenSelectedPattern": "pattern-detail",
+        "onViewResult": "generated-preview",
+        "onWhyThisPattern": "selection-rationale"
+      }
+    },
+    {
+      "stepId": "orientation",
+      "route": "/flows/studio-portfolio-01/orientation",
+      "status": "built",
+      "resolvedScreenType": "onboarding",
+      "screenPattern": "onboarding-01",
+      "blockPatterns": [
+        "wizard-stepper-01",
+        "form-section-login-01",
+        "action-footer-01",
+        "empty-state-01"
+      ],
+      "requiredStates": [
+        "default"
+      ],
+      "stateCoveragePlan": [
+        "default"
+      ],
+      "transitions": {
+        "onContinue": "overview",
+        "onSkip": "overview"
+      }
+    },
+    {
+      "stepId": "generated-preview",
+      "route": "/flows/studio-portfolio-01/generated-preview",
+      "status": "built",
+      "resolvedScreenType": "detail",
+      "screenPattern": "detail-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "breadcrumb-context-01",
+        "detail-overview-01",
+        "activity-feed-01",
+        "comment-thread-01",
+        "action-footer-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ],
+      "transitions": {
+        "onOpenSelectedPattern": "pattern-detail",
+        "onWhyThisPattern": "selection-rationale"
+      }
+    },
+    {
+      "stepId": "selection-rationale",
+      "route": "/flows/studio-portfolio-01/selection-rationale",
+      "status": "built",
+      "resolvedScreenType": "report-analytics",
+      "screenPattern": "report-analytics-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "filter-toolbar-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "empty"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "empty"
+      ],
+      "transitions": {
+        "onOpenSelectedPattern": "pattern-detail"
+      }
+    },
+    {
+      "stepId": "contract-explorer",
+      "route": "/flows/studio-portfolio-01/contract-explorer",
+      "status": "built",
+      "resolvedScreenType": "detail",
+      "screenPattern": "detail-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "breadcrumb-context-01",
+        "detail-overview-01",
+        "activity-feed-01",
+        "comment-thread-01",
+        "action-footer-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "empty"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "empty"
+      ],
+      "transitions": {
+        "onOpenSelectedPattern": "pattern-detail"
+      }
+    },
+    {
+      "stepId": "provenance-trail",
+      "route": "/flows/studio-portfolio-01/provenance-trail",
+      "status": "built",
+      "resolvedScreenType": "report-analytics",
+      "screenPattern": "report-analytics-01",
+      "blockPatterns": [
+        "page-header-actions-01",
+        "filter-toolbar-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading",
+        "error"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading",
+        "error"
+      ],
+      "transitions": {
+        "onBackToQuality": "quality-report"
+      }
+    },
+    {
+      "stepId": "coverage-matrix",
+      "route": "/flows/studio-portfolio-01/coverage-matrix",
+      "status": "built",
+      "resolvedScreenType": "dashboard",
+      "screenPattern": "dashboard-01",
+      "blockPatterns": [
+        "sidebar-07",
+        "page-header-actions-01",
+        "summary-metric-row-01",
+        "chart-panel-01",
+        "data-table-panel-01",
+        "filter-toolbar-01"
+      ],
+      "requiredStates": [
+        "default",
+        "loading"
+      ],
+      "stateCoveragePlan": [
+        "default",
+        "loading"
+      ],
+      "transitions": {
+        "onSelectPattern": "pattern-detail"
+      }
+    }
+  ]
+}

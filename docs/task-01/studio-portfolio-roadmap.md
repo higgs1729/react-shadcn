@@ -38,6 +38,8 @@ encoding:"UTF-8"
 
 成果物: 文言・数値・リンクの出典を一箇所に持ち、画面が仮のダッシュボード値に依存しない状態。
 
+完了: `app/flows/studio-portfolio-01/studio-content.ts` にコピーとCTAを集約し、`npm run gen:studio-portfolio-data` が registry・契約・example成果物からクライアント安全な `studio-portfolio-data.json` を生成する。`npm run test:studio-portfolio-data` は語彙数、flow状態、16 stepの解決・実装を検証する。
+
 ### 3. Reviewer Discovery を完成させる
 
 `Overview → Pattern Library → Pattern Detail → Live Demo → Quality Report → Case Study` を、最初の主要体験として完成させる。

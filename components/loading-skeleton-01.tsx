@@ -8,7 +8,7 @@ export interface LoadingSkeleton01Props {
 
 export function LoadingSkeleton01({ rows = 4 }: LoadingSkeleton01Props) {
   return (
-    <div className="flex w-full flex-col gap-4" aria-busy="true" aria-label="Loading">
+    <div role="status" className="flex w-full flex-col gap-4" aria-busy="true" aria-label="Loading">
       {Array.from({ length: rows }).map((_, index) => (
         <div key={index} className="flex items-center gap-3">
           <Skeleton className="size-10 shrink-0 rounded-full" />

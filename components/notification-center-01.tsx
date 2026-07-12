@@ -72,39 +72,41 @@ export function NotificationCenter({
             </Button>
           )}
         </PopoverHeader>
-        <ItemGroup>
-          {notifications.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              You&apos;re all caught up.
-            </p>
-          )}
-          {notifications.map((notification) => (
-            <Item
-              key={notification.id}
-              variant={notification.unread ? "muted" : "default"}
-              size="sm"
-              render={
-                <button
-                  type="button"
-                  onClick={() => onNotificationClick?.(notification.id)}
-                />
-              }
-            >
-              <ItemContent>
-                <ItemTitle>
-                  {notification.title}
-                  {notification.unread && (
-                    <Badge variant="default" className="h-1.5 w-1.5 rounded-full p-0" />
-                  )}
-                </ItemTitle>
-                <ItemDescription>{notification.description}</ItemDescription>
-                <ItemDescription className="text-xs">
-                  {notification.timestamp}
-                </ItemDescription>
-              </ItemContent>
-            </Item>
-          ))}
-        </ItemGroup>
+        {notifications.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            You&apos;re all caught up.
+          </p>
+        ) : (
+          <ItemGroup>
+            {notifications.map((notification) => (
+              <div role="listitem" key={notification.id}>
+                <Item
+                  variant={notification.unread ? "muted" : "default"}
+                  size="sm"
+                  render={
+                    <button
+                      type="button"
+                      onClick={() => onNotificationClick?.(notification.id)}
+                    />
+                  }
+                >
+                  <ItemContent>
+                    <ItemTitle>
+                      {notification.title}
+                      {notification.unread && (
+                        <Badge variant="default" className="h-1.5 w-1.5 rounded-full p-0" />
+                      )}
+                    </ItemTitle>
+                    <ItemDescription>{notification.description}</ItemDescription>
+                    <ItemDescription className="text-xs">
+                      {notification.timestamp}
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
+              </div>
+            ))}
+          </ItemGroup>
+        )}
       </PopoverContent>
     </Popover>
   )

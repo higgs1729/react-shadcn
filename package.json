@@ -39,6 +39,8 @@
     "eval:fixture": "node scripts/run-eval.mjs eval/fixtures/failing-wrong-winner.json",
     "test:eval": "node scripts/run-eval.test.mjs",
     "gen:provenance": "node scripts/gen-provenance.mjs",
+    "gen:studio-portfolio-data": "node scripts/gen-studio-portfolio-data.mjs",
+    "test:studio-portfolio-data": "node scripts/gen-studio-portfolio-data.test.mjs",
     "validate:provenance": "node scripts/validate-provenance.mjs",
     "test:provenance": "node scripts/test-provenance.mjs",
     "test:flows": "node scripts/test-flows.mjs",

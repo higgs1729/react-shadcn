@@ -116,7 +116,7 @@ export function InboxCommunicationScreen({ state = "default" }: { state?: InboxS
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">Support inbox</h1>
           <Button size="sm">New message</Button>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
           <FilterToolbar search={search} onSearchChange={setSearch} status={status} onStatusChange={setStatus} statusOptions={STATUS_OPTIONS} view="table" onViewChange={() => undefined} />
           {state === "error" && <Alert variant="destructive"><AlertTitle>Couldn&apos;t load conversations</AlertTitle><AlertDescription>Check your connection and try again.</AlertDescription><AlertAction><Button variant="outline" size="sm"><RotateCcwIcon />Retry</Button></AlertAction></Alert>}
           {(state === "empty" || (state === "default" && filtered.length === 0)) && <Empty className="rounded-lg border"><EmptyHeader><EmptyTitle>Inbox clear</EmptyTitle><EmptyDescription>No conversations match this view.</EmptyDescription></EmptyHeader><EmptyContent><Button variant="outline" onClick={() => { setSearch(""); setStatus("all") }}>Clear filters</Button></EmptyContent></Empty>}
@@ -171,7 +171,7 @@ export function InboxCommunicationScreen({ state = "default" }: { state?: InboxS
               )}
             </div>
           )}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

@@ -50,8 +50,8 @@ export function ConversationTriageList({
           const isActive = conversation.id === activeConversationId
 
           return (
+            <div role="listitem" key={conversation.id}>
             <Item
-              key={conversation.id}
               className={
                 isActive
                   ? "rounded-none bg-muted"
@@ -123,6 +123,7 @@ export function ConversationTriageList({
                 </div>
               </ItemContent>
             </Item>
+            </div>
           )
         })}
       </ItemGroup>

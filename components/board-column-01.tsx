@@ -59,13 +59,15 @@ export function BoardColumn({
           <PlusIcon />
         </Button>
       </header>
-      <div className="flex flex-1 flex-col gap-2" role="list">
-        {cards.length === 0 ? (
+      {cards.length === 0 ? (
+        <div className="flex flex-1 flex-col gap-2">
           <p className="rounded-lg border border-dashed px-3 py-5 text-center text-sm text-muted-foreground">
             {emptyMessage}
           </p>
-        ) : (
-          cards.map((card) => (
+        </div>
+      ) : (
+        <div className="flex flex-1 flex-col gap-2" role="list">
+          {cards.map((card) => (
             <Card
               key={card.id}
               draggable
@@ -85,9 +87,9 @@ export function BoardColumn({
                 </Button>
               </CardContent>
             </Card>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   )
 }
