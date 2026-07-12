@@ -41,10 +41,43 @@ rewritten. Subagents remain read-only on protected files.
 
 ## Delegation plan
 
-- Taxonomy research: `.agents/blockrole-taxonomy.md`.
-- Component/registry implementation: `.agents/blockrole-implementation.md`.
-- Fixture/test work: `.agents/blockrole-fixture.md`.
-- Mechanical review: `.agents/blockrole-review.md`.
+The coordinator owns scope and is the only role that edits protected files and
+candidate status; it runs on the highest capability tier. There are four delegate
+packages. **First identify which tool is running this brief, then read only that
+tool's subsection and skip the other.**
+
+### If you are Claude Code — read this, skip the Codex subsection
+
+Launch each delegate with the Agent tool, setting `subagent_type` to the name below;
+the model is already pinned in that file's frontmatter. Pass the filled target
+declaration explicitly — do not rely on the delegate having this conversation's
+history. Run the coordinator role itself on `opus` (pin `claude-opus-4-8` when
+reproducibility is required).
+
+| Package | `subagent_type` | Model |
+| --- | --- | --- |
+| Taxonomy research | `blockrole-taxonomy` | `sonnet` (pin `claude-sonnet-5`) |
+| Component/registry implementation | `blockrole-implementation` | `sonnet` (pin `claude-sonnet-5`) |
+| Fixture/test work | `blockrole-fixture` | `haiku` (pin `claude-haiku-4-5-20251001`) |
+| Mechanical review | `blockrole-review` | `haiku` (pin `claude-haiku-4-5-20251001`) |
+
+If the Agent tool is unavailable, execute the packages sequentially yourself and
+record that fact.
+
+### If you are Codex — read this, skip the Claude Code subsection
+
+Use the reusable definition under `.agents/` and pass its `model`, `reasoning_effort`,
+and `agent_type` to the sub-agent runner. Run the coordinator on the session's default
+reasoning-high tier.
+
+| Package | `.agents/` definition | Model | Reasoning |
+| --- | --- | --- | --- |
+| Taxonomy research | `blockrole-taxonomy.md` | `gpt-5.6-terra` | `high` |
+| Component/registry implementation | `blockrole-implementation.md` | `gpt-5.6-terra` | `high` |
+| Fixture/test work | `blockrole-fixture.md` | `gpt-5.6-luna` | `medium` |
+| Mechanical review | `blockrole-review.md` | `gpt-5.6-luna` | `low` |
+
+### Both tools
 
 The coordinator alone edits protected files and candidate status. Record actual models.
 

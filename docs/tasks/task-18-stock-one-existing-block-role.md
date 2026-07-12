@@ -34,9 +34,39 @@ TARGET_SCREEN_TYPES: <comma-separated existing ScreenTypes that consume it>
 
 ## Delegation plan
 
-- Coordinator: scope, API fit, integration, and final checks.
-- Implementation: use `.agents/blockrole-inventory.md`.
-- Mechanical review: use `.agents/blockrole-review.md`.
+The coordinator owns scope, API fit, integration, and final checks, and runs on the
+highest capability tier. There are two delegate packages — implementation and
+mechanical review. **First identify which tool is running this brief, then read only
+that tool's subsection and skip the other.**
+
+### If you are Claude Code — read this, skip the Codex subsection
+
+Launch each delegate with the Agent tool, setting `subagent_type` to the name below;
+the model is already pinned in that file's frontmatter. Pass the filled target
+declaration explicitly — do not rely on the delegate having this conversation's
+history. Run the coordinator role itself on `opus` (pin `claude-opus-4-8` when
+reproducibility is required).
+
+| Package | `subagent_type` | Model |
+| --- | --- | --- |
+| Implementation | `blockrole-inventory` | `sonnet` (pin `claude-sonnet-5`) |
+| Mechanical review | `blockrole-review` | `haiku` (pin `claude-haiku-4-5-20251001`) |
+
+If the Agent tool is unavailable, execute the packages sequentially yourself and
+record that fact.
+
+### If you are Codex — read this, skip the Claude Code subsection
+
+Use the reusable definition under `.agents/` and pass its `model`, `reasoning_effort`,
+and `agent_type` to the sub-agent runner. Run the coordinator on the session's default
+reasoning-high tier.
+
+| Package | `.agents/` definition | Model | Reasoning |
+| --- | --- | --- | --- |
+| Implementation | `blockrole-inventory.md` | `gpt-5.6-terra` | `medium` |
+| Mechanical review | `blockrole-review.md` | `gpt-5.6-luna` | `low` |
+
+### Both tools
 
 Record the actual model used. Keep delegate write sets disjoint and preserve unrelated
 changes.

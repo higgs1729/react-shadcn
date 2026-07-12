@@ -86,34 +86,65 @@ history. Prefer the lowest-capability agent that can complete the package reliab
 
 ### Model assignment
 
-Use the row for the tool running this brief. Model names are explicit so delegation is
-repeatable; when an exact model is unavailable, use the fallback in the same row rather
-than silently moving a package to a weaker tier. Record the actual model used for every
-work package in the final report.
+**First identify which tool is running this brief, then read only that tool's
+subsection and skip the other.** Both subsections assign the same four capability
+tiers to the same work packages — they differ only in concrete model names and how you
+launch a delegate. The shared capability rationale is:
 
-| Work | Codex | Claude Code | Why this tier |
+| Work package | Capability tier | Why |
+| --- | --- | --- |
+| Coordinator | highest | Owns taxonomy approval, protected edits, integration, and final judgment. |
+| WP-A taxonomy research | high (read-only) | Comparison and synthesis, but read-only and independently reviewable. |
+| WP-B fixture/test draft | low (mechanical) | Bounded, mechanical work with executable acceptance tests. |
+| WP-C registry/component implementation | high (coding) | Multi-file coding and API-fit decisions need a coding-capable model. |
+| WP-D mechanical review | low (read-only) | Diff counting and checklist verification are deterministic and read-only. |
+
+Record the actual model used for every work package in the final report.
+
+#### If you are Claude Code — read this, skip the Codex subsection
+
+The four work packages are predefined subagents under `.claude/agents/`. Launch each
+with the Agent tool, setting `subagent_type` to the name below; the model is already
+pinned in that file's frontmatter.
+
+| Work package | `subagent_type` | Model (frontmatter) |
+| --- | --- | --- |
+| Coordinator | `screentype-coordinator` | `opus` (pin `claude-opus-4-8` when reproducibility is required) |
+| WP-A | `screentype-taxonomy` | `sonnet` (pin `claude-sonnet-5`) |
+| WP-B | `screentype-fixture` | `haiku` (pin `claude-haiku-4-5-20251001`) |
+| WP-C | `screentype-implementation` | `sonnet` (pin `claude-sonnet-5`) |
+| WP-D | `screentype-review` | `haiku` (pin `claude-haiku-4-5-20251001`) |
+
+The coordinator subagent is only needed if this brief runs as a delegated coordinator
+session rather than directly in the primary session. Fallback: keep the capability
+class via the stable aliases `opus`/`sonnet`/`haiku`; do not drop WP-A or WP-C to
+`haiku` merely to reduce cost. If the Agent tool is unavailable, execute WP-A through
+WP-D yourself sequentially and report that model isolation was unavailable.
+
+#### If you are Codex — read this, skip the Claude Code subsection
+
+Use the reusable definition under `.agents/` for each work package and pass its
+`model`, `reasoning_effort`, and `agent_type` to the sub-agent runner.
+
+| Work package | `.agents/` definition | Model | Reasoning |
 | --- | --- | --- | --- |
-| Coordinator | `5.6 Sol`, reasoning `high` | `opus` (pin `claude-opus-4-8` when reproducibility is required) | Owns taxonomy approval, protected edits, integration, and final judgment. |
-| WP-A taxonomy research | `5.6 Terra`, reasoning `high` | `sonnet` (pin `claude-sonnet-5`) | Requires comparison and synthesis, but is read-only and independently reviewable. |
-| WP-B fixture/test draft | `5.4 Mini`, reasoning `medium` | `haiku` (pin `claude-haiku-4-5-20251001`) | Bounded, mechanical work with executable acceptance tests. |
-| WP-C registry/component implementation | `5.6 Terra`, reasoning `high` | `sonnet` (pin `claude-sonnet-5`) | Multi-file coding and API-fit decisions need a coding-capable model. |
-| WP-D mechanical review | `5.4 Mini`, reasoning `low` | `haiku` (pin `claude-haiku-4-5-20251001`) | Diff counting and checklist verification are deterministic and read-only. |
+| Coordinator | `screentype-coordinator.md` | `5.6 Sol` | `high` |
+| WP-A | `screentype-taxonomy.md` | `5.6 Terra` | `high` |
+| WP-B | `screentype-fixture.md` | `5.4 Mini` | `medium` |
+| WP-C | `screentype-implementation.md` | `5.6 Terra` | `high` |
+| WP-D | `screentype-review.md` | `5.4 Mini` | `low` |
 
-Codex fallback order: use `5.6 Terra` for implementation work when `5.6 Sol` is
-unavailable, and use `5.4 Mini` for bounded mechanical work. If the 5.6 family is
-unavailable, use the GUI's `5.5` for coordinator/implementation work and keep `5.4 Mini`
-for WP-B/WP-D. Claude Code fallback order: keep the capability class via the stable
-aliases `opus`, `sonnet`, and `haiku`; do not replace WP-A or WP-C with Haiku merely to
-reduce cost. As of 2026-07-12, the model policy was checked against the official OpenAI
-model catalog and Claude Code model/subagent documentation.
+Fallback: use `5.6 Terra` for implementation work when `5.6 Sol` is unavailable, and
+`5.4 Mini` for bounded mechanical work. If the 5.6 family is unavailable, use the GUI's
+`5.5` for coordinator/implementation work and keep `5.4 Mini` for WP-B/WP-D. The
+current sub-agent surface exposes `gpt-5.6-luna` but not `gpt-5.4-mini`; use Luna for
+WP-B/WP-D in that surface and record the actual model. If the runner is unavailable,
+execute WP-A through WP-D sequentially and report that model isolation was unavailable.
 
-For Claude Code custom subagents, set the frontmatter `model` field to `sonnet` or
-`haiku` as assigned above; keep the coordinator session on `opus`. For Codex, use the
-corresponding reusable definition under `.agents/` and pass its `model`,
-`reasoning_effort`, and `agent_type` to the sub-agent runner. The current Codex
-sub-agent surface exposes `gpt-5.6-luna` but not `gpt-5.4-mini`; use Luna for WP-B/WP-D
-in that surface and record the actual model. If the runner is unavailable, execute
-WP-A through WP-D sequentially and report that model isolation was unavailable.
+As of 2026-07-12, the model policy was checked against the official OpenAI model
+catalog and Claude Code model/subagent documentation.
+
+#### Work packages (both tools)
 
 1. **WP-A: taxonomy research (low-cost, read-only).** Inspect current facet vocabulary,
    profiles, and inventory. Return a proposed profile, nearest-type comparison, reused

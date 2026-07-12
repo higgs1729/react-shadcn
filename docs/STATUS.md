@@ -45,9 +45,24 @@ encoding:"UTF-8"
 - `docs/archive/{tasks,examples,notes,rfcs}/` = 完了 brief・旧 spec・研究ノート・完了 RFC(通常は不可視)。
 - `AGENTS.md` = ルート運用ルールの正本。`CLAUDE.md` は固定 `@AGENTS.md` shim(`validate:agents` でドリフト検出)。
 
+## 進行中タスク
+
+ScreenType追加優先順位テーブル:
+
+| 順位 | ScreenType候補 | 状態・先行条件 | 理由 |
+| --- | --- | --- | --- |
+| 1 | `inbox-communication` | 追加済み | Task 16の初回実行とbrief分離の検証に使用。 |
+| 2 | `document-workspace` | Task 16で判定 | detail / form / file / comment系の既存在庫を再利用できる可能性が高い。 |
+| 3 | `planning-board` | 新blockRole候補を先に評価 | board / column / card操作を既存collection roleへ押し込むと意味が弱くなりやすい。 |
+| 4 | `spatial-explorer` | map系blockRole追加を先に評価 | `geo` dataShapeはあるが、地図を担う専用blockRoleがない。 |
+| 5 | `calendar-scheduler` | calendar系blockRole追加を先に評価 | 日・週・月表示と時間枠操作を表す専用blockRoleがない。 |
+| 6 | `operations-console` | dashboard / workflowとの差を先に精査 | 既存型との重複が大きく、独立ScreenTypeにする根拠確認が必要。 |
+
+各候補はTask 16のBlockRole前提ゲートから開始する。既存roleの在庫不足はTask 18、
+新roleが必要なら候補台帳へ登録してTask 19を先行し、完了後にTask 16を再実行する。
+
 ## 次の候補(未選択)
 
-- 次の ScreenType 候補: `document-workspace`。実行 brief = `docs/tasks/task-16`。
 - maturity 昇格レビュー(人間レビュー)
 - 上流 Flow 層(brief→JTBD→FlowSpec)の自動化
 - 20-selection / 30-implementation 各層専用サブエージェントの定義

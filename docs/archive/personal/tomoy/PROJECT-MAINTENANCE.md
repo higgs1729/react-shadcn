@@ -33,6 +33,33 @@ npm run checks
 
 サンドボックス内では Google Fonts 取得や Storybook cache 読み取りで失敗することがあります。その場合でも、実環境で再実行して pass するかを確認します。
 
+## ScreenType / blockRole 追加の使い分け
+
+基本は `docs/tasks/task-16-add-one-screen-type.md` から始めます。追加したい
+ScreenType が必要とする blockRole を確認し、次の3通りに分岐します。
+
+1. 必要な blockRole が存在し、registry 在庫もある
+   - Task 16をそのまま実行してScreenTypeを1つ追加する。
+2. blockRole は存在するが、対応するcomponent / story / registry在庫がない
+   - `task-18-stock-one-existing-block-role.md` を先に実行する。
+   - 在庫追加後、Task 16を最初から再実行する。
+3. 必要なblockRole自体が語彙にない
+   - Task 16が `docs/block-role-candidates.json` に候補を登録して停止する。
+   - 内容を確認してから `task-19-add-one-new-block-role.md` を実行する。
+   - blockRole追加完了後、Task 16を最初から再実行する。
+
+各briefは一度に1つだけ追加します。Task 16の途中でblockRoleを追加したり、在庫不足を
+避けるために本来必須のroleをoptionalへ落としたりしません。
+
+確認用コマンド:
+
+```powershell
+npm run report:coverage
+```
+
+これはScreenType / blockRoleごとのregistry在庫数を表示します。現在はblockRole在庫の
+有無を確認できますが、component・story・state・checksまで含む品質一覧は将来構想です。
+
 ## maturity レビュー
 
 `registry/*.json` の `meta.aiDesignSystem.maturity` を `experimental` から `canonical` に上げる判断は人間レビュー専用です。
