@@ -16,6 +16,11 @@ custom-subagent directory and frontmatter format.
 | `screentype-fixture.md` | `gpt-5.6-luna` | `medium` | `worker` |
 | `screentype-implementation.md` | `gpt-5.6-terra` | `high` | `worker` |
 | `screentype-review.md` | `gpt-5.6-luna` | `low` | `explorer` |
+| `blockrole-taxonomy.md` | `gpt-5.6-terra` | `high` | `explorer` |
+| `blockrole-inventory.md` | `gpt-5.6-terra` | `medium` | `worker` |
+| `blockrole-implementation.md` | `gpt-5.6-terra` | `high` | `worker` |
+| `blockrole-fixture.md` | `gpt-5.6-luna` | `medium` | `worker` |
+| `blockrole-review.md` | `gpt-5.6-luna` | `low` | `explorer` |
 
 `gpt-5.4-mini` remains the preferred cost target for mechanical work when the
 calling Codex surface exposes it. The current sub-agent tool exposes Luna but not

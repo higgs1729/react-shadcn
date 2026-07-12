@@ -35,8 +35,10 @@ encoding:"UTF-8"
 - `docs/contracts/` = 4契約スキーマ(immutable)。`docs/provenance/` = provenance manifest 契約。
 - `docs/layers/20-selection/` = 選定手順 + canonical profiles。`30-implementation/` = 実装規約。
 - `docs/examples/` = 現行 golden flow 成果物のみ(`<artifact>-<flowId>.json` 命名、現在は flowspec / selectionspec / buildreport-dryrun-saas-ops-01 + sidecar)。
-- `docs/tasks/README.md` = brief テンプレ + 共通規約。`task-16` は ScreenType を1つ
-  end-to-end で追加する再利用 brief。初回実行で `inbox-communication` を追加済み。
+- `docs/tasks/README.md` = brief テンプレ + 共通規約。追加作業は3分割:
+  `task-16` = ScreenTypeのみ、`task-18` = 既存blockRoleの在庫1件、`task-19` =
+  新blockRole語彙+在庫1件。Task 16で判明した新role需要は
+  `docs/block-role-candidates.json` に proposed としてhandoffする。
 - `docs/rfcs/` = 横断改善の設計文書(なぜ・何を・成功判定)。実行 brief とは分離。
   active: `009`(registry–selection 意味検証 = completed)。旧 `010`(語彙拡張 + verification
   書き戻し governance)は `task-16` と AGENTS.md/30-implementation へ統合済み。
@@ -50,6 +52,8 @@ encoding:"UTF-8"
 - 上流 Flow 層(brief→JTBD→FlowSpec)の自動化
 - 20-selection / 30-implementation 各層専用サブエージェントの定義
   (brief 側で読むファイル一覧を渡す運用もこの時に整備)
+- blockRole全体の実装状況ビュー: enum/profile/registry/component/story/state/checksを
+  role単位で一覧化する。30/30在庫後の品質差を可視化する構想として保持し、今回は未着手。
 
 ## 小粒の改善メモ(急がない・機会があれば相乗り)
 

@@ -1,0 +1,5 @@
+{
+  "$comment": "Queue of new blockRole vocabulary needs discovered while designing ScreenTypes. add-one-screen-type appends proposed entries; add-one-new-block-role consumes one entry and updates its status only after verification.",
+  "version": "0.1.0",
+  "candidates": []
+}

@@ -25,12 +25,12 @@ REFERENCE_PRODUCTS: <two or more product/screen references, comma-separated>
 
 ## Scoped authorization
 
-Vocabulary (screenType / blockRole enums in `docs/contracts/*` + profiles in
-`docs/layers/20-selection/*`) is frozen by default. **The executor of this brief may
-extend it at its own discretion** — no per-extension human approval; the human audits
-periodically. Guardrails: add only (never change/remove existing values), subagents stay
-read-only on protected files, and if the target needs a new blockRole rather than just
-the one ScreenType, stop and report instead of widening the exception.
+Vocabulary is frozen by default. **The executor of this brief may append exactly one
+ScreenType and its profile at its own discretion** — no per-extension human approval;
+the human audits periodically. This authorization never covers blockRole vocabulary.
+Subagents stay read-only on protected files. If the target needs an unstocked existing
+role or a new role, follow the handoff protocol below and stop before editing the
+ScreenType vocabulary.
 
 ## Context
 
@@ -57,6 +57,25 @@ the one ScreenType, stop and report instead of widening the exception.
   coverage; use both to confirm the new ScreenType is recognized and stocked.
 - The current golden flow under `docs/examples/` must remain unchanged. Add isolated
   fixtures/tests outside `docs/examples/` for this ScreenType.
+- Existing-role inventory work uses `docs/tasks/task-18-stock-one-existing-block-role.md`.
+  New-role vocabulary work uses `docs/tasks/task-19-add-one-new-block-role.md`.
+- New role needs discovered here are tracked in `docs/block-role-candidates.json`.
+
+## BlockRole prerequisite gate
+
+Before any protected edit, classify every proposed typical role as one of:
+
+1. existing and stocked by a compatible standalone block-pattern: continue;
+2. existing but unstocked or API-incompatible: stop and hand off to Task 18;
+3. absent from the blockRole vocabulary: append one `proposed` candidate to
+   `docs/block-role-candidates.json`, then stop and hand off to Task 19.
+
+Use a deterministic candidate id `<target-screen-type>--<proposed-block-role>`. A new
+candidate records `id`, `status`, `proposedBlockRole`, `discoveredByScreenType`,
+`primaryJob`, `distinguishFrom`, `expectedRegion`, `userIntents`, `dataShapes`,
+`interactionModels`, `evidenceUrls`, and `createdAt`. Never duplicate an existing id or
+mark a candidate accepted/implemented in this task. The final report must name the
+blocking role and next brief. Do not weaken the ScreenType profile to avoid a handoff.
 
 ## Delegation plan
 
@@ -103,10 +122,9 @@ WP-A through WP-D sequentially and report that model isolation was unavailable.
    proposed profile, draft isolated positive/negative fixture changes proving the enum,
    profile, and registry item are recognized. Do not edit protected files or golden
    artifacts.
-3. **WP-C: registry/component implementation (medium capability).** Create the new
-   experimental screen-pattern registry item and only the missing components, stories,
-   or existing-role block-pattern items needed for a minimal working screen. Do not
-   alter existing facets or primitives.
+3. **WP-C: screen implementation (medium capability).** Create the new experimental
+   screen-pattern registry item, screen composition, and stories using only stocked
+   block roles. Do not create block-pattern inventory or alter existing facets.
 4. **WP-D: mechanical review (low-cost, read-only).** Compare the completed diff against
    this brief, check that exactly one ScreenType was added, and report omissions or
    unrelated changes.
@@ -122,43 +140,46 @@ same packages sequentially and record that fact; do not omit a package.
    adequately represented by an existing ScreenType. Include its primary intent,
    job-map stages, data shapes, interaction models, density, typical roles, optional
    roles, and at least two evidence references.
-2. Add exactly `TARGET_SCREEN_TYPE` to the ScreenType enum. Preserve all existing enum
+2. Pass the BlockRole prerequisite gate before editing protected files. A blocked run
+   produces the required Task 18 handoff or Task 19 candidate and makes no ScreenType
+   enum/profile change.
+3. Add exactly `TARGET_SCREEN_TYPE` to the ScreenType enum. Preserve all existing enum
    values and ordering; append the new value unless the file has an explicit ordering
    convention that requires another position.
-3. Add exactly one matching `screenTypes[TARGET_SCREEN_TYPE]` profile. Keep it
+4. Add exactly one matching `screenTypes[TARGET_SCREEN_TYPE]` profile. Keep it
    `maturity: "experimental"` and not human-reviewed. Use only existing facet enums and
    existing block roles. Update each referenced block-role profile's `screenTypes`
    array symmetrically without changing its other claims.
-4. Add at least one new experimental `screen-pattern` registry item whose `screenType`
+5. Add at least one new experimental `screen-pattern` registry item whose `screenType`
    equals `TARGET_SCREEN_TYPE`. Its composition must list standalone block roles and
    every required role must have at least one compatible block-pattern item in
    inventory.
-5. Reuse existing block-pattern items where their facets and component API genuinely
-   fit. For an uncovered required role, create a new block-pattern item only for an
-   already-defined blockRole, with its own component and Storybook story. Do not add a
-   new blockRole vocabulary in this task.
-6. Ensure the new screen pattern declares real files, dependencies, state coverage,
+6. Reuse existing stocked block-pattern items where their facets and component API
+   genuinely fit. Do not create block-pattern inventory in this task.
+7. Ensure the new screen pattern declares real files, dependencies, state coverage,
    evidence, risk, and verification metadata according to the facets contract. Do not
    claim checks or states that are not implemented.
-7. Add focused regression coverage proving: the new enum value validates; its profile
+8. Add focused regression coverage proving: the new enum value validates; its profile
    passes referential/symmetry checks; its registry item passes facet validation; and a
    SelectionSpec using the new ScreenType with a wrong-type screen pattern is rejected
    by cross-artifact validation when Task 15 semantics are present. Tests must derive
    expected vocabulary dynamically rather than hardcoding the old counts of 10
    ScreenTypes or 30 blockRoles.
-8. Add a minimal runnable screen or isolated composition fixture for the new pattern so
+9. Add a minimal runnable screen or isolated composition fixture for the new pattern so
    its story mounts. Do not add it to the existing golden flow. Read the relevant local
    Next.js guide in `node_modules/next/dist/docs/` before creating or changing a route.
-9. Run WP-D after implementation. The final diff must add exactly one ScreenType, no new
+10. Run WP-D after implementation. The final diff must add exactly one ScreenType, no new
    blockRole enum, no maturity promotion, no existing registry facet edits, and no
    unrelated refactor.
-10. Update `docs/STATUS.md` only after all checks pass, recording the new experimental
+11. Update `docs/STATUS.md` only after all checks pass, recording the new experimental
     ScreenType, its inventory item, remaining gaps, and the next candidate without
     retaining a change history.
 
 ## Constraints
 
 - One execution adds one ScreenType. Never batch multiple ScreenTypes.
+- Do not add or implement any blockRole or downgrade a semantically required role to
+  optional merely because inventory is missing.
 - Do not weaken schemas, validators, thresholds, or fail-closed behavior to make the new
   data pass.
 - Do not modify existing golden FlowSpec, SelectionSpec, BuildReport, or provenance
@@ -170,6 +191,10 @@ same packages sequentially and record that fact; do not omit a package.
 - Do not read `docs/archive/`.
 
 ## Acceptance criteria
+
+A run has exactly one terminal outcome: a completed ScreenType addition satisfies the
+full checklist below, while a prerequisite-blocked run satisfies only the final
+handoff criterion and leaves all ScreenType implementation files unchanged.
 
 - [ ] `git diff -- docs/contracts/ai-design-facets.schema.json` shows one added
       ScreenType enum value and no other contract change.
@@ -186,10 +211,13 @@ same packages sequentially and record that fact; do not omit a package.
 - [ ] WP-D reports exactly one ScreenType added, zero new blockRole enum values, zero
       maturity promotions, and zero edits to existing registry facet values.
 - [ ] `docs/STATUS.md` names the new experimental ScreenType and its inventory state.
+- [ ] Alternatively, a blocked prerequisite run adds no ScreenType and produces exactly
+      one actionable Task 18 handoff or deduplicated Task 19 candidate.
 
 ## Out of scope
 
 - Adding a second ScreenType or any new blockRole vocabulary.
+- Stocking an existing blockRole; use Task 18.
 - Promoting maturity or setting human-review approval.
 - Reworking selection scoring weights or tie-breaking rules.
 - Generalizing story generation for all possible component APIs.
