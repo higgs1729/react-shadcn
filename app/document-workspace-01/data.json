@@ -1,0 +1,18 @@
+{
+  "document": {
+    "id": "doc-2041",
+    "title": "Q3 Platform Migration Plan",
+    "content": "This document outlines the phased migration of the billing platform to the new event-driven architecture.\n\nPhase 1 covers read-path parity: every existing report must return identical totals when served from the new pipeline before we cut traffic over.\n\nPhase 2 covers write-path migration: new invoices and credit memos are written to both systems during a two-week dual-write window, with automated reconciliation running hourly.\n\nPhase 3 decommissions the legacy billing service once dual-write reconciliation has shown zero discrepancies for seven consecutive days.\n\nOpen questions: who owns the rollback runbook, and does finance need a read-only export during the cutover window?",
+    "savedState": "saved"
+  },
+  "breadcrumbPath": ["Workspace", "Engineering", "Migration Docs"],
+  "attachments": [
+    { "id": "att-1", "name": "migration-architecture.pdf", "meta": "2.4 MB · Added by Priya Shah" },
+    { "id": "att-2", "name": "reconciliation-checklist.xlsx", "meta": "84 KB · Added by Noah Kim" }
+  ],
+  "comments": [
+    { "id": "comment-1", "author": "Priya Shah", "body": "Can we confirm finance is fine with a read-only export instead of a full parallel run?", "timestamp": "3h ago" },
+    { "id": "comment-2", "author": "Noah Kim", "body": "I'll own the rollback runbook and link it here by Friday.", "timestamp": "1h ago" },
+    { "id": "comment-3", "author": "Ari Bell", "body": "Reconciliation job is passing in staging for the last 3 days.", "timestamp": "20m ago" }
+  ]
+}

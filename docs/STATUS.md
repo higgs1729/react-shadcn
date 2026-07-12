@@ -21,14 +21,23 @@ encoding:"UTF-8"
 - `validate:pipeline` は registry facet を読む意味検証を持つ(RFC 009): 名前存在
   (`REGISTRY_ITEM_EXISTS`)に加え、assetKind/screenType/blockRole/requiredBlocks/依存 union の
   5不変条件。在庫充足は `npm run report:coverage`(観測のみ・exit 0)で可視化。
-- block-pattern 棚は全充足(task-17): **31/31 blockRole 在庫**(各 role に experimental
+- block-pattern 棚は全充足: **32/32 blockRole 在庫**(各 role に experimental
   block-pattern を1つ、vendored primitive で合成。3ファイル/件 = component + registry +
-  hand-written story)。screenType は **4/11 在庫**、空き7(conversation-assistant /
+  hand-written story)。screenType は **5/12 在庫**、空き7(conversation-assistant /
   create-edit / detail / onboarding / report-analytics / settings-admin / workflow)は
   task-16 で screen-pattern を追加(必要 block は揃済み)。
 - `inbox-communication` を experimental ScreenType として追加済み。registry item
   `inbox-communication-01` は sidebar/header/filter/conversation triage/comment thread を合成し、
   default/loading/empty/error の Storybook story を持つ。人間レビューと実バックエンド接続は未実施。
+- `document-body-editor` を experimental blockRole として追加(task-19、候補
+  `document-workspace--document-body-editor` を消費 = implemented)。registry item
+  `document-body-editor-01` は Textarea/Field/Attachment 等の primitive で本文編集面を合成。
+  既存 screenType `detail` / `create-edit` の optionalBlockRoles に対称追加済み。
+- `document-workspace` を experimental ScreenType として追加(task-16 再実行)。registry item
+  `document-workspace-01` は page-header/breadcrumb/document-body-editor/comment-thread/
+  file-upload の既存在庫を再利用し、default/loading/empty/error の Storybook story を持つ。
+  detail との差は「本文の inline 編集が主目的」、create-edit との差は「離散フォーム項目でなく
+  自由記述キャンバス」。人間レビューと実バックエンド接続は未実施。
 
 ## 文書構成
 
@@ -47,19 +56,23 @@ encoding:"UTF-8"
 
 ## 進行中タスク
 
-ScreenType追加優先順位テーブル:
+- ScreenType追加優先順位テーブル:
 
 | 順位 | ScreenType候補 | 状態・先行条件 | 理由 |
 | --- | --- | --- | --- |
 | 1 | `inbox-communication` | 追加済み | Task 16の初回実行とbrief分離の検証に使用。 |
-| 2 | `document-workspace` | Task 16で判定 | detail / form / file / comment系の既存在庫を再利用できる可能性が高い。 |
-| 3 | `planning-board` | 新blockRole候補を先に評価 | board / column / card操作を既存collection roleへ押し込むと意味が弱くなりやすい。 |
+| 2 | `document-workspace` | 追加済み | 本文編集の中核 role が不在 → task-19 で `document-body-editor` を先行追加し、task-16 再実行で完了。 |
+| 3 | `planning-board` | 新blockRole候補を先に評価(候補 `planning-board--board-column` を台帳へ登録済み) | board / column / card操作を既存collection roleへ押し込むと意味が弱くなりやすい。 |
 | 4 | `spatial-explorer` | map系blockRole追加を先に評価 | `geo` dataShapeはあるが、地図を担う専用blockRoleがない。 |
 | 5 | `calendar-scheduler` | calendar系blockRole追加を先に評価 | 日・週・月表示と時間枠操作を表す専用blockRoleがない。 |
 | 6 | `operations-console` | dashboard / workflowとの差を先に精査 | 既存型との重複が大きく、独立ScreenTypeにする根拠確認が必要。 |
 
 各候補はTask 16のBlockRole前提ゲートから開始する。既存roleの在庫不足はTask 18、
 新roleが必要なら候補台帳へ登録してTask 19を先行し、完了後にTask 16を再実行する。
+
+- アプリの本体の作成
+  - 資料は`docs/archive/person/tomoy/AI-Design-System-Studio.md`
+    - 例外措置としてこのタスクにかかわっている間のみはこのファイルのみReadとEditを許可する
 
 ## 次の候補(未選択)
 

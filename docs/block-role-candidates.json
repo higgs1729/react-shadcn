@@ -24,7 +24,7 @@
     },
     {
       "id": "document-workspace--document-body-editor",
-      "status": "proposed",
+      "status": "implemented",
       "proposedBlockRole": "document-body-editor",
       "discoveredByScreenType": "document-workspace",
       "primaryJob": "Author and revise the body of one long-form/structured document inline, with in-context collaboration (comments, attachments).",
@@ -37,6 +37,26 @@
         "https://www.notion.com/help/writing-and-editing-basics",
         "https://support.google.com/docs/answer/179738",
         "https://confluence.atlassian.com/doc/create-a-page-136527296.html"
+      ],
+      "createdAt": "2026-07-12",
+      "registryItem": "document-body-editor-01",
+      "implementedAt": "2026-07-12",
+      "implementedByTask": "task-19-add-one-new-block-role"
+    },
+    {
+      "id": "planning-board--board-column",
+      "status": "proposed",
+      "proposedBlockRole": "board-column",
+      "discoveredByScreenType": "planning-board",
+      "primaryJob": "Represent one workflow-status column, its ordered work-item cards, and the accepted card-move operations that change each item's status.",
+      "distinguishFrom": "collection-grid presents independently browsable card tiles without a workflow grouping or cross-column move contract; data-table-panel compares generic rows and offers inline edits, not ordered cards whose drop target changes workflow status; filter-toolbar only constrains a collection and does not own columns or card movement.",
+      "expectedRegion": "main",
+      "userIntents": ["browse", "create", "edit", "monitor"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["drag-drop", "multi-action", "disclosure"],
+      "evidenceUrls": [
+        "https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-board/",
+        "https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-the-board-layout"
       ],
       "createdAt": "2026-07-12"
     }

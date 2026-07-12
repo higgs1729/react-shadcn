@@ -61,7 +61,7 @@
       "interactionModels": ["read-only", "disclosure", "inline-edit", "drawer-inspection"],
       "density": "medium",
       "typicalBlockRoles": ["page-header-actions", "breadcrumb-context", "detail-overview", "activity-feed", "comment-thread", "action-footer"],
-      "optionalBlockRoles": ["app-shell-sidebar", "app-shell-topnav", "command-search", "tabs-view-switcher", "notification-center", "modal-dialog", "drawer-inspector", "file-upload-area", "ai-explainability-label", "empty-state", "error-recovery", "loading-skeleton"],
+      "optionalBlockRoles": ["app-shell-sidebar", "app-shell-topnav", "command-search", "tabs-view-switcher", "notification-center", "modal-dialog", "drawer-inspector", "file-upload-area", "ai-explainability-label", "empty-state", "error-recovery", "loading-skeleton", "document-body-editor"],
       "notes": "Entity/record/profile page. One primary record plus related context."
     },
     "create-edit": {
@@ -73,7 +73,7 @@
       "interactionModels": ["form-submit", "inline-edit", "multi-action"],
       "density": "medium",
       "typicalBlockRoles": ["page-header-actions", "form-section", "action-footer", "file-upload-area"],
-      "optionalBlockRoles": ["modal-dialog"],
+      "optionalBlockRoles": ["modal-dialog", "document-body-editor"],
       "notes": "Form page or editor for creating/updating one record. Not a multi-step wizard (use workflow/onboarding for that)."
     },
     "settings-admin": {
@@ -135,6 +135,18 @@
       "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "conversation-triage-list", "comment-thread"],
       "optionalBlockRoles": ["activity-feed", "drawer-inspector", "empty-state", "error-recovery", "loading-skeleton", "notification-center"],
       "notes": "Human-message triage inbox for finding, assigning, replying to, snoozing, and resolving conversations. Distinguish from collection by communication lifecycle and ownership actions; distinguish from conversation-assistant by human correspondence rather than AI delegation or token streaming."
+    },
+    "document-workspace": {
+      "reviewed": false,
+      "maturity": "experimental",
+      "userIntents": ["edit", "create", "review", "communicate"],
+      "jobMapStages": ["locate", "execute", "modify", "conclude"],
+      "dataShapes": ["document", "conversation", "media"],
+      "interactionModels": ["inline-edit", "real-time", "disclosure", "drag-drop"],
+      "density": "low",
+      "typicalBlockRoles": ["page-header-actions", "breadcrumb-context", "document-body-editor", "comment-thread", "file-upload-area"],
+      "optionalBlockRoles": ["app-shell-sidebar", "activity-feed", "drawer-inspector", "notification-center", "empty-state", "error-recovery", "loading-skeleton"],
+      "notes": "Long-form/structured document authoring workspace with in-context collaboration (comments, attachments). Distinguish from detail: primary job is inline-editing free-form document body content, not displaying labelled record fields. Distinguish from create-edit: the body is a free-form document canvas, not discrete validated form fields."
     }
   },
   "blockRoles": {
@@ -144,7 +156,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["hierarchy"],
       "interactionModels": ["disclosure", "selection-single"],
-      "screenTypes": ["dashboard", "collection", "settings-admin", "detail", "inbox-communication"],
+      "screenTypes": ["dashboard", "collection", "settings-admin", "detail", "inbox-communication", "document-workspace"],
       "notes": "Primary left navigation shell. Only one navigation shell per screen."
     },
     "app-shell-topnav": {
@@ -162,7 +174,7 @@
       "userIntents": ["create", "edit", "browse"],
       "dataShapes": ["none"],
       "interactionModels": ["multi-action", "single-action"],
-      "screenTypes": ["dashboard", "collection", "detail", "create-edit", "report-analytics", "inbox-communication"],
+      "screenTypes": ["dashboard", "collection", "detail", "create-edit", "report-analytics", "inbox-communication", "document-workspace"],
       "notes": "Page title plus primary actions (create, export, etc.)."
     },
     "breadcrumb-context": {
@@ -171,7 +183,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["hierarchy"],
       "interactionModels": ["read-only", "disclosure"],
-      "screenTypes": ["detail", "collection", "settings-admin"],
+      "screenTypes": ["detail", "collection", "settings-admin", "document-workspace"],
       "notes": "Location context within a hierarchy."
     },
     "command-search": {
@@ -288,7 +300,7 @@
       "userIntents": ["create", "browse"],
       "dataShapes": ["none"],
       "interactionModels": ["single-action"],
-      "screenTypes": ["collection", "dashboard", "detail", "onboarding", "report-analytics", "inbox-communication"],
+      "screenTypes": ["collection", "dashboard", "detail", "onboarding", "report-analytics", "inbox-communication", "document-workspace"],
       "notes": "No-data state with a call to action. Selected as a block when the whole page is empty; in-block empty states are covered via stateCoverage."
     },
     "error-recovery": {
@@ -297,7 +309,7 @@
       "userIntents": ["recover"],
       "dataShapes": ["none"],
       "interactionModels": ["single-action"],
-      "screenTypes": ["auth", "collection", "detail", "dashboard", "report-analytics", "inbox-communication"],
+      "screenTypes": ["auth", "collection", "detail", "dashboard", "report-analytics", "inbox-communication", "document-workspace"],
       "notes": "Error / permission-denied recovery. Selected as a block for whole-page failures; in-block errors are covered via stateCoverage."
     },
     "loading-skeleton": {
@@ -306,7 +318,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["none"],
       "interactionModels": ["read-only"],
-      "screenTypes": ["collection", "dashboard", "detail", "report-analytics", "inbox-communication"],
+      "screenTypes": ["collection", "dashboard", "detail", "report-analytics", "inbox-communication", "document-workspace"],
       "notes": "Placeholder while data loads. Selected as a block for initial page load; in-block loading is covered via stateCoverage."
     },
     "notification-center": {
@@ -315,7 +327,7 @@
       "userIntents": ["monitor", "review"],
       "dataShapes": ["collection"],
       "interactionModels": ["read-only", "disclosure", "real-time"],
-      "screenTypes": ["dashboard", "detail", "collection", "inbox-communication"],
+      "screenTypes": ["dashboard", "detail", "collection", "inbox-communication", "document-workspace"],
       "notes": "Notifications/alerts panel, often real-time."
     },
     "modal-dialog": {
@@ -333,7 +345,7 @@
       "userIntents": ["review", "edit"],
       "dataShapes": ["single-record"],
       "interactionModels": ["drawer-inspection", "inline-edit"],
-      "screenTypes": ["collection", "dashboard", "detail", "inbox-communication"],
+      "screenTypes": ["collection", "dashboard", "detail", "inbox-communication", "document-workspace"],
       "notes": "Side panel to inspect/edit a row without leaving the list."
     },
     "file-upload-area": {
@@ -342,7 +354,7 @@
       "userIntents": ["create", "edit"],
       "dataShapes": ["media", "document"],
       "interactionModels": ["drag-drop", "single-action"],
-      "screenTypes": ["create-edit", "onboarding", "detail"],
+      "screenTypes": ["create-edit", "onboarding", "detail", "document-workspace"],
       "notes": "Drag-and-drop or picker upload zone."
     },
     "activity-feed": {
@@ -351,7 +363,7 @@
       "userIntents": ["monitor", "review", "communicate"],
       "dataShapes": ["collection"],
       "interactionModels": ["read-only", "real-time"],
-      "screenTypes": ["detail", "dashboard", "conversation-assistant", "inbox-communication"],
+      "screenTypes": ["detail", "dashboard", "conversation-assistant", "inbox-communication", "document-workspace"],
       "notes": "Chronological activity/audit stream (a time-ordered collection, not a quantitative time series)."
     },
     "comment-thread": {
@@ -360,7 +372,7 @@
       "userIntents": ["communicate", "review"],
       "dataShapes": ["conversation"],
       "interactionModels": ["form-submit", "real-time"],
-      "screenTypes": ["detail", "conversation-assistant", "inbox-communication"],
+      "screenTypes": ["detail", "conversation-assistant", "inbox-communication", "document-workspace"],
       "notes": "Threaded human comments on a record. Real-time updates from other users; streaming is reserved for AI token output."
     },
     "ai-conversation-list": {
@@ -417,6 +429,16 @@
       "interactionModels": ["form-submit", "read-only"],
       "screenTypes": ["workflow"],
       "notes": "Order/line-item summary with total and confirm action."
+    },
+    "document-body-editor": {
+      "reviewed": false,
+      "maturity": "experimental",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["create", "edit", "review"],
+      "dataShapes": ["document"],
+      "interactionModels": ["inline-edit", "real-time"],
+      "screenTypes": ["detail", "create-edit", "document-workspace"],
+      "notes": "Free-form, inline-editable long-form document body (rich text or structured prose) with in-context collaboration surfaces such as comments and attachments anchored to content. Unlike detail-overview, the primary interaction is continuous prose authoring, not read-only labelled fields; unlike form-section, content is not decomposed into discrete validated fields. Typically composed alongside comment-thread and file-upload-area rather than replacing them."
     }
   }
 }

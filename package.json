@@ -40,7 +40,9 @@
     "gen:provenance": "node scripts/gen-provenance.mjs",
     "validate:provenance": "node scripts/validate-provenance.mjs",
     "test:provenance": "node scripts/test-provenance.mjs",
-    "test:flows": "node scripts/test-flows.mjs"
+    "test:flows": "node scripts/test-flows.mjs",
+    "test:document-body-editor": "node scripts/test-document-body-editor.mjs",
+    "test:document-workspace": "node scripts/test-document-workspace.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

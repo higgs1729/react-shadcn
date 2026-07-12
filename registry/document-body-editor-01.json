@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "document-body-editor-01",
+  "type": "registry:block",
+  "title": "Document Body Editor 01",
+  "description": "A presentational, controlled inline-editable long-form document body with a title field, save-state indicator, and in-context attachments.",
+  "categories": ["block:document", "role:document-body-editor"],
+  "registryDependencies": ["card", "field", "input", "textarea", "attachment", "badge", "scroll-area"],
+  "files": [
+    {
+      "path": "components/document-body-editor-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "document-body-editor",
+      "userIntents": ["create", "edit", "review"],
+      "dataShapes": ["document"],
+      "interactionModels": ["inline-edit", "real-time"],
+      "layoutModel": {
+        "region": "main"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "empty", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Title input carries a screen-reader-only field label and the document body textarea carries an explicit aria-label; keyboard operability comes from the underlying shadcn/base-ui primitives. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "field", "input", "textarea", "attachment", "badge", "scroll-area"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-document-body-editor-document-body-editor-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://www.notion.com/help/writing-and-editing-basics",
+          "https://support.google.com/docs/answer/179738"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["loading", "error", "permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching, persistence, real-time transport, or conflict resolution wired in. Real-time collaboration cursors/presence are not implemented."
+      },
+      "extensions": {
+        "localEvidence": ["components/document-body-editor-01.tsx"]
+      }
+    }
+  }
+}

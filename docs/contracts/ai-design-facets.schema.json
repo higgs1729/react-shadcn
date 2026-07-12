@@ -314,7 +314,8 @@
         "workflow",
         "report-analytics",
         "conversation-assistant",
-        "inbox-communication"
+        "inbox-communication",
+        "document-workspace"
       ]
     },
     "blockRole": {
@@ -350,7 +351,8 @@
         "ai-explainability-label",
         "pricing-plan-card",
         "checkout-summary",
-        "conversation-triage-list"
+        "conversation-triage-list",
+        "document-body-editor"
       ]
     },
     "userIntent": {
