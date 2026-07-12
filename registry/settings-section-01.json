@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "settings-section-01",
+  "type": "registry:block",
+  "title": "Settings Section 01",
+  "description": "A presentational, controlled grouped settings card with inline toggle rows.",
+  "categories": ["block:settings", "role:settings-section"],
+  "registryDependencies": ["card", "field", "switch", "label"],
+  "files": [
+    {
+      "path": "components/settings-section-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "settings-section",
+      "userIntents": ["configure", "edit"],
+      "dataShapes": ["single-record", "permission-model"],
+      "interactionModels": ["form-submit", "inline-edit", "selection-single"],
+      "layoutModel": {
+        "region": "main"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Each toggle is wrapped in a field label associating it with its description; keyboard operability comes from the underlying shadcn/base-ui switch primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "field", "switch", "label"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-settings-section-settings-section-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; toggle state and persistence live in the caller."
+      },
+      "extensions": {
+        "localEvidence": ["components/settings-section-01.tsx"]
+      }
+    }
+  }
+}

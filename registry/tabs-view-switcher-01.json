@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tabs-view-switcher-01",
+  "type": "registry:block",
+  "title": "Tabs View Switcher 01",
+  "description": "A presentational, controlled segmented-tabs switcher for toggling between views/segments of the same data.",
+  "categories": ["block:tabs", "role:tabs-view-switcher"],
+  "registryDependencies": ["tabs"],
+  "files": [
+    {
+      "path": "components/tabs-view-switcher-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "tabs-view-switcher",
+      "userIntents": ["browse"],
+      "dataShapes": ["categorical"],
+      "interactionModels": ["disclosure", "selection-single"],
+      "layoutModel": {
+        "region": "main"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Tab list/tab/panel roles and keyboard operability come from the underlying shadcn/base-ui Tabs primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["tabs"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-tabs-view-switcher-tabs-view-switcher-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; view content is supplied by the caller."
+      },
+      "extensions": {
+        "localEvidence": ["components/tabs-view-switcher-01.tsx"]
+      }
+    }
+  }
+}

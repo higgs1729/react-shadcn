@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "command-search-01",
+  "type": "registry:block",
+  "title": "Command Search 01",
+  "description": "A presentational, controlled cmd+k command palette dialog with grouped, searchable items.",
+  "categories": ["block:command", "role:command-search"],
+  "registryDependencies": ["command", "dialog", "input-group"],
+  "files": [
+    {
+      "path": "components/command-search-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "command-search",
+      "userIntents": ["search", "browse"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["filter-sort", "modal-task"],
+      "layoutModel": {
+        "region": "popover"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Built on the shadcn/base-ui Command (cmdk) and Dialog primitives, which provide dialog semantics, focus trapping, and keyboard filtering/navigation. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["command", "dialog", "input-group"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-command-search-command-search-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; open state and item data/callbacks are supplied by the caller."
+      },
+      "extensions": {
+        "localEvidence": ["components/command-search-01.tsx"]
+      }
+    }
+  }
+}

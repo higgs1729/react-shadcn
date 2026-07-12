@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-shell-topnav-01",
+  "type": "registry:block",
+  "title": "App Shell Topnav 01",
+  "description": "A presentational, controlled top navigation bar shell with a brand mark, nav links, and sign-out action.",
+  "categories": ["block:shell", "role:app-shell-topnav"],
+  "registryDependencies": ["navigation-menu", "button"],
+  "files": [
+    {
+      "path": "components/app-shell-topnav-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "app-shell-topnav",
+      "userIntents": ["browse"],
+      "dataShapes": ["hierarchy"],
+      "interactionModels": ["disclosure", "selection-single"],
+      "layoutModel": {
+        "region": "header"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Nav items render as buttons within the navigation-menu primitive with an active state; keyboard operability comes from the underlying shadcn/base-ui primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["navigation-menu", "button"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": ["app-shell-sidebar"]
+      },
+      "verification": {
+        "storybookStories": ["blocks-app-shell-topnav-app-shell-topnav-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no routing wired in. Alternative to app-shell-sidebar; do not combine both on one screen."
+      },
+      "extensions": {
+        "localEvidence": ["components/app-shell-topnav-01.tsx"]
+      }
+    }
+  }
+}

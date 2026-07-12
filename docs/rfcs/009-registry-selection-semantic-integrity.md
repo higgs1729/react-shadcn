@@ -65,8 +65,8 @@ schema 的に妥当なまま次の誤りがパイプラインを通過する:
 
 - 契約スキーマ(`docs/contracts/*`)や canonical profiles の変更。
 - 在庫欠品を**強制**すること(本 RFC は観測のみ。gate 化は将来判断)。
-- 語彙(enum)拡張の手順 → RFC 010。
-- registry facet 書き戻しの規約整合 → RFC 010。
+- 語彙(enum)拡張の手順 → `docs/tasks/task-16`(旧 RFC 010、統合済み)。
+- registry facet 書き戻しの規約整合 → AGENTS.md / 30-implementation(旧 RFC 010、反映済み)。
 - story 生成の render adapter 汎用化(P2-2)→ STATUS.md メモ、在庫追加時に相乗り。
 
 ## Validation

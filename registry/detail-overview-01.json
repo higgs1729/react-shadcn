@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "detail-overview-01",
+  "type": "registry:block",
+  "title": "Detail Overview 01",
+  "description": "A presentational, controlled record summary card with labelled fields and a status badge.",
+  "categories": ["block:detail", "role:detail-overview"],
+  "registryDependencies": ["card", "field", "separator", "badge"],
+  "files": [
+    {
+      "path": "components/detail-overview-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "detail-overview",
+      "userIntents": ["review", "browse"],
+      "dataShapes": ["single-record", "relational"],
+      "interactionModels": ["read-only", "disclosure"],
+      "layoutModel": {
+        "region": "main"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Each field pairs a label with its value via the shadcn field primitive; read-only content has no interactive controls beyond the surrounding page. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "field", "separator", "badge"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-detail-overview-detail-overview-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or persistence."
+      },
+      "extensions": {
+        "localEvidence": ["components/detail-overview-01.tsx"]
+      }
+    }
+  }
+}

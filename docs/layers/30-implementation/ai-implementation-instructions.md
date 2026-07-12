@@ -13,7 +13,7 @@ Build working code from an already-decided selection. Input is a `SelectionSpec`
 
 ## Fix Loop Policy
 
-If any check fails, fix only files created in steps 2-3 of this pipeline. Never edit `components/ui/*`, `registry/*.json` facets, or `docs/contracts/*`. Then rerun the checks.
+If any check fails, fix only files created in steps 2-3 of this pipeline. Never edit `components/ui/*`, `registry/*.json` facets, or `docs/contracts/*`. Then rerun the checks. (The one sanctioned registry write is step 3's `gen-pattern-stories.mjs` writing back `verification.storybookStories`; that is generated verification metadata, not a Fix Loop facet edit.)
 
 Maximum 3 iterations. If still failing after 3 iterations:
 

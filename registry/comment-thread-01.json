@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "comment-thread-01",
+  "type": "registry:block",
+  "title": "Comment Thread 01",
+  "description": "A presentational, controlled threaded comment list with a reply composer.",
+  "categories": ["block:comment", "role:comment-thread"],
+  "registryDependencies": ["card", "avatar", "textarea", "button"],
+  "files": [
+    {
+      "path": "components/comment-thread-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "comment-thread",
+      "userIntents": ["communicate", "review"],
+      "dataShapes": ["conversation"],
+      "interactionModels": ["form-submit", "real-time"],
+      "layoutModel": {
+        "region": "card"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Reply textarea carries aria-label and the submit button disables until content is entered; keyboard operability comes from the underlying shadcn/base-ui primitives. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "avatar", "textarea", "button"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-comment-thread-comment-thread-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching, persistence, or real-time transport wired in."
+      },
+      "extensions": {
+        "localEvidence": ["components/comment-thread-01.tsx"]
+      }
+    }
+  }
+}

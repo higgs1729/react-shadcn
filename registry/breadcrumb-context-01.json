@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "breadcrumb-context-01",
+  "type": "registry:block",
+  "title": "Breadcrumb Context 01",
+  "description": "A presentational, controlled breadcrumb trail showing location context within a hierarchy, with the current page as the final crumb.",
+  "categories": ["block:breadcrumb", "role:breadcrumb-context"],
+  "registryDependencies": ["breadcrumb"],
+  "files": [
+    {
+      "path": "components/breadcrumb-context-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "breadcrumb-context",
+      "userIntents": ["browse"],
+      "dataShapes": ["hierarchy"],
+      "interactionModels": ["read-only", "disclosure"],
+      "layoutModel": {
+        "region": "header"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Breadcrumb nav carries an aria-label; the current page uses aria-current=\"page\" via the underlying shadcn/base-ui primitives. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["breadcrumb"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-breadcrumb-context-breadcrumb-context-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or routing."
+      },
+      "extensions": {
+        "localEvidence": ["components/breadcrumb-context-01.tsx"]
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-conversation-list-01",
+  "type": "registry:block",
+  "title": "AI Conversation List 01",
+  "description": "A presentational, controlled list of AI chat threads with active selection and a new-conversation action.",
+  "categories": ["block:ai-conversation", "role:ai-conversation-list"],
+  "registryDependencies": ["item", "scroll-area", "button"],
+  "files": [
+    {
+      "path": "components/ai-conversation-list-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "ai-conversation-list",
+      "userIntents": ["communicate", "delegate-to-ai"],
+      "dataShapes": ["conversation"],
+      "interactionModels": ["streaming", "real-time"],
+      "layoutModel": {
+        "region": "sidebar"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Each conversation renders as a focusable button with aria-current on the active thread; keyboard operability comes from the underlying shadcn/base-ui primitives. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["item", "scroll-area", "button"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-ai-conversation-list-ai-conversation-list-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching, persistence, or real-time transport wired in."
+      },
+      "extensions": {
+        "localEvidence": ["components/ai-conversation-list-01.tsx"]
+      }
+    }
+  }
+}

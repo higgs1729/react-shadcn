@@ -1,10 +1,10 @@
 {
-  "$comment": "Fixture for task-15: violates SCREENTYPE_MATCH only — derived from the golden SelectionSpec by changing the login screen resolvedScreenType from auth to dashboard while keeping screenPattern login-03 (facet screenType: auth) unchanged.",
+  "$comment": "Fixture for task-16: violates SCREENTYPE_MATCH only — derived from the golden SelectionSpec by changing the login screen resolvedScreenType from auth to inbox-communication while keeping screenPattern login-03 (facet screenType: auth) unchanged.",
   "flowId": "dryrun-saas-ops-01",
   "screens": [
     {
       "stepId": "login",
-      "resolvedScreenType": "dashboard",
+      "resolvedScreenType": "inbox-communication",
       "screenTypeScore": 100,
       "screenPattern": {
         "registryItem": "login-03",

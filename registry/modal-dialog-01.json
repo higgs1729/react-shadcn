@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "modal-dialog-01",
+  "type": "registry:block",
+  "title": "Modal Dialog 01",
+  "description": "A presentational, controlled focused edit task in a dialog, with a labelled field and confirm/cancel actions.",
+  "categories": ["block:modal", "role:modal-dialog"],
+  "registryDependencies": ["dialog", "button", "field", "input"],
+  "files": [
+    {
+      "path": "components/modal-dialog-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "modal-dialog",
+      "userIntents": ["edit", "approve", "create"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["modal-task", "form-submit", "single-action"],
+      "layoutModel": {
+        "region": "modal"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Dialog focus trapping and labelling come from the shadcn/base-ui Dialog primitive; the field label is associated via htmlFor/id. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["dialog", "button", "field", "input"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-modal-dialog-modal-dialog-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; open state, field value, and submit are supplied by the caller."
+      },
+      "extensions": {
+        "localEvidence": ["components/modal-dialog-01.tsx"]
+      }
+    }
+  }
+}

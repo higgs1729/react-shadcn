@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "file-upload-area-01",
+  "type": "registry:block",
+  "title": "File Upload Area 01",
+  "description": "A presentational, controlled drag-and-drop / picker upload zone with a file list.",
+  "categories": ["block:upload", "role:file-upload-area"],
+  "registryDependencies": ["attachment", "button"],
+  "files": [
+    {
+      "path": "components/file-upload-area-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "file-upload-area",
+      "userIntents": ["create", "edit"],
+      "dataShapes": ["media", "document"],
+      "interactionModels": ["drag-drop", "single-action"],
+      "layoutModel": {
+        "region": "card"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "File picker is reachable via a labelled button wrapping a native file input; each attachment's remove action carries an aria-label. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["attachment", "button"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-file-upload-area-file-upload-area-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no actual file upload/network transport is wired in."
+      },
+      "extensions": {
+        "localEvidence": ["components/file-upload-area-01.tsx"]
+      }
+    }
+  }
+}

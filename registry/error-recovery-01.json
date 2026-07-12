@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "error-recovery-01",
+  "type": "registry:block",
+  "title": "Error Recovery 01",
+  "description": "A presentational, controlled error/permission-denied message with a retry action.",
+  "categories": ["block:error", "role:error-recovery"],
+  "registryDependencies": ["empty", "button"],
+  "files": [
+    {
+      "path": "components/error-recovery-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "error-recovery",
+      "userIntents": ["recover"],
+      "dataShapes": ["none"],
+      "interactionModels": ["single-action"],
+      "layoutModel": {
+        "region": "main"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "The retry action is a native button element from the shadcn/base-ui Button primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["empty", "button"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-error-recovery-error-recovery-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or persistence."
+      },
+      "extensions": {
+        "localEvidence": ["components/error-recovery-01.tsx"]
+      }
+    }
+  }
+}

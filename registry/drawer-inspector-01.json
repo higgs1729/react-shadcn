@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "drawer-inspector-01",
+  "type": "registry:block",
+  "title": "Drawer Inspector 01",
+  "description": "A presentational, controlled side panel for inspecting and editing one record without leaving the list.",
+  "categories": ["block:drawer", "role:drawer-inspector"],
+  "registryDependencies": ["sheet", "button", "field", "input"],
+  "files": [
+    {
+      "path": "components/drawer-inspector-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "drawer-inspector",
+      "userIntents": ["review", "edit"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["drawer-inspection", "inline-edit"],
+      "layoutModel": {
+        "region": "drawer"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Sheet focus trapping and labelling come from the shadcn/base-ui Dialog-based Sheet primitive; each field label is associated via htmlFor/id. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["sheet", "button", "field", "input"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-drawer-inspector-drawer-inspector-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; open state, field values, and save are supplied by the caller."
+      },
+      "extensions": {
+        "localEvidence": ["components/drawer-inspector-01.tsx"]
+      }
+    }
+  }
+}

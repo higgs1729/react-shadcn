@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "activity-feed-01",
+  "type": "registry:block",
+  "title": "Activity Feed 01",
+  "description": "A presentational, controlled chronological activity/audit stream with actor avatars.",
+  "categories": ["block:activity", "role:activity-feed"],
+  "registryDependencies": ["item", "avatar", "separator"],
+  "files": [
+    {
+      "path": "components/activity-feed-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "activity-feed",
+      "userIntents": ["monitor", "review", "communicate"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["read-only", "real-time"],
+      "layoutModel": {
+        "region": "card"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Read-only stream with no interactive controls; avatar images carry alt text via actor name. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["item", "avatar", "separator"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-activity-feed-activity-feed-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching, persistence, or real-time transport wired in."
+      },
+      "extensions": {
+        "localEvidence": ["components/activity-feed-01.tsx"]
+      }
+    }
+  }
+}

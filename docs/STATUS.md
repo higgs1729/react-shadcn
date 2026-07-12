@@ -1,3 +1,7 @@
+'''
+encoding:"UTF-8"
+'''
+
 # STATUS
 
 プロジェクトの現在地。正本は git log であり、この文書はその要約キャッシュ(最新のみ)。
@@ -16,24 +20,32 @@
   自動発見(`scripts/lib/flows.mjs`、三つ組欠落・命名不一致は fail-loud)。
 - `validate:pipeline` は registry facet を読む意味検証を持つ(RFC 009): 名前存在
   (`REGISTRY_ITEM_EXISTS`)に加え、assetKind/screenType/blockRole/requiredBlocks/依存 union の
-  5不変条件。在庫充足は `npm run report:coverage`(観測のみ・exit 0)で可視化 —
-  現状 **3/10 screenType・7/30 blockRole 在庫**、残りは意図的 GAP。
+  5不変条件。在庫充足は `npm run report:coverage`(観測のみ・exit 0)で可視化。
+- block-pattern 棚は全充足(task-17): **30/30 blockRole 在庫**(各 role に experimental
+  block-pattern を1つ、vendored primitive で合成。3ファイル/件 = component + registry +
+  hand-written story)。screenType は **4/11 在庫**、空き7(conversation-assistant /
+  create-edit / detail / onboarding / report-analytics / settings-admin / workflow)は
+  task-16 で screen-pattern を追加(必要 block は揃済み)。
+- `inbox-communication` を experimental ScreenType として追加済み。registry item
+  `inbox-communication-01` は sidebar/header/filter/table の既存在庫を再利用し、
+  default/loading/empty/error の Storybook story を持つ。人間レビューと実バックエンド接続は未実施。
 
 ## 文書構成
 
 - `docs/contracts/` = 4契約スキーマ(immutable)。`docs/provenance/` = provenance manifest 契約。
 - `docs/layers/20-selection/` = 選定手順 + canonical profiles。`30-implementation/` = 実装規約。
 - `docs/examples/` = 現行 golden flow 成果物のみ(`<artifact>-<flowId>.json` 命名、現在は flowspec / selectionspec / buildreport-dryrun-saas-ops-01 + sidecar)。
-- `docs/tasks/README.md` = brief テンプレ + 共通規約(pending brief 置き場、現在は空)。
+- `docs/tasks/README.md` = brief テンプレ + 共通規約。`task-16` は ScreenType を1つ
+  end-to-end で追加する再利用 brief。初回実行で `inbox-communication` を追加済み。
 - `docs/rfcs/` = 横断改善の設計文書(なぜ・何を・成功判定)。実行 brief とは分離。
-  active: `009`(registry–selection 意味検証 = completed)、
-  `010`(語彙拡張 + verification 書き戻しの governance = proposed、人間レビュー待ち)。
+  active: `009`(registry–selection 意味検証 = completed)。旧 `010`(語彙拡張 + verification
+  書き戻し governance)は `task-16` と AGENTS.md/30-implementation へ統合済み。
 - `docs/archive/{tasks,examples,notes,rfcs}/` = 完了 brief・旧 spec・研究ノート・完了 RFC(通常は不可視)。
 - `AGENTS.md` = ルート運用ルールの正本。`CLAUDE.md` は固定 `@AGENTS.md` shim(`validate:agents` でドリフト検出)。
 
 ## 次の候補(未選択)
 
-- 新 screenType の在庫追加
+- 次の ScreenType 候補: `document-workspace`。実行 brief = `docs/tasks/task-16`。
 - maturity 昇格レビュー(人間レビュー)
 - 上流 Flow 層(brief→JTBD→FlowSpec)の自動化
 - 20-selection / 30-implementation 各層専用サブエージェントの定義

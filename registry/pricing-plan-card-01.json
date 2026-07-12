@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pricing-plan-card-01",
+  "type": "registry:block",
+  "title": "Pricing Plan Card 01",
+  "description": "A presentational, controlled plan/tier card set with features and a select action.",
+  "categories": ["block:pricing", "role:pricing-plan-card"],
+  "registryDependencies": ["card", "button", "badge", "separator"],
+  "files": [
+    {
+      "path": "components/pricing-plan-card-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "pricing-plan-card",
+      "userIntents": ["purchase", "compare"],
+      "dataShapes": ["collection"],
+      "interactionModels": ["selection-single", "single-action"],
+      "layoutModel": {
+        "region": "card"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Selection is driven by a labelled button per plan; keyboard operability comes from the underlying shadcn/base-ui button primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "button", "badge", "separator"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-pricing-plan-card-pricing-plan-card-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching, checkout, or payment logic."
+      },
+      "extensions": {
+        "localEvidence": ["components/pricing-plan-card-01.tsx"]
+      }
+    }
+  }
+}

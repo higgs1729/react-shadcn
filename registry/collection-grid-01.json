@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "collection-grid-01",
+  "type": "registry:block",
+  "title": "Collection Grid 01",
+  "description": "A presentational, controlled responsive card grid for browsing and selecting a collection item.",
+  "categories": ["block:collection", "role:collection-grid"],
+  "registryDependencies": ["card", "badge"],
+  "files": [
+    {
+      "path": "components/collection-grid-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "collection-grid",
+      "userIntents": ["browse", "search"],
+      "dataShapes": ["collection", "media"],
+      "interactionModels": ["selection-single", "disclosure"],
+      "layoutModel": {
+        "region": "main"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Each tile is a focusable, keyboard-activatable role=button with aria-pressed reflecting selection. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "badge"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-collection-grid-collection-grid-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or persistence."
+      },
+      "extensions": {
+        "localEvidence": ["components/collection-grid-01.tsx"]
+      }
+    }
+  }
+}

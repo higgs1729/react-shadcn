@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-explainability-label-01",
+  "type": "registry:block",
+  "title": "AI Explainability Label 01",
+  "description": "A presentational, controlled inline AI-generated/confidence provenance label with a tooltip explanation.",
+  "categories": ["block:ai-label", "role:ai-explainability-label"],
+  "registryDependencies": ["badge", "tooltip"],
+  "files": [
+    {
+      "path": "components/ai-explainability-label-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "ai-explainability-label",
+      "userIntents": ["review", "delegate-to-ai"],
+      "dataShapes": ["none"],
+      "interactionModels": ["read-only", "disclosure"],
+      "layoutModel": {
+        "region": "inline"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Tooltip trigger is focusable and the explanation text is announced on hover/focus via the underlying shadcn/base-ui tooltip primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["badge", "tooltip"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-ai-explainability-label-ai-explainability-label-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or persistence."
+      },
+      "extensions": {
+        "localEvidence": ["components/ai-explainability-label-01.tsx"]
+      }
+    }
+  }
+}

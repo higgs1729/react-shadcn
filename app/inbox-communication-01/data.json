@@ -1,0 +1,6 @@
+[
+  { "id": "conv-101", "sender": "Maya Chen", "subject": "Unable to update billing address", "preview": "The save button stays disabled after I edit the address.", "status": "open", "priority": "high", "assignee": "Ari", "updated": "2m" },
+  { "id": "conv-102", "sender": "Jon Bell", "subject": "Question about SSO rollout", "preview": "Can we enable SAML for one workspace before the others?", "status": "open", "priority": "normal", "assignee": "Unassigned", "updated": "14m" },
+  { "id": "conv-103", "sender": "Priya Shah", "subject": "Import completed with warnings", "preview": "Three records were skipped and I need help understanding why.", "status": "snoozed", "priority": "normal", "assignee": "Noah", "updated": "1h" },
+  { "id": "conv-104", "sender": "Luis Ortega", "subject": "Refund confirmation", "preview": "Thanks, the refund is visible on our statement now.", "status": "closed", "priority": "normal", "assignee": "Ari", "updated": "3h" }
+]

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "action-footer-01",
+  "type": "registry:block",
+  "title": "Action Footer 01",
+  "description": "A presentational, controlled sticky footer with a primary and secondary action.",
+  "categories": ["block:action-footer", "role:action-footer"],
+  "registryDependencies": ["button-group", "button"],
+  "files": [
+    {
+      "path": "components/action-footer-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "action-footer",
+      "userIntents": ["create", "edit", "approve"],
+      "dataShapes": ["none"],
+      "interactionModels": ["single-action", "multi-action", "form-submit"],
+      "layoutModel": {
+        "region": "footer"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Both actions are native buttons with visible text labels; keyboard operability comes from the underlying shadcn/base-ui button primitive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["button-group", "button"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-action-footer-action-footer-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or persistence."
+      },
+      "extensions": {
+        "localEvidence": ["components/action-footer-01.tsx"]
+      }
+    }
+  }
+}

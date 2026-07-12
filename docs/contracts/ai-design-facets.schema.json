@@ -313,7 +313,8 @@
         "settings-admin",
         "workflow",
         "report-analytics",
-        "conversation-assistant"
+        "conversation-assistant",
+        "inbox-communication"
       ]
     },
     "blockRole": {

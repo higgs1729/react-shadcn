@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "loading-skeleton-01",
+  "type": "registry:block",
+  "title": "Loading Skeleton 01",
+  "description": "A presentational placeholder of skeleton rows for a loading region.",
+  "categories": ["block:skeleton", "role:loading-skeleton"],
+  "registryDependencies": ["skeleton"],
+  "files": [
+    {
+      "path": "components/loading-skeleton-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "loading-skeleton",
+      "userIntents": ["browse"],
+      "dataShapes": ["none"],
+      "interactionModels": ["read-only"],
+      "layoutModel": {
+        "region": "main"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "The container carries aria-busy and an aria-label announcing the loading state; skeleton rows are decorative. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["skeleton"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-loading-skeleton-loading-skeleton-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Purely decorative and stateless; no data fetching, no interaction."
+      },
+      "extensions": {
+        "localEvidence": ["components/loading-skeleton-01.tsx"]
+      }
+    }
+  }
+}

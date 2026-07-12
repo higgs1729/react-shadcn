@@ -25,18 +25,12 @@ REFERENCE_PRODUCTS: <two or more product/screen references, comma-separated>
 
 ## Scoped authorization
 
-This is a vocabulary-governance task explicitly requested by the human. For this task
-only, the coordinator may edit these otherwise protected files, solely to add
-`TARGET_SCREEN_TYPE` and its profile:
-
-- `docs/contracts/ai-design-facets.schema.json`
-- `docs/layers/20-selection/ai-canonical-profiles.json`
-
-This authorization does not permit changing or removing existing enum values, existing
-profiles, existing registry facet values, selection instructions, or any other contract.
-Subagents must remain read-only on protected files; the coordinator performs and reviews
-the two authorized edits. If the target requires a new facet value other than the one
-ScreenType, stop and report it instead of widening the exception.
+Vocabulary (screenType / blockRole enums in `docs/contracts/*` + profiles in
+`docs/layers/20-selection/*`) is frozen by default. **The executor of this brief may
+extend it at its own discretion** — no per-extension human approval; the human audits
+periodically. Guardrails: add only (never change/remove existing values), subagents stay
+read-only on protected files, and if the target needs a new blockRole rather than just
+the one ScreenType, stop and report instead of widening the exception.
 
 ## Context
 
@@ -58,8 +52,9 @@ ScreenType, stop and report it instead of widening the exception.
   `maturity: "experimental"`. Human review is required for promotion.
 - `scripts/validate-profiles.mjs`, `scripts/validate-facets.mjs`, and
   `scripts/validate-pipeline.mjs` enforce profile, inventory, and cross-artifact
-  integrity. Task 15 may add `npm run report:coverage`; use it when available, but do
-  not make this task depend on an unfinished pending task.
+  integrity. `validate-pipeline.mjs` now includes facet-aware semantic invariants
+  (RFC 009: `SCREENTYPE_MATCH` etc.), and `npm run report:coverage` reports inventory
+  coverage; use both to confirm the new ScreenType is recognized and stocked.
 - The current golden flow under `docs/examples/` must remain unchanged. Add isolated
   fixtures/tests outside `docs/examples/` for this ScreenType.
 
@@ -94,10 +89,12 @@ reduce cost. As of 2026-07-12, the model policy was checked against the official
 model catalog and Claude Code model/subagent documentation.
 
 For Claude Code custom subagents, set the frontmatter `model` field to `sonnet` or
-`haiku` as assigned above; keep the coordinator session on `opus`. For Codex, pass the
-assigned model and reasoning effort when the subagent surface supports per-agent model
-selection. If it does not, keep WP-A through WP-D as explicit work packages under the
-active coordinator model and report that model isolation was unavailable.
+`haiku` as assigned above; keep the coordinator session on `opus`. For Codex, use the
+corresponding reusable definition under `.agents/` and pass its `model`,
+`reasoning_effort`, and `agent_type` to the sub-agent runner. The current Codex
+sub-agent surface exposes `gpt-5.6-luna` but not `gpt-5.4-mini`; use Luna for WP-B/WP-D
+in that surface and record the actual model. If the runner is unavailable, execute
+WP-A through WP-D sequentially and report that model isolation was unavailable.
 
 1. **WP-A: taxonomy research (low-cost, read-only).** Inspect current facet vocabulary,
    profiles, and inventory. Return a proposed profile, nearest-type comparison, reused

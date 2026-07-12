@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "wizard-stepper-01",
+  "type": "registry:block",
+  "title": "Wizard Stepper 01",
+  "description": "A presentational, controlled horizontal step indicator with active and complete states, composed from separator and badge.",
+  "categories": ["block:wizard", "role:wizard-stepper"],
+  "registryDependencies": ["separator", "badge"],
+  "files": [
+    {
+      "path": "components/wizard-stepper-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "wizard-stepper",
+      "userIntents": ["onboard", "create", "configure"],
+      "dataShapes": ["single-record"],
+      "interactionModels": ["wizard", "disclosure"],
+      "layoutModel": {
+        "region": "header"
+      },
+      "density": "low",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Current step carries aria-current=\"step\"; the stepper is read-only navigation context, not itself interactive. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["separator", "badge"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-wizard-stepper-wizard-stepper-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no data fetching or persistence. No stepper primitive exists yet, so this composes separator and badge."
+      },
+      "extensions": {
+        "localEvidence": ["components/wizard-stepper-01.tsx"]
+      }
+    }
+  }
+}

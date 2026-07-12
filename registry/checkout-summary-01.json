@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkout-summary-01",
+  "type": "registry:block",
+  "title": "Checkout Summary 01",
+  "description": "A presentational, controlled order line-item summary with total and a confirm action.",
+  "categories": ["block:checkout", "role:checkout-summary"],
+  "registryDependencies": ["card", "separator", "button"],
+  "files": [
+    {
+      "path": "components/checkout-summary-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "checkout-summary",
+      "userIntents": ["purchase", "review"],
+      "dataShapes": ["transaction"],
+      "interactionModels": ["form-submit", "read-only"],
+      "layoutModel": {
+        "region": "card"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Confirm action is a native labelled button; line items are static text. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["card", "separator", "button"],
+        "npm": [],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-checkout-summary-checkout-summary-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no payment processing or network calls."
+      },
+      "extensions": {
+        "localEvidence": ["components/checkout-summary-01.tsx"]
+      }
+    }
+  }
+}

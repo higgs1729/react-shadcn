@@ -1,0 +1,72 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-prompt-composer-01",
+  "type": "registry:block",
+  "title": "AI Prompt Composer 01",
+  "description": "A presentational, controlled prompt input with attach and send controls.",
+  "categories": ["block:ai-prompt", "role:ai-prompt-composer"],
+  "registryDependencies": ["input-group", "button"],
+  "files": [
+    {
+      "path": "components/ai-prompt-composer-01.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "ai-prompt-composer",
+      "userIntents": ["communicate", "delegate-to-ai", "create"],
+      "dataShapes": ["conversation"],
+      "interactionModels": ["streaming", "form-submit", "human-in-the-loop"],
+      "layoutModel": {
+        "region": "footer"
+      },
+      "density": "medium",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Prompt textarea and send/attach buttons carry aria-label; Enter submits and Shift+Enter inserts a newline. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["input-group", "button"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": {
+        "requiredBlocks": [],
+        "optionalBlocks": [],
+        "incompatibleWith": []
+      },
+      "verification": {
+        "storybookStories": ["blocks-ai-prompt-composer-ai-prompt-composer-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "low",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://ui.shadcn.com/docs/registry/registry-item-json",
+          "file:///docs/layers/20-selection/ai-canonical-profiles.json"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["permission-denied", "rtl"],
+        "notes": "Presentational and fully controlled; no streaming transport or network calls wired in."
+      },
+      "extensions": {
+        "localEvidence": ["components/ai-prompt-composer-01.tsx"]
+      }
+    }
+  }
+}

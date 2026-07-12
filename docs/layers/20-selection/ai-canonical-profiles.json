@@ -123,6 +123,18 @@
       "typicalBlockRoles": ["ai-conversation-list", "ai-prompt-composer", "ai-explainability-label", "activity-feed"],
       "optionalBlockRoles": ["comment-thread"],
       "notes": "AI chat, support thread, agent workspace. Streaming turn-based interaction."
+    },
+    "inbox-communication": {
+      "reviewed": false,
+      "maturity": "experimental",
+      "userIntents": ["communicate", "review", "monitor", "filter"],
+      "jobMapStages": ["locate", "execute", "conclude"],
+      "dataShapes": ["conversation", "collection"],
+      "interactionModels": ["filter-sort", "selection-multiple", "multi-action", "real-time"],
+      "density": "high",
+      "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "data-table-panel"],
+      "optionalBlockRoles": ["activity-feed", "comment-thread", "drawer-inspector", "empty-state", "error-recovery", "loading-skeleton", "notification-center"],
+      "notes": "Human-message triage inbox for finding, assigning, replying to, snoozing, and resolving conversations. Distinguish from collection by communication lifecycle and ownership actions; distinguish from conversation-assistant by human correspondence rather than AI delegation or token streaming."
     }
   },
   "blockRoles": {
@@ -132,7 +144,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["hierarchy"],
       "interactionModels": ["disclosure", "selection-single"],
-      "screenTypes": ["dashboard", "collection", "settings-admin", "detail"],
+      "screenTypes": ["dashboard", "collection", "settings-admin", "detail", "inbox-communication"],
       "notes": "Primary left navigation shell. Only one navigation shell per screen."
     },
     "app-shell-topnav": {
@@ -150,7 +162,7 @@
       "userIntents": ["create", "edit", "browse"],
       "dataShapes": ["none"],
       "interactionModels": ["multi-action", "single-action"],
-      "screenTypes": ["dashboard", "collection", "detail", "create-edit", "report-analytics"],
+      "screenTypes": ["dashboard", "collection", "detail", "create-edit", "report-analytics", "inbox-communication"],
       "notes": "Page title plus primary actions (create, export, etc.)."
     },
     "breadcrumb-context": {
@@ -177,7 +189,7 @@
       "userIntents": ["filter", "search", "compare"],
       "dataShapes": ["collection", "categorical"],
       "interactionModels": ["filter-sort"],
-      "screenTypes": ["collection", "dashboard", "report-analytics"],
+      "screenTypes": ["collection", "dashboard", "report-analytics", "inbox-communication"],
       "notes": "Filter/sort/search controls above a collection or chart."
     },
     "tabs-view-switcher": {
@@ -213,7 +225,7 @@
       "userIntents": ["browse", "filter", "compare", "edit"],
       "dataShapes": ["collection", "relational"],
       "interactionModels": ["filter-sort", "selection-multiple", "inline-edit"],
-      "screenTypes": ["collection", "dashboard", "report-analytics"],
+      "screenTypes": ["collection", "dashboard", "report-analytics", "inbox-communication"],
       "notes": "Sortable/selectable data table."
     },
     "collection-grid": {
@@ -276,7 +288,7 @@
       "userIntents": ["create", "browse"],
       "dataShapes": ["none"],
       "interactionModels": ["single-action"],
-      "screenTypes": ["collection", "dashboard", "detail", "onboarding", "report-analytics"],
+      "screenTypes": ["collection", "dashboard", "detail", "onboarding", "report-analytics", "inbox-communication"],
       "notes": "No-data state with a call to action. Selected as a block when the whole page is empty; in-block empty states are covered via stateCoverage."
     },
     "error-recovery": {
@@ -285,7 +297,7 @@
       "userIntents": ["recover"],
       "dataShapes": ["none"],
       "interactionModels": ["single-action"],
-      "screenTypes": ["auth", "collection", "detail", "dashboard", "report-analytics"],
+      "screenTypes": ["auth", "collection", "detail", "dashboard", "report-analytics", "inbox-communication"],
       "notes": "Error / permission-denied recovery. Selected as a block for whole-page failures; in-block errors are covered via stateCoverage."
     },
     "loading-skeleton": {
@@ -294,7 +306,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["none"],
       "interactionModels": ["read-only"],
-      "screenTypes": ["collection", "dashboard", "detail", "report-analytics"],
+      "screenTypes": ["collection", "dashboard", "detail", "report-analytics", "inbox-communication"],
       "notes": "Placeholder while data loads. Selected as a block for initial page load; in-block loading is covered via stateCoverage."
     },
     "notification-center": {
@@ -303,7 +315,7 @@
       "userIntents": ["monitor", "review"],
       "dataShapes": ["collection"],
       "interactionModels": ["read-only", "disclosure", "real-time"],
-      "screenTypes": ["dashboard", "detail", "collection"],
+      "screenTypes": ["dashboard", "detail", "collection", "inbox-communication"],
       "notes": "Notifications/alerts panel, often real-time."
     },
     "modal-dialog": {
@@ -321,7 +333,7 @@
       "userIntents": ["review", "edit"],
       "dataShapes": ["single-record"],
       "interactionModels": ["drawer-inspection", "inline-edit"],
-      "screenTypes": ["collection", "dashboard", "detail"],
+      "screenTypes": ["collection", "dashboard", "detail", "inbox-communication"],
       "notes": "Side panel to inspect/edit a row without leaving the list."
     },
     "file-upload-area": {
@@ -339,7 +351,7 @@
       "userIntents": ["monitor", "review", "communicate"],
       "dataShapes": ["collection"],
       "interactionModels": ["read-only", "real-time"],
-      "screenTypes": ["detail", "dashboard", "conversation-assistant"],
+      "screenTypes": ["detail", "dashboard", "conversation-assistant", "inbox-communication"],
       "notes": "Chronological activity/audit stream (a time-ordered collection, not a quantitative time series)."
     },
     "comment-thread": {
@@ -348,7 +360,7 @@
       "userIntents": ["communicate", "review"],
       "dataShapes": ["conversation"],
       "interactionModels": ["form-submit", "real-time"],
-      "screenTypes": ["detail", "conversation-assistant"],
+      "screenTypes": ["detail", "conversation-assistant", "inbox-communication"],
       "notes": "Threaded human comments on a record. Real-time updates from other users; streaming is reserved for AI token output."
     },
     "ai-conversation-list": {
