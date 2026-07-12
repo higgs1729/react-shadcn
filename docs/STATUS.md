@@ -62,7 +62,8 @@ encoding:"UTF-8"
   document-workspace-01 に validation-error（関連する文書タイトルのfield error）を追加し、
   各状態を実ブラウザのStorybook/a11yで検証した。共有file-upload-areaは、Document Workspaceの
   a11y検証で判明したネスト操作要素を解消済み。maturity昇格なし。
-- `studio-portfolio-01` のSelectionSpec未出力ドライ評価（現在の `requiredStates` のみ）:
+- `studio-portfolio-01` の**旧11ステップ時点**のSelectionSpec未出力ドライ評価（当時の
+  `requiredStates` のみ）:
   **resolved 11 / unresolved 0**。
   `overview→dashboard-01`、`pattern-library→collection-table-01`、
   `pattern-detail→report-analytics-01`、`live-demo→dashboard-01`、
@@ -113,6 +114,16 @@ encoding:"UTF-8"
 - アプリの本体の作成
   - 資料は`docs/archive/personal/tomoy/AI-Design-System-Studio.md`
     - 例外措置としてこのタスクにかかわっている間のみはこのファイルのみReadとEditを許可する
+  - FlowSpec `flowspec-studio-portfolio-01` に Studio 終端2画面（generated-preview /
+    selection-rationale）と Evaluator Deep-Dive 3画面（contract-explorer / provenance-trail /
+    coverage-matrix）を追加済み（計16 step、schema 検証 pass）。全 screenType は既存在庫で充足。
+  - **配布形式確定（2026-07-12）: 静的エクスポート → GitHub Pages。** `next.config.ts` は
+    `output:'export'`＋env `PAGES_BASE_PATH` ゲートの basePath。CI は `.github/workflows/deploy-pages.yml`
+    （app を `out/` に、Storybook を `/storybook` に同梱してデプロイ）。詳細は資料の「配布形式の決定」節。
+  - **本体実装の制約**: `output:'export'` はプロジェクト全体に効くため、registry/coverage は
+    build-time 読み取り、URL クエリは client-side（`useSearchParams`+Suspense）読み取り。
+    Server Component の `await searchParams` は export を壊す（invoice-list を client 化で対応済み）。
+  - 人間の一度きり操作: リポジトリ Settings → Pages → Source を「GitHub Actions」に設定。
 
 ## 次の候補(未選択)
 

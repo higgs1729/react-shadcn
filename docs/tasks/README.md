@@ -27,6 +27,39 @@ Briefs reference this section instead of restating it. Read it before starting.
 - Finish by reporting: files created/changed, commands run with exit codes, and any
   requirement you could not satisfy (do not silently narrow scope).
 
+## Execution permission failures (Codex sandbox)
+
+In Codex Desktop, a command can be correct yet fail with `EPERM`, `EACCES`, or
+`operation not permitted` because the sandbox blocks a tool-created temporary or output
+file. Treat this as an execution-environment failure only when the denied path is one of
+the command's expected generated locations, for example:
+
+- Next.js build output such as `.next/trace`.
+- Vite / Storybook temporary caches such as `node_modules/.vite-temp/` or
+  `node_modules/.cache/storybook/`.
+- A requested generated artifact, such as a provenance sidecar under `docs/examples/`.
+
+Use this decision sequence:
+
+1. Preserve the exact command and the denied path in the report. Do not change source code,
+   weaken the check, or substitute a different command merely to avoid the write.
+2. Rerun that same, narrowly scoped command with an explicit elevated-permission request.
+   The request must say what generated directory/file it needs and why; prefer a command
+   prefix limited to that check. Do not request broad shell or filesystem permission.
+3. If the elevated rerun passes, report the initial failure as a sandbox restriction and the
+   elevated result as the authoritative check result.
+4. If the denied path is a source file, a protected file, or an unexpected location, stop and
+   escalate to the coordinator/user instead of assuming write permission. Likewise, a real
+   test, type, lint, build, or a11y failure remains a product failure even when an earlier
+   sandbox failure also occurred.
+5. If elevated execution is unavailable, report the command, exact error, and blocked output
+   path as an unsatisfied requirement. Never claim a skipped browser/build/provenance check
+   passed.
+
+Build and browser checks normally write caches even when their user-visible purpose is
+verification. After a successful elevated run, continue with the task's ordinary validation
+and provenance steps; elevation does not bypass any repository rule.
+
 ## Brief template
 
 The orchestrator generates each brief from this template. Rules for filling it in:

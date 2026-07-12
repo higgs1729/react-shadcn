@@ -1,0 +1,56 @@
+name: deploy-pages
+
+# Static export of the portfolio app deployed to GitHub Pages, with the
+# Storybook build co-located under /storybook on the same origin so
+# pattern-detail deep-links resolve. Registry/coverage are read at build time.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# GitHub Pages project site is served under /<repo>; the app is built with a
+# matching basePath so asset URLs resolve.
+env:
+  PAGES_BASE_PATH: /react-shadcn
+
+# Allow one concurrent deployment; let an in-progress run finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Static export -> out/
+      - run: npm run build
+      # Component lab co-located at /<repo>/storybook (relative-asset build).
+      - run: npm run build-storybook
+      - run: |
+          mkdir -p out/storybook
+          cp -r storybook-static/* out/storybook/
+          # Bypass Jekyll so the _next/ directory is served verbatim.
+          touch out/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
