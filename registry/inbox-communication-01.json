@@ -5,7 +5,7 @@
   "title": "Inbox Communication 01",
   "description": "A high-density human communication inbox for searching, filtering, assigning, and resolving incoming conversations.",
   "categories": ["screen:inbox-communication", "intent:communicate", "density:high"],
-  "registryDependencies": ["alert", "badge", "button", "checkbox", "empty", "input-group", "select", "sidebar", "skeleton", "table", "toggle-group"],
+  "registryDependencies": ["alert", "avatar", "badge", "button", "card", "empty", "input-group", "item", "scroll-area", "select", "sidebar", "skeleton", "textarea", "toggle-group"],
   "files": [
     {
       "path": "app/inbox-communication-01/inbox-screen.tsx",
@@ -24,7 +24,7 @@
       "maturity": "experimental",
       "source": "internal",
       "screenType": "inbox-communication",
-      "blockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "data-table-panel"],
+      "blockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "conversation-triage-list", "comment-thread"],
       "userIntents": ["communicate", "review", "monitor", "filter"],
       "jobMapStages": ["locate", "execute", "conclude"],
       "dataShapes": ["conversation", "collection"],
@@ -44,13 +44,13 @@
         "notes": "Interactive controls use labeled shadcn/base-ui primitives; the composed screen has not received an independent accessibility audit."
       },
       "dependencies": {
-        "shadcn": ["alert", "badge", "button", "checkbox", "empty", "input-group", "select", "sidebar", "skeleton", "table", "toggle-group"],
+        "shadcn": ["alert", "avatar", "badge", "button", "card", "empty", "input-group", "item", "scroll-area", "select", "sidebar", "skeleton", "textarea", "toggle-group"],
         "npm": ["lucide-react"],
-        "registries": ["sidebar-07", "page-header-actions-01", "filter-toolbar-01", "data-table-panel-01"]
+        "registries": ["sidebar-07", "page-header-actions-01", "filter-toolbar-01", "conversation-triage-list-01", "comment-thread-01"]
       },
       "composition": {
-        "requiredBlocks": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "data-table-panel"],
-        "optionalBlocks": ["activity-feed", "comment-thread", "drawer-inspector", "notification-center"],
+        "requiredBlocks": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "conversation-triage-list", "comment-thread"],
+        "optionalBlocks": ["activity-feed", "drawer-inspector", "notification-center"],
         "incompatibleWith": ["app-shell-topnav"]
       },
       "verification": {
@@ -80,7 +80,7 @@
         "licenseReviewNeeded": false,
         "maintenanceReviewNeeded": false,
         "missingStates": ["permission-denied", "offline", "rtl"],
-        "notes": "Conversation data and real-time behavior are simulated locally; assignment, reply, snooze, and close actions are represented by the taxonomy but are not connected to a backend."
+        "notes": "Conversation data and lifecycle actions are simulated locally. Assignment, reply, snooze, and close have no backend or real-time transport."
       },
       "extensions": {
         "localEvidence": [

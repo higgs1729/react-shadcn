@@ -21,13 +21,13 @@ encoding:"UTF-8"
 - `validate:pipeline` は registry facet を読む意味検証を持つ(RFC 009): 名前存在
   (`REGISTRY_ITEM_EXISTS`)に加え、assetKind/screenType/blockRole/requiredBlocks/依存 union の
   5不変条件。在庫充足は `npm run report:coverage`(観測のみ・exit 0)で可視化。
-- block-pattern 棚は全充足(task-17): **30/30 blockRole 在庫**(各 role に experimental
+- block-pattern 棚は全充足(task-17): **31/31 blockRole 在庫**(各 role に experimental
   block-pattern を1つ、vendored primitive で合成。3ファイル/件 = component + registry +
   hand-written story)。screenType は **4/11 在庫**、空き7(conversation-assistant /
   create-edit / detail / onboarding / report-analytics / settings-admin / workflow)は
   task-16 で screen-pattern を追加(必要 block は揃済み)。
 - `inbox-communication` を experimental ScreenType として追加済み。registry item
-  `inbox-communication-01` は sidebar/header/filter/table の既存在庫を再利用し、
+  `inbox-communication-01` は sidebar/header/filter/conversation triage/comment thread を合成し、
   default/loading/empty/error の Storybook story を持つ。人間レビューと実バックエンド接続は未実施。
 
 ## 文書構成
@@ -68,7 +68,7 @@ ScreenType追加優先順位テーブル:
 - 20-selection / 30-implementation 各層専用サブエージェントの定義
   (brief 側で読むファイル一覧を渡す運用もこの時に整備)
 - blockRole全体の実装状況ビュー: enum/profile/registry/component/story/state/checksを
-  role単位で一覧化する。30/30在庫後の品質差を可視化する構想として保持し、今回は未着手。
+  role単位で一覧化する。31/31在庫後の品質差を可視化する構想として保持し、今回は未着手。
 
 ## 小粒の改善メモ(急がない・機会があれば相乗り)
 

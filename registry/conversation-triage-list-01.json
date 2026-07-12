@@ -1,0 +1,64 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "conversation-triage-list-01",
+  "type": "registry:block",
+  "title": "Conversation Triage List 01",
+  "description": "A controlled high-density inbox queue for prioritizing human conversations and applying assignment, snooze, or close actions.",
+  "categories": ["block:conversation", "role:conversation-triage-list"],
+  "registryDependencies": ["badge", "button", "item", "scroll-area"],
+  "files": [
+    { "path": "components/conversation-triage-list-01.tsx", "type": "registry:component" }
+  ],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "conversation-triage-list",
+      "userIntents": ["communicate", "review", "filter", "monitor"],
+      "dataShapes": ["conversation", "collection"],
+      "interactionModels": ["selection-single", "selection-multiple", "multi-action", "real-time"],
+      "layoutModel": { "region": "main", "responsive": ["mobile", "desktop"] },
+      "density": "high",
+      "stateCoverage": ["default", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "Conversation selection is a native button; each lifecycle control has a unique accessible label. Not independently audited."
+      },
+      "dependencies": {
+        "shadcn": ["badge", "button", "item", "scroll-area"],
+        "npm": ["lucide-react"],
+        "registries": []
+      },
+      "composition": { "requiredBlocks": [], "optionalBlocks": [], "incompatibleWith": [] },
+      "verification": {
+        "storybookStories": ["blocks-conversation-triage-list-conversation-triage-list-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "high",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://www.intercom.com/help/en/articles/6258745-the-inbox-explained",
+          "https://www.intercom.com/help/en/articles/6561699-assign-conversations-to-teammates-and-teams"
+        ]
+      },
+      "risk": {
+        "level": "low",
+        "missingStates": ["loading", "error", "permission-denied", "rtl"],
+        "notes": "Controlled presentation component; persistence and real-time transport belong to the consuming screen."
+      },
+      "extensions": {
+        "localEvidence": ["components/conversation-triage-list-01.tsx"],
+        "taxonomyDecision": "Owns inbox-specific prioritization and lifecycle controls. Generic data tables do not express these semantics, while AI conversation lists require AI delegation and streaming."
+      }
+    }
+  }
+}

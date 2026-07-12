@@ -132,8 +132,8 @@
       "dataShapes": ["conversation", "collection"],
       "interactionModels": ["filter-sort", "selection-multiple", "multi-action", "real-time"],
       "density": "high",
-      "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "data-table-panel"],
-      "optionalBlockRoles": ["activity-feed", "comment-thread", "drawer-inspector", "empty-state", "error-recovery", "loading-skeleton", "notification-center"],
+      "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "conversation-triage-list", "comment-thread"],
+      "optionalBlockRoles": ["activity-feed", "drawer-inspector", "empty-state", "error-recovery", "loading-skeleton", "notification-center"],
       "notes": "Human-message triage inbox for finding, assigning, replying to, snoozing, and resolving conversations. Distinguish from collection by communication lifecycle and ownership actions; distinguish from conversation-assistant by human correspondence rather than AI delegation or token streaming."
     }
   },
@@ -389,6 +389,16 @@
       "interactionModels": ["read-only", "disclosure"],
       "screenTypes": ["conversation-assistant", "dashboard", "detail"],
       "notes": "AI provenance/uncertainty label. Required when AI output materially affects decisions."
+    },
+    "conversation-triage-list": {
+      "reviewed": false,
+      "maturity": "experimental",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["communicate", "review", "filter", "monitor"],
+      "dataShapes": ["conversation", "collection"],
+      "interactionModels": ["selection-single", "selection-multiple", "multi-action", "real-time"],
+      "screenTypes": ["inbox-communication"],
+      "notes": "High-density queue for prioritizing human conversations and applying ownership or lifecycle actions. Unlike data-table-panel, rows carry conversation-specific priority, assignment, and resolution semantics; unlike ai-conversation-list, it has no AI delegation or streaming contract."
     },
     "pricing-plan-card": {
       "reviewed": true, "maturity": "canonical",

@@ -1,5 +1,44 @@
 {
   "$comment": "Queue of new blockRole vocabulary needs discovered while designing ScreenTypes. add-one-screen-type appends proposed entries; add-one-new-block-role consumes one entry and updates its status only after verification.",
   "version": "0.1.0",
-  "candidates": []
+  "candidates": [
+    {
+      "id": "inbox-communication--conversation-triage-list",
+      "status": "implemented",
+      "proposedBlockRole": "conversation-triage-list",
+      "discoveredByScreenType": "inbox-communication",
+      "primaryJob": "Prioritize a human communication queue and apply ownership or lifecycle actions before opening a conversation.",
+      "distinguishFrom": "data-table-panel is generic record comparison and editing; ai-conversation-list is for AI-delegated, streaming chat sessions.",
+      "expectedRegion": "main",
+      "userIntents": ["communicate", "review", "filter", "monitor"],
+      "dataShapes": ["conversation", "collection"],
+      "interactionModels": ["selection-single", "selection-multiple", "multi-action", "real-time"],
+      "evidenceUrls": [
+        "https://www.intercom.com/help/en/articles/6258745-the-inbox-explained",
+        "https://www.intercom.com/help/en/articles/6561699-assign-conversations-to-teammates-and-teams"
+      ],
+      "createdAt": "2026-07-12",
+      "registryItem": "conversation-triage-list-01",
+      "implementedAt": "2026-07-12",
+      "implementedByTask": "inbox-communication remediation"
+    },
+    {
+      "id": "document-workspace--document-body-editor",
+      "status": "proposed",
+      "proposedBlockRole": "document-body-editor",
+      "discoveredByScreenType": "document-workspace",
+      "primaryJob": "Author and revise the body of one long-form/structured document inline, with in-context collaboration (comments, attachments).",
+      "distinguishFrom": "detail-overview is a read-only labelled-field record summary, not inline-editable prose; form-section is discrete validated form fields, not a free-form document canvas.",
+      "expectedRegion": "main",
+      "userIntents": ["create", "edit", "review"],
+      "dataShapes": ["document"],
+      "interactionModels": ["inline-edit", "real-time"],
+      "evidenceUrls": [
+        "https://www.notion.com/help/writing-and-editing-basics",
+        "https://support.google.com/docs/answer/179738",
+        "https://confluence.atlassian.com/doc/create-a-page-136527296.html"
+      ],
+      "createdAt": "2026-07-12"
+    }
+  ]
 }

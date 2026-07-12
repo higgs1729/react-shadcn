@@ -349,7 +349,8 @@
         "ai-prompt-composer",
         "ai-explainability-label",
         "pricing-plan-card",
-        "checkout-summary"
+        "checkout-summary",
+        "conversation-triage-list"
       ]
     },
     "userIntent": {
