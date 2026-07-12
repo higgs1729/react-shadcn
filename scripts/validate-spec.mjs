@@ -30,8 +30,11 @@ const isAllowlistedSidecar = (name) => name.endsWith('.provenance.json')
 const scanMode = targets.length === 0
 if (scanMode) {
   const dir = join(ROOT, 'docs', 'examples')
+  // Recursive, matching scripts/lib/flows.mjs: the fail-closed guarantee
+  // ("any unknown JSON under docs/examples/ fails") must cover subfolders too,
+  // or a triple that flow discovery finds would escape this scan.
   targets = existsSync(dir)
-    ? readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => join(dir, f))
+    ? readdirSync(dir, { recursive: true }).map(String).filter((f) => f.endsWith('.json')).map((f) => join(dir, f))
     : []
 }
 if (targets.length === 0) {

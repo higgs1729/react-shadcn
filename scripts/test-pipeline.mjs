@@ -70,6 +70,33 @@ try {
     { build: join(FIX, 'build-verified-failed-check.json') },
     'VERIFIED_CHECKS_PASS',
   )
+
+  // RFC 009: registry-selection semantic integrity (task-15).
+  expectFailure(
+    'asset kind mismatch',
+    { selection: join(FIX, 'selection-asset-kind-mismatch.json') },
+    'ASSET_KIND_MATCH',
+  )
+  expectFailure(
+    'screenType mismatch',
+    { selection: join(FIX, 'selection-screentype-mismatch.json') },
+    'SCREENTYPE_MATCH',
+  )
+  expectFailure(
+    'block role mismatch',
+    { selection: join(FIX, 'selection-block-role-mismatch.json') },
+    'BLOCK_ROLE_MATCH',
+  )
+  expectFailure(
+    'required block missing',
+    { selection: join(FIX, 'selection-required-block-missing.json') },
+    'REQUIRED_BLOCKS_COVERED',
+  )
+  expectFailure(
+    'dependency missing',
+    { selection: join(FIX, 'selection-dependency-missing.json') },
+    'DEPENDENCY_UNION',
+  )
 } catch (error) {
   console.error(`Pipeline validator regression test failed: ${error.message}`)
   process.exit(1)

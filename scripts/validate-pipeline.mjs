@@ -43,23 +43,28 @@ const hasExplicitArgs = argv.includes('--flow') || argv.includes('--selection') 
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8').replace(/^﻿/, ''))
 
 // ---- registry inventory (offline) ----------------------------------------
-function loadRegistryItemNames() {
+// Returns a Map<itemName, facets> where facets is the item's
+// `meta.aiDesignSystem` object (or null when unavailable). A missing name
+// field is skipped, matching the prior name-only loader's behavior; only a
+// JSON parse error falls back to a name-only entry (facets: null) so a
+// malformed registry file never masks an otherwise-valid selection (the
+// registry validators own malformed-file diagnostics, not this one).
+function loadRegistryItems() {
   const dir = join(ROOT, 'registry')
-  const names = new Set()
-  if (!existsSync(dir)) return names
+  const items = new Map()
+  if (!existsSync(dir)) return items
   for (const file of readdirSync(dir)) {
     if (!file.endsWith('.json')) continue
     try {
       const item = JSON.parse(readFileSync(join(dir, file), 'utf8'))
-      if (item && typeof item.name === 'string') names.add(item.name)
+      if (item && typeof item.name === 'string') {
+        items.set(item.name, item.meta?.aiDesignSystem ?? null)
+      }
     } catch {
-      // A malformed registry file is out of scope for this validator; the
-      // registry validators own that. Fall back to the filename stem so a
-      // parse error here never masks an otherwise-valid selection.
-      names.add(file.replace(/\.json$/, ''))
+      items.set(file.replace(/\.json$/, ''), null)
     }
   }
-  return names
+  return items
 }
 
 // ---- schema gate ---------------------------------------------------------
@@ -70,7 +75,7 @@ const validators = {
   BuildReport: getContractValidator(ajv, 'ai-buildreport.schema.json'),
 }
 
-const registryItems = loadRegistryItemNames()
+const registryItems = loadRegistryItems()
 
 /** Validate one FlowSpec/SelectionSpec/BuildReport triple. Never exits. */
 function validateTriple(flowPath, selectionPath, buildPath) {
@@ -166,6 +171,125 @@ function validateTriple(flowPath, selectionPath, buildPath) {
     for (const block of screen.blocks ?? []) {
       if (block.registryItem && !registryItems.has(block.registryItem)) {
         fail('SelectionSpec', screen.stepId, 'REGISTRY_ITEM_EXISTS', `block "${block.registryItem}" (role ${block.blockRole}) is not in registry/`)
+      }
+    }
+  }
+
+  // ---- facet-aware registry-selection semantic invariants (RFC 009) -------
+  // A selected registry item can exist by name yet be the wrong *kind* of
+  // thing for its slot: a block-pattern used as a screen pattern, a role
+  // mismatch, missing required composition, or an undeclared dependency. All
+  // five checks below are skipped for an item that's absent from the
+  // registry (REGISTRY_ITEM_EXISTS already reports that) or whose facets
+  // failed to parse/are missing (facets === null).
+  for (const screen of selection.screens) {
+    const patternName = screen.screenPattern?.registryItem
+    const patternFacets = registryItems.has(patternName) ? registryItems.get(patternName) : undefined
+    const hasPatternFacets = patternFacets != null
+
+    if (hasPatternFacets) {
+      // ASSET_KIND_MATCH (screen pattern side): the selected screen pattern
+      // must actually be a screen-pattern item, not a block-pattern.
+      if (patternFacets.assetKind !== 'screen-pattern') {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'ASSET_KIND_MATCH',
+          `screen pattern "${patternName}" has assetKind "${patternFacets.assetKind}" (expected "screen-pattern")`,
+        )
+      }
+      // SCREENTYPE_MATCH: the pattern's declared screenType must agree with
+      // what the selection layer resolved for this screen.
+      if (patternFacets.screenType !== screen.resolvedScreenType) {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'SCREENTYPE_MATCH',
+          `screen pattern "${patternName}" screenType "${patternFacets.screenType}" != resolvedScreenType "${screen.resolvedScreenType}"`,
+        )
+      }
+    }
+
+    const blocks = screen.blocks ?? []
+    const blockFacetsList = blocks.map((block) => ({
+      block,
+      facets: registryItems.has(block.registryItem) ? registryItems.get(block.registryItem) : undefined,
+    }))
+
+    for (const { block, facets } of blockFacetsList) {
+      if (facets == null) continue
+      // ASSET_KIND_MATCH (block side): every selected block must actually be
+      // a block-pattern item, not a screen-pattern.
+      if (facets.assetKind !== 'block-pattern') {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'ASSET_KIND_MATCH',
+          `block "${block.registryItem}" (role ${block.blockRole}) has assetKind "${facets.assetKind}" (expected "block-pattern")`,
+        )
+      }
+      // BLOCK_ROLE_MATCH: the item's declared blockRole must match the role
+      // the SelectionSpec assigned it to.
+      if (facets.blockRole !== block.blockRole) {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'BLOCK_ROLE_MATCH',
+          `block "${block.registryItem}" facet blockRole "${facets.blockRole}" != selected role "${block.blockRole}"`,
+        )
+      }
+    }
+
+    // REQUIRED_BLOCKS_COVERED: no blockRole selected twice, and every role the
+    // screen pattern's composition.requiredBlocks demands is present.
+    const roleCounts = new Map()
+    for (const block of blocks) {
+      roleCounts.set(block.blockRole, (roleCounts.get(block.blockRole) ?? 0) + 1)
+    }
+    for (const [role, count] of roleCounts) {
+      if (count > 1) {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'REQUIRED_BLOCKS_COVERED',
+          `blockRole "${role}" is selected ${count} times (expected at most once)`,
+        )
+      }
+    }
+    if (hasPatternFacets) {
+      const requiredBlocks = patternFacets.composition?.requiredBlocks ?? []
+      for (const role of requiredBlocks) {
+        if (!roleCounts.has(role)) {
+          fail(
+            'SelectionSpec',
+            screen.stepId,
+            'REQUIRED_BLOCKS_COVERED',
+            `required block role "${role}" (from screen pattern "${patternName}") is not among selected blocks`,
+          )
+        }
+      }
+    }
+
+    // DEPENDENCY_UNION: the union of dependencies.shadcn across the selected
+    // screen pattern and blocks must all be present in registryDependencies.
+    // Extra entries in registryDependencies are allowed.
+    const depUnion = new Set()
+    if (hasPatternFacets) {
+      for (const dep of patternFacets.dependencies?.shadcn ?? []) depUnion.add(dep)
+    }
+    for (const { facets } of blockFacetsList) {
+      if (facets == null) continue
+      for (const dep of facets.dependencies?.shadcn ?? []) depUnion.add(dep)
+    }
+    const declaredDeps = new Set(screen.registryDependencies ?? [])
+    for (const dep of depUnion) {
+      if (!declaredDeps.has(dep)) {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'DEPENDENCY_UNION',
+          `dependency "${dep}" (required by the selected pattern/blocks) is missing from registryDependencies`,
+        )
       }
     }
   }

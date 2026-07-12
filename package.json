@@ -32,6 +32,8 @@
     "test:validators": "node scripts/test-validators.mjs",
     "test:planned-checks": "node scripts/run-planned-checks.test.mjs",
     "test:pipeline": "node scripts/test-pipeline.mjs",
+    "report:coverage": "node scripts/report-inventory-coverage.mjs",
+    "test:coverage": "node scripts/report-inventory-coverage.test.mjs",
     "eval": "node scripts/run-eval.mjs",
     "eval:fixture": "node scripts/run-eval.mjs eval/fixtures/failing-wrong-winner.json",
     "test:eval": "node scripts/run-eval.test.mjs",
