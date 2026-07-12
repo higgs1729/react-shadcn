@@ -1,16 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import Screen from '@/app/flows/dryrun-saas-ops-01/overview/page'
+import { DashboardScreen } from '@/app/dashboard-01/dashboard-screen'
 
 const meta = {
   title: 'Patterns/dashboard/Dashboard 01',
+  component: DashboardScreen,
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
-  render: () => (
-    <Screen />
-  ),
-} satisfies Meta
+} satisfies Meta<typeof DashboardScreen>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {}
+export const Default: Story = { args: { state: 'default' } }
+export const Loading: Story = { args: { state: 'loading' } }
+export const Empty: Story = { args: { state: 'empty' } }
+export const Error: Story = { args: { state: 'error' } }

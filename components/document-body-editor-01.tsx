@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/attachment"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
+import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
@@ -33,6 +33,7 @@ export interface DocumentBodyEditorProps {
   attachments?: DocumentBodyEditorAttachment[]
   savedState?: DocumentBodyEditorSavedState
   emptyPlaceholder?: string
+  titleError?: string
 }
 
 const savedStateLabel: Record<DocumentBodyEditorSavedState, string> = {
@@ -58,22 +59,28 @@ export function DocumentBodyEditor({
   attachments = [],
   savedState = "saved",
   emptyPlaceholder = "Start writing…",
+  titleError,
 }: DocumentBodyEditorProps) {
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader className="gap-3">
         <div className="flex items-center gap-2">
-          <Field className="flex-1">
+          <Field className="flex-1" data-invalid={Boolean(titleError) || undefined}>
             <FieldLabel htmlFor="document-body-editor-title" className="sr-only">
               Document title
             </FieldLabel>
             <Input
               id="document-body-editor-title"
+              aria-describedby={titleError ? "document-body-editor-title-error" : undefined}
+              aria-invalid={Boolean(titleError) || undefined}
               value={title}
               placeholder="Untitled document"
               onChange={(event) => onTitleChange?.(event.target.value)}
               className="border-none px-0 text-lg font-medium shadow-none focus-visible:ring-0"
             />
+            {titleError && (
+              <FieldError id="document-body-editor-title-error">{titleError}</FieldError>
+            )}
           </Field>
           <Badge variant={savedStateVariant[savedState]}>
             {savedStateLabel[savedState]}

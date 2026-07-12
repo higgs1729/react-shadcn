@@ -34,6 +34,7 @@
     "test:pipeline": "node scripts/test-pipeline.mjs",
     "report:coverage": "node scripts/report-inventory-coverage.mjs",
     "test:coverage": "node scripts/report-inventory-coverage.test.mjs",
+    "test:screen-states": "node scripts/test-screen-state-inventory.mjs",
     "eval": "node scripts/run-eval.mjs",
     "eval:fixture": "node scripts/run-eval.mjs eval/fixtures/failing-wrong-winner.json",
     "test:eval": "node scripts/run-eval.test.mjs",

@@ -97,6 +97,11 @@ try {
     { selection: join(FIX, 'selection-dependency-missing.json') },
     'DEPENDENCY_UNION',
   )
+  expectFailure(
+    'FlowSpec state not covered by selected pattern',
+    { flow: join(FIX, 'flowspec-state-coverage-missing.json') },
+    'STATE_COVERAGE_MATCH',
+  )
 } catch (error) {
   console.error(`Pipeline validator regression test failed: ${error.message}`)
   process.exit(1)

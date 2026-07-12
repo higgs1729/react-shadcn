@@ -8,6 +8,25 @@ The flow is already decided (schema: `docs/contracts/`; worked example: `docs/ex
 
 Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical screen profiles in `ai-canonical-profiles.json` (both located by filename under `docs/`). Reject any value outside those enums. If a facet is missing, infer conservatively from the other facets and record the assumption in the output.
 
+## State-inventory model
+
+`meta.aiDesignSystem.stateCoverage` is the inventory declaration for an implemented
+screen-pattern. It classifies what that individual pattern can render; it never creates a
+baseline requirement for every pattern of the same `screenType`.
+
+```text
+ScreenType inventory
+├─ user states: default, loading, empty, error, permission-denied
+├─ interaction states: validation-error, disabled, success
+└─ environment variants: mobile, dark-mode, rtl
+```
+
+For a FlowSpec step, its `requiredStates` is the sole state gate. A candidate is eligible
+only when its `stateCoverage` contains every requested value. Do not infer additional state
+requirements from `screenType`, `dataShapes`, `interactionModels`, or a generic
+"data-driven" policy. A missing state is a truthful inventory gap: reject that candidate
+and leave the step unresolved when no eligible candidate remains.
+
 ## Procedure Per Step
 
 1. **Resolve screenType.** Score every canonical profile in `ai-canonical-profiles.json` against the step and pick the highest:
@@ -24,7 +43,7 @@ Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical s
    never infer it here. If the top two scores differ by less than 8 (near-tie), break the
    tie in this order: (1) exact `jobMapStages` set match, (2) `density` match, (3) put the
    step in `unresolved` with the tied candidates and escalate; do not guess.
-2. **Retrieve and score screen patterns.** Filter `screen-pattern` items by resolved `screenType`, then `userIntents`, then `dataShapes`. Drop items with missing `registryDependencies`, declared incompatibilities, or insufficient `requiredStates` coverage. Score 0-100: Intent 25 / DataShape 15 / Interaction 15 / State 15 / A11y 10 / Dependency 10 / Evidence 10. Reject below 70. Take the top candidate and keep rejected alternatives.
+2. **Retrieve and score screen patterns.** Filter `screen-pattern` items by resolved `screenType`, then `userIntents`, then `dataShapes`. Drop items with missing `registryDependencies`, declared incompatibilities, or any `FlowSpec.requiredStates` value absent from `stateCoverage`. Score 0-100: Intent 25 / DataShape 15 / Interaction 15 / State 15 / A11y 10 / Dependency 10 / Evidence 10. Reject below 70. Take the top candidate and keep rejected alternatives.
 3. **Read required block roles.** Read roles from the chosen screen pattern's `composition.requiredBlocks`. These are structural; do not derive them directly from raw facets. Add `optionalBlocks` only when a step facet clearly calls for one, such as `filter` intent -> `filter-toolbar`.
 4. **Select a block pattern per role.**
    - Retrieve `block-pattern` candidates by `blockRole`.
@@ -53,7 +72,6 @@ Facet vocabularies are defined in `ai-design-facets.schema.json` and canonical s
 - Do not add charts unless `dataShapes` includes `metric`, `time-series`, or `categorical`, or a comparison intent is present.
 - Do not use dense data blocks for `auth` or `onboarding` screen types.
 - Do not recreate shadcn primitives already provided by a registry dependency.
-- Require `empty`, `loading`, `error`, and `permission-denied` coverage for data-driven screens.
 - Include an AI explainability block when AI output materially affects user decisions.
 - Treat `visualTone` as a tiebreaker only.
 
@@ -113,7 +131,8 @@ Before emitting, verify all of the following:
 - Every selected item is at or above 70.
 - Components are not selected; dependencies are listed only as information.
 - Rejected alternatives and assumptions are recorded.
-- Every `requiredStates` value is present in `stateCoveragePlan`, or listed as a risk.
+- Every `requiredStates` value is present in both `stateCoveragePlan` and the selected
+  screen pattern's declared `stateCoverage`; otherwise the step is `unresolved`.
 
 If any self-review item fails, do not emit: fix correctable failures (re-retrieve candidates,
 recalculate scores, reread block roles, add missing `assumptions`/`risks`/rejected alternatives)

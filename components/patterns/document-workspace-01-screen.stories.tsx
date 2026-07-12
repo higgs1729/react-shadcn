@@ -15,3 +15,4 @@ export const Default: Story = { args: { state: 'default' } }
 export const Loading: Story = { args: { state: 'loading' } }
 export const Empty: Story = { args: { state: 'empty' } }
 export const Error: Story = { args: { state: 'error' } }
+export const ValidationError: Story = { args: { state: 'validation-error' } }

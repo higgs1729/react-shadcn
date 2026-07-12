@@ -83,7 +83,7 @@
         "responsive": ["mobile", "desktop"]
       },
       "density": "high",
-      "stateCoverage": ["default", "mobile"],
+      "stateCoverage": ["default", "loading", "empty", "error", "mobile"],
       "accessibility": {
         "keyboard": true,
         "focusVisible": true,
@@ -142,7 +142,12 @@
         "incompatibleWith": ["app-shell-topnav"]
       },
       "verification": {
-        "storybookStories": ["patterns-dashboard-dashboard-01--default"],
+        "storybookStories": [
+          "patterns-dashboard-dashboard-01--default",
+          "patterns-dashboard-dashboard-01--loading",
+          "patterns-dashboard-dashboard-01--empty",
+          "patterns-dashboard-dashboard-01--error"
+        ],
         "interactionTests": false,
         "accessibilityTests": false,
         "visualSnapshots": false,
@@ -161,18 +166,20 @@
         "level": "medium",
         "licenseReviewNeeded": false,
         "maintenanceReviewNeeded": false,
-        "missingStates": ["loading", "empty", "error", "permission-denied", "dark-mode", "rtl"],
-        "notes": "RESOLVED 2026-07-08: former install collision with sidebar-07 (which owns app/dashboard/page.tsx and the shared app-sidebar/nav-main/nav-user) fixed by wiring this pattern to a dedicated route app/dashboard-01/ with its colliding components namespaced under components/dashboard-01/. Shared non-colliding components (site-header, section-cards, chart-area-interactive, data-table, nav-documents, nav-secondary) remain at components/. Sample data is static (app/dashboard-01/data.json); loading/empty/error states are not implemented."
+        "missingStates": ["permission-denied", "dark-mode", "rtl"],
+        "notes": "RESOLVED 2026-07-08: former install collision with sidebar-07 (which owns app/dashboard/page.tsx and the shared app-sidebar/nav-main/nav-user) fixed by wiring this pattern to a dedicated route app/dashboard-01/ with its colliding components namespaced under components/dashboard-01/. Shared non-colliding components (site-header, section-cards, chart-area-interactive, data-table, nav-documents, nav-secondary) remain at components/. Sample data is static (app/dashboard-01/data.json); loading/empty/error states are simulated by DashboardScreen and evidenced in Storybook."
       },
       "extensions": {
         "localEvidence": [
           "app/dashboard-01/page.tsx",
+          "app/dashboard-01/dashboard-screen.tsx",
           "components/dashboard-01/app-sidebar.tsx",
           "components/site-header.tsx",
           "components/section-cards.tsx",
           "components/chart-area-interactive.tsx",
           "components/data-table.tsx",
-          "app/dashboard-01/data.json"
+          "app/dashboard-01/data.json",
+          "components/patterns/dashboard-01-screen.stories.tsx"
         ]
       }
     }

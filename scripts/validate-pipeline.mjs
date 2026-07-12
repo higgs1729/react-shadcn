@@ -120,6 +120,7 @@ function validateTriple(flowPath, selectionPath, buildPath) {
 
   const flowStepIds = flow.steps.map((s) => s.stepId)
   const flowStepSet = new Set(flowStepIds)
+  const flowStepsById = new Map(flow.steps.map((step) => [step.stepId, step]))
 
   const selectionScreenIds = selection.screens.map((s) => s.stepId)
   const selectionUnresolvedIds = (selection.unresolved ?? []).map((u) => u.stepId)
@@ -206,6 +207,33 @@ function validateTriple(flowPath, selectionPath, buildPath) {
           screen.stepId,
           'SCREENTYPE_MATCH',
           `screen pattern "${patternName}" screenType "${patternFacets.screenType}" != resolvedScreenType "${screen.resolvedScreenType}"`,
+        )
+      }
+
+      // STATE_COVERAGE_MATCH: FlowSpec owns the required states. A selected
+      // screen pattern is eligible only when it declares every one of those
+      // states as implemented inventory, and the SelectionSpec carries the
+      // same plan forward. No state requirement is inferred from screenType
+      // or data shape here.
+      const requestedStates = flowStepsById.get(screen.stepId)?.requiredStates ?? []
+      const patternStates = new Set(patternFacets.stateCoverage ?? [])
+      const plannedStates = new Set(screen.stateCoveragePlan ?? [])
+      const missingFromPattern = requestedStates.filter((state) => !patternStates.has(state))
+      const missingFromPlan = requestedStates.filter((state) => !plannedStates.has(state))
+      if (missingFromPattern.length > 0) {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'STATE_COVERAGE_MATCH',
+          `FlowSpec requires state(s) ${missingFromPattern.map((state) => `"${state}"`).join(', ')} but screen pattern "${patternName}" stateCoverage lacks them`,
+        )
+      }
+      if (missingFromPlan.length > 0) {
+        fail(
+          'SelectionSpec',
+          screen.stepId,
+          'STATE_COVERAGE_MATCH',
+          `FlowSpec requires state(s) ${missingFromPlan.map((state) => `"${state}"`).join(', ')} but SelectionSpec stateCoveragePlan lacks them`,
         )
       }
     }

@@ -35,7 +35,7 @@
         "responsive": ["mobile", "desktop"]
       },
       "density": "low",
-      "stateCoverage": ["default", "loading", "empty", "error"],
+      "stateCoverage": ["default", "loading", "empty", "error", "validation-error"],
       "accessibility": {
         "keyboard": true,
         "focusVisible": true,
@@ -58,7 +58,8 @@
           "patterns-document-workspace-document-workspace-01--default",
           "patterns-document-workspace-document-workspace-01--loading",
           "patterns-document-workspace-document-workspace-01--empty",
-          "patterns-document-workspace-document-workspace-01--error"
+          "patterns-document-workspace-document-workspace-01--error",
+          "patterns-document-workspace-document-workspace-01--validation-error"
         ],
         "interactionTests": false,
         "accessibilityTests": false,
@@ -80,7 +81,7 @@
         "licenseReviewNeeded": false,
         "maintenanceReviewNeeded": false,
         "missingStates": ["permission-denied", "offline", "rtl"],
-        "notes": "Document body, comments, and attachments are simulated locally with a fixed seed. Save, reply, and file-selection actions mutate only local component state; there is no persistence, real-time transport, presence, or conflict resolution wired in."
+        "notes": "The validation-error state exposes an associated document-title error. Document body, comments, and attachments are simulated locally with a fixed seed. Save, reply, and file-selection actions mutate only local component state; there is no persistence, real-time transport, presence, or conflict resolution wired in."
       },
       "extensions": {
         "localEvidence": [

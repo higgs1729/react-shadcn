@@ -1,5 +1,3 @@
-"use client"
-
 import { FileIcon, UploadIcon, XIcon } from "lucide-react"
 
 import {
@@ -12,7 +10,7 @@ import {
   AttachmentMedia,
   AttachmentTitle,
 } from "@/components/ui/attachment"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 
 export interface FileUploadAreaFile {
   id: string
@@ -37,8 +35,6 @@ export function FileUploadArea({
   return (
     <div className="flex flex-col gap-4">
       <div
-        role="button"
-        tabIndex={0}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault()
@@ -51,7 +47,7 @@ export function FileUploadArea({
         <p className="text-xs text-muted-foreground">
           or choose files from your device
         </p>
-        <Button variant="outline" size="sm" render={<label />}>
+        <label className={buttonVariants({ variant: "outline", size: "sm" })}>
           Browse files
           <input
             type="file"
@@ -61,7 +57,7 @@ export function FileUploadArea({
               if (e.target.files) onFilesSelected(e.target.files)
             }}
           />
-        </Button>
+        </label>
       </div>
       {files.length > 0 && (
         <AttachmentGroup className="flex-wrap">

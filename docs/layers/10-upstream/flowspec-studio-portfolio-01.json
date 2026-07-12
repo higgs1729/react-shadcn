@@ -19,7 +19,9 @@
         "onOpenStudio": "studio-composer",
         "onViewQuality": "quality-report",
         "onViewCaseStudy": "case-study",
-        "onOrientation": "orientation"
+        "onOrientation": "orientation",
+        "onExploreContracts": "contract-explorer",
+        "onViewCoverage": "coverage-matrix"
       }
     },
     {
@@ -44,7 +46,7 @@
       "density": "medium",
       "requiredStates": ["default", "loading", "empty", "error"],
       "accessibilityConstraints": { "keyboard": true },
-      "transitions": { "onLiveDemo": "live-demo", "onBack": "pattern-library" }
+      "transitions": { "onLiveDemo": "live-demo", "onBack": "pattern-library", "onWhyThisPattern": "selection-rationale" }
     },
     {
       "stepId": "live-demo",
@@ -68,7 +70,7 @@
       "density": "high",
       "requiredStates": ["default", "loading"],
       "accessibilityConstraints": { "keyboard": true },
-      "transitions": { "onCaseStudy": "case-study" }
+      "transitions": { "onCaseStudy": "case-study", "onVerifyProvenance": "provenance-trail", "onExploreContracts": "contract-explorer" }
     },
     {
       "stepId": "case-study",
@@ -129,7 +131,7 @@
       "density": "high",
       "requiredStates": ["default", "loading", "empty"],
       "accessibilityConstraints": { "keyboard": true },
-      "transitions": { "onOpenSelectedPattern": "pattern-detail" }
+      "transitions": { "onOpenSelectedPattern": "pattern-detail", "onViewResult": "generated-preview", "onWhyThisPattern": "selection-rationale" }
     },
     {
       "stepId": "orientation",
@@ -142,6 +144,70 @@
       "requiredStates": ["default"],
       "accessibilityConstraints": { "keyboard": true },
       "transitions": { "onContinue": "overview", "onSkip": "overview" }
+    },
+    {
+      "stepId": "generated-preview",
+      "order": 12,
+      "userIntents": ["review", "browse"],
+      "jobMapStages": ["monitor", "conclude"],
+      "dataShapes": ["single-record", "collection"],
+      "interactionModels": ["read-only", "filter-sort", "disclosure"],
+      "density": "medium",
+      "requiredStates": ["default", "loading", "empty", "error"],
+      "accessibilityConstraints": { "keyboard": true, "focusVisible": true },
+      "transitions": { "onOpenSelectedPattern": "pattern-detail", "onWhyThisPattern": "selection-rationale" }
+    },
+    {
+      "stepId": "selection-rationale",
+      "order": 13,
+      "userIntents": ["review", "compare", "analyze"],
+      "jobMapStages": ["define", "conclude"],
+      "dataShapes": ["categorical", "metric", "collection"],
+      "interactionModels": ["read-only", "disclosure", "selection-single"],
+      "density": "high",
+      "requiredStates": ["default", "loading", "empty"],
+      "accessibilityConstraints": { "keyboard": true },
+      "visualTone": ["developer", "ai-native"],
+      "transitions": { "onOpenSelectedPattern": "pattern-detail" }
+    },
+    {
+      "stepId": "contract-explorer",
+      "order": 14,
+      "userIntents": ["review", "browse", "analyze"],
+      "jobMapStages": ["locate", "define"],
+      "dataShapes": ["document", "hierarchy", "single-record"],
+      "interactionModels": ["read-only", "disclosure", "selection-single"],
+      "density": "medium",
+      "requiredStates": ["default", "loading", "empty"],
+      "accessibilityConstraints": { "keyboard": true },
+      "visualTone": ["developer"],
+      "transitions": { "onOpenSelectedPattern": "pattern-detail" }
+    },
+    {
+      "stepId": "provenance-trail",
+      "order": 15,
+      "userIntents": ["review", "analyze"],
+      "jobMapStages": ["monitor", "confirm", "conclude"],
+      "dataShapes": ["single-record", "categorical", "transaction"],
+      "interactionModels": ["read-only", "disclosure"],
+      "density": "medium",
+      "requiredStates": ["default", "loading", "error"],
+      "accessibilityConstraints": { "keyboard": true },
+      "visualTone": ["developer"],
+      "transitions": { "onBackToQuality": "quality-report" }
+    },
+    {
+      "stepId": "coverage-matrix",
+      "order": 16,
+      "userIntents": ["monitor", "analyze", "browse"],
+      "jobMapStages": ["monitor", "locate"],
+      "dataShapes": ["metric", "categorical", "collection"],
+      "interactionModels": ["read-only", "filter-sort", "disclosure"],
+      "density": "high",
+      "requiredStates": ["default", "loading"],
+      "accessibilityConstraints": { "keyboard": true, "focusVisible": true },
+      "visualTone": ["developer"],
+      "transitions": { "onSelectPattern": "pattern-detail" }
     }
   ]
 }

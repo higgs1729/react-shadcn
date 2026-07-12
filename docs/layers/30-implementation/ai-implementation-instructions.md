@@ -2,6 +2,25 @@
 
 Build working code from an already-decided selection. Input is a `SelectionSpec` that passes `npm run validate:spec -- <file>`; output is a `BuildReport` that passes the same command. Screens listed in the SelectionSpec's `unresolved` are copied to the BuildReport's `unresolved` and never built.
 
+## State-inventory model
+
+`meta.aiDesignSystem.stateCoverage` records only the states a particular screen-pattern has
+actually implemented and evidenced. It is an inventory capability, not a required state
+matrix for a `screenType`.
+
+```text
+ScreenType inventory
+├─ user states: default, loading, empty, error, permission-denied
+├─ interaction states: validation-error, disabled, success
+└─ environment variants: mobile, dark-mode, rtl
+```
+
+Implement exactly the states requested by the selected FlowSpec step. Do not infer extra
+states from the screen type, data shape, interaction model, or a generic data-driven rule.
+Before claiming a state, add a renderable Storybook story for it; recovery/exit states need a
+labelled action where meaningful, validation errors need an associated field error, and
+disabled states need a semantically disabled control.
+
 ## Pipeline
 
 1. **Install registry items** — `node scripts/install-selection.mjs <spec>`.

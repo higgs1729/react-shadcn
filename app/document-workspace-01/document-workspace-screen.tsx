@@ -27,7 +27,7 @@ import {
 
 import workspaceData from "./data.json"
 
-export type DocumentWorkspaceState = "default" | "loading" | "empty" | "error"
+export type DocumentWorkspaceState = "default" | "loading" | "empty" | "error" | "validation-error"
 
 interface WorkspaceDocument {
   id: string
@@ -123,7 +123,8 @@ export function DocumentWorkspaceScreen({
       </Sidebar>
       <SidebarInset>
         <SiteHeader />
-        <main className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+          <h1 className="sr-only">Document workspace</h1>
           <div className="flex items-center justify-between gap-4">
             <BreadcrumbContext01
               items={breadcrumbPath.map((label, index) => ({
@@ -187,15 +188,16 @@ export function DocumentWorkspaceScreen({
             </Empty>
           )}
 
-          {state === "default" && !isEmptyDocument && (
+          {(state === "default" || state === "validation-error") && !isEmptyDocument && (
             <div className="grid min-h-0 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,1fr)]">
               <DocumentBodyEditor
-                title={title}
+                title={state === "validation-error" ? "" : title}
                 onTitleChange={setTitle}
                 content={content}
                 onContentChange={setContent}
                 attachments={INITIAL_ATTACHMENTS}
                 savedState={INITIAL_DOCUMENT.savedState}
+                titleError={state === "validation-error" ? "Enter a document title." : undefined}
               />
               <div className="flex min-w-0 flex-col gap-4">
                 <CommentThread
@@ -205,7 +207,7 @@ export function DocumentWorkspaceScreen({
                   onSubmitReply={submitReply}
                 />
                 <div className="rounded-lg border p-4">
-                  <h3 className="mb-3 text-sm font-medium">Attachments</h3>
+                  <h2 className="mb-3 text-sm font-medium">Attachments</h2>
                   <FileUploadArea
                     files={files}
                     onFilesSelected={addFiles}
@@ -216,7 +218,7 @@ export function DocumentWorkspaceScreen({
               </div>
             </div>
           )}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

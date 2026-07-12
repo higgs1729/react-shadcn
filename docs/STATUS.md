@@ -52,6 +52,26 @@ encoding:"UTF-8"
   file-upload の既存在庫を再利用し、default/loading/empty/error の Storybook story を持つ。
   detail との差は「本文の inline 編集が主目的」、create-edit との差は「離散フォーム項目でなく
   自由記述キャンバス」。人間レビューと実バックエンド接続は未実施。
+- Task 21 を完了。`stateCoverage` は ScreenType 共通の必須マトリクスではなく、各
+  screen-pattern が実装・Storybookで証明済みの状態在庫である。選定の状態ゲートは
+  **FlowSpec.step.requiredStates のみ**で、screenType / dataShapes / interactionModels /
+  data-driven の一般則から追加状態を推論しない。`npm run test:screen-states` は全12
+  ScreenTypeの在庫、合法enum、宣言済み user/interaction state のStorybook export、及び
+  FlowSpecが在庫にない状態を要求したときの `STATE_COVERAGE_MATCH` 負例を検証する。
+  FlowSpecが直接要求したため dashboard-01 に loading/empty/error、
+  document-workspace-01 に validation-error（関連する文書タイトルのfield error）を追加し、
+  各状態を実ブラウザのStorybook/a11yで検証した。共有file-upload-areaは、Document Workspaceの
+  a11y検証で判明したネスト操作要素を解消済み。maturity昇格なし。
+- `studio-portfolio-01` のSelectionSpec未出力ドライ評価（現在の `requiredStates` のみ）:
+  **resolved 11 / unresolved 0**。
+  `overview→dashboard-01`、`pattern-library→collection-table-01`、
+  `pattern-detail→report-analytics-01`、`live-demo→dashboard-01`、
+  `quality-report→report-analytics-01`、`case-study→report-analytics-01`、
+  `studio-composer→document-workspace-01`、`ai-assistant→conversation-assistant-01`、
+  `flow-checkpoint→workflow-01`、`result-report→report-analytics-01`、
+  `orientation→onboarding-01`。とくに pattern-detail / case-study が report-analytics に
+  解決されるのは現行facet重みの結果であり、望む画面意図と違う場合は状態方針ではなく上流FlowSpec
+  またはcanonical profileの別タスクで調整する。
 
 ## 文書構成
 
