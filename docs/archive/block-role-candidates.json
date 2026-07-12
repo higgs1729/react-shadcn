@@ -1,0 +1,67 @@
+{
+  "$comment": "Archived implemented blockRole candidates. Active candidates remain in docs/block-role-candidates.json.",
+  "version": "0.1.0",
+  "candidates": [
+    {
+      "id": "inbox-communication--conversation-triage-list",
+      "status": "implemented",
+      "proposedBlockRole": "conversation-triage-list",
+      "discoveredByScreenType": "inbox-communication",
+      "primaryJob": "Prioritize a human communication queue and apply ownership or lifecycle actions before opening a conversation.",
+      "distinguishFrom": "data-table-panel is generic record comparison and editing; ai-conversation-list is for AI-delegated, streaming chat sessions.",
+      "expectedRegion": "main",
+      "userIntents": ["communicate", "review", "filter", "monitor"],
+      "dataShapes": ["conversation", "collection"],
+      "interactionModels": ["selection-single", "selection-multiple", "multi-action", "real-time"],
+      "evidenceUrls": [
+        "https://www.intercom.com/help/en/articles/6258745-the-inbox-explained",
+        "https://www.intercom.com/help/en/articles/6561699-assign-conversations-to-teammates-and-teams"
+      ],
+      "createdAt": "2026-07-12",
+      "registryItem": "conversation-triage-list-01",
+      "implementedAt": "2026-07-12",
+      "implementedByTask": "inbox-communication remediation"
+    },
+    {
+      "id": "document-workspace--document-body-editor",
+      "status": "implemented",
+      "proposedBlockRole": "document-body-editor",
+      "discoveredByScreenType": "document-workspace",
+      "primaryJob": "Author and revise the body of one long-form/structured document inline, with in-context collaboration (comments, attachments).",
+      "distinguishFrom": "detail-overview is a read-only labelled-field record summary, not inline-editable prose; form-section is discrete validated form fields, not a free-form document canvas.",
+      "expectedRegion": "main",
+      "userIntents": ["create", "edit", "review"],
+      "dataShapes": ["document"],
+      "interactionModels": ["inline-edit", "real-time"],
+      "evidenceUrls": [
+        "https://www.notion.com/help/writing-and-editing-basics",
+        "https://support.google.com/docs/answer/179738",
+        "https://confluence.atlassian.com/doc/create-a-page-136527296.html"
+      ],
+      "createdAt": "2026-07-12",
+      "registryItem": "document-body-editor-01",
+      "implementedAt": "2026-07-12",
+      "implementedByTask": "task-19-add-one-new-block-role"
+    },
+    {
+      "id": "planning-board--board-column",
+      "status": "implemented",
+      "proposedBlockRole": "board-column",
+      "discoveredByScreenType": "planning-board",
+      "primaryJob": "Represent one workflow-status column, its ordered work-item cards, and the accepted card-move operations that change each item's status.",
+      "distinguishFrom": "collection-grid presents independently browsable card tiles without a workflow grouping or cross-column move contract; data-table-panel compares generic rows and offers inline edits, not ordered cards whose drop target changes workflow status; filter-toolbar only constrains a collection and does not own columns or card movement.",
+      "expectedRegion": "main",
+      "userIntents": ["browse", "create", "edit", "monitor"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["drag-drop", "multi-action", "disclosure"],
+      "evidenceUrls": [
+        "https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-board/",
+        "https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-the-board-layout"
+      ],
+      "createdAt": "2026-07-12",
+      "registryItem": "board-column-01",
+      "implementedAt": "2026-07-12",
+      "implementedByTask": "task-19-add-one-new-block-role"
+    }
+  ]
+}

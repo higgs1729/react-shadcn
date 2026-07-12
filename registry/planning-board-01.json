@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "planning-board-01",
+  "type": "registry:block",
+  "title": "Planning Board 01",
+  "description": "A high-density planning board for moving work items across workflow-status columns.",
+  "categories": ["screen:planning-board", "intent:monitor", "density:high"],
+  "registryDependencies": ["badge", "button", "card", "input", "sidebar"],
+  "files": [{ "path": "app/planning-board-01/planning-board-screen.tsx", "type": "registry:component", "target": "app/planning-board-01/planning-board-screen.tsx" }],
+  "meta": { "aiDesignSystem": {
+    "assetKind": "screen-pattern", "maturity": "experimental", "source": "internal", "screenType": "planning-board",
+    "blockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "board-column"],
+    "userIntents": ["browse", "create", "edit", "monitor"], "jobMapStages": ["locate", "modify", "monitor"], "dataShapes": ["collection", "categorical"], "interactionModels": ["drag-drop", "multi-action", "disclosure"],
+    "layoutModel": { "shell": "sidebar", "region": "full-page", "responsive": ["mobile", "desktop"] }, "density": "high", "stateCoverage": ["default", "loading", "empty", "error", "mobile", "dark-mode"],
+    "accessibility": { "keyboard": true, "focusVisible": true, "labels": true, "contrastChecked": false, "notes": "Search, filter, notification, and card controls have labels; cross-column keyboard reordering remains a consuming-board enhancement." },
+    "dependencies": { "shadcn": ["badge", "button", "card", "input", "sidebar"], "npm": ["lucide-react"], "registries": ["sidebar-07", "page-header-actions-01", "filter-toolbar-01", "board-column-01"] },
+    "composition": { "requiredBlocks": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "board-column"], "optionalBlocks": ["empty-state", "error-recovery", "loading-skeleton", "notification-center"], "incompatibleWith": ["app-shell-topnav"] },
+    "verification": { "storybookStories": ["patterns-planning-board-planning-board-01--default", "patterns-planning-board-planning-board-01--loading", "patterns-planning-board-planning-board-01--empty", "patterns-planning-board-planning-board-01--error"], "interactionTests": false, "accessibilityTests": false, "visualSnapshots": false, "lintTypecheck": false },
+    "evidence": { "sourceCount": 2, "confidence": "medium", "verifiedAt": "2026-07-12", "sourceUrls": ["https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-board/", "https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-the-board-layout"] },
+    "risk": { "level": "medium", "missingStates": ["permission-denied", "offline", "rtl"], "notes": "Cards are local seed data. State transitions are client-only and do not enforce remote workflow permissions or persist changes." },
+    "extensions": { "localEvidence": ["app/planning-board-01/planning-board-screen.tsx", "components/patterns/planning-board-01-screen.stories.tsx"], "taxonomyDecision": "Planning-board centers a categorical workflow-status transition performed by moving cards between lanes; collection centers browsing records and workflow centers one sequential transaction." }
+  }}
+}

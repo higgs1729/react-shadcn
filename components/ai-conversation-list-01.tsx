@@ -47,32 +47,33 @@ export function AiConversationList({
       <ScrollArea className="h-80">
         <ItemGroup>
           {conversations.map((conversation) => (
-            <Item
-              key={conversation.id}
-              size="sm"
-              variant={
-                conversation.id === activeConversationId ? "muted" : "default"
-              }
-              render={
-                <button
-                  type="button"
-                  onClick={() => onSelectConversation(conversation.id)}
-                  aria-current={
-                    conversation.id === activeConversationId
-                      ? "true"
-                      : undefined
-                  }
-                />
-              }
-            >
-              <ItemContent>
-                <ItemTitle>{conversation.title}</ItemTitle>
-                <ItemDescription>{conversation.preview}</ItemDescription>
-                <ItemDescription className="text-xs">
-                  {conversation.timestamp}
-                </ItemDescription>
-              </ItemContent>
-            </Item>
+            <div role="listitem" key={conversation.id}>
+              <Item
+                size="sm"
+                variant={
+                  conversation.id === activeConversationId ? "muted" : "default"
+                }
+                render={
+                  <button
+                    type="button"
+                    onClick={() => onSelectConversation(conversation.id)}
+                    aria-current={
+                      conversation.id === activeConversationId
+                        ? "true"
+                        : undefined
+                    }
+                  />
+                }
+              >
+                <ItemContent>
+                  <ItemTitle>{conversation.title}</ItemTitle>
+                  <ItemDescription>{conversation.preview}</ItemDescription>
+                  <ItemDescription className="text-xs">
+                    {conversation.timestamp}
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+            </div>
           ))}
         </ItemGroup>
       </ScrollArea>

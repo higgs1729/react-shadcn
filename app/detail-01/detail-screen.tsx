@@ -64,7 +64,7 @@ export function DetailScreen({
     <SidebarProvider>
       <SidebarInset>
         <SiteHeader />
-        <main className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
           <div className="flex items-center justify-between gap-4">
             <BreadcrumbContext01
               items={breadcrumbPath.map((label, index) => ({
@@ -142,7 +142,7 @@ export function DetailScreen({
                   />
                 </div>
                 <div className="rounded-lg border p-4">
-                  <h3 className="mb-3 text-sm font-medium">Activity</h3>
+                  <h2 className="mb-3 text-sm font-medium">Activity</h2>
                   <ActivityFeed entries={ACTIVITY} />
                 </div>
               </div>
@@ -154,7 +154,7 @@ export function DetailScreen({
               />
             </>
           )}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

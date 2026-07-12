@@ -1,0 +1,70 @@
+{
+  "provenanceVersion": "1.0.0",
+  "flowId": "studio-portfolio-01",
+  "createdAt": "2026-07-12T14:04:44.433Z",
+  "git": {
+    "commit": "a542cf88ccad7681c2a12978eacfaedcca2b1073"
+  },
+  "runtime": {
+    "node": "v22.17.0",
+    "npm": "10.9.2",
+    "os": "Windows_NT 10.0.26200 x64"
+  },
+  "inputs": {
+    "flowSpec": {
+      "path": "flowspec-studio-portfolio-01.json",
+      "algorithm": "sha256",
+      "digest": "cea94c487469bc6de3d37bb2ede417538f63b4cf66264447150c692159137c93"
+    },
+    "selectionSpec": {
+      "path": "selectionspec-studio-portfolio-01.json",
+      "algorithm": "sha256",
+      "digest": "b10758c6b83d7b9e4ede39132d481124e5e4684e0f97024e29f3e1167b99a6a9"
+    },
+    "buildReport": {
+      "path": "buildreport-studio-portfolio-01.json",
+      "algorithm": "sha256",
+      "digest": "5593278c212432b596ec384905e0c8416e6838aeeef11e4ec7ebe2c59aaee12d"
+    },
+    "registryInventory": {
+      "path": "registry/ (selection-scoped)",
+      "algorithm": "sha256",
+      "digest": "afa0f8956eb37daea391f0a3efed08f3b7121fe9fe75beb200773caa3f0753c3",
+      "items": [
+        "action-footer-01",
+        "activity-feed-01",
+        "ai-conversation-list-01",
+        "ai-explainability-label-01",
+        "ai-prompt-composer-01",
+        "breadcrumb-context-01",
+        "chart-panel-01",
+        "checkout-summary-01",
+        "collection-table-01",
+        "comment-thread-01",
+        "conversation-assistant-01",
+        "dashboard-01",
+        "data-table-panel-01",
+        "detail-01",
+        "detail-overview-01",
+        "document-body-editor-01",
+        "document-workspace-01",
+        "empty-state-01",
+        "file-upload-area-01",
+        "filter-toolbar-01",
+        "form-section-login-01",
+        "onboarding-01",
+        "page-header-actions-01",
+        "report-analytics-01",
+        "sidebar-07",
+        "summary-metric-row-01",
+        "wizard-stepper-01",
+        "workflow-01"
+      ]
+    }
+  },
+  "result": {
+    "status": "verified",
+    "durationMs": 0,
+    "failure": null
+  }
+}

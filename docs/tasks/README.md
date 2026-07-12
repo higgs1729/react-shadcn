@@ -26,6 +26,13 @@ Briefs reference this section instead of restating it. Read it before starting.
 - Do not read or reference `docs/archive/`.
 - Finish by reporting: files created/changed, commands run with exit codes, and any
   requirement you could not satisfy (do not silently narrow scope).
+- A task that adds or changes any `registry/*.json` must, as part of its own Definition of
+  Done, regenerate the provenance sidecar of every flow that references a changed item and
+  leave `npm run validate:provenance` at exit 0. (Provenance digests are selection-scoped, so
+  unrelated additions no longer invalidate other flows — but a *referenced* item still must.)
+- Commit promptly after a task is complete and verified. Uncommitted results from parallel
+  work bleed across tasks (stale digests, `next build` lock contention). Commits are the
+  user's to make: end a completed task by prompting the user to commit.
 
 ## Execution permission failures (Codex sandbox)
 

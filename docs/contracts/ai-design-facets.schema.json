@@ -315,7 +315,8 @@
         "report-analytics",
         "conversation-assistant",
         "inbox-communication",
-        "document-workspace"
+        "document-workspace",
+        "planning-board"
       ]
     },
     "blockRole": {
@@ -352,7 +353,8 @@
         "pricing-plan-card",
         "checkout-summary",
         "conversation-triage-list",
-        "document-body-editor"
+        "document-body-editor",
+        "board-column"
       ]
     },
     "userIntent": {

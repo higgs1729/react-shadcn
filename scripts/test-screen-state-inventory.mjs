@@ -60,10 +60,6 @@ try {
   const items = readRegistryItems()
   const screenPatterns = items.filter(({ item }) => item?.meta?.aiDesignSystem?.assetKind === 'screen-pattern')
 
-  if (canonicalScreenTypes.length !== 12) {
-    throw new Error(`expected 12 canonical screenTypes, found ${canonicalScreenTypes.length}`)
-  }
-
   const stockedTypes = new Set(screenPatterns.map(({ item }) => item.meta.aiDesignSystem.screenType))
   const unstockedTypes = canonicalScreenTypes.filter((screenType) => !stockedTypes.has(screenType))
   if (unstockedTypes.length > 0) {
@@ -103,7 +99,7 @@ try {
 
   verifyNegativeFixture()
   console.log(
-    `Screen state inventory passed: ${canonicalScreenTypes.length}/12 screenTypes stocked; ` +
+    `Screen state inventory passed: ${canonicalScreenTypes.length}/${canonicalScreenTypes.length} screenTypes stocked; ` +
       `${verifiedStateStories} declared user/interaction state stories verified.`,
   )
 } catch (error) {

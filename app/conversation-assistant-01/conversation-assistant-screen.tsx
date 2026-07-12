@@ -52,7 +52,10 @@ export function ConversationAssistantScreen({
 
   return (
     <div className="flex h-svh w-full gap-4 p-4">
-      <aside className="hidden shrink-0 border-r pr-4 md:block">
+      <aside
+        aria-label="Conversations"
+        className="hidden shrink-0 border-r pr-4 md:block"
+      >
         <AiConversationList
           conversations={CONVERSATIONS}
           activeConversationId={activeConversationId}
@@ -139,7 +142,10 @@ export function ConversationAssistantScreen({
           />
         </main>
 
-        <aside className="hidden w-64 shrink-0 flex-col gap-3 border-l pl-4 lg:flex">
+        <aside
+          aria-label="Activity"
+          className="hidden w-64 shrink-0 flex-col gap-3 border-l pl-4 lg:flex"
+        >
           <h2 className="text-sm font-medium">Activity</h2>
           <ActivityFeed entries={ACTIVITY} />
         </aside>

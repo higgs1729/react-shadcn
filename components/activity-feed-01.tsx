@@ -1,7 +1,5 @@
 "use client"
 
-import { Fragment } from "react"
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Item,
@@ -29,7 +27,7 @@ export function ActivityFeed({ entries }: ActivityFeedProps) {
   return (
     <ItemGroup>
       {entries.map((entry, index) => (
-        <Fragment key={entry.id}>
+        <div role="listitem" key={entry.id}>
           <Item size="sm">
             <ItemMedia variant="image">
               <Avatar size="sm">
@@ -50,7 +48,7 @@ export function ActivityFeed({ entries }: ActivityFeedProps) {
             </ItemContent>
           </Item>
           {index < entries.length - 1 && <ItemSeparator />}
-        </Fragment>
+        </div>
       ))}
     </ItemGroup>
   )

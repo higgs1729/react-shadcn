@@ -1,0 +1,55 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "board-column-01",
+  "type": "registry:block",
+  "title": "Board Column 01",
+  "description": "A controlled workflow-status lane with ordered work-item cards and drag-and-drop status transitions.",
+  "categories": ["block:board", "role:board-column"],
+  "registryDependencies": ["badge", "button", "card"],
+  "files": [{ "path": "components/board-column-01.tsx", "type": "registry:component" }],
+  "meta": {
+    "aiDesignSystem": {
+      "assetKind": "block-pattern",
+      "maturity": "experimental",
+      "source": "internal",
+      "blockRole": "board-column",
+      "userIntents": ["browse", "create", "edit", "monitor"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["drag-drop", "multi-action", "disclosure"],
+      "layoutModel": { "region": "main" },
+      "density": "medium",
+      "stateCoverage": ["default", "empty", "mobile", "dark-mode"],
+      "accessibility": {
+        "keyboard": true,
+        "focusVisible": true,
+        "labels": true,
+        "contrastChecked": false,
+        "notes": "The add and move controls have visible or explicit labels; native draggable cards support pointer movement. Cross-column keyboard reordering is delegated to the consuming board."
+      },
+      "dependencies": { "shadcn": ["badge", "button", "card"], "npm": ["lucide-react"], "registries": [] },
+      "composition": { "requiredBlocks": [], "optionalBlocks": [], "incompatibleWith": [] },
+      "verification": {
+        "storybookStories": ["blocks-board-column-board-column-01--default"],
+        "interactionTests": false,
+        "accessibilityTests": false,
+        "visualSnapshots": false,
+        "lintTypecheck": false
+      },
+      "evidence": {
+        "sourceCount": 2,
+        "confidence": "medium",
+        "verifiedAt": "2026-07-12",
+        "sourceUrls": [
+          "https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-board/",
+          "https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-the-board-layout"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "missingStates": ["loading", "error", "permission-denied", "rtl"],
+        "notes": "The component is controlled and does not persist a transition. The consuming board validates workflow permissions and owns keyboard cross-column reordering."
+      },
+      "extensions": { "localEvidence": ["components/board-column-01.tsx"] }
+    }
+  }
+}

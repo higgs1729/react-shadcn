@@ -72,8 +72,25 @@
         "selectionSpec": { "$ref": "#/definitions/digestEntry" },
         "buildReport": { "$ref": "#/definitions/digestEntry" },
         "registryInventory": {
-          "allOf": [{ "$ref": "#/definitions/digestEntry" }],
-          "$comment": "Single digest over the whole registry/ inventory: a key-sorted map of {filename -> canonical digest}, then digested."
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "algorithm", "digest", "items"],
+          "$comment": "SELECTION-SCOPED digest: covers ONLY the registry items this flow references (screenPattern.registryItem + each block selection's registryItem, unioned over SelectionSpec.screens), NOT the whole registry/ directory. Computed as a key-sorted map of {referenced-item-name -> canonical digest of registry/<name>.json}, then digested. `items` records the sorted set of referenced names so the validator re-derives and recomputes the exact same set deterministically. Adding/editing/removing an unrelated registry item leaves this digest unchanged; changing a referenced item changes it.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "$comment": "Human-readable scope label, e.g. 'registry/ (selection-scoped)'."
+            },
+            "algorithm": { "type": "string", "enum": ["sha256"] },
+            "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "items": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 },
+              "$comment": "Sorted, de-duplicated registry item names the digest covers."
+            }
+          }
         }
       }
     },

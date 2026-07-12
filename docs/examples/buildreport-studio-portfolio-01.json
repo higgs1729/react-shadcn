@@ -1,0 +1,203 @@
+{
+  "$comment": "Implementation-layer BuildReport for studio-portfolio-01, produced by executing docs/layers/30-implementation/ai-implementation-instructions.md against docs/examples/selectionspec-studio-portfolio-01.json (all 16 steps resolved, 0 unresolved). install-selection.mjs found every selected registry item, shadcn primitive, and npm dependency already present (no installs needed). gen-pattern-stories.mjs created 0 new story files: every screen pattern (dashboard-01/collection-table-01/detail-01/report-analytics-01/document-workspace-01/conversation-assistant-01/workflow-01/onboarding-01) and every selected block already had a components/patterns/*.stories.tsx from prior inventory tasks (task-16..19), so verification.storybookStories on registry items was not touched (0 registry writes). npm run run-checks (whole-repo contracts/lint/typecheck/build/build-storybook) passed on the first attempt. The initial run-planned-checks pass found 4 of 16 screens (pattern-detail, generated-preview, contract-explorer - all detail-01; ai-assistant - conversation-assistant-01) failing their planned `a11y` check on deterministic accessibility defects in shared, pre-existing screen and block components. Because those files were outside the pipeline Fix Loop Policy's editable set (files created in steps 2-3), WP-B left the 4 steps `failed` and this flow terminal `partial`. AFTER the pipeline run, at the user's explicit request, the coordinator repaired those shared-inventory a11y defects as a separate maintenance step: app/detail-01/detail-screen.tsx (demoted the nested <main> inside SidebarInset to a <div>; promoted the lone <h3>Activity</h3> to <h2> for heading-order), app/conversation-assistant-01/conversation-assistant-screen.tsx (added unique aria-label to the two <aside> complementary landmarks), components/ai-conversation-list-01.tsx and components/activity-feed-01.tsx (wrapped each ItemGroup[role=list] child in a role=listitem element so button/separator children are no longer disallowed by aria-required-children). No components/ui/*, registry facet, contract, or 20-selection file was touched. run-planned-checks was then re-run against this spec and now reports passed=true for all 16 screens (every planned lint/typecheck/a11y/story check passes), so all 16 steps are `built` (per-screen) and this flow's terminal status is `verified`.",
+  "flowId": "studio-portfolio-01",
+  "generatedAt": "2026-07-12",
+  "screens": [
+    {
+      "stepId": "overview",
+      "route": "/flows/studio-portfolio-01/overview",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/overview/page.tsx"],
+      "storiesCreated": [
+        "patterns-dashboard-dashboard-01--default",
+        "patterns-dashboard-dashboard-01--loading"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "pattern-library",
+      "route": "/flows/studio-portfolio-01/pattern-library",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/pattern-library/page.tsx"],
+      "storiesCreated": [
+        "patterns-collection-collection-table-01--default",
+        "patterns-collection-collection-table-01--loading",
+        "patterns-collection-collection-table-01--empty",
+        "patterns-collection-collection-table-01--error"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "pattern-detail",
+      "route": "/flows/studio-portfolio-01/pattern-detail",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/pattern-detail/page.tsx"],
+      "storiesCreated": [
+        "patterns-detail-detail-01--default",
+        "patterns-detail-detail-01--loading",
+        "patterns-detail-detail-01--empty",
+        "patterns-detail-detail-01--error"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "live-demo",
+      "route": "/flows/studio-portfolio-01/live-demo",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/live-demo/page.tsx"],
+      "storiesCreated": [
+        "patterns-dashboard-dashboard-01--default",
+        "patterns-dashboard-dashboard-01--loading",
+        "patterns-dashboard-dashboard-01--empty",
+        "patterns-dashboard-dashboard-01--error"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "quality-report",
+      "route": "/flows/studio-portfolio-01/quality-report",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/quality-report/page.tsx"],
+      "storiesCreated": [
+        "patterns-report-analytics-report-analytics-01--default",
+        "patterns-report-analytics-report-analytics-01--loading"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "case-study",
+      "route": "/flows/studio-portfolio-01/case-study",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/case-study/page.tsx"],
+      "storiesCreated": [
+        "patterns-report-analytics-report-analytics-01--default"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "studio-composer",
+      "route": "/flows/studio-portfolio-01/studio-composer",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/studio-composer/page.tsx"],
+      "storiesCreated": [
+        "patterns-document-workspace-document-workspace-01--default",
+        "patterns-document-workspace-document-workspace-01--validation-error"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "ai-assistant",
+      "route": "/flows/studio-portfolio-01/ai-assistant",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/ai-assistant/page.tsx"],
+      "storiesCreated": [
+        "patterns-conversation-assistant-conversation-assistant-01--default",
+        "patterns-conversation-assistant-conversation-assistant-01--loading"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "flow-checkpoint",
+      "route": "/flows/studio-portfolio-01/flow-checkpoint",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/flow-checkpoint/page.tsx"],
+      "storiesCreated": [
+        "patterns-workflow-workflow-01--default",
+        "patterns-workflow-workflow-01--loading"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "result-report",
+      "route": "/flows/studio-portfolio-01/result-report",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/result-report/page.tsx"],
+      "storiesCreated": [
+        "patterns-report-analytics-report-analytics-01--default",
+        "patterns-report-analytics-report-analytics-01--loading",
+        "patterns-report-analytics-report-analytics-01--empty"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "orientation",
+      "route": "/flows/studio-portfolio-01/orientation",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/orientation/page.tsx"],
+      "storiesCreated": [
+        "patterns-onboarding-onboarding-01--default"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "generated-preview",
+      "route": "/flows/studio-portfolio-01/generated-preview",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/generated-preview/page.tsx"],
+      "storiesCreated": [
+        "patterns-detail-detail-01--default",
+        "patterns-detail-detail-01--loading",
+        "patterns-detail-detail-01--empty",
+        "patterns-detail-detail-01--error"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "selection-rationale",
+      "route": "/flows/studio-portfolio-01/selection-rationale",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/selection-rationale/page.tsx"],
+      "storiesCreated": [
+        "patterns-report-analytics-report-analytics-01--default",
+        "patterns-report-analytics-report-analytics-01--loading",
+        "patterns-report-analytics-report-analytics-01--empty"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "contract-explorer",
+      "route": "/flows/studio-portfolio-01/contract-explorer",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/contract-explorer/page.tsx"],
+      "storiesCreated": [
+        "patterns-detail-detail-01--default",
+        "patterns-detail-detail-01--loading",
+        "patterns-detail-detail-01--empty"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "provenance-trail",
+      "route": "/flows/studio-portfolio-01/provenance-trail",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/provenance-trail/page.tsx"],
+      "storiesCreated": [
+        "patterns-report-analytics-report-analytics-01--default",
+        "patterns-report-analytics-report-analytics-01--loading",
+        "patterns-report-analytics-report-analytics-01--error"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    },
+    {
+      "stepId": "coverage-matrix",
+      "route": "/flows/studio-portfolio-01/coverage-matrix",
+      "status": "built",
+      "filesCreated": ["app/flows/studio-portfolio-01/coverage-matrix/page.tsx"],
+      "storiesCreated": [
+        "patterns-dashboard-dashboard-01--default",
+        "patterns-dashboard-dashboard-01--loading"
+      ],
+      "installed": { "shadcn": [], "npm": [] }
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "pass", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "pass", "attempts": 1 }
+  ],
+  "iterations": 1,
+  "status": "verified",
+  "unresolved": []
+}

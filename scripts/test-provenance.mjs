@@ -13,6 +13,8 @@ import { cpSync, mkdtempSync, readFileSync, writeFileSync, rmSync, mkdirSync } f
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { spawnSync } from 'node:child_process'
+import { resolveDoc } from './lib/provenance.mjs'
+import { docPath } from './lib/paths.mjs'
 
 const ROOT = process.cwd()
 const EX = join(ROOT, 'docs', 'examples')
@@ -25,6 +27,7 @@ const INPUTS = [
 ]
 
 const run = (args) => spawnSync(process.execPath, ['scripts/validate-provenance.mjs', ...args], { cwd: ROOT, encoding: 'utf8' })
+const runGen = (args) => spawnSync(process.execPath, ['scripts/gen-provenance.mjs', ...args], { cwd: ROOT, encoding: 'utf8' })
 
 function expectPass(label, args) {
   const r = run(args)
@@ -76,16 +79,61 @@ try {
     rmSync(mutBuild, { recursive: true, force: true })
   }
 
-  // Negative: a changed registry item is rejected, naming registryInventory.
+  // (b) Negative: editing a REFERENCED registry item changes the selection-scoped
+  // digest and is rejected, naming registryInventory. collection-table-01 is the
+  // invoice-list screen pattern, so it is in the flow's referenced set.
   const mutReg = stageWorkspace()
   try {
     const p = join(mutReg, 'registry', 'collection-table-01.json')
     const doc = JSON.parse(readFileSync(p, 'utf8'))
     doc.$comment = `${doc.$comment ?? ''} [mutated for test]`
     writeFileSync(p, JSON.stringify(doc, null, 2))
-    expectFailure('mutated registry item', ['--base-dir', mutReg, '--manifest', MANIFEST], 'registryInventory')
+    expectFailure('mutated referenced registry item', ['--base-dir', mutReg, '--manifest', MANIFEST], 'registryInventory')
   } finally {
     rmSync(mutReg, { recursive: true, force: true })
+  }
+
+  // (a) Positive: adding an UNRELATED registry item (one no screen references)
+  // leaves the flow's selection-scoped digest unchanged, so validation still
+  // passes. This is the core flow-scoping guarantee.
+  const addReg = stageWorkspace()
+  try {
+    const unrelated = join(addReg, 'registry', 'zzz-unrelated-provenance-test-99.json')
+    writeFileSync(unrelated, JSON.stringify({ $comment: 'unrelated inventory item, referenced by no flow' }, null, 2))
+    expectPass('unrelated registry item added', ['--base-dir', addReg, '--manifest', MANIFEST])
+  } finally {
+    rmSync(addReg, { recursive: true, force: true })
+  }
+
+  // (c) Negative: gen-provenance explicit mode with a missing target flag errors
+  // (naming the missing flags) and writes nothing.
+  {
+    const r = runGen(['--flow', 'flowspec-dryrun-saas-ops-01.json'])
+    const out = `${r.stdout}${r.stderr}`
+    if (r.status === 0 || !out.includes('explicit mode requires') || !out.includes('--selection')) {
+      throw new Error(`explicit missing flag: expected non-zero naming missing flags; got ${r.status}: ${out}`)
+    }
+    console.log('explicit mode missing flag: rejected as expected')
+  }
+
+  // (d) Positive: a bare basename that exists in BOTH docs/examples/ and another
+  // docs/ subfolder resolves to the docs/examples/ copy (docPath itself throws
+  // "ambiguous" on the same name, proving the ambiguity is real).
+  {
+    const AMBIGUOUS = 'flowspec-studio-portfolio-01.json'
+    const expected = join(ROOT, 'docs', 'examples', AMBIGUOUS)
+    const resolved = resolveDoc(AMBIGUOUS)
+    if (resolved !== expected) {
+      throw new Error(`ambiguous basename: expected resolveDoc -> ${expected}; got ${resolved}`)
+    }
+    let threw = false
+    try {
+      docPath(AMBIGUOUS)
+    } catch {
+      threw = true
+    }
+    if (!threw) throw new Error(`ambiguous basename: docPath("${AMBIGUOUS}") should have thrown "ambiguous"`)
+    console.log('ambiguous basename resolves to docs/examples/: as expected')
   }
 } catch (error) {
   console.error(`Provenance validator regression test failed: ${error.message}`)

@@ -1,9 +1,9 @@
 {
   "provenanceVersion": "1.0.0",
   "flowId": "dryrun-saas-ops-01",
-  "createdAt": "2026-07-12T08:17:39.587Z",
+  "createdAt": "2026-07-12T14:04:44.150Z",
   "git": {
-    "commit": "9ccb345360bb37cc959611ad260b58abecaaf34e"
+    "commit": "a542cf88ccad7681c2a12978eacfaedcca2b1073"
   },
   "runtime": {
     "node": "v22.17.0",
@@ -27,9 +27,21 @@
       "digest": "f24a6227ae72e918247504aba6382de3069abf09585d1da16ed9c1835d4277a4"
     },
     "registryInventory": {
-      "path": "registry/",
+      "path": "registry/ (selection-scoped)",
       "algorithm": "sha256",
-      "digest": "9694a084a5d5a5f32ea10f8a1e0d6cad7c0a3754659213567bb3ea18ddbe8bba"
+      "digest": "45ffa53d1ee6a0fce49d0c5105c7390bdbc8fb91ec9a81fb4a93ef9d9aeccf08",
+      "items": [
+        "chart-panel-01",
+        "collection-table-01",
+        "dashboard-01",
+        "data-table-panel-01",
+        "filter-toolbar-01",
+        "form-section-login-01",
+        "login-03",
+        "page-header-actions-01",
+        "sidebar-07",
+        "summary-metric-row-01"
+      ]
     }
   },
   "result": {

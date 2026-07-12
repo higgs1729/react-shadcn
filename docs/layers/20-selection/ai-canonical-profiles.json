@@ -48,7 +48,7 @@
       "interactionModels": ["filter-sort", "selection-multiple", "selection-single", "disclosure"],
       "density": "high",
       "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "tabs-view-switcher", "data-table-panel", "collection-grid", "empty-state", "loading-skeleton"],
-      "optionalBlockRoles": ["breadcrumb-context", "command-search", "notification-center", "modal-dialog", "drawer-inspector", "error-recovery"],
+      "optionalBlockRoles": ["breadcrumb-context", "command-search", "notification-center", "modal-dialog", "drawer-inspector", "error-recovery", "board-column"],
       "alternativeShells": ["app-shell-topnav"],
       "notes": "List/table/grid resource browser. Distinguish from dashboard: primary job is browsing many records, not monitoring metrics."
     },
@@ -147,6 +147,19 @@
       "typicalBlockRoles": ["page-header-actions", "breadcrumb-context", "document-body-editor", "comment-thread", "file-upload-area"],
       "optionalBlockRoles": ["app-shell-sidebar", "activity-feed", "drawer-inspector", "notification-center", "empty-state", "error-recovery", "loading-skeleton"],
       "notes": "Long-form/structured document authoring workspace with in-context collaboration (comments, attachments). Distinguish from detail: primary job is inline-editing free-form document body content, not displaying labelled record fields. Distinguish from create-edit: the body is a free-form document canvas, not discrete validated form fields."
+    },
+    "planning-board": {
+      "reviewed": false,
+      "maturity": "experimental",
+      "userIntents": ["browse", "create", "edit", "monitor"],
+      "jobMapStages": ["locate", "modify", "monitor"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["drag-drop", "multi-action", "disclosure"],
+      "density": "high",
+      "typicalBlockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "board-column"],
+      "optionalBlockRoles": ["empty-state", "error-recovery", "loading-skeleton", "notification-center"],
+      "alternativeShells": ["app-shell-topnav"],
+      "notes": "A status-lane planning surface for moving work cards through a workflow. Distinguish from collection: the primary operation is changing workflow status by moving cards between columns, not browsing independent records; distinguish from workflow: it coordinates many concurrent work items rather than completing one sequential transaction."
     }
   },
   "blockRoles": {
@@ -156,7 +169,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["hierarchy"],
       "interactionModels": ["disclosure", "selection-single"],
-      "screenTypes": ["dashboard", "collection", "settings-admin", "detail", "inbox-communication", "document-workspace"],
+      "screenTypes": ["dashboard", "collection", "settings-admin", "detail", "inbox-communication", "document-workspace", "planning-board"],
       "notes": "Primary left navigation shell. Only one navigation shell per screen."
     },
     "app-shell-topnav": {
@@ -165,7 +178,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["hierarchy"],
       "interactionModels": ["disclosure", "selection-single"],
-      "screenTypes": ["dashboard", "collection", "detail", "report-analytics"],
+      "screenTypes": ["dashboard", "collection", "detail", "report-analytics", "planning-board"],
       "notes": "Top navigation shell. Alternative to sidebar (see alternativeShells); do not combine both. Prefer for shallow navigation structures."
     },
     "page-header-actions": {
@@ -174,7 +187,7 @@
       "userIntents": ["create", "edit", "browse"],
       "dataShapes": ["none"],
       "interactionModels": ["multi-action", "single-action"],
-      "screenTypes": ["dashboard", "collection", "detail", "create-edit", "report-analytics", "inbox-communication", "document-workspace"],
+      "screenTypes": ["dashboard", "collection", "detail", "create-edit", "report-analytics", "inbox-communication", "document-workspace", "planning-board"],
       "notes": "Page title plus primary actions (create, export, etc.)."
     },
     "breadcrumb-context": {
@@ -201,7 +214,7 @@
       "userIntents": ["filter", "search", "compare"],
       "dataShapes": ["collection", "categorical"],
       "interactionModels": ["filter-sort"],
-      "screenTypes": ["collection", "dashboard", "report-analytics", "inbox-communication"],
+      "screenTypes": ["collection", "dashboard", "report-analytics", "inbox-communication", "planning-board"],
       "notes": "Filter/sort/search controls above a collection or chart."
     },
     "tabs-view-switcher": {
@@ -300,7 +313,7 @@
       "userIntents": ["create", "browse"],
       "dataShapes": ["none"],
       "interactionModels": ["single-action"],
-      "screenTypes": ["collection", "dashboard", "detail", "onboarding", "report-analytics", "inbox-communication", "document-workspace"],
+      "screenTypes": ["collection", "dashboard", "detail", "onboarding", "report-analytics", "inbox-communication", "document-workspace", "planning-board"],
       "notes": "No-data state with a call to action. Selected as a block when the whole page is empty; in-block empty states are covered via stateCoverage."
     },
     "error-recovery": {
@@ -309,7 +322,7 @@
       "userIntents": ["recover"],
       "dataShapes": ["none"],
       "interactionModels": ["single-action"],
-      "screenTypes": ["auth", "collection", "detail", "dashboard", "report-analytics", "inbox-communication", "document-workspace"],
+      "screenTypes": ["auth", "collection", "detail", "dashboard", "report-analytics", "inbox-communication", "document-workspace", "planning-board"],
       "notes": "Error / permission-denied recovery. Selected as a block for whole-page failures; in-block errors are covered via stateCoverage."
     },
     "loading-skeleton": {
@@ -318,7 +331,7 @@
       "userIntents": ["browse"],
       "dataShapes": ["none"],
       "interactionModels": ["read-only"],
-      "screenTypes": ["collection", "dashboard", "detail", "report-analytics", "inbox-communication", "document-workspace"],
+      "screenTypes": ["collection", "dashboard", "detail", "report-analytics", "inbox-communication", "document-workspace", "planning-board"],
       "notes": "Placeholder while data loads. Selected as a block for initial page load; in-block loading is covered via stateCoverage."
     },
     "notification-center": {
@@ -327,7 +340,7 @@
       "userIntents": ["monitor", "review"],
       "dataShapes": ["collection"],
       "interactionModels": ["read-only", "disclosure", "real-time"],
-      "screenTypes": ["dashboard", "detail", "collection", "inbox-communication", "document-workspace"],
+      "screenTypes": ["dashboard", "detail", "collection", "inbox-communication", "document-workspace", "planning-board"],
       "notes": "Notifications/alerts panel, often real-time."
     },
     "modal-dialog": {
@@ -439,6 +452,16 @@
       "interactionModels": ["inline-edit", "real-time"],
       "screenTypes": ["detail", "create-edit", "document-workspace"],
       "notes": "Free-form, inline-editable long-form document body (rich text or structured prose) with in-context collaboration surfaces such as comments and attachments anchored to content. Unlike detail-overview, the primary interaction is continuous prose authoring, not read-only labelled fields; unlike form-section, content is not decomposed into discrete validated fields. Typically composed alongside comment-thread and file-upload-area rather than replacing them."
+    },
+    "board-column": {
+      "reviewed": false,
+      "maturity": "experimental",
+      "layoutModel": { "region": "main" },
+      "userIntents": ["browse", "create", "edit", "monitor"],
+      "dataShapes": ["collection", "categorical"],
+      "interactionModels": ["drag-drop", "multi-action", "disclosure"],
+      "screenTypes": ["collection", "planning-board"],
+      "notes": "A workflow-status lane containing ordered work-item cards. Dropping a card into the lane changes its categorical workflow status. Unlike collection-grid or data-table-panel, this role owns the lane and its status-transition contract rather than a generic collection presentation."
     }
   }
 }

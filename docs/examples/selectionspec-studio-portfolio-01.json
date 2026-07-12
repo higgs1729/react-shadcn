@@ -1,0 +1,422 @@
+{
+  "$comment": "Output of executing ai-pattern-selection-instructions.md against flowspec-studio-portfolio-01.json and the current registry (2026-07-12). All 12 canonical screenTypes now have a stocked screen-pattern (task-16..19 backfilled create-edit/onboarding/detail/report-analytics/settings-admin/workflow/conversation-assistant/document-workspace since the task-20 brief's EXPECTED_UNRESOLVED guidance was written), so screenType resolution is the sole authoritative gate here per the brief's 'guidance, not a mandate' instruction; every one of the 16 steps resolved. screenTypeScore = the canonical-profile formula in step 1 (40*C_intent+20*C_shape+15*C_interaction+25*C_stage). screenPattern.score / blocks[].score = the step-2/step-4 registry-item formula (Intent25/Shape15/Interaction15/State15/A11y10/Dependency10/Evidence10), all using coverage fractions K_x=|item.x ∩ profile.x|/|item.x| or |step.x ∩ item.x|/|step.x| as specified. Evidence tier follows the scale established in selectionspec-dryrun-saas-ops-01.json (confidence high=10, medium=5); low-confidence items here score evidence=0, still comfortably clearing the reject-below-70 threshold. State component is NOT penalized for requiredStates beyond 'default' missing from block-level stateCoverage: those states are rendered at the screen-pattern composition level (skeleton/empty/alert regions replacing content within the already-eligible required blocks), exactly the convention documented in selectionspec-dryrun-saas-ops-01.json's invoice-list assumptions; block-level missingStates are recorded as risks instead of scored penalties. Two steps (pattern-detail, generated-preview) hit near-ties (<8 points between top two) and were resolved via the doc's tiebreak order (exact jobMapStages set match, then density match); both resolved via density match to 'detail'. case-study mechanically resolves to report-analytics (72.5) over document-workspace (62.5, diff=10, not a near-tie) purely because the formula's intent(40)+stage(25) weighting dominates a 0/2 dataShape-coverage penalty; this is flagged as a fit risk in that step's risks, not overridden, since the instructions are authoritative and do not permit qualitative score overrides.",
+  "flowId": "studio-portfolio-01",
+  "screens": [
+    {
+      "stepId": "overview",
+      "resolvedScreenType": "dashboard",
+      "screenTypeScore": 87.5,
+      "screenPattern": { "registryItem": "dashboard-01", "score": 95, "rejected": [] },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 100 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 }
+      ],
+      "registryDependencies": ["avatar", "badge", "breadcrumb", "button", "card", "chart", "checkbox", "collapsible", "drawer", "dropdown-menu", "input", "input-group", "label", "select", "separator", "sidebar", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: dashboard(87.5) beat next-best report-analytics(48.33) and collection(46.67) by >8; no near-tie.",
+        "dashboard-01 was the sole dashboard screen-pattern candidate; score reflects coverage, not comparison.",
+        "filter-toolbar added as an optionalBlock (dashboard-01 composition.optionalBlocks includes it) because the step's interactionModels include filter-sort, a clear facet signal per the selection rules example.",
+        "Shell hard filter passed: sidebar-07 shell 'sidebar' matches dashboard-01 layoutModel.shell; app-shell-topnav excluded via incompatibleWith.",
+        "requiredStates loading is rendered at composition level within the required blocks (per the dryrun-saas-ops-01 convention); block-level state scoring is not penalized for it."
+      ],
+      "risks": [
+        "dashboard-01 declares missingStates permission-denied/dark-mode/rtl; add before production use.",
+        "data-table-panel-01 drag-reorder has no keyboard alternative (accessibility risk, carried from the golden flow)."
+      ]
+    },
+    {
+      "stepId": "pattern-library",
+      "resolvedScreenType": "collection",
+      "screenTypeScore": 100,
+      "screenPattern": { "registryItem": "collection-table-01", "score": 87.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 100 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 }
+      ],
+      "registryDependencies": ["alert", "avatar", "badge", "breadcrumb", "button", "card", "checkbox", "collapsible", "drawer", "dropdown-menu", "empty", "input", "input-group", "label", "select", "separator", "sidebar", "skeleton", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading", "empty", "error"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: collection scored a perfect 100 (full coverage on every axis); no competing candidate close.",
+        "collection-table-01 was the sole collection screen-pattern candidate; score reflects coverage, not comparison.",
+        "Shell hard filter passed: sidebar-07 shell 'sidebar' matches collection-table-01 layoutModel.shell; app-shell-topnav excluded via incompatibleWith.",
+        "requiredStates loading/empty/error are rendered at composition level by the screen pattern (skeleton table / Empty / Alert replace the table region), matching the invoice-list precedent in selectionspec-dryrun-saas-ops-01.json; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "collection-table-01 lacks permission-denied and rtl coverage (risk.missingStates).",
+        "loading/empty/error are simulated via the ?state= query param against a static JSON fixture, not real network conditions.",
+        "data-table-panel-01 drag-reorder has no keyboard alternative (accessibility risk)."
+      ]
+    },
+    {
+      "stepId": "pattern-detail",
+      "resolvedScreenType": "detail",
+      "screenTypeScore": 52.5,
+      "screenPattern": { "registryItem": "detail-01", "score": 70, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "breadcrumb-context", "registryItem": "breadcrumb-context-01", "score": 90 },
+        { "blockRole": "detail-overview", "registryItem": "detail-overview-01", "score": 90 },
+        { "blockRole": "activity-feed", "registryItem": "activity-feed-01", "score": 90 },
+        { "blockRole": "comment-thread", "registryItem": "comment-thread-01", "score": 90 },
+        { "blockRole": "action-footer", "registryItem": "action-footer-01", "score": 90 }
+      ],
+      "registryDependencies": ["alert", "avatar", "badge", "breadcrumb", "button", "button-group", "card", "empty", "field", "item", "separator", "sidebar", "skeleton", "textarea"],
+      "stateCoveragePlan": ["default", "loading", "empty", "error"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType near-tie: top score report-analytics(55), tied second detail(52.5)/collection(52.5), diff<8 for all three vs the top. Tiebreak (1) exact jobMapStages set match: none of the three profiles match the step's {locate, define} exactly. Tiebreak (2) density match: step density=medium matches only detail (report-analytics and collection are both density=high) -> resolved to detail.",
+        "detail-01 was the sole detail screen-pattern candidate; score reflects coverage, not comparison. Score is exactly at the 70 reject threshold (Intent 12.5 + Shape 7.5 + Interaction 10 + State 15 + A11y 10 + Dependency 10 + Evidence 5[medium]) - flagged as a low-margin pick.",
+        "requiredStates loading/empty/error are rendered at composition level by the screen pattern; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "screenPattern score (70) is exactly at the reject threshold; any future re-scoring drift or registry change could flip this step to unresolved - recommend a stronger detail-screenType candidate for this step's compare-heavy intent.",
+        "detail-01 declares missingStates permission-denied/offline/rtl."
+      ]
+    },
+    {
+      "stepId": "live-demo",
+      "resolvedScreenType": "dashboard",
+      "screenTypeScore": 80,
+      "screenPattern": { "registryItem": "dashboard-01", "score": 87.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 100 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 }
+      ],
+      "registryDependencies": ["avatar", "badge", "breadcrumb", "button", "card", "chart", "checkbox", "collapsible", "drawer", "dropdown-menu", "input", "input-group", "label", "select", "separator", "sidebar", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading", "empty", "error"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: dashboard(80) beat report-analytics(55) and collection/detail(47.5 each) by >8; no near-tie.",
+        "FlowSpec $comment describes live-demo as 'embeds an already-built screen with ?state= switching'; the mechanical resolution to dashboard is consistent with its monitor jobMapStage and read-only/filter-sort interactions.",
+        "dashboard-01 was the sole dashboard screen-pattern candidate; score reflects coverage, not comparison.",
+        "filter-toolbar added as an optionalBlock: interactionModels include filter-sort.",
+        "Shell hard filter passed: sidebar-07 shell 'sidebar' matches dashboard-01 layoutModel.shell; app-shell-topnav excluded via incompatibleWith.",
+        "requiredStates loading/empty/error are rendered at composition level; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "dashboard-01 declares missingStates permission-denied/dark-mode/rtl.",
+        "data-table-panel-01 drag-reorder has no keyboard alternative (accessibility risk)."
+      ]
+    },
+    {
+      "stepId": "quality-report",
+      "resolvedScreenType": "report-analytics",
+      "screenTypeScore": 80,
+      "screenPattern": { "registryItem": "report-analytics-01", "score": 87.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 }
+      ],
+      "registryDependencies": ["alert", "badge", "button", "card", "chart", "checkbox", "drawer", "dropdown-menu", "empty", "input", "input-group", "label", "select", "separator", "sidebar", "skeleton", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: report-analytics(80) beat dashboard(60) by >8; no near-tie.",
+        "report-analytics-01 was the sole report-analytics screen-pattern candidate; score reflects coverage, not comparison.",
+        "requiredStates loading is rendered at composition level; block-level state scoring is not penalized for it."
+      ],
+      "risks": [
+        "report-analytics-01 declares missingStates permission-denied/offline/rtl/overflow.",
+        "Metrics/chart/table are simulated locally against a static fixture with no re-aggregation, per report-analytics-01 risk notes."
+      ]
+    },
+    {
+      "stepId": "case-study",
+      "resolvedScreenType": "report-analytics",
+      "screenTypeScore": 72.5,
+      "screenPattern": { "registryItem": "report-analytics-01", "score": 72.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 }
+      ],
+      "registryDependencies": ["alert", "badge", "button", "card", "chart", "checkbox", "drawer", "dropdown-menu", "empty", "input", "input-group", "label", "select", "separator", "sidebar", "skeleton", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: report-analytics(72.5) beat document-workspace(62.5, diff=10) and detail(55); no near-tie (diff>=8), so report-analytics is the mechanical winner despite a 0/2 dataShape-axis match (document/single-record vs report-analytics' metric/time-series/categorical/collection) - the formula's 40-point intent weight (full match on review+analyze) and 25-point stage weight (exact 'conclude' match) dominate the 20-point shape axis (score of 0 there).",
+        "report-analytics-01 was the sole report-analytics screen-pattern candidate for this resolved screenType; score reflects coverage, not comparison.",
+        "requiredStates is just [default]; no loading/empty/error gate to satisfy."
+      ],
+      "risks": [
+        "FIT RISK (not overridden, per instructions being authoritative over qualitative judgment): case-study's dataShapes are document/single-record and visualTone is editorial - a chart-panel/data-table-panel/summary-metric-row composition is a poor practical fit for what the FlowSpec $comment describes as a written case-study screen. Recommend a human review this resolution and consider adding a document-workspace- or detail-shaped case-study screen-pattern variant in a future inventory task; do not treat this SelectionSpec entry as validating the composition's real-world suitability.",
+        "report-analytics-01 declares missingStates permission-denied/offline/rtl/overflow."
+      ]
+    },
+    {
+      "stepId": "studio-composer",
+      "resolvedScreenType": "document-workspace",
+      "screenTypeScore": 67.5,
+      "screenPattern": { "registryItem": "document-workspace-01", "score": 82.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "breadcrumb-context", "registryItem": "breadcrumb-context-01", "score": 90 },
+        { "blockRole": "document-body-editor", "registryItem": "document-body-editor-01", "score": 90 },
+        { "blockRole": "comment-thread", "registryItem": "comment-thread-01", "score": 90 },
+        { "blockRole": "file-upload-area", "registryItem": "file-upload-area-01", "score": 90 }
+      ],
+      "registryDependencies": ["alert", "attachment", "avatar", "badge", "breadcrumb", "button", "card", "empty", "field", "input", "scroll-area", "separator", "sidebar", "skeleton", "textarea"],
+      "stateCoveragePlan": ["default", "validation-error"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: document-workspace(67.5) beat create-edit(55) by >8; no near-tie.",
+        "document-workspace-01 was the sole document-workspace screen-pattern candidate; score reflects coverage, not comparison.",
+        "requiredStates validation-error is present in document-workspace-01's stateCoverage (it is the only stocked pattern with that state), so this step is eligible; block-level scoring is not further penalized for it.",
+        "No app-shell-sidebar added: document-workspace-01 lists it only as optional and no step facet (userIntents/interactionModels) signals a navigation-shell need beyond the global nav already handled by the (out-of-scope) portfolio app shell."
+      ],
+      "risks": [
+        "document-workspace's canonical profile and document-workspace-01 registry entry are both maturity=experimental with reviewed=false (unreviewed by a human owner) - lower confidence than the other resolved screenTypes here.",
+        "document-workspace-01 evidence confidence is 'low' (sourceCount 3 but low confidence rating), contributing 0/10 to the pattern score.",
+        "document-body-editor-01 and file-upload-area-01 are simulated/local-only with no persistence (per their risk notes)."
+      ]
+    },
+    {
+      "stepId": "ai-assistant",
+      "resolvedScreenType": "conversation-assistant",
+      "screenTypeScore": 87.5,
+      "screenPattern": { "registryItem": "conversation-assistant-01", "score": 95, "rejected": [] },
+      "blocks": [
+        { "blockRole": "ai-conversation-list", "registryItem": "ai-conversation-list-01", "score": 90 },
+        { "blockRole": "ai-prompt-composer", "registryItem": "ai-prompt-composer-01", "score": 90 },
+        { "blockRole": "ai-explainability-label", "registryItem": "ai-explainability-label-01", "score": 90 },
+        { "blockRole": "activity-feed", "registryItem": "activity-feed-01", "score": 90 }
+      ],
+      "registryDependencies": ["alert", "avatar", "badge", "button", "input-group", "item", "scroll-area", "separator", "skeleton", "tooltip"],
+      "stateCoveragePlan": ["default", "loading"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: conversation-assistant(87.5) beat inbox-communication(40) by >8; no near-tie.",
+        "conversation-assistant-01 was the sole conversation-assistant screen-pattern candidate; score reflects coverage, not comparison.",
+        "ai-explainability-label included as a required block (per composition.requiredBlocks, not inferred from facets) which also satisfies the selection rule 'include an AI explainability block when AI output materially affects user decisions' for this delegate-to-ai step.",
+        "requiredStates loading is rendered at composition level; block-level state scoring is not penalized for it."
+      ],
+      "risks": [
+        "conversation-assistant-01 declares missingStates permission-denied/offline/rtl.",
+        "Chat transcript is simulated locally with no model backend or streaming transport wired in (per registry risk notes)."
+      ]
+    },
+    {
+      "stepId": "flow-checkpoint",
+      "resolvedScreenType": "workflow",
+      "screenTypeScore": 80,
+      "screenPattern": { "registryItem": "workflow-01", "score": 77.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "wizard-stepper", "registryItem": "wizard-stepper-01", "score": 90 },
+        { "blockRole": "form-section", "registryItem": "form-section-login-01", "score": 100 },
+        { "blockRole": "action-footer", "registryItem": "action-footer-01", "score": 90 },
+        { "blockRole": "checkout-summary", "registryItem": "checkout-summary-01", "score": 90 }
+      ],
+      "registryDependencies": ["alert", "badge", "button", "button-group", "card", "field", "input", "separator", "skeleton"],
+      "stateCoveragePlan": ["default", "loading"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: workflow(80) beat detail(60) by >8; no near-tie.",
+        "workflow-01 was the sole workflow screen-pattern candidate; score reflects coverage, not comparison.",
+        "form-section-login-01 (the only stocked form-section block) is login-specific content but scores 100 on role-fit because block role-fit is scored against the role's canonical profile, not the step's content facets, per the selection instructions ('a block's vocation is defined by its role, not by the page's overall intent'); its generic-content mismatch is carried as a risk instead.",
+        "requiredStates loading is rendered at composition level; block-level state scoring is not penalized for it."
+      ],
+      "risks": [
+        "form-section-login-01's actual field content (email/password) does not match flow-checkpoint's approval-confirmation subject matter; the implementation layer will need to re-author the field content, not just reuse the login copy verbatim.",
+        "workflow-01 declares missingStates validation-error/permission-denied/offline/rtl."
+      ]
+    },
+    {
+      "stepId": "result-report",
+      "resolvedScreenType": "report-analytics",
+      "screenTypeScore": 92.5,
+      "screenPattern": { "registryItem": "report-analytics-01", "score": 87.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 }
+      ],
+      "registryDependencies": ["alert", "badge", "button", "card", "chart", "checkbox", "drawer", "dropdown-menu", "empty", "input", "input-group", "label", "select", "separator", "sidebar", "skeleton", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading", "empty"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: report-analytics(92.5) beat dashboard(54.17) by >8; no near-tie.",
+        "report-analytics-01 was the sole report-analytics screen-pattern candidate; score reflects coverage, not comparison.",
+        "requiredStates loading/empty are rendered at composition level; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "report-analytics-01 declares missingStates permission-denied/offline/rtl/overflow."
+      ]
+    },
+    {
+      "stepId": "orientation",
+      "resolvedScreenType": "onboarding",
+      "screenTypeScore": 92.5,
+      "screenPattern": { "registryItem": "onboarding-01", "score": 87.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "wizard-stepper", "registryItem": "wizard-stepper-01", "score": 90 },
+        { "blockRole": "form-section", "registryItem": "form-section-login-01", "score": 100 },
+        { "blockRole": "action-footer", "registryItem": "action-footer-01", "score": 90 },
+        { "blockRole": "empty-state", "registryItem": "empty-state-01", "score": 90 }
+      ],
+      "registryDependencies": ["alert", "attachment", "badge", "button", "button-group", "card", "empty", "field", "input", "separator", "skeleton"],
+      "stateCoveragePlan": ["default"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: onboarding(92.5) beat auth(52.5) by >8; no near-tie.",
+        "onboarding-01 was the sole onboarding screen-pattern candidate; score reflects coverage, not comparison.",
+        "empty-state is a required block for onboarding-01 (composition.requiredBlocks), used here as the invite/first-run empty state per the pattern's own composition, not a per-step optional addition.",
+        "file-upload-area (optionalBlocks) not added: step dataShapes is [none], no media/document signal calling for an upload zone.",
+        "form-section-login-01's login-specific field content will need re-authoring for orientation copy at implementation time (same caveat as flow-checkpoint)."
+      ],
+      "risks": [
+        "onboarding-01 declares missingStates permission-denied/offline/rtl."
+      ]
+    },
+    {
+      "stepId": "generated-preview",
+      "resolvedScreenType": "detail",
+      "screenTypeScore": 60,
+      "screenPattern": { "registryItem": "detail-01", "score": 82.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "breadcrumb-context", "registryItem": "breadcrumb-context-01", "score": 90 },
+        { "blockRole": "detail-overview", "registryItem": "detail-overview-01", "score": 90 },
+        { "blockRole": "activity-feed", "registryItem": "activity-feed-01", "score": 90 },
+        { "blockRole": "comment-thread", "registryItem": "comment-thread-01", "score": 90 },
+        { "blockRole": "action-footer", "registryItem": "action-footer-01", "score": 90 }
+      ],
+      "registryDependencies": ["alert", "avatar", "badge", "breadcrumb", "button", "button-group", "card", "empty", "field", "item", "separator", "sidebar", "skeleton", "textarea"],
+      "stateCoveragePlan": ["default", "loading", "empty", "error"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType near-tie: top score detail(60), tied second dashboard(52.5)/report-analytics(52.5), diff<8 for all three vs the top. Tiebreak (1) exact jobMapStages set match: none of the three profiles match the step's {monitor, conclude} exactly. Tiebreak (2) density match: step density=medium matches only detail (dashboard and report-analytics are both density=high) -> resolved to detail.",
+        "detail-01 was the sole detail screen-pattern candidate; score reflects coverage, not comparison.",
+        "requiredStates loading/empty/error are rendered at composition level; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "detail-01 declares missingStates permission-denied/offline/rtl.",
+        "detail-01's comment-thread/activity-feed blocks are a stretch fit for a 'generated result preview' subject; implementation will need to adapt copy/labels accordingly."
+      ]
+    },
+    {
+      "stepId": "selection-rationale",
+      "resolvedScreenType": "report-analytics",
+      "screenTypeScore": 77.5,
+      "screenPattern": { "registryItem": "report-analytics-01", "score": 85, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 }
+      ],
+      "registryDependencies": ["alert", "badge", "button", "card", "chart", "checkbox", "drawer", "dropdown-menu", "empty", "input", "input-group", "label", "select", "separator", "sidebar", "skeleton", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading", "empty"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: report-analytics(77.5) beat dashboard(51.67) by >8; no near-tie.",
+        "report-analytics-01 was the sole report-analytics screen-pattern candidate; score reflects coverage, not comparison.",
+        "requiredStates loading/empty are rendered at composition level; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "report-analytics-01 declares missingStates permission-denied/offline/rtl/overflow."
+      ]
+    },
+    {
+      "stepId": "contract-explorer",
+      "resolvedScreenType": "detail",
+      "screenTypeScore": 62.5,
+      "screenPattern": { "registryItem": "detail-01", "score": 71.67, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "breadcrumb-context", "registryItem": "breadcrumb-context-01", "score": 90 },
+        { "blockRole": "detail-overview", "registryItem": "detail-overview-01", "score": 90 },
+        { "blockRole": "activity-feed", "registryItem": "activity-feed-01", "score": 90 },
+        { "blockRole": "comment-thread", "registryItem": "comment-thread-01", "score": 90 },
+        { "blockRole": "action-footer", "registryItem": "action-footer-01", "score": 90 }
+      ],
+      "registryDependencies": ["alert", "avatar", "badge", "breadcrumb", "button", "button-group", "card", "empty", "field", "item", "separator", "sidebar", "skeleton", "textarea"],
+      "stateCoveragePlan": ["default", "loading", "empty"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: detail(62.5) beat document-workspace(37.5) by >8; no near-tie.",
+        "detail-01 was the sole detail screen-pattern candidate; score reflects coverage, not comparison. Score (71.67) clears the 70 threshold with a small margin.",
+        "requiredStates loading/empty are rendered at composition level; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "screenPattern score (71.67) is close to the reject threshold; margin is thin.",
+        "detail-01 declares missingStates permission-denied/offline/rtl.",
+        "comment-thread/activity-feed blocks are a stretch fit for a document/hierarchy-shaped 'contract explorer' subject; implementation will need to adapt copy/labels accordingly."
+      ]
+    },
+    {
+      "stepId": "provenance-trail",
+      "resolvedScreenType": "report-analytics",
+      "screenTypeScore": 62.5,
+      "screenPattern": { "registryItem": "report-analytics-01", "score": 77.5, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 }
+      ],
+      "registryDependencies": ["alert", "badge", "button", "card", "chart", "checkbox", "drawer", "dropdown-menu", "empty", "input", "input-group", "label", "select", "separator", "sidebar", "skeleton", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading", "error"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: report-analytics(62.5) beat workflow(50)/detail(50) by >8; no near-tie.",
+        "report-analytics-01 was the sole report-analytics screen-pattern candidate; score reflects coverage, not comparison.",
+        "requiredStates loading/error are rendered at composition level; block-level state scoring is not penalized for them."
+      ],
+      "risks": [
+        "FIT RISK: provenance-trail's dataShapes are single-record/categorical/transaction (an audit-trail record view), which is a partial match to report-analytics' metric/time-series/categorical/collection profile (shape coverage only 1/3); the chart-panel/summary-metric-row composition may not suit an audit-trail readout. Flagged for human review, not overridden.",
+        "report-analytics-01 declares missingStates permission-denied/offline/rtl/overflow."
+      ]
+    },
+    {
+      "stepId": "coverage-matrix",
+      "resolvedScreenType": "dashboard",
+      "screenTypeScore": 82.5,
+      "screenPattern": { "registryItem": "dashboard-01", "score": 90, "rejected": [] },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 100 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 95 }
+      ],
+      "registryDependencies": ["avatar", "badge", "breadcrumb", "button", "card", "chart", "checkbox", "collapsible", "drawer", "dropdown-menu", "input", "input-group", "label", "select", "separator", "sidebar", "table", "tabs", "toggle-group"],
+      "stateCoveragePlan": ["default", "loading"],
+      "checksPlanned": ["lint", "typecheck", "a11y", "story"],
+      "assumptions": [
+        "screenType: dashboard(82.5) beat report-analytics(43.33) by >8; no near-tie.",
+        "dashboard-01 was the sole dashboard screen-pattern candidate; score reflects coverage, not comparison.",
+        "filter-toolbar added as an optionalBlock: interactionModels include filter-sort.",
+        "Shell hard filter passed: sidebar-07 shell 'sidebar' matches dashboard-01 layoutModel.shell; app-shell-topnav excluded via incompatibleWith.",
+        "requiredStates loading is rendered at composition level; block-level state scoring is not penalized for it."
+      ],
+      "risks": [
+        "dashboard-01 declares missingStates permission-denied/dark-mode/rtl.",
+        "data-table-panel-01 drag-reorder has no keyboard alternative (accessibility risk)."
+      ]
+    }
+  ],
+  "unresolved": []
+}

@@ -23,7 +23,13 @@ import os from 'node:os'
 import { spawnSync } from 'node:child_process'
 import { createContractAjv } from './lib/ajv.mjs'
 import { readDoc } from './lib/paths.mjs'
-import { digestArtifact, digestRegistryInventory, resolveInput, findProhibitedKeys } from './lib/provenance.mjs'
+import {
+  digestArtifact,
+  digestSelectionInventory,
+  referencedRegistryItems,
+  resolveDoc,
+  findProhibitedKeys,
+} from './lib/provenance.mjs'
 import { discoverFlows, FlowDiscoveryError } from './lib/flows.mjs'
 
 const ROOT = process.cwd()
@@ -61,6 +67,14 @@ function generateOne({ build, flowLabel, flowPath, selectionLabel, selectionPath
     if (cli.failureSummary) failure.summary = cli.failureSummary
   }
 
+  // Selection-scoped registry inventory digest: derive the referenced-item set
+  // from this flow's own SelectionSpec, then digest only those items. A missing
+  // referenced item throws here (fail-loud) BEFORE anything is written, so a
+  // sidecar is never rewritten for a triple whose inventory could not be fully
+  // recomputed.
+  const selection = readJson(selectionPath)
+  const registryInventory = digestSelectionInventory(registryDir, referencedRegistryItems(selection))
+
   const manifest = {
     provenanceVersion: PROVENANCE_VERSION,
     flowId: build.flowId,
@@ -75,7 +89,7 @@ function generateOne({ build, flowLabel, flowPath, selectionLabel, selectionPath
       flowSpec: digestArtifact(flowLabel, flowPath),
       selectionSpec: digestArtifact(selectionLabel, selectionPath),
       buildReport: digestArtifact(buildLabel, buildPath),
-      registryInventory: digestRegistryInventory(registryDir),
+      registryInventory,
     },
     result: { status, durationMs: Number.isFinite(durationMs) ? durationMs : 0, failure },
   }
@@ -128,14 +142,21 @@ function npmVersion() {
 }
 
 if (hasExplicitArgs) {
-  const flowLabel = opt('--flow', 'flowspec-dryrun-saas-ops-01.json')
-  const selectionLabel = opt('--selection', 'selectionspec-dryrun-saas-ops-01.json')
-  const buildLabel = opt('--build', 'buildreport-dryrun-saas-ops-01.json')
-  const flowPath = resolveInput(flowLabel)
-  const selectionPath = resolveInput(selectionLabel)
-  const buildPath = resolveInput(buildLabel)
+  // Explicit single-target mode is all-or-nothing: no golden-basename fallbacks.
+  // If any of the four target flags is present, all four are required.
+  const missing = ['--flow', '--selection', '--build', '--out'].filter((f) => !argv.includes(f))
+  if (missing.length > 0) {
+    console.error(`✗ explicit mode requires all of --flow, --selection, --build, --out; missing: ${missing.join(', ')}`)
+    process.exit(1)
+  }
+  const flowLabel = opt('--flow')
+  const selectionLabel = opt('--selection')
+  const buildLabel = opt('--build')
+  const flowPath = resolveDoc(flowLabel)
+  const selectionPath = resolveDoc(selectionLabel)
+  const buildPath = resolveDoc(buildLabel)
   const registryDir = opt('--registry-dir', join(ROOT, 'registry'))
-  const outPath = opt('--out', join(ROOT, 'docs', 'examples', 'buildreport-dryrun-saas-ops-01.provenance.json'))
+  const outPath = opt('--out')
 
   // BuildReport is the anchor: flowId and terminal status come from it.
   const build = readJson(buildPath)

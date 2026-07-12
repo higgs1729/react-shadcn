@@ -44,13 +44,19 @@
     "test:flows": "node scripts/test-flows.mjs",
     "test:document-body-editor": "node scripts/test-document-body-editor.mjs",
     "test:document-workspace": "node scripts/test-document-workspace.mjs",
+    "test:board-column": "node scripts/test-board-column.mjs",
+    "test:planning-board": "node scripts/test-screentype-inventory.mjs planning-board",
     "test:detail": "node scripts/test-screentype-inventory.mjs detail",
     "test:onboarding": "node scripts/test-screentype-inventory.mjs onboarding",
     "test:create-edit": "node scripts/test-screentype-inventory.mjs create-edit",
     "test:workflow": "node scripts/test-screentype-inventory.mjs workflow",
     "test:conversation-assistant": "node scripts/test-screentype-inventory.mjs conversation-assistant",
     "test:report-analytics": "node scripts/test-screentype-inventory.mjs report-analytics",
-    "test:settings-admin": "node scripts/test-screentype-inventory.mjs settings-admin"
+    "test:settings-admin": "node scripts/test-screentype-inventory.mjs settings-admin",
+    "select:candidates": "node scripts/select-candidates.mjs",
+    "test:select-candidates": "node scripts/select-candidates.test.mjs",
+    "gen:flow-routes": "node scripts/gen-flow-routes.mjs",
+    "test:flow-routes": "node scripts/gen-flow-routes.test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

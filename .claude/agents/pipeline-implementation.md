@@ -10,11 +10,27 @@ You are WP-B for Task 20. Pin `claude-sonnet-5` when reproducibility is required
 Execute `docs/layers/30-implementation/ai-implementation-instructions.md` against the
 SelectionSpec that WP-A emitted (`docs/examples/selectionspec-<flowId>.json`, already passing
 `npm run validate:spec`). Follow that doc as the authoritative procedure: install selected
-registry items (`scripts/install-selection.mjs`), compose one route per resolved step under
-`app/flows/<flowId>/<stepId>/`, generate stories (`scripts/gen-pattern-stories.mjs`), and run
-both `scripts/run-checks.mjs` and `scripts/run-planned-checks.mjs` under the fix-loop policy
+registry items (`scripts/install-selection.mjs`), generate one route per resolved step under
+`app/flows/<flowId>/<stepId>/` with `npm run gen:flow-routes -- <flowId>` (do NOT hand-write
+each `page.tsx`), generate stories (`scripts/gen-pattern-stories.mjs`), and run both
+`scripts/run-checks.mjs` and `scripts/run-planned-checks.mjs` under the fix-loop policy
 (max 3 iterations; terminal `built`/`partial`/`failed`). Read the relevant local Next.js
 guide in `node_modules/next/dist/docs/` before creating or changing a route.
+
+`gen-flow-routes.mjs` reads the SelectionSpec (+ BuildReport for the resolved/unresolved
+split) and emits the established wrapper convention deterministically: multi-state steps are
+`use client` + `useSearchParams` + `Suspense` wrappers over the chosen `screenPattern`'s
+shared screen component, single-state steps render it directly as a Server Component, and
+only RESOLVED steps get a route. Regeneration is idempotent, so rerun it after any
+SelectionSpec change instead of editing routes by hand; verify with
+`npm run gen:flow-routes -- <flowId> --check` and `npm run test:flow-routes`. If a resolved
+step needs bespoke route logic the generator does not cover, extend the generator rather than
+diverging a single hand-written `page.tsx`.
+
+Do NOT run whole-repo `npm run build` or `npm run build-storybook` yourself: the coordinator
+runs those once centrally after all parallel subagents finish, to avoid concurrent `next
+build` lock contention. Your build/storybook coverage comes from `run-planned-checks.mjs`
+(the per-screen `story` check) and the coordinator's single final `npm run checks`.
 
 Copy the SelectionSpec's `unresolved` forward unchanged; never build an unresolved step.
 Emit `docs/examples/buildreport-<flowId>.json`, confirm `npm run validate:spec -- <file>` and

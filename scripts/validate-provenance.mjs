@@ -26,7 +26,8 @@ import { createContractAjv } from './lib/ajv.mjs'
 import { readDoc, docPath } from './lib/paths.mjs'
 import {
   canonicalDigest,
-  digestRegistryInventory,
+  digestSelectionInventory,
+  referencedRegistryItems,
   resolveInput,
   findProhibitedKeys,
 } from './lib/provenance.mjs'
@@ -74,6 +75,7 @@ function validateManifest(manifestPath, { registryDir, overrides = {}, baseDir =
 
   // ---- gate 2: digest verification against source artifacts -----------------
   const mismatches = []
+  let selectionSourcePath = null
   for (const key of ['flowSpec', 'selectionSpec', 'buildReport']) {
     const entry = manifest.inputs[key]
     let sourcePath
@@ -83,18 +85,31 @@ function validateManifest(manifestPath, { registryDir, overrides = {}, baseDir =
       mismatches.push(`${key} (${entry.path}): source not found (${e.message})`)
       continue
     }
+    if (key === 'selectionSpec') selectionSourcePath = sourcePath
     const actual = canonicalDigest(readJson(sourcePath))
     if (actual !== entry.digest) {
       mismatches.push(`${key} (${entry.path}): recorded ${entry.digest.slice(0, 12)}… != actual ${actual.slice(0, 12)}…`)
     }
   }
 
-  // registry inventory digest
-  const actualRegistry = digestRegistryInventory(registryDir).digest
-  if (actualRegistry !== manifest.inputs.registryInventory.digest) {
-    mismatches.push(
-      `registryInventory (registry/): recorded ${manifest.inputs.registryInventory.digest.slice(0, 12)}… != actual ${actualRegistry.slice(0, 12)}…`,
-    )
+  // registry inventory digest (selection-scoped): re-derive the referenced-item
+  // set from this flow's OWN SelectionSpec and recompute the digest over only
+  // those items, comparing to the recorded digest. A referenced item missing
+  // from registry/ is a hard failure (never a silent pass).
+  const recordedRegistry = manifest.inputs.registryInventory
+  if (selectionSourcePath) {
+    let actualRegistryDigest
+    try {
+      const referenced = referencedRegistryItems(readJson(selectionSourcePath))
+      actualRegistryDigest = digestSelectionInventory(registryDir, referenced).digest
+    } catch (e) {
+      mismatches.push(`registryInventory (${recordedRegistry.path}): ${e.message}`)
+    }
+    if (actualRegistryDigest !== undefined && actualRegistryDigest !== recordedRegistry.digest) {
+      mismatches.push(
+        `registryInventory (${recordedRegistry.path}): recorded ${recordedRegistry.digest.slice(0, 12)}… != actual ${actualRegistryDigest.slice(0, 12)}…`,
+      )
+    }
   }
 
   if (mismatches.length > 0) {
