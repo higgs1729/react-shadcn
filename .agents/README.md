@@ -1,7 +1,7 @@
 # Repository Sub-Agent Definitions
 
 These files are reusable role definitions for delegated work in this repository. The
-same ten roles exist for both tools, mirrored file-for-file:
+same roles exist for both tools, mirrored file-for-file:
 
 - **Codex** reads the definitions in **this directory** (`.agents/*.md`).
 - **Claude Code** reads its own copies under **`.claude/agents/*.md`** (name /
@@ -31,6 +31,10 @@ and `agent_type` to the available sub-agent runner.
 | `blockrole-implementation.md` | `gpt-5.6-terra` | `high` | `worker` |
 | `blockrole-fixture.md` | `gpt-5.6-luna` | `medium` | `worker` |
 | `blockrole-review.md` | `gpt-5.6-luna` | `low` | `explorer` |
+| `pipeline-coordinator.md` | `gpt-5.6-sol` | `high` | `default` |
+| `pipeline-selection.md` | `gpt-5.6-terra` | `high` | `worker` |
+| `pipeline-implementation.md` | `gpt-5.6-terra` | `high` | `worker` |
+| `pipeline-review.md` | `gpt-5.6-luna` | `low` | `explorer` |
 
 `gpt-5.4-mini` remains the preferred cost target for mechanical work when the calling
 Codex surface exposes it. The current sub-agent tool exposes Luna but not Mini, so Luna
@@ -54,6 +58,10 @@ model is already pinned in that file's frontmatter. The definitions live under
 | `blockrole-implementation` | `sonnet` |
 | `blockrole-fixture` | `haiku` |
 | `blockrole-review` | `haiku` |
+| `pipeline-coordinator` | `opus` |
+| `pipeline-selection` | `sonnet` |
+| `pipeline-implementation` | `sonnet` |
+| `pipeline-review` | `haiku` |
 
 Pin `claude-opus-4-8` / `claude-sonnet-5` / `claude-haiku-4-5-20251001` when
 reproducibility is required instead of the floating aliases; see the "Model
