@@ -3,8 +3,8 @@
 ## Day 1
 
 - [x] 旧routeが依存するdataを `lib/studio-portfolio/` へ退避し、generator・testの参照先を切り替える。旧routeはこの段階では削除しない。
-- [ ] `studio-app-spec.json` を読む共通data moduleを作る。
-- [ ] `StudioLayout` を作り、AppHeader・Sidebar・mobile Drawerを接続する。
+- [x] `studio-app-spec.json` を読む共通data moduleを作る。
+- [x] `StudioLayout` を作り、AppHeader・Sidebar・mobile Drawerを接続する。
 - [ ] 5つのPrimaryNavigation Pageを作り、active stateを接続する。
 - [ ] Overviewを `studio-overview-01` として既存blockから構成する。
 - [ ] Patternsをregistry dataへbindingする。
