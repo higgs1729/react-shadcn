@@ -40,6 +40,18 @@ screen-patternとblock-patternを、役割・状態・maturityから探索する
 
 ## Studio
 
+> Current static implementation: users select one prebuilt scenario. The page visibly traces **Brief → FlowSpec → SelectionSpec → implementation preview**. It does not create contracts, UI, or AI answers at runtime.
+
+### Current display order
+
+1. Select a clear sample request
+2. Read its brief and expected outcome
+3. Inspect the corresponding prebuilt FlowSpec summary
+4. Inspect the corresponding prebuilt SelectionSpec summary
+5. Open the actual registered pattern in Storybook
+
+The legacy Studio notes below are retained only as project history; they do not describe the current route and must not be read as a runtime generation or AI capability.
+
 ### 目的
 
 一つのサンプルbriefが、選定・承認・実装結果へ変換される流れを体験する。

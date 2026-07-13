@@ -17,7 +17,28 @@
       { "id": "studio", "label": "Studio", "route": "/studio" },
       { "id": "quality", "label": "Quality", "route": "/quality" },
       { "id": "case-study", "label": "Case Study", "route": "/case-study" }
-    ]
+    ],
+    "utilityNavigation": [
+      {
+        "id": "settings",
+        "label": "Settings",
+        "route": "/settings",
+        "placement": "sidebar-footer",
+        "action": "open-settings-dialog"
+      }
+    ],
+    "windowNavigation": {
+      "mode": "in-app-tabs",
+      "newWindowLinks": [
+        "overview-studio-cta",
+        "overview-decision-cta",
+        "overview-selected-page-cta",
+        "studio-live-preview-cta",
+        "studio-pattern-detail-cta",
+        "case-study-quality-cta"
+      ],
+      "childRouteContext": "page-header"
+    }
   },
   "pages": [
     {
@@ -26,10 +47,15 @@
       "uiEntity": "Page",
       "compositionMode": "compose-existing-blocks",
       "composition": "studio-overview-01",
-      "blocks": ["page-header-actions-01", "summary-metric-row-01", "collection-grid-01", "activity-feed-01"],
+      "blocks": [
+        "page-header-actions-01",
+        "summary-metric-row-01",
+        "collection-grid-01",
+        "activity-feed-01"
+      ],
       "override": {
         "selectedPattern": "dashboard-01",
-        "reason": "The selected chart-and-table topology cannot express the required value proposition and journey-entry content without invented data."
+        "reason": "The selected chart-and-table topology cannot express the required value proposition and journey-entry content without invented data. Inventory counts remain supporting evidence, not the first visual surface."
       }
     },
     {
@@ -45,19 +71,40 @@
       "id": "studio",
       "route": "/studio",
       "uiEntity": "Page",
-      "compositionMode": "reuse-selected",
-      "composition": "document-workspace-01",
-      "contentSource": "docs/examples/*-studio-portfolio-01.json",
-      "relatedUI": ["ai-assistant", "flow-checkpoint", "result-report", "generated-preview", "selection-rationale"]
+      "compositionMode": "compose-existing-blocks",
+      "composition": "studio-scenario-runner-01",
+      "contentSource": "lib/studio-portfolio/studio-scenarios.ts",
+      "blocks": [
+        "page-header-actions-01",
+        "collection-grid-01",
+        "detail-overview-01",
+        "action-footer-01"
+      ],
+      "relatedUI": ["result-report", "generated-preview"],
+      "override": {
+        "selectedPattern": "document-workspace-01",
+        "reason": "Static delivery has no runtime FlowSpec/SelectionSpec generator or AI service. A selectable set of transparent prebuilt scenarios demonstrates the complete brief-to-preview relationship without implying generation."
+      }
     },
     {
       "id": "quality",
       "route": "/quality",
       "uiEntity": "Page",
-      "compositionMode": "reuse-selected",
-      "composition": "report-analytics-01",
+      "compositionMode": "compose-existing-blocks",
+      "composition": "studio-quality-01",
       "contentSource": "docs/examples/* + registry/*.json",
-      "relatedUI": ["coverage-matrix", "contract-explorer", "provenance-trail"]
+      "blocks": [
+        "page-header-actions-01",
+        "summary-metric-row-01",
+        "filter-toolbar-01",
+        "detail-overview-01",
+        "data-table-panel-01"
+      ],
+      "relatedUI": ["coverage-matrix", "contract-explorer", "provenance-trail"],
+      "override": {
+        "selectedPattern": "report-analytics-01",
+        "reason": "Quality needs to establish traceability and the next inspection action before showing historical checks. Metric cards and a chart do not communicate that purpose."
+      }
     },
     {
       "id": "case-study",
@@ -65,36 +112,159 @@
       "uiEntity": "Page",
       "compositionMode": "compose-existing-blocks",
       "composition": "studio-case-study-01",
-      "blocks": ["page-header-actions-01", "breadcrumb-context-01", "detail-overview-01", "activity-feed-01"],
+      "blocks": [
+        "page-header-actions-01",
+        "breadcrumb-context-01",
+        "detail-overview-01",
+        "activity-feed-01"
+      ],
       "override": {
         "selectedPattern": "report-analytics-01",
         "reason": "The case study is an editorial document; metric-chart-table regions are a known content-fit mismatch."
       }
+    },
+    {
+      "id": "settings",
+      "route": "/settings",
+      "uiEntity": "Page",
+      "compositionMode": "reuse-selected",
+      "composition": "settings-admin-01",
+      "blocks": ["settings-section-01"],
+      "override": {
+        "selectedPattern": "settings-admin-01",
+        "reason": "Theme and accent preferences are workspace-level settings. The existing settings-admin screen type and settings-section block fit this controlled static-export surface."
+      }
     }
   ],
   "entryPages": [
-    { "id": "orientation", "uiEntity": "Page", "route": "/orientation", "component": "onboarding-01" }
+    {
+      "id": "orientation",
+      "uiEntity": "Page",
+      "route": "/orientation",
+      "component": "onboarding-01"
+    }
   ],
   "childRoutes": [
-    { "id": "result-report", "parentPage": "studio", "route": "/studio/result", "component": "report-analytics-01" },
-    { "id": "generated-preview", "parentPage": "studio", "route": "/studio/preview", "component": "detail-01" },
-    { "id": "coverage-matrix", "parentPage": "quality", "route": "/quality/coverage", "component": "dashboard-01" }
+    {
+      "id": "result-report",
+      "parentPage": "studio",
+      "route": "/studio/result",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "report-analytics-01",
+        "reason": "ChildRouteはSelectionSpec/BuildReportの解決済みstepと採用patternを列挙する要約面であり、metric-chart-table topologyは不要。summary-metric-row-01とdetail blockで構成する。"
+      }
+    },
+    {
+      "id": "generated-preview",
+      "parentPage": "studio",
+      "route": "/studio/preview",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "detail-01",
+        "reason": "生成previewはgenerated-preview stepの選定結果をregistry patternとStorybookへ橋渡しするだけの薄い面で、detail-01全体ではなくdetail-overview-01のみ再利用する。"
+      }
+    },
+    {
+      "id": "coverage-matrix",
+      "parentPage": "quality",
+      "route": "/quality/coverage",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "dashboard-01",
+        "reason": "coverageはScreenType/blockRoleの在庫マトリクスであり、dashboard-01のchart領域は不要。確認目的とPatternsへの導線を先に置き、summary-metric-row-01は補助情報、tableを判断面として構成する。"
+      }
+    }
   ],
   "drawers": [
-    { "id": "pattern-detail", "parentPage": "patterns", "presentation": "inspector", "component": "detail-01" },
-    { "id": "live-demo", "parentPage": "patterns", "presentation": "preview", "component": "selected-pattern-preview" },
-    { "id": "ai-assistant", "parentPage": "studio", "presentation": "wide-assistant", "component": "conversation-assistant-01" },
-    { "id": "selection-rationale", "parentPage": "studio", "presentation": "comparison", "component": "report-analytics-01" },
-    { "id": "contract-explorer", "parentPage": "quality", "presentation": "document-inspector", "component": "detail-01" },
-    { "id": "provenance-trail", "parentPage": "quality", "presentation": "audit-inspector", "component": "report-analytics-01" }
+    {
+      "id": "pattern-detail",
+      "parentPage": "patterns",
+      "presentation": "inspector",
+      "component": "detail-01"
+    },
+    {
+      "id": "live-demo",
+      "parentPage": "patterns",
+      "presentation": "preview",
+      "component": "selected-pattern-preview"
+    },
+    {
+      "id": "ai-assistant",
+      "parentPage": "studio",
+      "presentation": "wide-assistant",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "conversation-assistant-01",
+        "reason": "静的作品では会話履歴を持たないため、conversation-assistant-01のchat topologyではなくai-explainability-label-01とai-prompt-composer-01で不足条件の提示と反映のみを構成する。"
+      }
+    },
+    {
+      "id": "selection-rationale",
+      "parentPage": "studio",
+      "presentation": "comparison",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "report-analytics-01",
+        "reason": "rationaleは採用/却下候補・score内訳・前提・riskの比較であり、report-analytics-01のchart領域は不要。card群で構成する。"
+      }
+    },
+    {
+      "id": "contract-explorer",
+      "parentPage": "quality",
+      "presentation": "document-inspector",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "detail-01",
+        "reason": "4契約の責務・入出力・実JSONを列挙する文書面で、detail-01全体ではなくdetail-overview-01とpreformatted JSONで構成する。"
+      }
+    },
+    {
+      "id": "provenance-trail",
+      "parentPage": "quality",
+      "presentation": "audit-inspector",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "report-analytics-01",
+        "reason": "provenanceは入力digestとregistry digestの監査表示であり、chart領域は不要。detail-overview-01で構成する。"
+      }
+    }
   ],
   "dialogs": [
-    { "id": "flow-checkpoint", "parentPage": "studio", "presentation": "approval", "component": "workflow-01" }
+    {
+      "id": "settings",
+      "parentPage": "studio-layout",
+      "presentation": "settings-window",
+      "compositionMode": "reuse-selected",
+      "override": {
+        "selectedPattern": "settings-admin-01",
+        "reason": "Desktop settings are a focused utility surface. A wide Dialog preserves the current workspace while the settings-admin composition provides a persistent settings navigation."
+      }
+    },
+    {
+      "id": "flow-checkpoint",
+      "parentPage": "studio",
+      "presentation": "approval",
+      "compositionMode": "compose-existing-blocks",
+      "override": {
+        "selectedPattern": "workflow-01",
+        "reason": "checkpointは選定結果・resolved step数・既知riskを確認して人間承認へ進む単一Dialogで、workflow-01の多段stepper構造は過剰。detail-overview-01で構成する。"
+      }
+    }
   ],
   "popovers": [],
   "verification": {
-    "requiredCommands": ["npm run test:studio-portfolio-data", "npm run validate", "npm run checks"],
+    "requiredCommands": [
+      "npm run test:studio-portfolio-data",
+      "npm run validate",
+      "npm run checks"
+    ],
     "requiredViewports": ["mobile", "desktop"],
-    "requiredStates": ["default", "loading", "empty", "error"]
+    "requiredStates": ["default", "loading", "empty", "error"],
+    "urlState": {
+      "panel": "Drawer or Dialog identifier; opens a transient UI on its owning Page.",
+      "pattern": "Pattern identifier used with the Patterns panel.",
+      "state": "Verification-only Page state: default, loading, empty, or error."
+    }
   }
 }

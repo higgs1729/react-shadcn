@@ -13,13 +13,15 @@
 
 ## Day 2
 
-- [ ] Studioをbrief・selection・result dataへbindingする。
-- [ ] AI assistantとrationaleをDrawer、checkpointをDialogで接続する。
-- [ ] Qualityをchecks・coverage・contract・provenanceへbindingする。
-- [ ] Case Studyをapp固有compositionで実装する。
-- [ ] mobile、keyboard、state、deep-linkを確認する。
-- [ ] 静的exportとStorybookをGitHub Pages用artifactへ統合する。
-- [ ] `npm run test:studio-portfolio-data`、`npm run validate`、`npm run checks` を通す。
+> Completed: URL-addressable Drawer / Dialog and Patterns state previews, responsive sidebar behavior, and the GitHub Pages artifact (including Storybook). Verified with the required three commands and a `/react-shadcn` production export.
+
+- [x] Studioをbrief・selection・result dataへbindingする。
+- [x] AI assistantとrationaleをDrawer、checkpointをDialogで接続する。
+- [x] Qualityをchecks・coverage・contract・provenanceへbindingする。
+- [x] Case Studyをapp固有compositionで実装する。
+- [x] mobile、keyboard、state、deep-linkを確認する。
+- [x] 静的exportとStorybookをGitHub Pages用artifactへ統合する。
+- [x] `npm run test:studio-portfolio-data`、`npm run validate`、`npm run checks` を通す。
 
 ## 完了条件
 

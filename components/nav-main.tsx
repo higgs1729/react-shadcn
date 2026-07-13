@@ -43,7 +43,13 @@ export function NavMain({
             render={<SidebarMenuItem />}
           >
             <CollapsibleTrigger
-              render={<SidebarMenuButton tooltip={item.title} />}
+              render={
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={item.isActive}
+                  className="data-active:bg-primary/10 data-active:hover:bg-primary/15"
+                />
+              }
             >
               {item.icon}
               <span>{item.title}</span>

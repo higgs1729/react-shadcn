@@ -1,5 +1,7 @@
 "use client"
 
+import type { ReactNode } from "react"
+
 import {
   Card,
   CardContent,
@@ -22,6 +24,8 @@ export interface SettingsSectionProps {
   description: string
   settings: SettingsSectionRow[]
   onToggle: (id: string, checked: boolean) => void
+  children?: ReactNode
+  borderless?: boolean
 }
 
 export function SettingsSection({
@@ -29,31 +33,51 @@ export function SettingsSection({
   description,
   settings,
   onToggle,
+  children,
+  borderless = false,
 }: SettingsSectionProps) {
+  const rows = settings.map((setting) => (
+    <Field key={setting.id} orientation="horizontal" className="border-t py-4">
+      <FieldLabel htmlFor={`setting-${setting.id}`}>
+        <FieldContent>
+          <span>{setting.label}</span>
+          <span className="text-sm font-normal text-muted-foreground">
+            {setting.description}
+          </span>
+        </FieldContent>
+        <Switch
+          id={`setting-${setting.id}`}
+          checked={setting.checked}
+          onCheckedChange={(checked) => onToggle(setting.id, checked)}
+        />
+      </FieldLabel>
+    </Field>
+  ))
+
+  if (borderless) {
+    return (
+      <section>
+        <div className="pb-5">
+          <h2 className="text-base font-semibold">{title}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+        </div>
+        <div className="flex flex-col">
+          {rows}
+          {children}
+        </div>
+      </section>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {settings.map((setting) => (
-          <Field key={setting.id} orientation="horizontal">
-            <FieldLabel htmlFor={`setting-${setting.id}`}>
-              <FieldContent>
-                <span>{setting.label}</span>
-                <span className="text-sm font-normal text-muted-foreground">
-                  {setting.description}
-                </span>
-              </FieldContent>
-              <Switch
-                id={`setting-${setting.id}`}
-                checked={setting.checked}
-                onCheckedChange={(checked) => onToggle(setting.id, checked)}
-              />
-            </FieldLabel>
-          </Field>
-        ))}
+      <CardContent className="flex flex-col">
+        {rows}
+        {children}
       </CardContent>
     </Card>
   )
