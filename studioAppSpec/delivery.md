@@ -9,7 +9,7 @@
 - [x] Overviewを `studio-overview-01` として既存blockから構成する。
 - [x] Patternsをregistry dataへbindingする。
 - [x] Pattern detailとLive demoをDrawerで接続する。
-- [ ] 新しいトップレベルrouteの動作確認後、旧 `app/flows/studio-portfolio-01/` の16 step route・layout・navigationを削除する。`app/*-01/` のscreen component（在庫実体）とregistry・storyは変更しない。
+- [x] 新しいトップレベルrouteの動作確認後、旧 `app/flows/studio-portfolio-01/` の16 step route・layout・navigationを削除する。`app/*-01/` のscreen component（在庫実体）とregistry・storyは変更しない。
 
 ## Day 2
 

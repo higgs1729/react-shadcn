@@ -94,6 +94,11 @@ export function OverviewPage() {
       </div>
 
       <Card>
+        <CardHeader><CardTitle>作品の到達点</CardTitle><CardDescription>設計・実装・検証を、公開可能な静的artifactへ順に接続しています。</CardDescription></CardHeader>
+        <CardContent><ActivityFeed entries={[{ id: "spec", actor: "Spec", action: "画面階層とcontent-fitの判断を固定", timestamp: "Architecture" }, { id: "routes", actor: "Routes", action: "共有StudioLayout内の5 Pageへ移行", timestamp: "Implementation" }, { id: "checks", actor: "Checks", action: "contracts・typecheck・build・Storybookを検証", timestamp: "Verification" }]} /></CardContent>
+      </Card>
+
+      <Card>
         <CardHeader><CardTitle>公開上の境界</CardTitle></CardHeader>
         <CardContent className="text-sm text-muted-foreground">inventoryはexperimentalを含みます。自動検証のpassは、UX・内容・maturityに対する人間レビューを代替しません。</CardContent>
       </Card>
@@ -185,6 +190,7 @@ export function QualityPage() {
 export function CaseStudyPage() {
   return (
     <PageFrame title="Case Study" description="画面を単独のテンプレートではなく、Page・ChildRoute・Drawer・Dialogからなる階層として設計し直した過程をまとめます。">
+      <BreadcrumbContext01 items={[{ id: "portfolio", label: "Portfolio", onSelect: () => {} }]} currentLabel="Case Study" />
       <DetailOverview title="Studio Portfolio" status="In progress" fields={[{ id: "problem", label: "Problem", value: "選定済みpatternと作品contentの不整合" }, { id: "decision", label: "Decision", value: "content fitを優先してcompositionを分離" }, { id: "delivery", label: "Delivery", value: "Static export / GitHub Pages" }]} />
       <div className="grid gap-4 lg:grid-cols-2">
         {[

@@ -13,7 +13,7 @@ encoding:"UTF-8"
 - `inbox-communication`、`document-workspace`、`planning-board` を含む追加 ScreenType はすべて experimental。maturity 昇格と人間レビューは未実施。
 - active の `docs/block-role-candidates.json` は空。implemented candidate は `docs/archive/block-role-candidates.json` に保管する。
 - golden flow `dryrun-saas-ops-01` は login / overview / invoice-list の3画面で verified・unresolved 0。
-- flow `studio-portfolio-01`（Task 20 で選定→実装を実行）は 16 step すべて resolve・unresolved 0、terminal status **verified**（16/16 built）。route は 16 step すべてに `app/flows/studio-portfolio-01/<stepId>/` を生成。
+- flow `studio-portfolio-01`（Task 20 で選定→実装を実行）は 16 step すべて resolve・unresolved 0、terminal status **verified**（16/16 built）。当時生成した `app/flows/studio-portfolio-01/` の旧16 routeは、portfolio本体のトップレベルrouteへ移行後に削除済みで、BuildReportは履歴証拠として保持する。
 - Task 20 の初回実装では 4 step（`pattern-detail`/`generated-preview`/`contract-explorer` = `detail-01`、`ai-assistant` = `conversation-assistant-01`）が planned a11y check で failed だった。原因は共有 inventory 側の欠陥で、実装後にユーザー依頼で修正済み: `detail-01` の nested `<main>` を `<div>` 化・`<h3>`→`<h2>`（heading-order）、`conversation-assistant-01` の 2 つの `<aside>` に一意な `aria-label`、`ai-conversation-list-01`/`activity-feed-01` の `ItemGroup`(role=list) 直下子要素を `role=listitem` でラップ（aria-required-children）。`components/ui/*`・registry facet・contract・20-selection は不変更。run-planned-checks は 16/16 pass。
 
 ## 検証と運用
@@ -29,7 +29,7 @@ encoding:"UTF-8"
 ## 現状のタスク
 
 1. [Studio App Spec](../studioAppSpec/README.md) を正本として、StudioLayout・5つのPage・ChildRoute・Drawer / Dialogを静的実装し、GitHub Pagesへ配布する。人間は公開時に Repository Settings の Pages source を GitHub Actions に設定する。
-   - 決定（2026-07-13）: route はトップレベル（`/overview` 等、`rootRoute: "/"`）。`/` は Orientation を表示し、完了・skip操作で `/overview` へ進む。旧routeが依存するdataは `lib/studio-portfolio/` に退避してから、`app/flows/studio-portfolio-01/` の16 step route・layout・navigationだけを削除する（`app/*-01/` のscreen component＝在庫実体とregistry・storyは不変）。これに伴いTask 20のBuildReport `studio-portfolio-01`は本体アプリと切り離され、app固有compositionは別のportfolio verification対象になる。
+   - 決定（2026-07-13）: route はトップレベル（`/overview` 等、`rootRoute: "/"`）。`/` は Orientation を表示し、完了・skip操作で `/overview` へ進む。旧routeが依存したdataは `lib/studio-portfolio/` に退避済みで、`app/flows/studio-portfolio-01/` の16 step route・layout・navigationは削除済み（`app/*-01/` のscreen component＝在庫実体とregistry・storyは不変）。Task 20のBuildReport `studio-portfolio-01`は本体アプリと切り離し、app固有compositionは別のportfolio verification対象にする。
 2. 次の ScreenType 候補は `spatial-explorer`（map role の必要性を評価）、`calendar-scheduler`（calendar role の必要性を評価）、`operations-console`（dashboard / workflow との重複を精査）。
 3. 人間レビューによる maturity 昇格と、blockRole 実装品質の一覧化は未着手。
 
