@@ -236,6 +236,9 @@ handoff criterion and leaves all ScreenType implementation files unchanged.
 - [ ] `npm run test:pipeline` and `npm run validate:pipeline` each exit 0; when Task 15
       is present, regression output covers `SCREENTYPE_MATCH` for the new type.
 - [ ] The new screen-pattern story builds and mounts without runtime exceptions.
+- [ ] The new screen-pattern's story passes the a11y gate at stock time:
+      `VITE_SB_A11Y_MODE=error npx vitest run --project=storybook components/patterns/<name>-screen.stories.tsx`
+      exits 0 (zero axe violations).
 - [ ] `npm run report:coverage` exits 0 and reports at least one item for
       `TARGET_SCREEN_TYPE`, when that command exists.
 - [ ] `npm run validate` and `npm run checks` both exit 0.

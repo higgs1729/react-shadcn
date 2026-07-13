@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "0.1.0",
+  "appId": "studio-portfolio-01",
+  "rootRoute": "/flows/studio-portfolio-01",
+  "deliveryMode": "static-export",
+  "layout": {
+    "id": "studio-layout",
+    "component": "StudioLayout",
+    "sidebar": "sidebar-07",
+    "appHeader": "page-header-actions-01",
+    "mobileNavigation": "drawer",
+    "primaryNavigation": [
+      { "id": "overview", "label": "Overview", "route": "/overview" },
+      { "id": "patterns", "label": "Patterns", "route": "/patterns" },
+      { "id": "studio", "label": "Studio", "route": "/studio" },
+      { "id": "quality", "label": "Quality", "route": "/quality" },
+      { "id": "case-study", "label": "Case Study", "route": "/case-study" }
+    ]
+  },
+  "pages": [
+    {
+      "id": "overview",
+      "route": "/overview",
+      "uiEntity": "Page",
+      "compositionMode": "compose-existing-blocks",
+      "composition": "studio-overview-01",
+      "blocks": ["page-header-actions-01", "summary-metric-row-01", "collection-grid-01", "activity-feed-01"],
+      "override": {
+        "selectedPattern": "dashboard-01",
+        "reason": "The selected chart-and-table topology cannot express the required value proposition and journey-entry content without invented data."
+      }
+    },
+    {
+      "id": "patterns",
+      "route": "/patterns",
+      "uiEntity": "Page",
+      "compositionMode": "reuse-selected",
+      "composition": "collection-table-01",
+      "contentSource": "registry/*.json",
+      "relatedUI": ["pattern-detail", "live-demo"]
+    },
+    {
+      "id": "studio",
+      "route": "/studio",
+      "uiEntity": "Page",
+      "compositionMode": "reuse-selected",
+      "composition": "document-workspace-01",
+      "contentSource": "docs/examples/*-studio-portfolio-01.json",
+      "relatedUI": ["ai-assistant", "flow-checkpoint", "result-report", "generated-preview", "selection-rationale"]
+    },
+    {
+      "id": "quality",
+      "route": "/quality",
+      "uiEntity": "Page",
+      "compositionMode": "reuse-selected",
+      "composition": "report-analytics-01",
+      "contentSource": "docs/examples/* + registry/*.json",
+      "relatedUI": ["coverage-matrix", "contract-explorer", "provenance-trail"]
+    },
+    {
+      "id": "case-study",
+      "route": "/case-study",
+      "uiEntity": "Page",
+      "compositionMode": "compose-existing-blocks",
+      "composition": "studio-case-study-01",
+      "blocks": ["page-header-actions-01", "breadcrumb-context-01", "detail-overview-01", "activity-feed-01"],
+      "override": {
+        "selectedPattern": "report-analytics-01",
+        "reason": "The case study is an editorial document; metric-chart-table regions are a known content-fit mismatch."
+      }
+    }
+  ],
+  "entryPages": [
+    { "id": "orientation", "uiEntity": "Page", "route": "/orientation", "component": "onboarding-01" }
+  ],
+  "childRoutes": [
+    { "id": "result-report", "parentPage": "studio", "route": "/studio/result", "component": "report-analytics-01" },
+    { "id": "generated-preview", "parentPage": "studio", "route": "/studio/preview", "component": "detail-01" },
+    { "id": "coverage-matrix", "parentPage": "quality", "route": "/quality/coverage", "component": "dashboard-01" }
+  ],
+  "drawers": [
+    { "id": "pattern-detail", "parentPage": "patterns", "presentation": "inspector", "component": "detail-01" },
+    { "id": "live-demo", "parentPage": "patterns", "presentation": "preview", "component": "selected-pattern-preview" },
+    { "id": "ai-assistant", "parentPage": "studio", "presentation": "wide-assistant", "component": "conversation-assistant-01" },
+    { "id": "selection-rationale", "parentPage": "studio", "presentation": "comparison", "component": "report-analytics-01" },
+    { "id": "contract-explorer", "parentPage": "quality", "presentation": "document-inspector", "component": "detail-01" },
+    { "id": "provenance-trail", "parentPage": "quality", "presentation": "audit-inspector", "component": "report-analytics-01" }
+  ],
+  "dialogs": [
+    { "id": "flow-checkpoint", "parentPage": "studio", "presentation": "approval", "component": "workflow-01" }
+  ],
+  "popovers": [],
+  "verification": {
+    "requiredCommands": ["npm run test:studio-portfolio-data", "npm run validate", "npm run checks"],
+    "requiredViewports": ["mobile", "desktop"],
+    "requiredStates": ["default", "loading", "empty", "error"]
+  }
+}

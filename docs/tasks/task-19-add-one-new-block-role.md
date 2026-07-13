@@ -104,6 +104,9 @@ The coordinator alone edits protected files and candidate status. Record actual 
 - [ ] Profile diff contains exactly one new role profile plus symmetric ScreenType
       references and no maturity promotion.
 - [ ] The new block-pattern validates and its story builds and mounts.
+- [ ] The new pattern's story passes the a11y gate at stock time:
+      `VITE_SB_A11Y_MODE=error npx vitest run --project=storybook components/patterns/<name>.stories.tsx`
+      exits 0 (zero axe violations).
 - [ ] `npm run validate:schemas`, `npm run validate:profiles`,
       `npm run validate:facets`, `npm run report:coverage`, `npm run validate`, and
       `npm run checks` exit 0.

@@ -92,6 +92,9 @@ changes.
       item was added.
 - [ ] `git diff -- docs/contracts docs/layers/20-selection` is empty for this task.
 - [ ] The new component and story exist and Storybook builds without runtime errors.
+- [ ] The new pattern's story passes the a11y gate at stock time:
+      `VITE_SB_A11Y_MODE=error npx vitest run --project=storybook components/patterns/<name>.stories.tsx`
+      exits 0 (zero axe violations).
 - [ ] `npm run validate:facets`, `npm run report:coverage`, `npm run validate`, and
       `npm run checks` exit 0.
 - [ ] Review reports zero vocabulary changes, zero maturity promotions, and zero edits

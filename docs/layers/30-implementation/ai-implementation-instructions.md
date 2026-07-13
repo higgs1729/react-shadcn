@@ -34,6 +34,8 @@ disabled states need a semantically disabled control.
 
 If any check fails, fix only files created in steps 2-3 of this pipeline. Never edit `components/ui/*`, `registry/*.json` facets, or `docs/contracts/*`. Then rerun the checks. (The one sanctioned registry write is step 3's `gen-pattern-stories.mjs` writing back `verification.storybookStories`; that is generated verification metadata, not a Fix Loop facet edit.)
 
+Inventory stocked via Task 16/18/19 must pass the `a11y` gate — `VITE_SB_A11Y_MODE=error` over its story — at **stock time**, not only when a flow later composes it. A pattern whose story has axe violations is not "done" even if `build-storybook` compiles it. Accessibility defects in a shared pattern are far cheaper to catch at stock time than after a downstream flow build fails on them (as happened in the studio-portfolio-01 run).
+
 Maximum 3 iterations. If still failing after 3 iterations:
 
 - `status: "failed"` if no screen reached `built` with all its checks passing.
