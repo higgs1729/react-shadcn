@@ -1,0 +1,22 @@
+{
+  "appId": "invoice-desk",
+  "title": "Invoice Desk",
+  "flowId": "invoice-desk-01",
+  "stepId": "invoice-collection",
+  "implementedRoute": "/examples/invoice-desk",
+  "previewRoute": "/example-previews/invoice-desk",
+  "brief": "Let a finance lead find an invoice, inspect it, and record a local payment while seeing invoice, customer, and collection totals update together.",
+  "audience": "Finance leads reviewing the current collection at the start of the day.",
+  "screenType": "collection",
+  "selectedPattern": "collection-table-01",
+  "scope": [
+    "Client-side Invoices, Customers, and Collections navigation over one invoice fixture",
+    "Search, status filtering, and table or grid presentation for the invoice collection",
+    "Invoice detail Dialog with a client-only Mark as paid transition that updates derived balances and collection totals"
+  ],
+  "boundaries": [
+    "No payment processor, accounting service, or persistence is connected",
+    "Mark as paid changes are local to the current browser session",
+    "The fixture is illustrative and does not represent live accounts receivable"
+  ]
+}

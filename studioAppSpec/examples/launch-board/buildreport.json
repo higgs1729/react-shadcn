@@ -1,0 +1,38 @@
+{
+  "$comment": "BuildReport for the curated static Launch Board example. The checks below were executed locally on 2026-07-14 after its route, preview app, sidebar entry, and artifacts were added.",
+  "flowId": "launch-board-01",
+  "generatedAt": "2026-07-14",
+  "screens": [
+    {
+      "stepId": "release-board",
+      "route": "/examples/launch-board",
+      "status": "built",
+      "filesCreated": [
+        "app/(studio)/examples/launch-board/page.tsx",
+        "app/example-previews/launch-board/page.tsx",
+        "app/example-previews/launch-board/launch-board-app.tsx",
+        "studioAppSpec/examples/launch-board/brief.json",
+        "studioAppSpec/examples/launch-board/flowspec.json",
+        "studioAppSpec/examples/launch-board/selectionspec.json",
+        "studioAppSpec/examples/launch-board/buildreport.json"
+      ],
+      "filesModified": [
+        "components/studio-portfolio/example-app-pages.tsx",
+        "studioAppSpec/studio-app-spec.json"
+      ],
+      "storiesCreated": [],
+      "installed": { "shadcn": [], "npm": [] },
+      "checkFailures": []
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "pass", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "pass", "attempts": 1 }
+  ],
+  "iterations": 1,
+  "status": "verified",
+  "unresolved": []
+}

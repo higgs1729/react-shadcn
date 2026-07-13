@@ -1,0 +1,39 @@
+{
+  "$comment": "BuildReport for the curated static Member Gate example. The checks below were executed locally on 2026-07-14 after its route, form, sidebar entry, and artifacts were added.",
+  "flowId": "member-gate-01",
+  "generatedAt": "2026-07-14",
+  "screens": [
+    {
+      "stepId": "workspace-sign-in",
+      "route": "/examples/member-gate",
+      "status": "built",
+      "filesCreated": [
+        "app/(studio)/examples/member-gate/page.tsx",
+        "components/studio-portfolio/member-gate-form.tsx",
+        "studioAppSpec/examples/member-gate/brief.json",
+        "studioAppSpec/examples/member-gate/flowspec.json",
+        "studioAppSpec/examples/member-gate/selectionspec.json",
+        "studioAppSpec/examples/member-gate/buildreport.json"
+      ],
+      "filesModified": [
+        "components/studio-portfolio/example-app-pages.tsx",
+        "studioAppSpec/studio-app-spec.json"
+      ],
+      "storiesCreated": [],
+      "installed": {
+        "shadcn": [],
+        "npm": []
+      }
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "pass", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "pass", "attempts": 1 }
+  ],
+  "iterations": 1,
+  "status": "verified",
+  "unresolved": []
+}

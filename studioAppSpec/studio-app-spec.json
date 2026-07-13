@@ -10,13 +10,33 @@
     "component": "StudioLayout",
     "sidebar": "sidebar-07",
     "appHeader": "page-header-actions-01",
+    "appHeaderBehavior": "sticky-top",
     "mobileNavigation": "drawer",
+    "navigationGroups": [
+      {
+        "id": "ai-design-system",
+        "label": "AI Design System",
+        "itemSource": "primaryNavigation"
+      },
+      {
+        "id": "example-apps",
+        "label": "Example Apps",
+        "itemSource": "exampleNavigation"
+      }
+    ],
     "primaryNavigation": [
       { "id": "overview", "label": "Overview", "route": "/overview" },
       { "id": "patterns", "label": "Patterns", "route": "/patterns" },
       { "id": "studio", "label": "Studio", "route": "/studio" },
       { "id": "quality", "label": "Quality", "route": "/quality" },
       { "id": "case-study", "label": "Case Study", "route": "/case-study" }
+    ],
+    "exampleNavigation": [
+      { "id": "ops-pulse", "label": "Ops Pulse", "route": "/examples/ops-pulse" },
+      { "id": "member-gate", "label": "Member Gate", "route": "/examples/member-gate" },
+      { "id": "invoice-desk", "label": "Invoice Desk", "route": "/examples/invoice-desk" },
+      { "id": "launch-board", "label": "Launch Board", "route": "/examples/launch-board" },
+      { "id": "review-docs", "label": "Review Docs", "route": "/examples/review-docs" }
     ],
     "utilityNavigation": [
       {
@@ -40,6 +60,124 @@
       "childRouteContext": "page-header"
     }
   },
+  "exampleApps": {
+    "mode": "curated-static",
+    "artifactRoot": "studioAppSpec/examples",
+    "routeRoot": "/examples",
+    "authorship": "top-level-ai",
+    "disclosure": "Each example is composed by the top-level AI from the existing inventory. It does not run the golden flow or call an AI service at runtime.",
+    "artifactContract": {
+      "requiredFiles": [
+        "brief.json",
+        "flowspec.json",
+        "selectionspec.json",
+        "buildreport.json"
+      ],
+      "consistencyKeys": [
+        "appId",
+        "flowId",
+        "stepId",
+        "screenType",
+        "selectedPattern",
+        "implementedRoute"
+      ],
+      "buildReportPolicy": "Create the BuildReport after the route is implemented. Record pass only for checks that were actually executed successfully."
+    },
+    "items": [
+      {
+        "id": "ops-pulse",
+        "label": "Ops Pulse",
+        "route": "/examples/ops-pulse",
+        "previewRoute": "/example-previews/ops-pulse",
+        "presentation": "iframe-16-9",
+        "brief": "Show the current SaaS operational health, recent movement, and records that need attention in one place.",
+        "screenType": "dashboard",
+        "selectedPattern": "dashboard-01",
+        "requiredBlocks": [
+          "app-shell-sidebar",
+          "page-header-actions",
+          "summary-metric-row",
+          "chart-panel",
+          "data-table-panel"
+        ],
+        "primaryInteraction": "Inspect KPIs, trends, and operational records.",
+        "dataMode": "static-fixture",
+        "implementationStatus": "built"
+      },
+      {
+        "id": "member-gate",
+        "label": "Member Gate",
+        "route": "/examples/member-gate",
+        "brief": "Let a member enter a workspace with email and password or a supported external account.",
+        "screenType": "auth",
+        "selectedPattern": "login-03",
+        "requiredBlocks": ["form-section"],
+        "primaryInteraction": "Enter credentials and receive local validation feedback.",
+        "dataMode": "local-form-state",
+        "implementationStatus": "built",
+        "boundary": "No real authentication provider or session is connected."
+      },
+      {
+        "id": "invoice-desk",
+        "label": "Invoice Desk",
+        "route": "/examples/invoice-desk",
+        "previewRoute": "/example-previews/invoice-desk",
+        "presentation": "iframe-16-9",
+        "brief": "Find invoices quickly, narrow them by status, and inspect the current collection in table or grid form.",
+        "screenType": "collection",
+        "selectedPattern": "collection-table-01",
+        "requiredBlocks": [
+          "app-shell-sidebar",
+          "page-header-actions",
+          "filter-toolbar",
+          "data-table-panel"
+        ],
+        "primaryInteraction": "Search, filter, switch table or grid views, inspect an invoice, and record a session-local payment that updates collections.",
+        "dataMode": "static-fixture",
+        "implementationStatus": "built",
+        "boundary": "No payment processor, accounting connection, or persistence is connected; payment changes are local to the browser session."
+      },
+      {
+        "id": "launch-board",
+        "label": "Launch Board",
+        "route": "/examples/launch-board",
+        "previewRoute": "/example-previews/launch-board",
+        "presentation": "iframe-16-9",
+        "brief": "Organize release tasks by workflow status and move work forward from planning to completion.",
+        "screenType": "planning-board",
+        "selectedPattern": "planning-board-01",
+        "requiredBlocks": [
+          "app-shell-sidebar",
+          "page-header-actions",
+          "filter-toolbar",
+          "board-column"
+        ],
+        "primaryInteraction": "Move task cards between status columns.",
+        "dataMode": "local-seed-state",
+        "implementationStatus": "built",
+        "boundary": "Card movement is not persisted to a backend."
+      },
+      {
+        "id": "review-docs",
+        "label": "Review Docs",
+        "route": "/examples/review-docs",
+        "brief": "Edit a launch document and keep its review comments and supporting files in the same workspace.",
+        "screenType": "document-workspace",
+        "selectedPattern": "document-workspace-01",
+        "requiredBlocks": [
+          "page-header-actions",
+          "breadcrumb-context",
+          "document-body-editor",
+          "comment-thread",
+          "file-upload-area"
+        ],
+        "primaryInteraction": "Edit content, add comments, and manage local attachments.",
+        "dataMode": "local-seed-state",
+        "implementationStatus": "planned",
+        "boundary": "Edits, comments, and files are not persisted or synchronized."
+      }
+    ]
+  },
   "pages": [
     {
       "id": "overview",
@@ -47,15 +185,16 @@
       "uiEntity": "Page",
       "compositionMode": "compose-existing-blocks",
       "composition": "studio-overview-01",
+      "contentSource": "docs/examples/*dryrun-saas-ops-01.json + app/flows/dryrun-saas-ops-01/login",
       "blocks": [
         "page-header-actions-01",
         "summary-metric-row-01",
-        "collection-grid-01",
-        "activity-feed-01"
+        "detail-overview-01",
+        "collection-grid-01"
       ],
       "override": {
         "selectedPattern": "dashboard-01",
-        "reason": "The selected chart-and-table topology cannot express the required value proposition and journey-entry content without invented data. Inventory counts remain supporting evidence, not the first visual surface."
+        "reason": "The overview first surface is a selectable five-stage system-flow composition. Its concrete authentication example traces one brief through the dryrun-saas-ops-01 FlowSpec, SelectionSpec, and BuildReport into the implemented login-03 UI, demonstrating a ScreenType that the portfolio app itself does not otherwise use."
       }
     },
     {
@@ -187,7 +326,8 @@
       "id": "live-demo",
       "parentPage": "patterns",
       "presentation": "preview",
-      "component": "selected-pattern-preview"
+      "component": "selected-pattern-preview",
+      "themeBehavior": "follows-resolved-app-theme"
     },
     {
       "id": "ai-assistant",

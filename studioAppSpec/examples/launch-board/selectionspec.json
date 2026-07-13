@@ -1,0 +1,31 @@
+{
+  "$comment": "Curated static selection for launch-board-01. planning-board-01 supplies the board baseline; the implementation adds release-themed local seed cards, search, column filtering, and a local add-item action.",
+  "flowId": "launch-board-01",
+  "screens": [
+    {
+      "stepId": "release-board",
+      "resolvedScreenType": "planning-board",
+      "screenTypeScore": 100,
+      "screenPattern": { "registryItem": "planning-board-01", "score": 100, "rejected": [] },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 96 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 100 },
+        { "blockRole": "board-column", "registryItem": "board-column-01", "score": 100 }
+      ],
+      "registryDependencies": ["badge", "button", "card", "input", "sidebar"],
+      "stateCoveragePlan": ["default", "empty"],
+      "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
+      "assumptions": [
+        "planning-board-01 is the stocked planning-board screen pattern and its column-transition model fits the application.",
+        "board-column-01 provides the drag-and-drop and move controls that change a card's workflow status.",
+        "All cards and counts derive from one local seed set plus session-local moves and additions."
+      ],
+      "risks": [
+        "No project-tracking service, workflow permissions, or persistence is connected.",
+        "Cross-column keyboard reordering is delegated to the board and is not a full keyboard drag alternative."
+      ]
+    }
+  ],
+  "unresolved": []
+}

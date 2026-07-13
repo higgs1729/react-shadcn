@@ -5,7 +5,7 @@ import { RotateCcwIcon } from "lucide-react"
 import { AppSidebar } from "@/components/dashboard-01/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
-import { SectionCards } from "@/components/section-cards"
+import { SectionCards, type SummaryMetric } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -17,7 +17,19 @@ import data from "./data.json"
 
 export type DashboardState = "default" | "loading" | "empty" | "error"
 
-export function DashboardScreen({ state = "default" }: { state?: DashboardState }) {
+export function DashboardScreen({
+  state = "default",
+  headerTitle,
+  metrics,
+  chartTitle,
+  chartDescription,
+}: {
+  state?: DashboardState
+  headerTitle?: string
+  metrics?: SummaryMetric[]
+  chartTitle?: string
+  chartDescription?: string
+}) {
   return (
     <SidebarProvider
       style={
@@ -29,7 +41,7 @@ export function DashboardScreen({ state = "default" }: { state?: DashboardState 
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader />
+        <SiteHeader title={headerTitle} />
         <div className="@container/main flex flex-1 flex-col gap-4 p-4 md:gap-6 md:p-6">
           {state === "loading" && (
             <div className="space-y-4" role="status">
@@ -75,8 +87,11 @@ export function DashboardScreen({ state = "default" }: { state?: DashboardState 
 
           {state === "default" && (
             <>
-              <SectionCards />
-              <ChartAreaInteractive />
+              <SectionCards items={metrics} />
+              <ChartAreaInteractive
+                title={chartTitle}
+                description={chartDescription}
+              />
               <DataTable data={data} />
             </>
           )}

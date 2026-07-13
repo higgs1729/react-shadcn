@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react"
 import Link from "next/link"
+import { useTheme } from "next-themes"
 import {
   ArrowRightIcon,
   CheckCircle2Icon,
@@ -29,6 +30,7 @@ import {
   type FileUploadAreaFile,
 } from "@/components/file-upload-area-01"
 import { FilterToolbar } from "@/components/filter-toolbar"
+import { PricingPlanCard } from "@/components/pricing-plan-card-01"
 import { SectionCards } from "@/components/section-cards"
 import { WizardStepper } from "@/components/wizard-stepper-01"
 import { Badge } from "@/components/ui/badge"
@@ -71,6 +73,9 @@ import studioPortfolioData from "@/lib/studio-portfolio/studio-portfolio-data.js
 import { studioContent } from "@/lib/studio-portfolio/studio-content"
 import { studioEvidence } from "@/lib/studio-portfolio/evidence"
 import { studioScenarios } from "@/lib/studio-portfolio/studio-scenarios"
+import flowSpec from "@/docs/examples/flowspec-dryrun-saas-ops-01.json"
+import selectionSpec from "@/docs/examples/selectionspec-dryrun-saas-ops-01.json"
+import buildReport from "@/docs/examples/buildreport-dryrun-saas-ops-01.json"
 
 const data = studioPortfolioData
 
@@ -259,16 +264,135 @@ export function OrientationPage() {
   )
 }
 
+type SystemFlowStageId =
+  | "brief"
+  | "flow-spec"
+  | "selection-spec"
+  | "build-report"
+  | "ui"
+
+const systemFlowStages: {
+  id: SystemFlowStageId
+  label: string
+  fileName: string
+}[] = [
+  { id: "brief", label: "Brief", fileName: "brief" },
+  { id: "flow-spec", label: "FlowSpec", fileName: "flowspec-dryrun-saas-ops-01.json" },
+  { id: "selection-spec", label: "SelectionSpec", fileName: "selectionspec-dryrun-saas-ops-01.json" },
+  { id: "build-report", label: "BuildReport", fileName: "buildreport-dryrun-saas-ops-01.json" },
+  { id: "ui", label: "UI", fileName: "login-03" },
+]
+
+function SystemFlow() {
+  const [selectedStageId, setSelectedStageId] = useState<SystemFlowStageId>("brief")
+  const [loginPreviewSrc, setLoginPreviewSrc] = useState("")
+  const selectedStage = systemFlowStages.find((stage) => stage.id === selectedStageId)!
+  const scenario = studioScenarios.find((item) => item.id === "sign-in")!
+  const flowStep = flowSpec.steps.find((step) => step.stepId === "login")!
+  const selectedScreen = selectionSpec.screens.find((screen) => screen.stepId === "login")!
+  const builtScreen = buildReport.screens.find((screen) => screen.stepId === "login")!
+
+  useEffect(() => {
+    const basePath = window.location.pathname.replace(/\/overview\/?$/, "")
+    setLoginPreviewSrc(`${basePath}/flows/dryrun-saas-ops-01/login`)
+  }, [])
+
+  const preview =
+    selectedStageId === "brief"
+      ? JSON.stringify({ brief: scenario.brief }, null, 2)
+      : selectedStageId === "flow-spec"
+        ? JSON.stringify({ flowId: flowSpec.flowId, step: flowStep }, null, 2)
+        : selectedStageId === "selection-spec"
+          ? JSON.stringify({ flowId: selectionSpec.flowId, screen: selectedScreen }, null, 2)
+          : selectedStageId === "build-report"
+            ? JSON.stringify({ flowId: buildReport.flowId, screen: builtScreen, status: buildReport.status, checks: buildReport.checks }, null, 2)
+            : null
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>システムの流れ</CardTitle>
+        <CardDescription>
+          briefから実装まで、選定と検証の根拠を実際の成果物でたどれます。
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-5">
+        <div className="grid gap-2 sm:grid-cols-5">
+          {systemFlowStages.map((stage, index) => {
+            const isSelected = stage.id === selectedStageId
+            return (
+              <div key={stage.id} className="relative isolate min-w-0">
+                {index < systemFlowStages.length - 1 ? (
+                  <div
+                    aria-hidden="true"
+                    className="absolute top-1/2 left-full z-0 hidden h-px w-2 bg-border sm:block"
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedStageId(stage.id)}
+                  className={`relative z-10 flex h-full min-h-32 w-full flex-col items-start gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isSelected ? "border-primary bg-primary/8" : "bg-card hover:bg-muted/50"}`}
+                >
+                  <span className={`flex size-7 items-center justify-center rounded-full text-xs font-semibold ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-semibold">{stage.label}</span>
+                  <span className="min-h-8 break-all font-mono text-[10px] leading-4 text-muted-foreground">{stage.fileName}</span>
+                </button>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="overflow-hidden rounded-lg border bg-muted/20">
+          <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
+            <span className="font-mono text-xs text-muted-foreground">{selectedStage.fileName}</span>
+            <Badge variant="outline">{selectedStage.label}</Badge>
+          </div>
+          {preview ? (
+            <pre className="max-h-72 min-w-0 overflow-auto whitespace-pre-wrap break-words p-4 font-mono text-xs leading-5 text-foreground">{preview}</pre>
+          ) : (
+            <div className="p-4 sm:p-5">
+              {loginPreviewSrc ? (
+                <div className="relative mx-auto aspect-[4/3] w-full max-w-4xl overflow-hidden rounded-md border bg-background shadow-sm">
+                  <iframe
+                    title="Login 03"
+                    src={loginPreviewSrc}
+                    className="absolute top-0 left-0 h-[110%] w-[110%] origin-top-left scale-[0.91] border-0 bg-background"
+                  />
+                </div>
+              ) : (
+                <div className="mx-auto aspect-[4/3] w-full max-w-4xl animate-pulse rounded-md border bg-muted/30" />
+              )}
+            </div>
+          )}
+        </div>
+      </CardContent>
+      <CardFooter className="flex flex-wrap gap-2">
+        <Button render={<Link href="/studio" data-open-window />}>
+          Studioで試す <ArrowRightIcon />
+        </Button>
+        <Button variant="outline" render={<Link href="/case-study" data-open-window />}>
+          設計判断を読む
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
 export function OverviewPage() {
   const [selectedId, setSelectedId] = useState("patterns")
-  const flows = data.flows
+  const [selectedInventoryId, setSelectedInventoryId] =
+    useState("registry-items")
 
   return (
     <PageFrame
       title="AI Design System Studio"
       description={studioContent.message}
     >
-      <Card>
+      <SystemFlow />
+      <Card className="hidden">
         <CardHeader>
           <CardTitle>briefから、説明できるUIの判断へ</CardTitle>
           <CardDescription>
@@ -287,37 +411,90 @@ export function OverviewPage() {
           </Button>
         </CardFooter>
       </Card>
-      <SectionCards
-        variant="compact"
-        items={[
-          {
-            label: "ScreenTypes",
-            value: String(data.inventory.screenTypes),
-            summary: "現在の正規語彙",
-            detail: "ScreenType inventory",
-          },
-          {
-            label: "blockRoles",
-            value: String(data.inventory.blockRoles),
-            summary: "画面を構成する責務",
-            detail: "Block role inventory",
-          },
-          {
-            label: "Registry items",
-            value: String(data.inventory.registryItems),
-            summary: "再利用可能な在庫",
-            detail: "Screen / block patterns",
-          },
-          {
-            label: "Verified flows",
-            value: `${flows.filter((flow) => flow.status === "verified").length}/${flows.length}`,
-            summary: "例示flowの検証結果",
-            detail: "BuildReport status",
-          },
-        ]}
-      />
+      <section aria-labelledby="patterns-inventory-heading">
+        <div className="mb-3">
+          <h2 id="patterns-inventory-heading" className="text-base font-medium">
+            Patterns inventory
+          </h2>
+        </div>
+        <PricingPlanCard
+          selectedPlanId={selectedInventoryId}
+          onSelectPlan={setSelectedInventoryId}
+          showAction={false}
+          emphasizeAll
+          plans={[
+            {
+              id: "screen-types",
+              name: "ScreenTypes",
+              price: String(data.inventory.screenTypes),
+              period: "types",
+              features: [],
+              preview: (
+                <div className="h-28 overflow-hidden rounded-md border bg-muted/20 p-2">
+                  <div className="flex h-full gap-2">
+                    <div className="w-8 rounded bg-primary/20" />
+                    <div className="flex min-w-0 flex-1 flex-col gap-2">
+                      <div className="h-3 w-1/3 rounded bg-primary/20" />
+                      <div className="grid flex-1 grid-cols-3 gap-1.5">
+                        <div className="rounded bg-primary/20" />
+                        <div className="rounded bg-primary/20" />
+                        <div className="rounded bg-primary/20" />
+                      </div>
+                      <div className="h-5 rounded bg-primary/20" />
+                    </div>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              id: "block-roles",
+              name: "blockRoles",
+              price: String(data.inventory.blockRoles),
+              period: "roles",
+              features: [],
+              preview: (
+                <div className="grid h-28 grid-cols-3 gap-2 rounded-md border bg-muted/20 p-2">
+                  <div className="rounded bg-primary/20" />
+                  <div className="rounded bg-muted" />
+                  <div className="rounded bg-muted" />
+                </div>
+              ),
+            },
+            {
+              id: "registry-items",
+              name: "Registry items",
+              price: String(data.inventory.registryItems),
+              period: "patterns",
+              features: [],
+              preview: (
+                <div className="h-28 overflow-hidden rounded-md border bg-muted/20 p-2">
+                  <div className="h-3 w-2/5 rounded bg-muted" />
+                  <div className="mt-2 space-y-1.5">
+                    {["one", "two", "three", "four"].map((row) => (
+                      <div key={row} className="grid grid-cols-[1fr_1.5fr_1fr] gap-1.5">
+                        <div className="h-3 rounded bg-muted" />
+                        <div className="h-3 rounded bg-muted" />
+                        <div className="h-3 rounded bg-primary/20" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+        />
+        <div className="mt-3">
+          <Button
+            variant="outline"
+            size="sm"
+            render={<Link href="/patterns" data-open-window />}
+          >
+            実際に確認する <ArrowRightIcon />
+          </Button>
+        </div>
+      </section>
 
-      <Card>
+      <Card className="hidden">
         <CardHeader>
           <CardTitle>設計から検証まで</CardTitle>
           <CardDescription>
@@ -341,7 +518,7 @@ export function OverviewPage() {
         </CardContent>
       </Card>
 
-      <div>
+      <div className="hidden">
         <h2 className="mb-3 text-base font-medium">次に確認する場所</h2>
         <CollectionGrid
           selectedId={selectedId}
@@ -377,7 +554,7 @@ export function OverviewPage() {
         </div>
       </div>
 
-      <Card>
+      <Card className="hidden">
         <CardHeader>
           <CardTitle>作品の到達点</CardTitle>
           <CardDescription>
@@ -410,7 +587,7 @@ export function OverviewPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="hidden">
         <CardHeader>
           <CardTitle>公開上の境界</CardTitle>
         </CardHeader>
@@ -423,6 +600,7 @@ export function OverviewPage() {
 }
 
 export function PatternsPage() {
+  const { resolvedTheme } = useTheme()
   const { params, update: updateUrlState } = usePortfolioUrlState()
   const [search, setSearch] = useState("")
   const [kind, setKind] = useState("all")
@@ -484,8 +662,11 @@ export function PatternsPage() {
       process.env.NODE_ENV === "development"
         ? "http://localhost:6006"
         : `${window.location.pathname.replace(/\/patterns\/?$/, "")}/storybook`
-    setLiveDemoSrc(`${storybookBase}/iframe.html?id=${storyId}&viewMode=story`)
-  }, [storyId])
+    const storybookTheme = resolvedTheme === "dark" ? "dark" : "light"
+    setLiveDemoSrc(
+      `${storybookBase}/iframe.html?id=${storyId}&viewMode=story&globals=theme:${storybookTheme}`
+    )
+  }, [resolvedTheme, storyId])
 
   useEffect(() => {
     const panel = params.get("panel")

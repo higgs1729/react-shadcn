@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { CheckIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -20,18 +21,23 @@ export interface PricingPlan {
   period: string
   features: string[]
   badge?: string
+  preview?: ReactNode
 }
 
 export interface PricingPlanCardProps {
   plans: PricingPlan[]
   selectedPlanId: string
   onSelectPlan: (id: string) => void
+  showAction?: boolean
+  emphasizeAll?: boolean
 }
 
 export function PricingPlanCard({
   plans,
   selectedPlanId,
   onSelectPlan,
+  showAction = true,
+  emphasizeAll = false,
 }: PricingPlanCardProps) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -40,7 +46,13 @@ export function PricingPlanCard({
         return (
           <Card
             key={plan.id}
-            className={selected ? "ring-2 ring-ring" : undefined}
+            className={
+              emphasizeAll
+                ? "ring-2 ring-[oklch(0.556_0_0)]"
+                : selected
+                  ? "ring-2 ring-ring"
+                  : undefined
+            }
           >
             <CardHeader>
               <div className="flex items-center justify-between gap-2">
@@ -57,22 +69,28 @@ export function PricingPlanCard({
             </CardHeader>
             <Separator />
             <CardContent className="flex flex-col gap-2">
-              {plan.features.map((feature) => (
-                <div key={feature} className="flex items-center gap-2 text-sm">
-                  <CheckIcon className="size-4 text-primary" />
-                  {feature}
-                </div>
-              ))}
+              {plan.preview ? (
+                plan.preview
+              ) : (
+                plan.features.map((feature) => (
+                  <div key={feature} className="flex items-center gap-2 text-sm">
+                    <CheckIcon className="size-4 text-primary" />
+                    {feature}
+                  </div>
+                ))
+              )}
             </CardContent>
-            <CardFooter>
-              <Button
-                className="w-full"
-                variant={selected ? "default" : "outline"}
-                onClick={() => onSelectPlan(plan.id)}
-              >
-                {selected ? "Selected" : "Choose plan"}
-              </Button>
-            </CardFooter>
+            {showAction ? (
+              <CardFooter>
+                <Button
+                  className="w-full"
+                  variant={selected ? "default" : "outline"}
+                  onClick={() => onSelectPlan(plan.id)}
+                >
+                  {selected ? "Selected" : "Choose plan"}
+                </Button>
+              </CardFooter>
+            ) : null}
           </Card>
         )
       })}

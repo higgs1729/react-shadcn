@@ -15,6 +15,7 @@ import {
   BookOpenIcon,
   BoxesIcon,
   CircleCheckBigIcon,
+  FileChartColumnIncreasingIcon,
   FolderKanbanIcon,
   LayoutDashboardIcon,
   Settings2Icon,
@@ -23,6 +24,7 @@ import {
 
 import {
   primaryNavigation,
+  exampleNavigation,
   isPrimaryNavigationRoute,
 } from "@/lib/studio-portfolio/app-spec"
 import { ResizableSidebarRail } from "@/components/resizable-sidebar-rail"
@@ -34,6 +36,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
@@ -49,6 +52,7 @@ const navigationIcons: Record<string, ComponentType<{ className?: string }>> = {
   studio: FolderKanbanIcon,
   quality: CircleCheckBigIcon,
   "case-study": BookOpenIcon,
+  "ops-pulse": FileChartColumnIncreasingIcon,
 }
 
 function PrimaryNavigation() {
@@ -82,12 +86,45 @@ function PrimaryNavigation() {
   )
 }
 
+function ExampleNavigation() {
+  const pathname = usePathname()
+  const { isMobile, setOpenMobile } = useSidebar()
+
+  if (exampleNavigation.length === 0) return null
+
+  return (
+    <SidebarMenu>
+      {exampleNavigation.map((item) => {
+        const Icon = navigationIcons[item.id] ?? LayoutDashboardIcon
+        const isActive = isPrimaryNavigationRoute(pathname, item.route)
+
+        return (
+          <SidebarMenuItem key={item.id}>
+            <SidebarMenuButton
+              isActive={isActive}
+              tooltip={item.label}
+              render={<Link href={item.route} />}
+              className="relative data-active:bg-primary/10 data-active:shadow-none data-active:before:absolute data-active:before:inset-y-1 data-active:before:left-0 data-active:before:w-0.5 data-active:before:rounded-full data-active:before:bg-primary data-active:hover:bg-primary/15"
+              onClick={() => {
+                if (isMobile) setOpenMobile(false)
+              }}
+            >
+              <Icon />
+              <span>{item.label}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )
+      })}
+    </SidebarMenu>
+  )
+}
+
 type AppWindow = { id: string; route: string }
 
 function getWindowLabel(route: string) {
   if (route.startsWith("/settings")) return "Settings"
   return (
-    primaryNavigation.find((item) =>
+    [...primaryNavigation, ...exampleNavigation].find((item) =>
       isPrimaryNavigationRoute(route, item.route)
     )?.label ?? "Studio"
   )
@@ -175,7 +212,7 @@ function AppHeader() {
   }
 
   return (
-    <header className="flex h-12 shrink-0 items-end gap-2 overflow-x-auto border-b bg-muted/30 px-2 pt-1">
+    <header className="sticky top-0 z-30 flex h-12 shrink-0 items-end gap-2 overflow-x-auto border-b bg-background/95 px-2 pt-1 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <SidebarTrigger className="mb-1.5 shrink-0" />
       <Separator orientation="vertical" className="mb-1.5 h-5 shrink-0" />
       <div
@@ -242,10 +279,19 @@ export function StudioLayout({ children }: { children: ReactNode }) {
       <Sidebar collapsible="icon">
         <SidebarContent className="pt-3">
           <SidebarGroup>
+            <SidebarGroupLabel>AI Design System</SidebarGroupLabel>
             <SidebarGroupContent>
               <PrimaryNavigation />
             </SidebarGroupContent>
           </SidebarGroup>
+          {exampleNavigation.length > 0 ? (
+            <SidebarGroup>
+              <SidebarGroupLabel>Example Apps</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <ExampleNavigation />
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ) : null}
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenu>

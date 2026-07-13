@@ -1,0 +1,41 @@
+{
+  "$comment": "BuildReport for the curated static Ops Pulse example. Results below were executed locally on 2026-07-13 after the interactive fixture implementation. Build and Storybook are recorded as environment failures, not successful verification.",
+  "flowId": "ops-pulse-01",
+  "generatedAt": "2026-07-13",
+  "screens": [
+    {
+      "stepId": "operations-overview",
+      "route": "/examples/ops-pulse",
+      "status": "built",
+      "filesCreated": [
+        "app/(studio)/examples/ops-pulse/page.tsx",
+        "components/studio-portfolio/example-app-pages.tsx",
+        "app/example-previews/ops-pulse/page.tsx",
+        "app/example-previews/ops-pulse/ops-pulse-app.tsx",
+        "studioAppSpec/examples/ops-pulse/brief.json",
+        "studioAppSpec/examples/ops-pulse/flowspec.json",
+        "studioAppSpec/examples/ops-pulse/selectionspec.json",
+        "studioAppSpec/examples/ops-pulse/buildreport.json"
+      ],
+      "storiesCreated": [],
+      "installed": {
+        "shadcn": [],
+        "npm": []
+      },
+      "checkFailures": [
+        "npm run build could not fetch the Geist Mono and Inter Google fonts from fonts.googleapis.com in this environment.",
+        "npm run build-storybook could not write its cache under node_modules/.cache/storybook because of EPERM."
+      ]
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "fail", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "fail", "attempts": 1 }
+  ],
+  "iterations": 2,
+  "status": "partial",
+  "unresolved": []
+}

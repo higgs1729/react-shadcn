@@ -1,0 +1,32 @@
+{
+  "$comment": "Curated static selection for invoice-desk-01. collection-table-01 supplies the collection baseline; the implementation adds a local payment transition and derived customer/collection views.",
+  "flowId": "invoice-desk-01",
+  "screens": [
+    {
+      "stepId": "invoice-collection",
+      "resolvedScreenType": "collection",
+      "screenTypeScore": 100,
+      "screenPattern": { "registryItem": "collection-table-01", "score": 100, "rejected": [] },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 100 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 100 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 100 },
+        { "blockRole": "modal-dialog", "registryItem": "modal-dialog-01", "score": 98 }
+      ],
+      "registryDependencies": ["badge", "button", "card", "dialog", "field", "input", "select", "sidebar", "table", "toggle-group"],
+      "stateCoveragePlan": ["default", "empty"],
+      "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
+      "assumptions": [
+        "collection-table-01 is the stocked collection screen pattern and its sidebar, filter, and table structure fit the application.",
+        "All visible values derive from one static invoice fixture plus local paid state.",
+        "Payment recording is intentionally client-only and is presented as a session-local action."
+      ],
+      "risks": [
+        "No live accounting data, authorization, payment processing, or persistence is connected.",
+        "The fixture does not model loading, error, permission, or concurrent-update states."
+      ]
+    }
+  ],
+  "unresolved": []
+}

@@ -52,6 +52,30 @@ screen-patternとblock-patternを、役割・状態・maturityから探索する
 
 The legacy Studio notes below are retained only as project history; they do not describe the current route and must not be read as a runtime generation or AI capability.
 
+### Curated static examples
+
+Studio is defined to present five curated example apps instead of claiming runtime generation:
+
+1. Ops Pulse — `dashboard-01`
+2. Member Gate — `login-03`
+3. Invoice Desk — `collection-table-01`
+4. Launch Board — `planning-board-01`
+5. Review Docs — `document-workspace-01`
+
+Each example exposes a consistent Brief -> FlowSpec -> SelectionSpec -> UI -> BuildReport trace. The top-level AI authors the artifacts from the current inventory. The UI does not run the golden flow or call an AI service at runtime. A BuildReport may mark a check as passed only after that check has actually completed successfully.
+
+### Sidebar grouping
+
+- `AI Design System`: Overview, Patterns, Studio, Quality, Case Study
+- `Example Apps`: Ops Pulse, Member Gate, Invoice Desk, Launch Board, Review Docs
+- Settings remains a utility action in the sidebar footer.
+
+An Example App route remains inside `StudioLayout`. Its main content presents the independent app route in an interactive 16:9 iframe so the Studio navigation remains available while the app preview owns its own shell.
+
+An Example App route remains inside `StudioLayout`. Its main content presents the independent app route in an interactive 16:9 iframe so the Studio navigation remains available while the app preview owns its own shell.
+
+An Example App route remains inside `StudioLayout`. Its main content presents the independent app route in an interactive 16:9 iframe so the Studio navigation remains available while the app preview owns its own shell.
+
 ### 目的
 
 一つのサンプルbriefが、選定・承認・実装結果へ変換される流れを体験する。

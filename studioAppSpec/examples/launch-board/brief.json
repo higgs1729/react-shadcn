@@ -1,0 +1,22 @@
+{
+  "appId": "launch-board",
+  "title": "Launch Board",
+  "flowId": "launch-board-01",
+  "stepId": "release-board",
+  "implementedRoute": "/examples/launch-board",
+  "previewRoute": "/example-previews/launch-board",
+  "brief": "Organize release tasks by workflow status and move work forward from planning to completion.",
+  "audience": "A release lead tracking delivery work across the team at the start of the day.",
+  "screenType": "planning-board",
+  "selectedPattern": "planning-board-01",
+  "scope": [
+    "A four-column release board over local seed cards",
+    "Drag-and-drop and button moves that change a card's workflow column",
+    "Search and per-column filtering, plus adding a local work item"
+  ],
+  "boundaries": [
+    "No project-tracking service, workflow permissions, or persistence is connected",
+    "Card movement and new items are local to the current browser session",
+    "The seed cards are illustrative and do not represent a live release"
+  ]
+}

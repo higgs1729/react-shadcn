@@ -1,0 +1,36 @@
+{
+  "$comment": "Curated static selection for member-gate-01. Scores record fit against the current inventory, not a runtime selection result.",
+  "flowId": "member-gate-01",
+  "screens": [
+    {
+      "stepId": "workspace-sign-in",
+      "resolvedScreenType": "auth",
+      "screenTypeScore": 100,
+      "screenPattern": {
+        "registryItem": "login-03",
+        "score": 100,
+        "rejected": []
+      },
+      "blocks": [
+        { "blockRole": "form-section", "registryItem": "form-section-login-01", "score": 100 }
+      ],
+      "registryDependencies": [
+        "button",
+        "card",
+        "field",
+        "input"
+      ],
+      "stateCoveragePlan": ["default", "error"],
+      "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
+      "assumptions": [
+        "login-03 is the stocked auth screen pattern and its form-section covers email, password, and external-account entry.",
+        "Validation and the entered-workspace confirmation are local UI state over no backend."
+      ],
+      "risks": [
+        "No real authentication provider or session is connected, so the success path only confirms local validation.",
+        "The external-account buttons report their boundary instead of completing a sign-in."
+      ]
+    }
+  ],
+  "unresolved": []
+}

@@ -6,6 +6,10 @@ type PrimaryNavigationItem = {
   route: string
 }
 
+type ExampleApp = PrimaryNavigationItem & {
+  implementationStatus: "planned" | "built"
+}
+
 type StudioAppSpec = {
   appId: string
   rootRoute: string
@@ -13,11 +17,20 @@ type StudioAppSpec = {
   orientationCompletedRoute: string
   layout: {
     primaryNavigation: PrimaryNavigationItem[]
+    exampleNavigation: PrimaryNavigationItem[]
+  }
+  exampleApps: {
+    items: ExampleApp[]
   }
 }
 
 export const studioAppSpec = rawSpec as StudioAppSpec
 export const primaryNavigation = studioAppSpec.layout.primaryNavigation
+export const exampleNavigation = studioAppSpec.layout.exampleNavigation.filter((item) =>
+  studioAppSpec.exampleApps.items.some(
+    (app) => app.id === item.id && app.implementationStatus === "built"
+  )
+)
 
 export function isPrimaryNavigationRoute(pathname: string, route: string) {
   return pathname === route || pathname.startsWith(`${route}/`)

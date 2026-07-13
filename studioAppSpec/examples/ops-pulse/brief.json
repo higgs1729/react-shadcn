@@ -1,0 +1,23 @@
+{
+  "appId": "ops-pulse",
+  "title": "Ops Pulse",
+  "flowId": "ops-pulse-01",
+  "stepId": "operations-overview",
+  "implementedRoute": "/examples/ops-pulse",
+  "previewRoute": "/example-previews/ops-pulse",
+  "brief": "Let product and operations leads inspect SaaS health, move between Overview, Incidents, and Services, and resolve an incident locally from its detail dialog.",
+  "audience": "Product and operations leads checking the service at the start of the day.",
+  "screenType": "dashboard",
+  "selectedPattern": "dashboard-01",
+  "scope": [
+    "Client-side Overview, Incidents, and Services navigation over one Ops Pulse fixture",
+    "Period-dependent availability, latency, error-budget metrics, and request-volume chart",
+    "Incident detail Dialog with a client-only Resolve transition that updates the active count and affected service status"
+  ],
+  "boundaries": [
+    "No live service connection",
+    "Resolve changes are local to the current browser session and are not persisted",
+    "The chart is a static fixture visualization rather than telemetry",
+    "No alerting or incident-management backend"
+  ]
+}

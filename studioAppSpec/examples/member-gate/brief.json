@@ -1,0 +1,21 @@
+{
+  "appId": "member-gate",
+  "title": "Member Gate",
+  "flowId": "member-gate-01",
+  "stepId": "workspace-sign-in",
+  "implementedRoute": "/examples/member-gate",
+  "brief": "Let a member enter a workspace with email and password or a supported external account.",
+  "audience": "A returning member signing in to their workspace at the start of a session.",
+  "screenType": "auth",
+  "selectedPattern": "login-03",
+  "scope": [
+    "Email and password entry",
+    "Local client-side validation feedback",
+    "External account entry points"
+  ],
+  "boundaries": [
+    "No real authentication provider or session is connected",
+    "No password recovery or account creation backend",
+    "External sign-in reports its boundary instead of navigating"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$comment": "Curated static selection for ops-pulse-01. dashboard-01 supplies the dashboard composition baseline; the implemented app replaces its document-table behavior with a local incident list and Dialog-based resolution flow.",
+  "flowId": "ops-pulse-01",
+  "screens": [
+    {
+      "stepId": "operations-overview",
+      "resolvedScreenType": "dashboard",
+      "screenTypeScore": 100,
+      "screenPattern": {
+        "registryItem": "dashboard-01",
+        "score": 100,
+        "rejected": []
+      },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 100 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "summary-metric-row", "registryItem": "summary-metric-row-01", "score": 100 },
+        { "blockRole": "chart-panel", "registryItem": "chart-panel-01", "score": 95 },
+        { "blockRole": "data-table-panel", "registryItem": "data-table-panel-01", "score": 94 },
+        { "blockRole": "modal-dialog", "registryItem": "modal-dialog-01", "score": 98 }
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "card",
+        "chart",
+        "checkbox",
+        "drawer",
+        "dialog",
+        "dropdown-menu",
+        "field",
+        "input",
+        "label",
+        "select",
+        "separator",
+        "sidebar",
+        "table",
+        "tabs",
+        "toggle-group"
+      ],
+      "stateCoveragePlan": ["default"],
+      "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
+      "assumptions": [
+        "dashboard-01 is the stocked dashboard screen pattern and its sidebar shell matches the required app shell.",
+        "The primary sidebar navigation, reporting-period controls, and incident selection are local UI interactions over one static fixture.",
+        "Incident rows use a Dialog for inspection and resolution rather than the stocked table's checkbox, drag-reorder, or drawer interactions.",
+        "Resolve is deliberately client-only: it updates fixture-derived UI state without a backend or persistence."
+      ],
+      "risks": [
+        "No live operational data, telemetry, incident backend, or persistence is connected.",
+        "The fixture does not model loading, error, permission, or concurrent-update states."
+      ]
+    }
+  ],
+  "unresolved": []
+}

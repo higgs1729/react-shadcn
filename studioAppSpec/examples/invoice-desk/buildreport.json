@@ -1,0 +1,39 @@
+{
+  "$comment": "BuildReport for the curated static Invoice Desk example. Results below were executed locally on 2026-07-14. Build and Storybook are recorded as environment failures, not successful verification.",
+  "flowId": "invoice-desk-01",
+  "generatedAt": "2026-07-14",
+  "screens": [
+    {
+      "stepId": "invoice-collection",
+      "route": "/examples/invoice-desk",
+      "status": "built",
+      "filesCreated": [
+        "app/(studio)/examples/invoice-desk/page.tsx",
+        "components/studio-portfolio/example-app-pages.tsx",
+        "app/example-previews/invoice-desk/page.tsx",
+        "app/example-previews/invoice-desk/invoice-desk-app.tsx",
+        "studioAppSpec/examples/invoice-desk/brief.json",
+        "studioAppSpec/examples/invoice-desk/flowspec.json",
+        "studioAppSpec/examples/invoice-desk/selectionspec.json",
+        "studioAppSpec/examples/invoice-desk/buildreport.json"
+      ],
+      "storiesCreated": [],
+      "installed": { "shadcn": [], "npm": [] },
+      "checkFailures": [
+        "npm run build could not fetch the Geist Mono and Inter Google fonts from fonts.googleapis.com in this environment.",
+        "npm run build-storybook could not write its cache under node_modules/.cache/storybook because of EPERM."
+      ]
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "diff", "command": "git diff --check", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "fail", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "fail", "attempts": 1 }
+  ],
+  "iterations": 2,
+  "status": "partial",
+  "unresolved": []
+}
