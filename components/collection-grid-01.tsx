@@ -44,7 +44,7 @@ export function CollectionGrid({
           }}
           className={
             item.id === selectedId
-              ? "cursor-pointer border-primary bg-primary/5 ring-2 ring-primary/40"
+              ? "cursor-pointer border-primary bg-linear-to-b from-primary/5 to-primary/5 ring-2 ring-primary/40"
               : "cursor-pointer"
           }
         >

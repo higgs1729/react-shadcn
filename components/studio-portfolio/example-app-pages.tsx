@@ -142,3 +142,39 @@ export function LaunchBoardExamplePage() {
     </div>
   )
 }
+
+export function ReviewDocsExamplePage() {
+  return (
+    <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
+      <div className="max-w-3xl">
+        <h1 className="text-2xl font-semibold tracking-tight">Review Docs</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          ローンチ文書を編集し、そのレビューコメントと添付ファイルを同じワークスペースにまとめる静的なドキュメントワークスペースです。編集・コメント・ファイルはブラウザセッション内のローカル状態のみで、保存や同期はされません。
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Badge variant="secondary">document-workspace</Badge>
+          <Badge variant="outline">document-workspace-01</Badge>
+          <Badge variant="outline">Local seed state</Badge>
+        </div>
+      </div>
+
+      <section aria-labelledby="review-docs-preview-title" className="min-w-0">
+        <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
+          <div className="flex items-center justify-between border-b px-3 py-2 text-sm">
+            <h2 id="review-docs-preview-title" className="font-medium">
+              Interactive preview
+            </h2>
+            <span className="text-xs text-muted-foreground">16:9</span>
+          </div>
+          <div className="aspect-video bg-muted/30">
+            <iframe
+              title="Review Docs application preview"
+              src="../../example-previews/review-docs/"
+              className="size-full border-0 bg-background"
+            />
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

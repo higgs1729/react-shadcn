@@ -16,8 +16,12 @@ import {
   BoxesIcon,
   CircleCheckBigIcon,
   FileChartColumnIncreasingIcon,
+  FileCheck2Icon,
   FolderKanbanIcon,
+  KeyRoundIcon,
   LayoutDashboardIcon,
+  ReceiptTextIcon,
+  RocketIcon,
   Settings2Icon,
   XIcon,
 } from "lucide-react"
@@ -53,6 +57,10 @@ const navigationIcons: Record<string, ComponentType<{ className?: string }>> = {
   quality: CircleCheckBigIcon,
   "case-study": BookOpenIcon,
   "ops-pulse": FileChartColumnIncreasingIcon,
+  "member-gate": KeyRoundIcon,
+  "invoice-desk": ReceiptTextIcon,
+  "launch-board": RocketIcon,
+  "review-docs": FileCheck2Icon,
 }
 
 function PrimaryNavigation() {
