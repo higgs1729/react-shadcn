@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 const root = process.cwd()
-const output = join(root, "app", "flows", "studio-portfolio-01", "studio-portfolio-data.json")
+const output = join(root, "lib", "studio-portfolio", "studio-portfolio-data.json")
 
 execFileSync(process.execPath, ["scripts/gen-studio-portfolio-data.mjs"], { cwd: root, stdio: "inherit" })
 

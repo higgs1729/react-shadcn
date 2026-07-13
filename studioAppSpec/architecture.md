@@ -4,7 +4,7 @@
 
 ```text
 First visit
-└─ Orientation
+└─ `/` → Orientation → `/overview`
 
 StudioLayout
 ├─ AppHeader
@@ -38,6 +38,7 @@ StudioLayout
 
 ### Page
 
+- `/` は初回導入の `Orientation` を表示し、完了・skip操作は `/overview` へ進む。
 - PrimaryNavigationに直接表示するPageは5つだけにする。
 - Pageの切替はPrimaryNavigationで行う。
 - 各Pageは一つの主要JTBDだけを持つ。

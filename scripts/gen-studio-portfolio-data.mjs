@@ -5,7 +5,7 @@ const ROOT = process.cwd()
 const REGISTRY_DIR = join(ROOT, "registry")
 const EXAMPLES_DIR = join(ROOT, "docs", "examples")
 const FACETS_SCHEMA = join(ROOT, "docs", "contracts", "ai-design-facets.schema.json")
-const OUT = join(ROOT, "app", "flows", "studio-portfolio-01", "studio-portfolio-data.json")
+const OUT = join(ROOT, "lib", "studio-portfolio", "studio-portfolio-data.json")
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, ""))
 
 function registryItems() {

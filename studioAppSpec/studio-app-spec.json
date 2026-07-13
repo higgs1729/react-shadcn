@@ -1,7 +1,9 @@
 {
   "schemaVersion": "0.1.0",
   "appId": "studio-portfolio-01",
-  "rootRoute": "/flows/studio-portfolio-01",
+  "rootRoute": "/",
+  "indexRoute": "/orientation",
+  "orientationCompletedRoute": "/overview",
   "deliveryMode": "static-export",
   "layout": {
     "id": "studio-layout",

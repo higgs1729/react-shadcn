@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-import { studioContent, type FlowAction } from "./studio-content"
+import { studioContent, type FlowAction } from "@/lib/studio-portfolio/studio-content"
 
 const FLOW_ROOT = "/flows/studio-portfolio-01"
 const actionsByStep: Record<string, readonly FlowAction[]> = studioContent.actionsByStep

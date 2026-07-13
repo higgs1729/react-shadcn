@@ -2,12 +2,14 @@
 
 ## Day 1
 
+- [x] 旧routeが依存するdataを `lib/studio-portfolio/` へ退避し、generator・testの参照先を切り替える。旧routeはこの段階では削除しない。
 - [ ] `studio-app-spec.json` を読む共通data moduleを作る。
 - [ ] `StudioLayout` を作り、AppHeader・Sidebar・mobile Drawerを接続する。
 - [ ] 5つのPrimaryNavigation Pageを作り、active stateを接続する。
 - [ ] Overviewを `studio-overview-01` として既存blockから構成する。
 - [ ] Patternsをregistry dataへbindingする。
 - [ ] Pattern detailとLive demoをDrawerで接続する。
+- [ ] 新しいトップレベルrouteの動作確認後、旧 `app/flows/studio-portfolio-01/` の16 step route・layout・navigationを削除する。`app/*-01/` のscreen component（在庫実体）とregistry・storyは変更しない。
 
 ## Day 2
 

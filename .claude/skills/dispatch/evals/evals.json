@@ -1,0 +1,26 @@
+{
+  "skill_name": "dispatch",
+  "evals": [
+    {
+      "id": 0,
+      "name": "registry-required-blocks-audit",
+      "prompt": "registry/ ディレクトリの全JSONのうち assetKind が screen-pattern のものすべてについて、meta.aiDesignSystem.requiredBlocks の各エントリが registry に実在する block-pattern を指しているかを全数確認してください。結果は「pattern / 参照block / 存在有無」の一覧表を含む markdown レポートにまとめ、不整合が1件も無ければその旨を明記してください。",
+      "expected_output": "全 screen-pattern (13件以上) を網羅した対応表と、整合/不整合の明確な結論を持つ markdown レポート",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "app-client-pattern-audit",
+      "prompt": "app/ 配下のすべての page.tsx と *-screen.tsx について、(1) 'use client' ディレクティブの有無、(2) useSearchParams の使用、(3) React.Suspense の使用を調査し、ファイルごとの一覧表を作ってください。最後に、next.config.ts の output:'export'(静的エクスポート)の観点で危険なパターンが残っていないかの結論を書いてください。結果は markdown レポートにまとめてください。",
+      "expected_output": "15ファイル以上を網羅した一覧表と、静的エクスポート安全性の結論を持つ markdown レポート",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "scripts-readjson-duplication",
+      "prompt": "scripts/ 配下の全 .mjs ファイルについて、JSONファイルを読み込む処理(readFile + JSON.parse、BOM除去などの前処理を含む)を自前実装しているファイルをすべて特定し、それぞれの実装の差異(BOM除去の有無、エラー処理の違いなど)を比較する短い markdown レポートを作ってください。",
+      "expected_output": "readJson相当を自前実装している複数のスクリプト(4件以上)の特定と実装差異の比較レポート",
+      "files": []
+    }
+  ]
+}
