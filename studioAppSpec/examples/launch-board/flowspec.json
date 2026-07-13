@@ -17,7 +17,10 @@
       "transitions": {
         "cardMovement": "Dragging a card onto a column, or using its move control, changes which workflow status owns the card and updates every column count.",
         "boardControls": "Search and the column selector narrow the visible cards; an empty result offers Clear filters.",
-        "workItemCreation": "New work item appends a local card to the Backlog column."
+        "workItemCreation": "New work item opens a Dialog requiring a non-empty title; submitting adds a local card to the chosen column.",
+        "workItemEditing": "The manage-items panel's Edit control opens the same Dialog pre-filled with the card's fields, including its column; saving updates or moves the card.",
+        "workItemDeletion": "The manage-items panel's Delete control removes a card from the board immediately.",
+        "boardPersistence": "Every move, edit, deletion, and addition is saved to localStorage; reloading the page restores that saved board. Reset board discards it and restores the seed columns."
       }
     }
   ]

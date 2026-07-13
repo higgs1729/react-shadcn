@@ -112,10 +112,10 @@
         "screenType": "auth",
         "selectedPattern": "login-03",
         "requiredBlocks": ["form-section"],
-        "primaryInteraction": "Enter credentials and receive local validation feedback.",
+        "primaryInteraction": "Enter credentials, receive local validation feedback, and stay signed in across reloads via a localStorage session with a Sign out action and a 30-second lockout after 5 failed attempts.",
         "dataMode": "local-form-state",
         "implementationStatus": "built",
-        "boundary": "No real authentication provider or session is connected."
+        "boundary": "No real authentication provider or backend session is connected; the signed-in session is saved to this browser's localStorage only."
       },
       {
         "id": "invoice-desk",
@@ -152,15 +152,17 @@
           "filter-toolbar",
           "board-column"
         ],
-        "primaryInteraction": "Move task cards between status columns.",
+        "primaryInteraction": "Move task cards between status columns, and create, edit, or delete work items; the board is saved to localStorage across reloads with a Reset board action.",
         "dataMode": "local-seed-state",
         "implementationStatus": "built",
-        "boundary": "Card movement is not persisted to a backend."
+        "boundary": "No backend is connected; board state (moves, edits, deletions, additions) is saved to this browser's localStorage only."
       },
       {
         "id": "review-docs",
         "label": "Review Docs",
         "route": "/examples/review-docs",
+        "previewRoute": "/example-previews/review-docs",
+        "presentation": "iframe-16-9",
         "brief": "Edit a launch document and keep its review comments and supporting files in the same workspace.",
         "screenType": "document-workspace",
         "selectedPattern": "document-workspace-01",
@@ -171,10 +173,10 @@
           "comment-thread",
           "file-upload-area"
         ],
-        "primaryInteraction": "Edit content, add comments, and manage local attachments.",
+        "primaryInteraction": "Edit content, add or delete comments, manage local attachments, and Save to persist the document to localStorage across reloads, or Discard changes to revert to the last save.",
         "dataMode": "local-seed-state",
-        "implementationStatus": "planned",
-        "boundary": "Edits, comments, and files are not persisted or synchronized."
+        "implementationStatus": "built",
+        "boundary": "No backend is connected; Save writes the document, comments, and attachment metadata to this browser's localStorage only."
       }
     ]
   },

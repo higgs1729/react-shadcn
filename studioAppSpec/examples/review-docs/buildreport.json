@@ -1,0 +1,40 @@
+{
+  "$comment": "BuildReport for the curated static Review Docs example. Updated 2026-07-14 to add a Save/Discard cycle backed by localStorage (persisting the document, comments, and attachment metadata across reloads) and comment deletion, raising this from a UI demo to a minimally functional app per the app-suite CRUD/persistence/guard bar.",
+  "flowId": "review-docs-01",
+  "generatedAt": "2026-07-14",
+  "screens": [
+    {
+      "stepId": "document-review",
+      "route": "/examples/review-docs",
+      "status": "built",
+      "filesCreated": [
+        "app/(studio)/examples/review-docs/page.tsx",
+        "app/example-previews/review-docs/page.tsx",
+        "app/example-previews/review-docs/review-docs-app.tsx",
+        "studioAppSpec/examples/review-docs/brief.json",
+        "studioAppSpec/examples/review-docs/flowspec.json",
+        "studioAppSpec/examples/review-docs/selectionspec.json",
+        "studioAppSpec/examples/review-docs/buildreport.json"
+      ],
+      "filesModified": [
+        "components/studio-portfolio/example-app-pages.tsx",
+        "studioAppSpec/studio-app-spec.json"
+      ],
+      "storiesCreated": [],
+      "installed": { "shadcn": [], "npm": [] },
+      "checkFailures": [
+        { "name": "lint", "detail": "react-hooks/set-state-in-effect on the initial localStorage-hydration effect; resolved by consolidating title/content/comments/files into one snapshot state object (one setState call instead of four) and documenting the remaining one-time hydration setState with a scoped eslint-disable." }
+      ]
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 2 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "pass", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "pass", "attempts": 1 }
+  ],
+  "iterations": 2,
+  "status": "verified",
+  "unresolved": []
+}

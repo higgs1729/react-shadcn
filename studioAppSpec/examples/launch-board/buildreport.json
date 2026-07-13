@@ -1,5 +1,5 @@
 {
-  "$comment": "BuildReport for the curated static Launch Board example. The checks below were executed locally on 2026-07-14 after its route, preview app, sidebar entry, and artifacts were added.",
+  "$comment": "BuildReport for the curated static Launch Board example. Updated 2026-07-14 to add localStorage board persistence, full create/edit/delete on work items, and a Reset board action, raising this from a UI demo to a minimally functional app per the app-suite CRUD/persistence/guard bar.",
   "flowId": "launch-board-01",
   "generatedAt": "2026-07-14",
   "screens": [
@@ -22,17 +22,19 @@
       ],
       "storiesCreated": [],
       "installed": { "shadcn": [], "npm": [] },
-      "checkFailures": []
+      "checkFailures": [
+        { "name": "lint", "detail": "react-hooks/set-state-in-effect on the initial localStorage-hydration effect; resolved by removing a second reactive write-effect (writes now happen inline in each mutator) and documenting the remaining one-time hydration setState with a scoped eslint-disable." }
+      ]
     }
   ],
   "checks": [
     { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
-    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 2 },
     { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
     { "name": "build", "command": "npm run build", "status": "pass", "attempts": 1 },
     { "name": "storybook", "command": "npm run build-storybook", "status": "pass", "attempts": 1 }
   ],
-  "iterations": 1,
+  "iterations": 2,
   "status": "verified",
   "unresolved": []
 }

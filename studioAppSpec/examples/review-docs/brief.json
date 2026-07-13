@@ -1,0 +1,24 @@
+{
+  "appId": "review-docs",
+  "title": "Review Docs",
+  "flowId": "review-docs-01",
+  "stepId": "document-review",
+  "implementedRoute": "/examples/review-docs",
+  "previewRoute": "/example-previews/review-docs",
+  "brief": "Edit a launch document and keep its review comments and supporting files in the same workspace.",
+  "audience": "A launch owner revising the release plan while reviewers comment and attach evidence.",
+  "screenType": "document-workspace",
+  "selectedPattern": "document-workspace-01",
+  "scope": [
+    "Editable document title and body with a saved-state indicator",
+    "A review comment thread that accepts new replies and supports deleting a comment",
+    "A local attachment area supporting add, drag-drop, and remove",
+    "Save persists the document, comments, and attachment metadata to the browser's localStorage; a document reload restores that saved snapshot",
+    "Discard changes reverts unsaved edits back to the last saved snapshot"
+  ],
+  "boundaries": [
+    "No document store, review service, or file backend is connected",
+    "Save writes to this browser's localStorage only, not to any server; nothing is synchronized elsewhere",
+    "The seed document is illustrative and does not represent a live launch"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$comment": "Curated static selection for review-docs-01. document-workspace-01 supplies the workspace baseline; the implementation wires launch-themed local seed state, a saved-state Save/Discard cycle backed by localStorage, and comment deletion via a manage-comments list, across its blocks.",
+  "flowId": "review-docs-01",
+  "screens": [
+    {
+      "stepId": "document-review",
+      "resolvedScreenType": "document-workspace",
+      "screenTypeScore": 100,
+      "screenPattern": { "registryItem": "document-workspace-01", "score": 100, "rejected": [] },
+      "blocks": [
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 96 },
+        { "blockRole": "breadcrumb-context", "registryItem": "breadcrumb-context-01", "score": 100 },
+        { "blockRole": "document-body-editor", "registryItem": "document-body-editor-01", "score": 100 },
+        { "blockRole": "comment-thread", "registryItem": "comment-thread-01", "score": 100 },
+        { "blockRole": "file-upload-area", "registryItem": "file-upload-area-01", "score": 100 }
+      ],
+      "registryDependencies": ["avatar", "badge", "breadcrumb", "button", "card", "field", "input", "scroll-area", "separator", "textarea"],
+      "stateCoveragePlan": ["default", "validation-error"],
+      "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
+      "assumptions": [
+        "document-workspace-01 is the stocked document-workspace screen pattern and its editor, comment, and attachment blocks fit the application.",
+        "The editor, comment thread, and file-upload area are the stocked blocks reused directly with local state; comment deletion is surfaced through a separate manage-comments list since comment-thread-01 is not modified.",
+        "All content derives from one local seed document plus localStorage-persisted edits, comments, and attachments, restored on reload and revertible via Discard changes."
+      ],
+      "risks": [
+        "No document store, review service, file backend, or backend persistence is connected; Save writes to this browser's localStorage only.",
+        "The seed does not model loading, error, permission, or concurrent-edit states.",
+        "Clearing site data or using a different browser loses the saved document; there is no recovery path back to the original seed once saved over."
+      ]
+    }
+  ],
+  "unresolved": []
+}

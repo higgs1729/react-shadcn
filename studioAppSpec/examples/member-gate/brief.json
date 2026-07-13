@@ -11,10 +11,13 @@
   "scope": [
     "Email and password entry",
     "Local client-side validation feedback",
-    "External account entry points"
+    "External account entry points",
+    "A signed-in session persisted to the browser's localStorage, restored on reload, and cleared by Sign out",
+    "A 30-second lockout after 5 consecutive failed sign-in attempts"
   ],
   "boundaries": [
-    "No real authentication provider or session is connected",
+    "No real authentication provider or backend session is connected",
+    "The signed-in session is saved to this browser's localStorage only, not to any server",
     "No password recovery or account creation backend",
     "External sign-in reports its boundary instead of navigating"
   ]

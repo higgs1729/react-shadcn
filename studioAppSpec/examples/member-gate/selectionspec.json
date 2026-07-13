@@ -20,15 +20,16 @@
         "field",
         "input"
       ],
-      "stateCoveragePlan": ["default", "error"],
+      "stateCoveragePlan": ["default", "error", "locked"],
       "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
       "assumptions": [
         "login-03 is the stocked auth screen pattern and its form-section covers email, password, and external-account entry.",
-        "Validation and the entered-workspace confirmation are local UI state over no backend."
+        "Validation, the lockout countdown, and the signed-in session are local UI state persisted to localStorage, not a backend."
       ],
       "risks": [
-        "No real authentication provider or session is connected, so the success path only confirms local validation.",
-        "The external-account buttons report their boundary instead of completing a sign-in."
+        "No real authentication provider or backend session is connected, so the success path only confirms local validation and a localStorage session.",
+        "The external-account buttons report their boundary instead of completing a sign-in.",
+        "The lockout is a client-side timer only and offers no protection against a scripted or multi-tab attacker."
       ]
     }
   ],

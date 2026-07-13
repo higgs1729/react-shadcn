@@ -1,5 +1,5 @@
 {
-  "$comment": "Curated static selection for launch-board-01. planning-board-01 supplies the board baseline; the implementation adds release-themed local seed cards, search, column filtering, and a local add-item action.",
+  "$comment": "Curated static selection for launch-board-01. planning-board-01 supplies the board baseline; the implementation adds release-themed local seed cards, search, column filtering, a full create/edit/delete flow via a manage-items panel and Dialog, and localStorage persistence with a Reset board action.",
   "flowId": "launch-board-01",
   "screens": [
     {
@@ -18,12 +18,13 @@
       "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
       "assumptions": [
         "planning-board-01 is the stocked planning-board screen pattern and its column-transition model fits the application.",
-        "board-column-01 provides the drag-and-drop and move controls that change a card's workflow status.",
-        "All cards and counts derive from one local seed set plus session-local moves and additions."
+        "board-column-01 provides the drag-and-drop and move controls that change a card's workflow status; it is not modified, so edit and delete are surfaced through a separate manage-items panel and shared Dialog instead.",
+        "All cards and counts derive from one local seed set plus localStorage-persisted moves, edits, deletions, and additions."
       ],
       "risks": [
-        "No project-tracking service, workflow permissions, or persistence is connected.",
-        "Cross-column keyboard reordering is delegated to the board and is not a full keyboard drag alternative."
+        "No project-tracking service, workflow permissions, or backend persistence is connected; state lives in this browser's localStorage only.",
+        "Cross-column keyboard reordering is delegated to the board and is not a full keyboard drag alternative; the manage-items panel's column selector is the keyboard-accessible path to move a card.",
+        "Clearing site data or using a different browser loses the board; Reset board is the only recovery path back to the seed."
       ]
     }
   ],

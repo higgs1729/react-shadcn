@@ -12,11 +12,14 @@
   "scope": [
     "A four-column release board over local seed cards",
     "Drag-and-drop and button moves that change a card's workflow column",
-    "Search and per-column filtering, plus adding a local work item"
+    "Search and per-column filtering, plus adding a local work item",
+    "Full CRUD on work items: create, edit (title, description, priority, column), and delete via a manage-items panel",
+    "Board state persisted to the browser's localStorage across reloads, with a Reset board action that restores the seed"
   ],
   "boundaries": [
-    "No project-tracking service, workflow permissions, or persistence is connected",
-    "Card movement and new items are local to the current browser session",
-    "The seed cards are illustrative and do not represent a live release"
+    "No project-tracking service, workflow permissions, or backend persistence is connected",
+    "Card moves, edits, deletions, and additions are saved to this browser's localStorage only, not to any server",
+    "The seed cards are illustrative and do not represent a live release",
+    "Creating or editing a work item requires a non-empty title"
   ]
 }

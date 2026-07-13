@@ -1,5 +1,5 @@
 {
-  "$comment": "BuildReport for the curated static Member Gate example. The checks below were executed locally on 2026-07-14 after its route, form, sidebar entry, and artifacts were added.",
+  "$comment": "BuildReport for the curated static Member Gate example. Updated 2026-07-14 to add localStorage session persistence and a failed-attempt lockout, raising this from a UI demo to a minimally functional app per the app-suite CRUD/persistence/guard bar.",
   "flowId": "member-gate-01",
   "generatedAt": "2026-07-14",
   "screens": [

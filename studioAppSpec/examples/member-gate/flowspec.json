@@ -11,13 +11,17 @@
       "dataShapes": ["single-record"],
       "interactionModels": ["form-submit", "single-action"],
       "density": "low",
-      "requiredStates": ["default", "error"],
+      "requiredStates": ["default", "error", "locked"],
       "accessibilityConstraints": {
         "keyboard": true,
         "focusVisible": true,
         "labels": true
       },
-      "visualTone": ["focused", "trustworthy"]
+      "visualTone": ["focused", "trustworthy"],
+      "transitions": {
+        "sessionPersistence": "A successful sign-in is saved to localStorage; reloading the page restores the signed-in view directly. Sign out clears it.",
+        "lockout": "Five consecutive failed sign-in attempts replace the form with a 30-second countdown lockout; it clears automatically once the countdown reaches zero."
+      }
     }
   ]
 }
