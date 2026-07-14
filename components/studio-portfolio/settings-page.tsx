@@ -338,7 +338,7 @@ export function SettingsPage({
                 枠線
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                背景と文字の色は変えずに、境界線だけを濃くして要素の輪郭を見やすくします。
+                境界線を強調して輪郭を見やすくする
               </p>
               <Field
                 orientation="horizontal"

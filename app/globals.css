@@ -122,15 +122,15 @@
    attribute on <html>. Light and dark are handled separately; :not(.dark)
    keeps the light overrides from leaking into dark. */
 html[data-emphasize-borders="true"]:not(.dark) {
-  --border: oklch(0.44 0 0);
-  --input: oklch(0.44 0 0);
-  --sidebar-border: oklch(0.44 0 0);
+  --border: oklch(0.556 0 0);
+  --input: oklch(0.556 0 0);
+  --sidebar-border: oklch(0.556 0 0);
 }
 
 html[data-emphasize-borders="true"].dark {
-  --border: oklch(1 0 0 / 45%);
-  --input: oklch(1 0 0 / 50%);
-  --sidebar-border: oklch(1 0 0 / 45%);
+  --border: oklch(0.556 0 0);
+  --input: oklch(0.556 0 0);
+  --sidebar-border: oklch(0.556 0 0);
 }
 
 /* The pattern-inventory preview boxes carry a placeholder border (transparent

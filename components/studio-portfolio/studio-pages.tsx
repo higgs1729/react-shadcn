@@ -428,10 +428,9 @@ export function OverviewPage() {
           </h2>
         </div>
         <PricingPlanCard
-          selectedPlanId={selectedInventoryId}
+          selectedPlanId=""
           onSelectPlan={setSelectedInventoryId}
           showAction={false}
-          emphasizeAll
           plans={[
             {
               id: "screen-types",
