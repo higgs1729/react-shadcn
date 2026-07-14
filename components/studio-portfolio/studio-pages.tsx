@@ -70,6 +70,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { builtExampleApps } from "@/lib/studio-portfolio/app-spec"
+import { OrientationLanding } from "@/components/studio-portfolio/orientation-landing"
 import studioPortfolioData from "@/lib/studio-portfolio/studio-portfolio-data.json"
 import { studioContent } from "@/lib/studio-portfolio/studio-content"
 import { studioEvidence } from "@/lib/studio-portfolio/evidence"
@@ -320,46 +321,7 @@ function usePortfolioUrlState() {
 }
 
 export function OrientationPage() {
-  return (
-    <div className="mx-auto flex min-h-svh w-full max-w-3xl flex-col justify-center gap-8 p-6 md:p-10">
-      <Badge variant="outline" className="w-fit">
-        AI Design System Studio
-      </Badge>
-      <div className="max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-          UIを選んだ理由まで、追跡可能にする。
-        </h1>
-        <p className="mt-4 leading-7 text-muted-foreground">
-          briefからFlowSpec、選定、実装、検証までを、静的な作品としてたどるためのStudioです。
-        </p>
-      </div>
-      <WizardStepper
-        steps={[
-          { id: "brief", label: "Brief" },
-          { id: "selection", label: "Selection" },
-          { id: "evidence", label: "Evidence" },
-        ]}
-        currentStepId="brief"
-        completedStepIds={[]}
-      />
-      <div className="flex flex-wrap gap-3">
-        <Button size="lg" nativeButton={false} render={<Link href="/overview" />}>
-          作品を見る <ArrowRightIcon />
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          nativeButton={false}
-          render={<Link href="/studio" />}
-        >
-          Studioから始める
-        </Button>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        自動検証済みの証拠と、人間レビューが必要な判断を区別して表示します。
-      </p>
-    </div>
-  )
+  return <OrientationLanding />
 }
 
 type SystemFlowStageId =

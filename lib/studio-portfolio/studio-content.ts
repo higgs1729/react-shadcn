@@ -69,7 +69,7 @@ export const studioContent = {
     "case-study": [],
   } satisfies Record<string, readonly FlowAction[]>,
   screens: {
-    orientation: { title: "AI Design System Studio へようこそ", intro: "brief から検証済み UI まで、判断の根拠をたどれます。", primaryAction: "Overview を見る" },
+    orientation: { title: "再利用可能で説明可能なデザイン", intro: "ユーザーの要望からAIが適切な部品を選定して画面を作成", primaryAction: "作品を見る" },
     overview: { title: "AI が UI を選ぶ理由まで、追跡可能にする。", intro: "intent、契約、pattern、実装、検証を一つの流れとして公開します。", primaryAction: "Reviewer tour を始める" },
     "pattern-library": { title: "再利用可能な UI 在庫", intro: "ScreenType と blockRole から、使える pattern と状態を絞り込みます。", primaryAction: "Pattern の詳細を見る" },
     "pattern-detail": { title: "Pattern の構成と適用条件", intro: "この pattern が担う役割、構成 block、対応状態、検証記録を確認できます。", primaryAction: "実画面で見る" },
