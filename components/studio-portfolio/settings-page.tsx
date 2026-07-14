@@ -22,6 +22,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
+import { Switch } from "@/components/ui/switch"
 
 type ThemeChoice = "system" | "dark" | "light"
 type SettingsSectionId = "appearance" | "behavior"
@@ -184,6 +186,7 @@ export function SettingsPage({
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [accent, setAccent] = useState<AccentId>("indigo")
+  const [highContrast, setHighContrast] = useState(false)
   const [preferences, setPreferences] = useState(defaultPreferences)
   const pointerCursor =
     preferences.find((preference) => preference.id === "pointer-cursor")
@@ -199,6 +202,10 @@ export function SettingsPage({
       : "indigo"
     setAccent(nextAccent)
     applyAccent(nextAccent)
+    const storedHighContrast =
+      window.localStorage.getItem("studio-high-contrast") === "true"
+    setHighContrast(storedHighContrast)
+    document.documentElement.dataset.highContrast = String(storedHighContrast)
     if (storedPreferences) {
       try {
         setPreferences(
@@ -218,6 +225,12 @@ export function SettingsPage({
     applyAccent(accent)
     window.localStorage.setItem("studio-accent", accent)
   }, [accent, mounted])
+
+  useEffect(() => {
+    if (!mounted) return
+    document.documentElement.dataset.highContrast = String(highContrast)
+    window.localStorage.setItem("studio-high-contrast", String(highContrast))
+  }, [highContrast, mounted])
 
   useEffect(() => {
     if (!mounted) return
@@ -314,6 +327,32 @@ export function SettingsPage({
                 ))}
               </div>
               <AccentPreview accent={activeAccent} />
+            </section>
+            <section aria-labelledby="contrast-label" className="border-t pt-8">
+              <h2 id="contrast-label" className="text-base font-semibold">
+                ハイコントラスト
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                背景と文字、境界線のコントラストを強め、要素の輪郭を見やすくします。
+              </p>
+              <Field
+                orientation="horizontal"
+                className="mt-4 max-w-2xl rounded-lg border p-4"
+              >
+                <FieldLabel htmlFor="high-contrast">
+                  <FieldContent>
+                    <span>ハイコントラストを有効にする</span>
+                    <span className="text-sm font-normal text-muted-foreground">
+                      背景色のコントラストをより大きくし、境界線を濃く表示します。
+                    </span>
+                  </FieldContent>
+                  <Switch
+                    id="high-contrast"
+                    checked={highContrast}
+                    onCheckedChange={setHighContrast}
+                  />
+                </FieldLabel>
+              </Field>
             </section>
           </div>
         </section>

@@ -116,6 +116,49 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* High contrast: pushes background/foreground to maximum contrast and darkens
+   borders so element outlines read clearly. Toggled from Settings > 外観 via
+   the data-high-contrast attribute on <html>. Light and dark are handled
+   separately; :not(.dark) keeps the light overrides from leaking into dark. */
+html[data-high-contrast="true"]:not(.dark) {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0 0 0);
+  --secondary-foreground: oklch(0.12 0 0);
+  --muted: oklch(0.94 0 0);
+  --muted-foreground: oklch(0.32 0 0);
+  --accent-foreground: oklch(0.12 0 0);
+  --border: oklch(0.44 0 0);
+  --input: oklch(0.44 0 0);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0 0 0);
+  --sidebar-accent-foreground: oklch(0.12 0 0);
+  --sidebar-border: oklch(0.44 0 0);
+}
+
+html[data-high-contrast="true"].dark {
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.16 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --secondary: oklch(0.3 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.24 0 0);
+  --muted-foreground: oklch(0.86 0 0);
+  --accent-foreground: oklch(1 0 0);
+  --border: oklch(1 0 0 / 45%);
+  --input: oklch(1 0 0 / 50%);
+  --sidebar: oklch(0 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(1 0 0 / 45%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
