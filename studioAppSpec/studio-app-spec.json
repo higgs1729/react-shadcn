@@ -36,7 +36,8 @@
       { "id": "member-gate", "label": "Member Gate", "route": "/examples/member-gate" },
       { "id": "invoice-desk", "label": "Invoice Desk", "route": "/examples/invoice-desk" },
       { "id": "launch-board", "label": "Launch Board", "route": "/examples/launch-board" },
-      { "id": "review-docs", "label": "Review Docs", "route": "/examples/review-docs" }
+      { "id": "review-docs", "label": "Review Docs", "route": "/examples/review-docs" },
+      { "id": "support-inbox", "label": "Support Inbox", "route": "/examples/support-inbox" }
     ],
     "utilityNavigation": [
       {
@@ -177,6 +178,27 @@
         "dataMode": "local-seed-state",
         "implementationStatus": "built",
         "boundary": "No backend is connected; Save writes the document, comments, and attachment metadata to this browser's localStorage only."
+      },
+      {
+        "id": "support-inbox",
+        "label": "Support Inbox",
+        "route": "/examples/support-inbox",
+        "previewRoute": "/example-previews/support-inbox",
+        "presentation": "iframe-16-9",
+        "brief": "Triage incoming support conversations, reply to the active thread, and move each one through its open, snoozed, and closed lifecycle.",
+        "screenType": "inbox-communication",
+        "selectedPattern": "inbox-communication-01",
+        "requiredBlocks": [
+          "app-shell-sidebar",
+          "page-header-actions",
+          "filter-toolbar",
+          "conversation-triage-list",
+          "comment-thread"
+        ],
+        "primaryInteraction": "Search and filter conversations, switch list or grid views, select a conversation to read its message thread, reply with a guarded non-empty message that reopens and claims it, assign, snooze, close, or reopen a conversation, and log a new inbound conversation; the inbox is saved to localStorage across reloads with a Reset inbox action.",
+        "dataMode": "local-seed-state",
+        "implementationStatus": "built",
+        "boundary": "No messaging platform, real-time transport, or backend persistence is connected; conversations, replies, lifecycle changes, and new conversations are saved to this browser's localStorage only."
       }
     ]
   },

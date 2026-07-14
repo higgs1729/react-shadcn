@@ -1,0 +1,26 @@
+{
+  "appId": "support-inbox",
+  "title": "Support Inbox",
+  "flowId": "support-inbox-01",
+  "stepId": "triage-inbox",
+  "implementedRoute": "/examples/support-inbox",
+  "previewRoute": "/example-previews/support-inbox",
+  "brief": "Triage incoming support conversations, reply to the active thread, and move each one through its open, snoozed, and closed lifecycle.",
+  "audience": "A support teammate working the shared inbox, deciding what to answer, assign, or defer next.",
+  "screenType": "inbox-communication",
+  "selectedPattern": "inbox-communication-01",
+  "scope": [
+    "A shared support inbox over local seed conversations, each carrying its own message thread",
+    "Search and status filtering (open, snoozed, closed), plus a list or grid view of the conversation list",
+    "Reading the selected conversation's thread and replying with a guarded non-empty message that reopens and claims it",
+    "Lifecycle actions on a conversation: assign to me, snooze, close, and reopen",
+    "Logging a new inbound conversation via a Dialog that requires a sender, subject, and first message",
+    "Inbox state persisted to the browser's localStorage across reloads, with a Reset inbox action that restores the seed"
+  ],
+  "boundaries": [
+    "No messaging platform, real-time transport, or backend persistence is connected",
+    "Replies, lifecycle changes, and new conversations are saved to this browser's localStorage only, not to any server",
+    "The seed conversations are illustrative and do not represent real customers",
+    "Sending a reply requires a non-empty message; creating a conversation requires a non-empty sender, subject, and message"
+  ]
+}

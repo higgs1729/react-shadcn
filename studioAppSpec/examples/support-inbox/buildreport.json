@@ -1,0 +1,41 @@
+{
+  "$comment": "BuildReport for the curated static Support Inbox example. Built 2026-07-14 with per-conversation message threads, guarded reply that reopens and claims the conversation, assign/snooze/close/reopen lifecycle, a New conversation Dialog, list/grid views, and localStorage persistence with a Reset inbox action — meeting the app-suite CRUD/persistence/guard bar rather than a UI mock.",
+  "flowId": "support-inbox-01",
+  "generatedAt": "2026-07-14",
+  "screens": [
+    {
+      "stepId": "triage-inbox",
+      "route": "/examples/support-inbox",
+      "status": "built",
+      "filesCreated": [
+        "app/(studio)/examples/support-inbox/page.tsx",
+        "app/example-previews/support-inbox/page.tsx",
+        "app/example-previews/support-inbox/support-inbox-app.tsx",
+        "studioAppSpec/examples/support-inbox/brief.json",
+        "studioAppSpec/examples/support-inbox/flowspec.json",
+        "studioAppSpec/examples/support-inbox/selectionspec.json",
+        "studioAppSpec/examples/support-inbox/buildreport.json"
+      ],
+      "filesModified": [
+        "components/studio-portfolio/example-app-pages.tsx",
+        "studioAppSpec/studio-app-spec.json",
+        ".storybook/main.ts"
+      ],
+      "storiesCreated": [],
+      "installed": { "shadcn": [], "npm": [] },
+      "checkFailures": [
+        { "name": "storybook", "detail": "build-storybook failed on Linux because the committed staticDirs entry used a Windows path separator (\"..\\\\public\"), which does not resolve as a POSIX directory. Fixed by using the portable Storybook convention (\"../public\"), which is also valid on Windows. Unrelated to the Support Inbox example itself." }
+      ]
+    }
+  ],
+  "checks": [
+    { "name": "contracts", "command": "npm run validate", "status": "pass", "attempts": 1 },
+    { "name": "lint", "command": "npm run lint", "status": "pass", "attempts": 1 },
+    { "name": "typecheck", "command": "npm run typecheck", "status": "pass", "attempts": 1 },
+    { "name": "build", "command": "npm run build", "status": "pass", "attempts": 1 },
+    { "name": "storybook", "command": "npm run build-storybook", "status": "pass", "attempts": 2 }
+  ],
+  "iterations": 2,
+  "status": "verified",
+  "unresolved": []
+}

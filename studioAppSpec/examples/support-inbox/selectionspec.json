@@ -1,0 +1,33 @@
+{
+  "$comment": "Curated static selection for support-inbox-01. inbox-communication-01 supplies the triage baseline (conversation-triage-list + comment-thread); the implementation adds per-conversation message threads, search and status filtering, a list/grid view toggle, a guarded reply that reopens and claims the conversation, assign/snooze/close/reopen lifecycle actions, a New conversation Dialog, and localStorage persistence with a Reset inbox action.",
+  "flowId": "support-inbox-01",
+  "screens": [
+    {
+      "stepId": "triage-inbox",
+      "resolvedScreenType": "inbox-communication",
+      "screenTypeScore": 100,
+      "screenPattern": { "registryItem": "inbox-communication-01", "score": 100, "rejected": [] },
+      "blocks": [
+        { "blockRole": "app-shell-sidebar", "registryItem": "sidebar-07", "score": 96 },
+        { "blockRole": "page-header-actions", "registryItem": "page-header-actions-01", "score": 100 },
+        { "blockRole": "filter-toolbar", "registryItem": "filter-toolbar-01", "score": 100 },
+        { "blockRole": "conversation-triage-list", "registryItem": "conversation-triage-list-01", "score": 100 },
+        { "blockRole": "comment-thread", "registryItem": "comment-thread-01", "score": 100 }
+      ],
+      "registryDependencies": ["badge", "button", "card", "dialog", "field", "input", "item", "scroll-area", "select", "textarea", "toggle-group"],
+      "stateCoveragePlan": ["default", "empty"],
+      "checksPlanned": ["contracts", "lint", "typecheck", "build", "storybook"],
+      "assumptions": [
+        "inbox-communication-01 is the stocked inbox-communication screen pattern and its triage-plus-thread topology fits the application.",
+        "conversation-triage-list-01 and comment-thread-01 are reused unchanged; per-conversation threads, the view toggle, the New conversation Dialog, and the thread-header lifecycle controls are composed around them by the application.",
+        "All conversations, threads, and counts derive from one local seed set plus localStorage-persisted replies, lifecycle changes, and additions."
+      ],
+      "risks": [
+        "No messaging platform, real-time transport, or backend persistence is connected; state lives in this browser's localStorage only.",
+        "Assignment is a single-operator toggle (You or Unassigned) rather than a real teammate roster, and there is no notification or presence transport.",
+        "Clearing site data or using a different browser loses the inbox; Reset inbox is the only recovery path back to the seed."
+      ]
+    }
+  ],
+  "unresolved": []
+}
