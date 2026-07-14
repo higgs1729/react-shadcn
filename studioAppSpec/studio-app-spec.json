@@ -109,6 +109,8 @@
         "id": "member-gate",
         "label": "Member Gate",
         "route": "/examples/member-gate",
+        "previewRoute": "/example-previews/member-gate",
+        "presentation": "iframe-16-9",
         "brief": "Let a member enter a workspace with email and password or a supported external account.",
         "screenType": "auth",
         "selectedPattern": "login-03",
