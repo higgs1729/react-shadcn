@@ -8,6 +8,9 @@ type PrimaryNavigationItem = {
 
 type ExampleApp = PrimaryNavigationItem & {
   implementationStatus: "planned" | "built"
+  previewRoute?: string
+  screenType: string
+  selectedPattern: string
 }
 
 type StudioAppSpec = {
@@ -30,6 +33,9 @@ export const exampleNavigation = studioAppSpec.layout.exampleNavigation.filter((
   studioAppSpec.exampleApps.items.some(
     (app) => app.id === item.id && app.implementationStatus === "built"
   )
+)
+export const builtExampleApps = studioAppSpec.exampleApps.items.filter(
+  (app) => app.implementationStatus === "built"
 )
 
 export function isPrimaryNavigationRoute(pathname: string, route: string) {
