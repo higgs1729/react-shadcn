@@ -250,10 +250,15 @@ export function OrientationPage() {
         completedStepIds={[]}
       />
       <div className="flex flex-wrap gap-3">
-        <Button size="lg" render={<Link href="/overview" />}>
+        <Button size="lg" nativeButton={false} render={<Link href="/overview" />}>
           作品を見る <ArrowRightIcon />
         </Button>
-        <Button variant="outline" size="lg" render={<Link href="/studio" />}>
+        <Button
+          variant="outline"
+          size="lg"
+          nativeButton={false}
+          render={<Link href="/studio" />}
+        >
           Studioから始める
         </Button>
       </div>
@@ -370,10 +375,14 @@ function SystemFlow() {
         </div>
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
-        <Button render={<Link href="/studio" data-open-window />}>
+        <Button nativeButton={false} render={<Link href="/studio" data-open-window />}>
           Studioで試す <ArrowRightIcon />
         </Button>
-        <Button variant="outline" render={<Link href="/case-study" data-open-window />}>
+        <Button
+          variant="outline"
+          nativeButton={false}
+          render={<Link href="/case-study" data-open-window />}
+        >
           設計判断を読む
         </Button>
       </CardFooter>
@@ -400,11 +409,12 @@ export function OverviewPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex flex-wrap gap-2">
-          <Button render={<Link href="/studio" data-open-window />}>
+          <Button nativeButton={false} render={<Link href="/studio" data-open-window />}>
             briefから試す <ArrowRightIcon />
           </Button>
           <Button
             variant="outline"
+            nativeButton={false}
             render={<Link href="/case-study" data-open-window />}
           >
             設計判断を読む
@@ -487,6 +497,7 @@ export function OverviewPage() {
           <Button
             variant="outline"
             size="sm"
+            nativeButton={false}
             render={<Link href="/patterns" data-open-window />}
           >
             実際に確認する <ArrowRightIcon />
@@ -547,6 +558,7 @@ export function OverviewPage() {
         <div className="mt-3">
           <Button
             variant="outline"
+            nativeButton={false}
             render={<Link href={`/${selectedId}`} data-open-window />}
           >
             選択したPageを開く <ArrowRightIcon />
@@ -1322,7 +1334,7 @@ export function LegacyStudioWorkspace() {
             <DialogClose render={<Button variant="outline" />}>
               Back
             </DialogClose>
-            <Button render={<Link href="/studio/result" />}>
+            <Button nativeButton={false} render={<Link href="/studio/result" />}>
               承認して結果を見る <ArrowRightIcon />
             </Button>
           </DialogFooter>
@@ -1505,7 +1517,7 @@ export function QualityPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex flex-wrap gap-2">
-          <Button render={<Link href="/quality/coverage" />}>
+          <Button nativeButton={false} render={<Link href="/quality/coverage" />}>
             Coverage matrix
           </Button>
           <Button variant="outline" onClick={() => setContractOpen(true)}>
@@ -1791,7 +1803,7 @@ export function ResultReportPage() {
           ))}
         </CardContent>
         <CardFooter>
-          <Button render={<Link href="/studio/preview" />}>
+          <Button nativeButton={false} render={<Link href="/studio/preview" />}>
             生成previewを見る <ArrowRightIcon />
           </Button>
         </CardFooter>
@@ -1839,7 +1851,7 @@ export function GeneratedPreviewPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button render={<Link href="/patterns" />}>
+          <Button nativeButton={false} render={<Link href="/patterns" />}>
             Patternsを開く <ExternalLinkIcon />
           </Button>
         </CardFooter>
@@ -1909,7 +1921,7 @@ export function CoverageMatrixPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button variant="outline" render={<Link href="/patterns" />}>
+          <Button variant="outline" nativeButton={false} render={<Link href="/patterns" />}>
             Patternsを開く <ArrowRightIcon />
           </Button>
         </CardFooter>
@@ -2039,6 +2051,7 @@ export function CaseStudyPage() {
         <CardFooter>
           <Button
             variant="outline"
+            nativeButton={false}
             render={<Link href="/quality" data-open-window />}
           >
             検証結果を見る <ExternalLinkIcon />
