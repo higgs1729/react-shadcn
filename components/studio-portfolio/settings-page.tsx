@@ -186,7 +186,7 @@ export function SettingsPage({
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [accent, setAccent] = useState<AccentId>("indigo")
-  const [highContrast, setHighContrast] = useState(false)
+  const [emphasizeBorders, setEmphasizeBorders] = useState(false)
   const [preferences, setPreferences] = useState(defaultPreferences)
   const pointerCursor =
     preferences.find((preference) => preference.id === "pointer-cursor")
@@ -202,10 +202,12 @@ export function SettingsPage({
       : "indigo"
     setAccent(nextAccent)
     applyAccent(nextAccent)
-    const storedHighContrast =
-      window.localStorage.getItem("studio-high-contrast") === "true"
-    setHighContrast(storedHighContrast)
-    document.documentElement.dataset.highContrast = String(storedHighContrast)
+    const storedEmphasizeBorders =
+      window.localStorage.getItem("studio-emphasize-borders") === "true"
+    setEmphasizeBorders(storedEmphasizeBorders)
+    document.documentElement.dataset.emphasizeBorders = String(
+      storedEmphasizeBorders
+    )
     if (storedPreferences) {
       try {
         setPreferences(
@@ -228,9 +230,12 @@ export function SettingsPage({
 
   useEffect(() => {
     if (!mounted) return
-    document.documentElement.dataset.highContrast = String(highContrast)
-    window.localStorage.setItem("studio-high-contrast", String(highContrast))
-  }, [highContrast, mounted])
+    document.documentElement.dataset.emphasizeBorders = String(emphasizeBorders)
+    window.localStorage.setItem(
+      "studio-emphasize-borders",
+      String(emphasizeBorders)
+    )
+  }, [emphasizeBorders, mounted])
 
   useEffect(() => {
     if (!mounted) return
@@ -328,28 +333,28 @@ export function SettingsPage({
               </div>
               <AccentPreview accent={activeAccent} />
             </section>
-            <section aria-labelledby="contrast-label" className="border-t pt-8">
-              <h2 id="contrast-label" className="text-base font-semibold">
-                ハイコントラスト
+            <section aria-labelledby="borders-label" className="border-t pt-8">
+              <h2 id="borders-label" className="text-base font-semibold">
+                枠線
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                背景と文字、境界線のコントラストを強め、要素の輪郭を見やすくします。
+                背景と文字の色は変えずに、境界線だけを濃くして要素の輪郭を見やすくします。
               </p>
               <Field
                 orientation="horizontal"
                 className="mt-4 max-w-2xl rounded-lg border p-4"
               >
-                <FieldLabel htmlFor="high-contrast">
+                <FieldLabel htmlFor="emphasize-borders">
                   <FieldContent>
-                    <span>ハイコントラストを有効にする</span>
+                    <span>枠線を強調する</span>
                     <span className="text-sm font-normal text-muted-foreground">
-                      背景色のコントラストをより大きくし、境界線を濃く表示します。
+                      カードや表、入力欄などの枠線を濃く表示します。
                     </span>
                   </FieldContent>
                   <Switch
-                    id="high-contrast"
-                    checked={highContrast}
-                    onCheckedChange={setHighContrast}
+                    id="emphasize-borders"
+                    checked={emphasizeBorders}
+                    onCheckedChange={setEmphasizeBorders}
                   />
                 </FieldLabel>
               </Field>

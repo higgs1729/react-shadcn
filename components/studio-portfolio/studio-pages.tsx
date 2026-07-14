@@ -440,7 +440,7 @@ export function OverviewPage() {
               period: "types",
               features: [],
               preview: (
-                <div className="h-28 overflow-hidden rounded-md border bg-muted/20 p-2">
+                <div className="inventory-preview h-28 overflow-hidden rounded-md border border-transparent bg-muted/20 p-2">
                   <div className="flex h-full gap-2">
                     <div className="w-8 rounded bg-primary/20" />
                     <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -463,7 +463,7 @@ export function OverviewPage() {
               period: "roles",
               features: [],
               preview: (
-                <div className="grid h-28 grid-cols-3 gap-2 rounded-md border bg-muted/20 p-2">
+                <div className="inventory-preview grid h-28 grid-cols-3 gap-2 rounded-md border border-transparent bg-muted/20 p-2">
                   <div className="rounded bg-primary/20" />
                   <div className="rounded bg-muted" />
                   <div className="rounded bg-muted" />
@@ -477,7 +477,7 @@ export function OverviewPage() {
               period: "patterns",
               features: [],
               preview: (
-                <div className="h-28 overflow-hidden rounded-md border bg-muted/20 p-2">
+                <div className="inventory-preview h-28 overflow-hidden rounded-md border border-transparent bg-muted/20 p-2">
                   <div className="h-3 w-2/5 rounded bg-muted" />
                   <div className="mt-2 space-y-1.5">
                     {["one", "two", "three", "four"].map((row) => (
