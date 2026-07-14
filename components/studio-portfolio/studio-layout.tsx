@@ -14,12 +14,14 @@ import { usePathname, useRouter } from "next/navigation"
 import {
   BookOpenIcon,
   BoxesIcon,
+  ChevronRightIcon,
   CircleCheckBigIcon,
   FileChartColumnIncreasingIcon,
   FileCheck2Icon,
   FolderKanbanIcon,
   KeyRoundIcon,
   LayoutDashboardIcon,
+  MenuIcon,
   ReceiptTextIcon,
   RocketIcon,
   Settings2Icon,
@@ -33,6 +35,21 @@ import {
 } from "@/lib/studio-portfolio/app-spec"
 import { ResizableSidebarRail } from "@/components/resizable-sidebar-rail"
 import { SettingsDialog } from "@/components/studio-portfolio/settings-page"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar,
@@ -49,6 +66,110 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar"
+
+const ZOOM_STEP = 10
+const ZOOM_MIN = 50
+const ZOOM_MAX = 200
+
+function SidebarMenuBar() {
+  const zoomRef = useRef(100)
+
+  const applyZoom = useCallback((next: number) => {
+    zoomRef.current = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next))
+    ;(document.documentElement.style as CSSStyleDeclaration & { zoom?: string }).zoom =
+      `${zoomRef.current}%`
+  }, [])
+
+  const handleUndo = useCallback(() => {
+    document.execCommand("undo")
+  }, [])
+
+  const handleRedo = useCallback(() => {
+    document.execCommand("redo")
+  }, [])
+
+  const handleReload = useCallback(() => {
+    window.location.reload()
+  }, [])
+
+  const handleZoomIn = useCallback(() => {
+    applyZoom(zoomRef.current + ZOOM_STEP)
+  }, [applyZoom])
+
+  const handleZoomOut = useCallback(() => {
+    applyZoom(zoomRef.current - ZOOM_STEP)
+  }, [applyZoom])
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey)) return
+      const key = event.key.toLowerCase()
+      if (key === "z" && event.shiftKey) {
+        event.preventDefault()
+        handleRedo()
+      } else if (key === "z") {
+        event.preventDefault()
+        handleUndo()
+      } else if (key === "r") {
+        event.preventDefault()
+        handleReload()
+      } else if (key === "+" || key === "=") {
+        event.preventDefault()
+        handleZoomIn()
+      } else if (key === "-") {
+        event.preventDefault()
+        handleZoomOut()
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [handleUndo, handleRedo, handleReload, handleZoomIn, handleZoomOut])
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger render={<SidebarMenuButton tooltip="メニュー" />}>
+            <MenuIcon />
+            <span>メニュー</span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>編集</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={handleUndo}>
+                  元に戻す
+                  <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleRedo}>
+                  やり直し
+                  <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>表示</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={handleReload}>
+                  再読み込み
+                  <DropdownMenuShortcut>Ctrl+R</DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleZoomIn}>
+                  拡大
+                  <DropdownMenuShortcut>Ctrl++</DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleZoomOut}>
+                  縮小
+                  <DropdownMenuShortcut>Ctrl+-</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}
 
 const navigationIcons: Record<string, ComponentType<{ className?: string }>> = {
   overview: LayoutDashboardIcon,
@@ -286,19 +407,50 @@ export function StudioLayout({ children }: { children: ReactNode }) {
     >
       <Sidebar collapsible="icon">
         <SidebarContent className="pt-3">
-          <SidebarGroup>
-            <SidebarGroupLabel>AI Design System</SidebarGroupLabel>
+          <SidebarGroup className="pb-0">
             <SidebarGroupContent>
-              <PrimaryNavigation />
+              <SidebarMenuBar />
             </SidebarGroupContent>
           </SidebarGroup>
-          {exampleNavigation.length > 0 ? (
-            <SidebarGroup>
-              <SidebarGroupLabel>Example Apps</SidebarGroupLabel>
+          <Collapsible
+            defaultOpen
+            className="group/ai-design-system"
+            render={<SidebarGroup />}
+          >
+            <CollapsibleTrigger
+              render={
+                <SidebarGroupLabel className="w-full cursor-pointer justify-between" />
+              }
+            >
+              <span>AI Design System</span>
+              <ChevronRightIcon className="size-4 transition-transform duration-200 group-data-open/ai-design-system:rotate-90" />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
               <SidebarGroupContent>
-                <ExampleNavigation />
+                <PrimaryNavigation />
               </SidebarGroupContent>
-            </SidebarGroup>
+            </CollapsibleContent>
+          </Collapsible>
+          {exampleNavigation.length > 0 ? (
+            <Collapsible
+              defaultOpen
+              className="group/example-apps"
+              render={<SidebarGroup />}
+            >
+              <CollapsibleTrigger
+                render={
+                  <SidebarGroupLabel className="w-full cursor-pointer justify-between" />
+                }
+              >
+                <span>Example Apps</span>
+                <ChevronRightIcon className="size-4 transition-transform duration-200 group-data-open/example-apps:rotate-90" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  <ExampleNavigation />
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </Collapsible>
           ) : null}
         </SidebarContent>
         <SidebarFooter>

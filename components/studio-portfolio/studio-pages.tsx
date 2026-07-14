@@ -9,11 +9,14 @@ import {
 } from "react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
+import ReactMarkdown from "react-markdown"
 import {
   ArrowRightIcon,
   CheckCircle2Icon,
+  CodeIcon,
   ExternalLinkIcon,
-  ShieldCheckIcon,
+  LayoutGridIcon,
+  MessageCircleIcon,
 } from "lucide-react"
 
 import { ActivityFeed } from "@/components/activity-feed-01"
@@ -69,15 +72,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel"
 import { builtExampleApps } from "@/lib/studio-portfolio/app-spec"
 import { OrientationLanding } from "@/components/studio-portfolio/orientation-landing"
 import studioPortfolioData from "@/lib/studio-portfolio/studio-portfolio-data.json"
 import { studioContent } from "@/lib/studio-portfolio/studio-content"
 import { studioEvidence } from "@/lib/studio-portfolio/evidence"
 import { studioScenarios } from "@/lib/studio-portfolio/studio-scenarios"
-import flowSpec from "@/docs/examples/flowspec-dryrun-saas-ops-01.json"
-import selectionSpec from "@/docs/examples/selectionspec-dryrun-saas-ops-01.json"
-import buildReport from "@/docs/examples/buildreport-dryrun-saas-ops-01.json"
 
 const data = studioPortfolioData
 
@@ -124,8 +132,8 @@ function SectionHeader({
   id: string
   title: string
   description: string
-  actionHref: string
-  actionLabel: string
+  actionHref?: string
+  actionLabel?: string
 }) {
   return (
     <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
@@ -135,20 +143,34 @@ function SectionHeader({
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
-      <Button
-        variant="outline"
-        size="sm"
-        nativeButton={false}
-        render={<Link href={actionHref} data-open-window />}
-      >
-        {actionLabel} <ArrowRightIcon />
-      </Button>
+      {actionHref && actionLabel ? (
+        <Button
+          variant="outline"
+          size="sm"
+          nativeButton={false}
+          render={<Link href={actionHref} data-open-window />}
+        >
+          {actionLabel} <ArrowRightIcon />
+        </Button>
+      ) : null}
     </div>
   )
 }
 
+const EXAMPLE_APPS_AUTOPLAY_MS = 4000
+
 function ExampleAppsSection() {
   const basePath = useStudioBasePath()
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+
+  useEffect(() => {
+    if (!carouselApi) return
+    const id = window.setInterval(() => {
+      if (carouselApi.canScrollNext()) carouselApi.scrollNext()
+      else carouselApi.scrollTo(0)
+    }, EXAMPLE_APPS_AUTOPLAY_MS)
+    return () => window.clearInterval(id)
+  }, [carouselApi])
 
   return (
     <section aria-labelledby="example-apps-heading">
@@ -159,41 +181,46 @@ function ExampleAppsSection() {
         actionHref={builtExampleApps[0]?.route ?? "/examples"}
         actionLabel="最初の例を開く"
       />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {builtExampleApps.map((app) => (
-          <Link
-            key={app.id}
-            href={app.route}
-            data-open-window
-            className="group flex flex-col overflow-hidden rounded-lg border bg-card transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <div className="relative aspect-video w-full overflow-hidden border-b bg-muted/20">
-              {app.previewRoute && basePath !== null ? (
-                <iframe
-                  title={app.label}
-                  src={`${basePath}${app.previewRoute}/`}
-                  loading="lazy"
-                  tabIndex={-1}
-                  className="pointer-events-none absolute top-0 left-0 h-[250%] w-[250%] origin-top-left scale-[0.4] border-0 bg-background"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                  {app.label}
+      <Carousel setApi={setCarouselApi} opts={{ loop: true }} className="w-full">
+        <CarouselContent>
+          {builtExampleApps.map((app) => (
+            <CarouselItem key={app.id}>
+              <Link
+                href={app.route}
+                data-open-window
+                className="group flex flex-col overflow-hidden rounded-lg transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+              >
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted/20">
+                  {app.previewRoute && basePath !== null ? (
+                    <iframe
+                      title={app.label}
+                      src={`${basePath}${app.previewRoute}/`}
+                      loading="lazy"
+                      tabIndex={-1}
+                      className="pointer-events-none absolute top-0 left-0 h-[250%] w-[250%] origin-top-left scale-[0.4] border-0 bg-background"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                      {app.label}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            <div className="flex flex-1 flex-col gap-2 p-3">
-              <span className="font-medium">{app.label}</span>
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline">{app.screenType}</Badge>
-                <span className="font-mono text-xs text-muted-foreground">
-                  {app.selectedPattern}
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+                <div className="flex flex-1 flex-col gap-2 p-3">
+                  <span className="font-medium">{app.label}</span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline">{app.screenType}</Badge>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {app.selectedPattern}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-2 bg-background/80 backdrop-blur" />
+        <CarouselNext className="right-2 bg-background/80 backdrop-blur" />
+      </Carousel>
     </section>
   )
 }
@@ -324,112 +351,106 @@ export function OrientationPage() {
   return <OrientationLanding />
 }
 
-type SystemFlowStageId =
-  | "brief"
-  | "flow-spec"
-  | "selection-spec"
-  | "build-report"
-  | "ui"
-
-const systemFlowStages: {
-  id: SystemFlowStageId
-  label: string
-  fileName: string
-}[] = [
-  { id: "brief", label: "Brief", fileName: "brief" },
-  { id: "flow-spec", label: "FlowSpec", fileName: "flowspec-dryrun-saas-ops-01.json" },
-  { id: "selection-spec", label: "SelectionSpec", fileName: "selectionspec-dryrun-saas-ops-01.json" },
-  { id: "build-report", label: "BuildReport", fileName: "buildreport-dryrun-saas-ops-01.json" },
-  { id: "ui", label: "UI", fileName: "login-03" },
+const systemFlowUsedBlocks = [
+  "summary-metric-row-01",
+  "chart-panel-01",
+  "data-table-panel-01",
 ]
 
 function SystemFlow() {
-  const [selectedStageId, setSelectedStageId] = useState<SystemFlowStageId>("brief")
   const basePath = useStudioBasePath()
-  const selectedStage = systemFlowStages.find((stage) => stage.id === selectedStageId)!
-  const scenario = studioScenarios.find((item) => item.id === "sign-in")!
-  const flowStep = flowSpec.steps.find((step) => step.stepId === "login")!
-  const selectedScreen = selectionSpec.screens.find((screen) => screen.stepId === "login")!
-  const builtScreen = buildReport.screens.find((screen) => screen.stepId === "login")!
-  const loginPreviewSrc =
-    basePath !== null ? `${basePath}/flows/dryrun-saas-ops-01/login` : ""
-
-  const preview =
-    selectedStageId === "brief"
-      ? JSON.stringify({ brief: scenario.brief }, null, 2)
-      : selectedStageId === "flow-spec"
-        ? JSON.stringify({ flowId: flowSpec.flowId, step: flowStep }, null, 2)
-        : selectedStageId === "selection-spec"
-          ? JSON.stringify({ flowId: selectionSpec.flowId, screen: selectedScreen }, null, 2)
-          : selectedStageId === "build-report"
-            ? JSON.stringify({ flowId: buildReport.flowId, screen: builtScreen, status: buildReport.status, checks: buildReport.checks }, null, 2)
-            : null
+  const scenario = studioScenarios.find((item) => item.id === "operations-overview")!
+  const dashboardApp = builtExampleApps.find(
+    (app) => app.selectedPattern === "dashboard-01"
+  )
+  const dashboardPreviewSrc =
+    basePath !== null && dashboardApp?.previewRoute
+      ? `${basePath}${dashboardApp.previewRoute}/`
+      : ""
 
   return (
     <Card>
-      <CardContent className="space-y-5">
-        <div className="grid gap-2 sm:grid-cols-5">
-          {systemFlowStages.map((stage, index) => {
-            const isSelected = stage.id === selectedStageId
-            return (
-              <div key={stage.id} className="relative isolate min-w-0">
-                {index < systemFlowStages.length - 1 ? (
-                  <div
-                    aria-hidden="true"
-                    className="absolute top-1/2 left-full z-0 hidden h-px w-2 bg-border sm:block"
-                  />
-                ) : null}
-                <button
-                  type="button"
-                  aria-pressed={isSelected}
-                  onClick={() => setSelectedStageId(stage.id)}
-                  className={`relative z-10 flex h-full min-h-32 w-full flex-col items-start gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isSelected ? "border-primary bg-primary/8" : "bg-card hover:bg-muted/50"}`}
-                >
-                  <span className={`flex size-7 items-center justify-center rounded-full text-xs font-semibold ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                    {index + 1}
-                  </span>
-                  <span className="text-sm font-semibold">{stage.label}</span>
-                  <span className="min-h-8 break-all font-mono text-[10px] leading-4 text-muted-foreground">{stage.fileName}</span>
-                </button>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="overflow-hidden rounded-lg border bg-muted/20">
-          <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
-            <span className="font-mono text-xs text-muted-foreground">{selectedStage.fileName}</span>
-            <Badge variant="outline">{selectedStage.label}</Badge>
+      <CardContent>
+        <div className="grid items-stretch gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1.4fr]">
+          <div className="flex flex-col gap-2 rounded-lg bg-muted/30 p-4">
+            <span className="inline-flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <MessageCircleIcon className="size-4" aria-hidden="true" />
+            </span>
+            <span className="text-xs font-medium text-muted-foreground">
+              1. 作りたいものを伝える
+            </span>
+            <p className="text-sm leading-6">「{scenario.brief}」</p>
           </div>
-          {preview ? (
-            <pre className="max-h-72 min-w-0 overflow-auto whitespace-pre-wrap break-words p-4 font-mono text-xs leading-5 text-foreground">{preview}</pre>
-          ) : (
-            <div className="p-4 sm:p-5">
-              {loginPreviewSrc ? (
-                <div className="relative mx-auto aspect-[4/3] w-full max-w-4xl overflow-hidden rounded-md border bg-background shadow-sm">
-                  <iframe
-                    title="Login 03"
-                    src={loginPreviewSrc}
-                    className="absolute top-0 left-0 h-[110%] w-[110%] origin-top-left scale-[0.91] border-0 bg-background"
-                  />
-                </div>
+
+          <ArrowRightIcon
+            aria-hidden="true"
+            className="hidden size-5 shrink-0 self-center text-muted-foreground sm:block"
+          />
+
+          <div className="flex flex-col gap-2 rounded-lg bg-muted/30 p-4">
+            <span className="inline-flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <LayoutGridIcon className="size-4" aria-hidden="true" />
+            </span>
+            <span className="text-xs font-medium text-muted-foreground">
+              2. 画面の組み立てを選ぶ
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {systemFlowUsedBlocks.map((name) => (
+                <Badge key={name} variant="outline" className="font-mono text-[11px]">
+                  {name}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <ArrowRightIcon
+            aria-hidden="true"
+            className="hidden size-5 shrink-0 self-center text-muted-foreground sm:block"
+          />
+
+          <div className="flex flex-col gap-2 rounded-lg bg-muted/30 p-4">
+            <span className="inline-flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <CodeIcon className="size-4" aria-hidden="true" />
+            </span>
+            <span className="text-xs font-medium text-muted-foreground">
+              3. コードとして実装
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-sm">
+              <CheckCircle2Icon className="size-4 text-primary" aria-hidden="true" />
+              Dashboard 01
+            </span>
+          </div>
+
+          <ArrowRightIcon
+            aria-hidden="true"
+            className="hidden size-5 shrink-0 self-center text-muted-foreground sm:block"
+          />
+
+          <div className="flex flex-col gap-2 overflow-hidden rounded-lg bg-muted/30 p-2">
+            <span className="px-2 pt-1 text-xs font-medium text-muted-foreground">
+              4. できあがった画面
+            </span>
+            <div className="relative aspect-video w-full overflow-hidden rounded-md bg-background">
+              {dashboardPreviewSrc ? (
+                <iframe
+                  title="Dashboard 01"
+                  src={dashboardPreviewSrc}
+                  loading="lazy"
+                  tabIndex={-1}
+                  className="pointer-events-none absolute top-0 left-0 h-[250%] w-[250%] origin-top-left scale-[0.4] border-0 bg-background"
+                />
               ) : (
-                <div className="mx-auto aspect-[4/3] w-full max-w-4xl animate-pulse rounded-md border bg-muted/30" />
+                <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                  Dashboard 01
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
         <Button nativeButton={false} render={<Link href="/studio" data-open-window />}>
-          Studioで試す <ArrowRightIcon />
-        </Button>
-        <Button
-          variant="outline"
-          nativeButton={false}
-          render={<Link href="/case-study" data-open-window />}
-        >
-          設計判断を読む
+          Studioで見る <ArrowRightIcon />
         </Button>
       </CardFooter>
     </Card>
@@ -453,8 +474,6 @@ export function OverviewPage() {
             id="system-flow-heading"
             title="システムの流れ"
             description="briefから実装まで、選定と検証の根拠を実際の成果物でたどれます。"
-            actionHref="/studio"
-            actionLabel="Studioで試す"
           />
           <SystemFlow />
         </section>
@@ -1275,8 +1294,24 @@ export function LegacyStudioWorkspace() {
   )
 }
 
+type StudioStepId =
+  | "brief"
+  | "flow-spec"
+  | "selection-spec"
+  | "build-report"
+  | "ui-preview"
+
+const studioSteps: { id: StudioStepId; label: string }[] = [
+  { id: "brief", label: "Brief" },
+  { id: "flow-spec", label: "FlowSpec" },
+  { id: "selection-spec", label: "SelectionSpec" },
+  { id: "build-report", label: "BuildReport" },
+  { id: "ui-preview", label: "UI preview" },
+]
+
 export function StudioPage() {
   const [selectedId, setSelectedId] = useState(studioScenarios[0].id)
+  const [selectedStepId, setSelectedStepId] = useState<StudioStepId>("brief")
   const selectedScenario =
     studioScenarios.find((scenario) => scenario.id === selectedId) ??
     studioScenarios[0]
@@ -1286,19 +1321,9 @@ export function StudioPage() {
       title="Studio"
       description="実行時にAIが生成する画面ではありません。実在するpatternへ結びつけた、選択式の静的サンプルで判断の流れを確認します。"
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>Briefから実装previewまでを、選んで辿る</CardTitle>
-          <CardDescription>
-            サンプルを選ぶと、その意図に対応する事前作成済みのFlowSpecとSelectionSpec、実在するStorybook
-            previewを順に確認できます。
-          </CardDescription>
-        </CardHeader>
-      </Card>
-
       <section aria-labelledby="scenario-heading">
         <h2 id="scenario-heading" className="mb-3 text-base font-medium">
-          1. 確認したいことを選ぶ
+          確認したいことを選ぶ
         </h2>
         <CollectionGrid
           selectedId={selectedId}
@@ -1314,96 +1339,143 @@ export function StudioPage() {
 
       <section aria-labelledby="trace-heading">
         <h2 id="trace-heading" className="mb-3 text-base font-medium">
-          2. 判断の記録を辿る
+          判断の記録を辿る
         </h2>
-        <div className="grid gap-4 xl:grid-cols-3">
-          <DetailOverview
-            title="Brief"
-            status="Selected sample"
-            fields={[
-              {
-                id: "request",
-                label: "Request",
-                value: selectedScenario.brief,
-              },
-              {
-                id: "outcome",
-                label: "Expected outcome",
-                value: selectedScenario.outcome,
-              },
-            ]}
-          />
-          <DetailOverview
-            title="FlowSpec"
-            status="Prebuilt"
-            fields={[
-              {
-                id: "intent",
-                label: "User intent",
-                value: selectedScenario.flowSpec.userIntent,
-              },
-              {
-                id: "type",
-                label: "ScreenType",
-                value: selectedScenario.flowSpec.primaryScreenType,
-              },
-              {
-                id: "state",
-                label: "Required state",
-                value: selectedScenario.flowSpec.requiredState,
-              },
-            ]}
-          />
-          <DetailOverview
-            title="SelectionSpec"
-            status="Prebuilt"
-            fields={[
-              {
-                id: "pattern",
-                label: "Screen pattern",
-                value: selectedScenario.selectionSpec.screenPattern,
-              },
-              {
-                id: "reason",
-                label: "Why this pattern",
-                value: selectedScenario.selectionSpec.reason,
-              },
-            ]}
-          />
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+          <div className="flex gap-2 overflow-x-auto pb-1 lg:w-48 lg:shrink-0 lg:flex-col lg:overflow-visible lg:pb-0">
+            {studioSteps.map((step, index) => {
+              const isSelected = step.id === selectedStepId
+              return (
+                <button
+                  key={step.id}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedStepId(step.id)}
+                  className={`flex shrink-0 items-center gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full ${isSelected ? "border-primary bg-primary/8" : "bg-card hover:bg-muted/50"}`}
+                >
+                  <span
+                    className={`flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                  >
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-medium whitespace-nowrap">
+                    {step.label}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            {selectedStepId === "brief" ? (
+              <DetailOverview
+                title="Brief"
+                status="Selected sample"
+                fields={[
+                  {
+                    id: "request",
+                    label: "Request",
+                    value: selectedScenario.brief,
+                  },
+                  {
+                    id: "outcome",
+                    label: "Expected outcome",
+                    value: selectedScenario.outcome,
+                  },
+                ]}
+              />
+            ) : selectedStepId === "flow-spec" ? (
+              <DetailOverview
+                title="FlowSpec"
+                status="Prebuilt"
+                fields={[
+                  {
+                    id: "intent",
+                    label: "User intent",
+                    value: selectedScenario.flowSpec.userIntent,
+                  },
+                  {
+                    id: "type",
+                    label: "ScreenType",
+                    value: selectedScenario.flowSpec.primaryScreenType,
+                  },
+                  {
+                    id: "state",
+                    label: "Required state",
+                    value: selectedScenario.flowSpec.requiredState,
+                  },
+                ]}
+              />
+            ) : selectedStepId === "selection-spec" ? (
+              <DetailOverview
+                title="SelectionSpec"
+                status="Prebuilt"
+                fields={[
+                  {
+                    id: "pattern",
+                    label: "Screen pattern",
+                    value: selectedScenario.selectionSpec.screenPattern,
+                  },
+                  {
+                    id: "reason",
+                    label: "Why this pattern",
+                    value: selectedScenario.selectionSpec.reason,
+                  },
+                ]}
+              />
+            ) : selectedStepId === "build-report" ? (
+              <DetailOverview
+                title="BuildReport"
+                status={selectedScenario.buildReport.status}
+                fields={[
+                  {
+                    id: "pattern",
+                    label: "Built as",
+                    value: selectedScenario.selectionSpec.screenPattern,
+                  },
+                  {
+                    id: "checks",
+                    label: "Checks passed",
+                    value: selectedScenario.buildReport.checksPassed.join(" / "),
+                  },
+                ]}
+              />
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>UI previewを確認する</CardTitle>
+                  <CardDescription>
+                    選定されたpatternのStorybookを開き、実装済みのdefaultと状態別previewを確認します。
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter className="flex flex-wrap gap-2">
+                  <Button
+                    render={
+                      <Link
+                        href={`/patterns?panel=live-demo&pattern=${selectedScenario.selectionSpec.screenPattern}`}
+                        data-open-window
+                      />
+                    }
+                  >
+                    {selectedScenario.outcome} <ArrowRightIcon />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    render={
+                      <Link
+                        href={`/patterns?panel=pattern-detail&pattern=${selectedScenario.selectionSpec.screenPattern}`}
+                        data-open-window
+                      />
+                    }
+                  >
+                    選定の詳細を見る
+                  </Button>
+                </CardFooter>
+              </Card>
+            )}
+          </div>
         </div>
       </section>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>3. 実装previewを確認する</CardTitle>
-          <CardDescription>
-            選定されたpatternのStorybookを開き、実装済みのdefaultと状態別previewを確認します。
-          </CardDescription>
-        </CardHeader>
-        <CardFooter className="flex flex-wrap gap-2">
-          <Button
-            render={
-              <Link
-                href={`/patterns?panel=live-demo&pattern=${selectedScenario.selectionSpec.screenPattern}`}
-                data-open-window
-              />
-            }
-          >
-            {selectedScenario.outcome} <ArrowRightIcon />
-          </Button>
-          <Button
-            variant="outline"
-            render={
-              <Link
-                href={`/patterns?panel=pattern-detail&pattern=${selectedScenario.selectionSpec.screenPattern}`}
-                data-open-window
-              />
-            }
-          >
-            選定の詳細を見る
-          </Button>
-        </CardFooter>
-      </Card>
 
       <p className="text-xs text-muted-foreground">
         この画面は静的ポートフォリオです。入力から新しいFlowSpec・SelectionSpec・UIを生成したり、外部AIへ問い合わせたりはしません。
@@ -1414,20 +1486,8 @@ export function StudioPage() {
 
 export function QualityPage() {
   const { params } = usePortfolioUrlState()
-  const verifiedFlows = data.flows.filter((flow) => flow.status === "verified")
-  const [search, setSearch] = useState("")
-  const [status, setStatus] = useState("all")
-  const [view, setView] = useState<"table" | "grid">("table")
   const [contractOpen, setContractOpen] = useState(false)
   const [provenanceOpen, setProvenanceOpen] = useState(false)
-  const checks = studioEvidence.checks.filter(
-    (check) =>
-      (status === "all" || check.status === status) &&
-      (!search.trim() ||
-        `${check.name} ${check.command}`
-          .toLowerCase()
-          .includes(search.toLowerCase()))
-  )
 
   useEffect(() => {
     const panel = params.get("panel")
@@ -1438,145 +1498,63 @@ export function QualityPage() {
   return (
     <PageFrame
       title="Quality"
-      description="品質の主張を、契約・生成物・チェック結果まで遡って確認します。"
+      description="品質の主張を、契約・生成物・来歴まで遡って確認します。"
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>判断の根拠を、公開前に辿る</CardTitle>
-          <CardDescription>
-            まず契約・来歴・coverageを確認し、その後に個別の自動checkへ進みます。数値は検証範囲を示す補助情報です。
-          </CardDescription>
-        </CardHeader>
-        <CardFooter className="flex flex-wrap gap-2">
-          <Button nativeButton={false} render={<Link href="/quality/coverage" />}>
-            Coverage matrix
-          </Button>
-          <Button variant="outline" onClick={() => setContractOpen(true)}>
-            Contract explorer
-          </Button>
-          <Button variant="outline" onClick={() => setProvenanceOpen(true)}>
-            Provenance trail
-          </Button>
-        </CardFooter>
-      </Card>
-      <SectionCards
-        variant="compact"
-        items={[
-          {
-            label: "Verified flows",
-            value: String(verifiedFlows.length),
-            summary: "BuildReportでverified",
-            detail: "Example flows",
-          },
-          {
-            label: "Built screens",
-            value: String(
-              data.flows.reduce((total, flow) => total + flow.screens, 0)
-            ),
-            summary: "例示flowに含まれる画面",
-            detail: "BuildReport screens",
-          },
-          {
-            label: "Unresolved",
-            value: String(
-              data.flows.reduce((total, flow) => total + flow.unresolved, 0)
-            ),
-            summary: "例示flowの未解決数",
-            detail: "Resolution status",
-          },
-          {
-            label: "Registry coverage",
-            value: `${data.inventory.screenTypes}/${data.inventory.screenTypes}`,
-            summary: "ScreenType inventoryのcoverage",
-            detail: "Coverage report",
-          },
-        ]}
-      />
-      <Card>
-        <CardHeader>
-          <CardTitle>自動検証</CardTitle>
-          <CardDescription>
-            Task
-            20のBuildReportに記録された再現可能なcheckです。現在のportfolio本体は別途`npm
-            run checks`で確認します。
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <FilterToolbar
-            search={search}
-            onSearchChange={setSearch}
-            status={status}
-            onStatusChange={setStatus}
-            statusOptions={[
-              { value: "all", label: "All checks" },
-              { value: "pass", label: "Pass" },
-            ]}
-            view={view}
-            onViewChange={setView}
-          />
-          {view === "table" ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Check</TableHead>
-                  <TableHead>Command</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {checks.map((check) => (
-                  <TableRow key={check.name}>
-                    <TableCell>{check.name}</TableCell>
-                    <TableCell className="font-mono text-xs">
-                      {check.command}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          check.status === "pass" ? "secondary" : "outline"
-                        }
-                      >
-                        {check.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="grid gap-3 md:grid-cols-2">
-              {checks.map((check) => (
-                <div key={check.name} className="rounded-md border p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{check.name}</span>
-                    <CheckCircle2Icon className="size-4 text-emerald-600" />
-                  </div>
-                  <p className="mt-2 font-mono text-xs text-muted-foreground">
-                    {check.command}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>人間レビューが必要な項目</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-3 md:grid-cols-3">
-          {[
-            "content fitと読みやすさ",
-            "maturityの昇格判断",
-            "公開前の最終UX確認",
-          ].map((item) => (
-            <div key={item} className="rounded-md border p-3 text-sm">
-              <ShieldCheckIcon className="mb-2 size-4 text-muted-foreground" />
-              {item}
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+      <div className="max-w-3xl space-y-4 text-sm leading-6 text-muted-foreground">
+        <p>
+          brief から画面ができるまでの各段階(FlowSpec → SelectionSpec →
+          BuildReport)は、それぞれ「契約」として内容が固定されています。契約は
+          JSON Schemaで書かれ、ajvという検証ツールが次の段階へ進む前に機械的に形式を確認するため、ルールから外れた内容が途中で紛れ込むことはありません。
+        </p>
+        <p>
+          さらに生成物には provenance
+          sidecarという記録が添えられます。これは入力ファイルの digest(内容から計算した指紋のようなもの)を保存する仕組みで、後から入力が書き換えられていないかを機械的に照合できます。「この画面はこのbriefと選定結果から作られた」という対応関係を、見た目ではなく検証可能な形で示します。
+        </p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Coverage matrix</CardTitle>
+            <CardDescription>
+              ScreenType・blockRoleの在庫が網羅されているかを確認します。
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button
+              nativeButton={false}
+              render={<Link href="/quality/coverage" />}
+            >
+              開く <ArrowRightIcon />
+            </Button>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Contract explorer</CardTitle>
+            <CardDescription>
+              各段階を固定する4つの契約スキーマの内容を確認します。
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button variant="outline" onClick={() => setContractOpen(true)}>
+              開く <ArrowRightIcon />
+            </Button>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Provenance trail</CardTitle>
+            <CardDescription>
+              入力とregistryのdigestが、成果物とどう結びつくかを確認します。
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button variant="outline" onClick={() => setProvenanceOpen(true)}>
+              開く <ArrowRightIcon />
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
       <Drawer
         open={contractOpen}
         onOpenChange={setContractOpen}
@@ -1889,106 +1867,32 @@ export function CoverageMatrixPage() {
   )
 }
 
-export function CaseStudyPage() {
+export function CaseStudyPage({ markdown }: { markdown: string }) {
   return (
     <PageFrame
       title="Case Study"
       description="画面を単独のテンプレートではなく、Page・ChildRoute・Drawer・Dialogからなる階層として設計し直した過程をまとめます。"
     >
-      <DetailOverview
-        title="Studio Portfolio"
-        status="In progress"
-        fields={[
-          {
-            id: "problem",
-            label: "Problem",
-            value: "選定済みpatternと作品contentの不整合",
-          },
-          {
-            id: "decision",
-            label: "Decision",
-            value: "content fitを優先してcompositionを分離",
-          },
-          {
-            id: "delivery",
-            label: "Delivery",
-            value: "Static export / GitHub Pages",
-          },
-        ]}
-      />
-      <div className="grid gap-4 lg:grid-cols-2">
-        {[
-          [
-            "Contract-first",
-            "briefから実装までの判断をFlowSpec・SelectionSpec・BuildReportで受け渡す。",
-          ],
-          [
-            "Inventory-first",
-            "すべてのcomponentを使うのではなく、JTBDに必要な在庫だけを使う。",
-          ],
-          [
-            "Hierarchy-first",
-            "PrimaryNavigation、Page、ChildRoute、Drawer、Dialogの責務を混同しない。",
-          ],
-          [
-            "Content fit",
-            "無関係なKPIやchartを流用せず、適合しない場合は理由を残してcompositionを切り替える。",
-          ],
-          [
-            "Result",
-            "5つのPageと、選定結果・coverageを確認するChildRouteを静的export可能な構成で実装した。",
-          ],
-          [
-            "Current limit",
-            "AI API、永続化、maturity昇格、人間による最終UX評価は静的portfolioの対象外として明示する。",
-          ],
-        ].map(([title, body]) => (
-          <Card key={title}>
-            <CardHeader>
-              <CardTitle>{title}</CardTitle>
-              <CardDescription>{body}</CardDescription>
-            </CardHeader>
-          </Card>
-        ))}
+      <div
+        className="max-w-3xl space-y-4 text-sm leading-7 text-foreground
+          [&_code]:rounded [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs
+          [&_h1]:mt-8 first:[&_h1]:mt-0 [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:tracking-tight
+          [&_h2]:mt-6 [&_h2]:text-base [&_h2]:font-semibold
+          [&_li]:ml-5 [&_li]:list-disc
+          [&_ol]:space-y-1 [&_ul]:space-y-1
+          [&_p]:text-muted-foreground
+          [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 [&_pre]:p-4"
+      >
+        <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>現在の到達点</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ActivityFeed
-            entries={[
-              {
-                id: "spec",
-                actor: "Spec",
-                action: "StudioLayoutとroute hierarchyを定義",
-                timestamp: "Design decision",
-              },
-              {
-                id: "data",
-                actor: "Data",
-                action: "portfolio dataをroute外のbuild-time moduleへ退避",
-                timestamp: "Implementation",
-              },
-              {
-                id: "quality",
-                actor: "Checks",
-                action: "validate・typecheck・build・Storybookを確認",
-                timestamp: "Verification",
-              },
-            ]}
-          />
-        </CardContent>
-        <CardFooter>
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={<Link href="/quality" data-open-window />}
-          >
-            検証結果を見る <ExternalLinkIcon />
-          </Button>
-        </CardFooter>
-      </Card>
+
+      <Button
+        variant="outline"
+        nativeButton={false}
+        render={<Link href="/quality" data-open-window />}
+      >
+        検証結果を見る <ExternalLinkIcon />
+      </Button>
     </PageFrame>
   )
 }

@@ -12,6 +12,10 @@ export type StudioScenario = {
     screenPattern: string
     reason: string
   }
+  buildReport: {
+    status: string
+    checksPassed: string[]
+  }
 }
 
 export const studioScenarios: StudioScenario[] = [
@@ -30,6 +34,10 @@ export const studioScenarios: StudioScenario[] = [
       screenPattern: "dashboard-01",
       reason: "複数の重要指標とその推移を、ひとつの判断面にまとめるため。",
     },
+    buildReport: {
+      status: "built",
+      checksPassed: ["lint", "typecheck", "story", "a11y"],
+    },
   },
   {
     id: "sign-in",
@@ -46,20 +54,9 @@ export const studioScenarios: StudioScenario[] = [
       screenPattern: "login-03",
       reason: "認証フォーム、補助リンク、入力エラーを一貫して扱えるため。",
     },
-  },
-  {
-    id: "invoice-review",
-    title: "請求書を検索・確認したい",
-    brief: "請求書を検索・絞り込みし、支払い状況を一覧で確認したい。",
-    outcome: "Collection Table 01を確認する",
-    flowSpec: {
-      userIntent: "検索・絞り込み",
-      primaryScreenType: "collection",
-      requiredState: "empty",
-    },
-    selectionSpec: {
-      screenPattern: "collection-table-01",
-      reason: "高密度な一覧、検索、フィルタ、空状態を同じ画面で扱えるため。",
+    buildReport: {
+      status: "built",
+      checksPassed: ["lint", "typecheck", "story", "a11y"],
     },
   },
   {
@@ -76,21 +73,9 @@ export const studioScenarios: StudioScenario[] = [
       screenPattern: "planning-board-01",
       reason: "columnとcardの関係で、作業の状態遷移を直接扱えるため。",
     },
-  },
-  {
-    id: "document-review",
-    title: "文書を作成してレビューしたい",
-    brief:
-      "長い提案書を編集し、コメントと添付ファイルをまとめてレビューしたい。",
-    outcome: "Document Workspace 01を確認する",
-    flowSpec: {
-      userIntent: "作成・レビュー",
-      primaryScreenType: "document-workspace",
-      requiredState: "validation-error",
-    },
-    selectionSpec: {
-      screenPattern: "document-workspace-01",
-      reason: "本文編集、コメント、添付を文書の文脈でまとめられるため。",
+    buildReport: {
+      status: "built",
+      checksPassed: ["lint", "typecheck", "story", "a11y"],
     },
   },
 ]
