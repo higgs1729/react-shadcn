@@ -37,6 +37,7 @@ import { PricingPlanCard } from "@/components/pricing-plan-card-01"
 import { SectionCards } from "@/components/section-cards"
 import { WizardStepper } from "@/components/wizard-stepper-01"
 import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -72,14 +73,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "@/components/ui/carousel"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { builtExampleApps } from "@/lib/studio-portfolio/app-spec"
 import { OrientationLanding } from "@/components/studio-portfolio/orientation-landing"
 import studioPortfolioData from "@/lib/studio-portfolio/studio-portfolio-data.json"
@@ -157,20 +151,17 @@ function SectionHeader({
   )
 }
 
-const EXAMPLE_APPS_AUTOPLAY_MS = 4000
+// カードは w-72 (288px)。iframe をデスクトップ幅でレンダリングして全体像を見せ、
+// カード幅に合わせて縮小する。値が小さいほど拡大表示(縦に短いアプリ向け)。
+const EXAMPLE_APPS_CARD_WIDTH = 288
+const EXAMPLE_APPS_VIEWPORT_DEFAULT = 1280
+const EXAMPLE_APPS_VIEWPORT: Record<string, number> = {
+  "member-gate": 820,
+}
 
 function ExampleAppsSection() {
   const basePath = useStudioBasePath()
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
-
-  useEffect(() => {
-    if (!carouselApi) return
-    const id = window.setInterval(() => {
-      if (carouselApi.canScrollNext()) carouselApi.scrollNext()
-      else carouselApi.scrollTo(0)
-    }, EXAMPLE_APPS_AUTOPLAY_MS)
-    return () => window.clearInterval(id)
-  }, [carouselApi])
+  const marqueeApps = [...builtExampleApps, ...builtExampleApps]
 
   return (
     <section aria-labelledby="example-apps-heading">
@@ -181,46 +172,59 @@ function ExampleAppsSection() {
         actionHref={builtExampleApps[0]?.route ?? "/examples"}
         actionLabel="最初の例を開く"
       />
-      <Carousel setApi={setCarouselApi} opts={{ loop: true }} className="w-full">
-        <CarouselContent>
-          {builtExampleApps.map((app) => (
-            <CarouselItem key={app.id}>
-              <Link
-                href={app.route}
-                data-open-window
-                className="group flex flex-col overflow-hidden rounded-lg transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
-              >
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted/20">
-                  {app.previewRoute && basePath !== null ? (
-                    <iframe
-                      title={app.label}
-                      src={`${basePath}${app.previewRoute}/`}
-                      loading="lazy"
-                      tabIndex={-1}
-                      className="pointer-events-none absolute top-0 left-0 h-[250%] w-[250%] origin-top-left scale-[0.4] border-0 bg-background"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                      {app.label}
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col gap-2 p-3">
-                  <span className="font-medium">{app.label}</span>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline">{app.screenType}</Badge>
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {app.selectedPattern}
-                    </span>
+      <div className="group relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
+        <div className="flex w-max animate-[example-apps-marquee_50s_linear_infinite] group-hover:[animation-play-state:paused]">
+          {marqueeApps.map((app, index) => (
+            <Link
+              key={`${app.id}-${index}`}
+              href={app.route}
+              data-open-window
+              aria-hidden={index >= builtExampleApps.length}
+              tabIndex={index >= builtExampleApps.length ? -1 : undefined}
+              className="group/card mr-6 flex w-72 shrink-0 flex-col overflow-hidden rounded-lg transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-muted/20">
+                {app.previewRoute && basePath !== null ? (
+                  (() => {
+                    const viewportWidth =
+                      EXAMPLE_APPS_VIEWPORT[app.id] ?? EXAMPLE_APPS_VIEWPORT_DEFAULT
+                    const viewportHeight = Math.round((viewportWidth * 10) / 16)
+                    return (
+                      <iframe
+                        title={app.label}
+                        src={`${basePath}${app.previewRoute}/`}
+                        loading="lazy"
+                        tabIndex={-1}
+                        scrolling="no"
+                        style={{
+                          width: viewportWidth,
+                          height: viewportHeight,
+                          transform: `scale(${EXAMPLE_APPS_CARD_WIDTH / viewportWidth})`,
+                        }}
+                        className="pointer-events-none absolute top-0 left-0 origin-top-left border-0 bg-background"
+                      />
+                    )
+                  })()
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                    {app.label}
                   </div>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col gap-2 p-3">
+                <span className="font-medium">{app.label}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="outline">{app.screenType}</Badge>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {app.selectedPattern}
+                  </span>
                 </div>
-              </Link>
-            </CarouselItem>
+              </div>
+            </Link>
           ))}
-        </CarouselContent>
-        <CarouselPrevious className="left-2 bg-background/80 backdrop-blur" />
-        <CarouselNext className="right-2 bg-background/80 backdrop-blur" />
-      </Carousel>
+        </div>
+      </div>
+      <style>{`@keyframes example-apps-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
     </section>
   )
 }
@@ -1484,17 +1488,39 @@ export function StudioPage() {
   )
 }
 
+// DetailOverview(registry pattern)は値が右端寄せで、ラベルと値の距離が遠い。
+// Quality の契約/来歴表示ではラベル直後に値を置きたいため、ローカル版を使う。
+function QualityFieldsCard({
+  title,
+  status,
+  fields,
+}: {
+  title: string
+  status: string
+  fields: { id: string; label: string; value: string }[]
+}) {
+  return (
+    <Card>
+      <CardHeader className="flex-row items-center justify-between">
+        <CardTitle>{title}</CardTitle>
+        <Badge variant="secondary">{status}</Badge>
+      </CardHeader>
+      <Separator />
+      <CardContent className="flex flex-col gap-4">
+        {fields.map((field) => (
+          <div key={field.id} className="flex items-baseline gap-4 text-sm">
+            <span className="w-32 shrink-0 text-muted-foreground">
+              {field.label}
+            </span>
+            <span className="min-w-0 break-all">{field.value}</span>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  )
+}
+
 export function QualityPage() {
-  const { params } = usePortfolioUrlState()
-  const [contractOpen, setContractOpen] = useState(false)
-  const [provenanceOpen, setProvenanceOpen] = useState(false)
-
-  useEffect(() => {
-    const panel = params.get("panel")
-    setContractOpen(panel === "contract-explorer")
-    setProvenanceOpen(panel === "provenance-trail")
-  }, [params])
-
   return (
     <PageFrame
       title="Quality"
@@ -1511,66 +1537,63 @@ export function QualityPage() {
           sidecarという記録が添えられます。これは入力ファイルの digest(内容から計算した指紋のようなもの)を保存する仕組みで、後から入力が書き換えられていないかを機械的に照合できます。「この画面はこのbriefと選定結果から作られた」という対応関係を、見た目ではなく検証可能な形で示します。
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader>
+      <Card>
+        <CardContent className="space-y-4">
+          <div className="space-y-1">
             <CardTitle>Coverage matrix</CardTitle>
             <CardDescription>
               ScreenType・blockRoleの在庫が網羅されているかを確認します。
             </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Button
-              nativeButton={false}
-              render={<Link href="/quality/coverage" />}
-            >
-              開く <ArrowRightIcon />
-            </Button>
-          </CardFooter>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Contract explorer</CardTitle>
-            <CardDescription>
+          </div>
+          <div className="max-w-xl space-y-2">
+            {[
+              { label: "screenTypes", value: data.inventory.screenTypes },
+              { label: "blockRoles", value: data.inventory.blockRoles },
+              { label: "registryItems", value: data.inventory.registryItems },
+            ].map((stat) => (
+              <div key={stat.label} className="flex items-center gap-3">
+                <span className="w-28 shrink-0 font-mono text-xs text-muted-foreground">
+                  {stat.label}
+                </span>
+                <div className="h-4 flex-1 overflow-hidden rounded-sm bg-muted/40">
+                  <div
+                    className="h-full rounded-sm bg-primary/70 transition-colors hover:bg-primary"
+                    style={{
+                      width: `${(stat.value / data.inventory.registryItems) * 100}%`,
+                    }}
+                  />
+                </div>
+                <span className="w-8 shrink-0 text-right text-sm font-semibold tabular-nums">
+                  {stat.value}
+                </span>
+              </div>
+            ))}
+          </div>
+          <Button
+            nativeButton={false}
+            render={<Link href="/quality/coverage" />}
+          >
+            開く <ArrowRightIcon />
+          </Button>
+        </CardContent>
+      </Card>
+      <div id="quality-detail">
+        <Tabs defaultValue="contract-explorer">
+          <TabsList>
+            <TabsTrigger value="contract-explorer">
+              Contract explorer
+            </TabsTrigger>
+            <TabsTrigger value="provenance-trail">
+              Provenance trail
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="contract-explorer" className="space-y-3 pt-4">
+            <p className="text-sm text-muted-foreground">
               各段階を固定する4つの契約スキーマの内容を確認します。
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Button variant="outline" onClick={() => setContractOpen(true)}>
-              開く <ArrowRightIcon />
-            </Button>
-          </CardFooter>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Provenance trail</CardTitle>
-            <CardDescription>
-              入力とregistryのdigestが、成果物とどう結びつくかを確認します。
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Button variant="outline" onClick={() => setProvenanceOpen(true)}>
-              開く <ArrowRightIcon />
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
-      <Drawer
-        open={contractOpen}
-        onOpenChange={setContractOpen}
-        swipeDirection="right"
-      >
-        <DrawerContent className="max-w-2xl">
-          <DrawerHeader>
-            <DrawerTitle>Contract explorer</DrawerTitle>
-            <DrawerDescription>
-              実装へ渡す判断を固定する4つの契約です。
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="space-y-3 overflow-y-auto px-4 py-4">
+            </p>
             {studioEvidence.contracts.map((contract) => (
               <div key={contract.name} className="space-y-2">
-                <DetailOverview
+                <QualityFieldsCard
                   title={contract.name}
                   status="Source of truth"
                   fields={[
@@ -1600,28 +1623,12 @@ export function QualityPage() {
                 </pre>
               </div>
             ))}
-          </div>
-          <DrawerFooter>
-            <DrawerClose render={<Button variant="outline" />}>
-              Close
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-      <Drawer
-        open={provenanceOpen}
-        onOpenChange={setProvenanceOpen}
-        swipeDirection="right"
-      >
-        <DrawerContent className="max-w-2xl">
-          <DrawerHeader>
-            <DrawerTitle>Provenance trail</DrawerTitle>
-            <DrawerDescription>
-              入力とregistry inventoryのdigestを、BuildReportと結びます。
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="space-y-3 overflow-y-auto px-4 py-4">
-            <DetailOverview
+          </TabsContent>
+          <TabsContent value="provenance-trail" className="space-y-3 pt-4">
+            <p className="text-sm text-muted-foreground">
+              入力とregistryのdigestが、成果物とどう結びつくかを確認します。
+            </p>
+            <QualityFieldsCard
               title="buildreport-studio-portfolio-01"
               status={studioEvidence.build.status}
               fields={[
@@ -1651,14 +1658,9 @@ export function QualityPage() {
               selection-scoped registry items:{" "}
               {studioEvidence.provenance.registryItems.join(", ")}
             </p>
-          </div>
-          <DrawerFooter>
-            <DrawerClose render={<Button variant="outline" />}>
-              Close
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          </TabsContent>
+        </Tabs>
+      </div>
     </PageFrame>
   )
 }
