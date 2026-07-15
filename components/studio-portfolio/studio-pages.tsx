@@ -1611,7 +1611,7 @@ export function QualityPage() {
                     },
                   ]}
                 />
-                <pre className="overflow-x-auto rounded-md border bg-muted/40 p-3 font-mono text-xs">
+                <pre className="overflow-x-auto rounded-md border bg-muted/40 p-3 font-mono text-xs dark:bg-card">
                   {JSON.stringify(
                     {
                       $schema: contract.schemaFile,
@@ -1876,13 +1876,20 @@ export function CaseStudyPage({ markdown }: { markdown: string }) {
       description="今回の開発の過程や学んだことのまとめ。"
     >
       <div
-        className="max-w-3xl space-y-4 text-sm leading-7 text-foreground
-          [&_code]:rounded [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs
-          [&_h1]:mt-8 first:[&_h1]:mt-0 [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:tracking-tight
-          [&_h2]:mt-6 [&_h2]:text-base [&_h2]:font-semibold
-          [&_li]:ml-5 [&_li]:list-disc
-          [&_ol]:space-y-1 [&_ul]:space-y-1
-          [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 [&_pre]:p-4"
+        className="max-w-3xl space-y-5 text-[0.9375rem] leading-8 text-foreground
+          [counter-reset:cs-section]
+          [&_code]:rounded [&_code]:border [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs
+          [&_h1]:mt-14 first:[&_h1]:mt-0 [&_h1]:flex [&_h1]:items-baseline [&_h1]:gap-3 [&_h1]:border-b [&_h1]:pb-3 [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:tracking-tight
+          [&_h1]:[counter-increment:cs-section]
+          [&_h1]:before:content-[counter(cs-section,decimal-leading-zero)]
+          [&_h1]:before:font-mono [&_h1]:before:text-sm [&_h1]:before:font-normal [&_h1]:before:text-primary
+          [&_h2]:mt-8 [&_h2]:text-base [&_h2]:font-semibold
+          [&_li]:relative [&_li]:pl-5
+          [&_li]:before:absolute [&_li]:before:top-[0.8em] [&_li]:before:left-0 [&_li]:before:h-1.5 [&_li]:before:w-1.5 [&_li]:before:rounded-full [&_li]:before:bg-primary/60 [&_li]:before:content-['']
+          [&_ol]:space-y-2 [&_ul]:space-y-2
+          [&_ul]:rounded-lg [&_ul]:border [&_ul]:bg-muted/20 dark:[&_ul]:bg-card [&_ul]:p-4 [&_ul]:pl-5
+          [&_strong]:font-semibold [&_strong]:text-primary
+          [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 dark:[&_pre]:bg-card [&_pre]:p-4"
       >
         <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>
