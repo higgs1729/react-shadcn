@@ -731,7 +731,7 @@ export function StudioLayout({ children }: { children: ReactNode }) {
         </SidebarFooter>
         <ResizableSidebarRail />
       </Sidebar>
-      <SidebarInset>
+      <SidebarInset className="min-w-0">
         <AppHeader
           windows={windows}
           activeWindowId={activeWindowId}
