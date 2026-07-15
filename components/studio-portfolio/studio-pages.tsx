@@ -1873,7 +1873,7 @@ export function CaseStudyPage({ markdown }: { markdown: string }) {
   return (
     <PageFrame
       title="Case Study"
-      description="画面を単独のテンプレートではなく、Page・ChildRoute・Drawer・Dialogからなる階層として設計し直した過程をまとめます。"
+      description="今回の開発の過程や学んだことのまとめ。"
     >
       <div
         className="max-w-3xl space-y-4 text-sm leading-7 text-foreground
@@ -1882,19 +1882,10 @@ export function CaseStudyPage({ markdown }: { markdown: string }) {
           [&_h2]:mt-6 [&_h2]:text-base [&_h2]:font-semibold
           [&_li]:ml-5 [&_li]:list-disc
           [&_ol]:space-y-1 [&_ul]:space-y-1
-          [&_p]:text-muted-foreground
           [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 [&_pre]:p-4"
       >
         <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>
-
-      <Button
-        variant="outline"
-        nativeButton={false}
-        render={<Link href="/quality" data-open-window />}
-      >
-        検証結果を見る <ExternalLinkIcon />
-      </Button>
     </PageFrame>
   )
 }
