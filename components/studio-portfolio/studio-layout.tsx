@@ -55,6 +55,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar,
@@ -137,7 +146,6 @@ function SidebarMenuBar() {
         <DropdownMenu>
           <DropdownMenuTrigger render={<SidebarMenuButton tooltip="メニュー" />}>
             <MenuIcon />
-            <span>メニュー</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
             <DropdownMenuSub>
@@ -554,6 +562,78 @@ function AppHeader({
   )
 }
 
+function CommandPalette() {
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault()
+        setOpen((current) => !current)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
+
+  const handleSelect = useCallback(
+    (route: string) => {
+      setOpen(false)
+      router.push(route)
+    },
+    [router]
+  )
+
+  return (
+    <CommandDialog
+      open={open}
+      onOpenChange={setOpen}
+      title="コマンドパレット"
+      description="ページを検索して移動"
+    >
+      <Command>
+        <CommandInput placeholder="ページを検索..." />
+        <CommandList>
+          <CommandEmpty>該当する項目がありません</CommandEmpty>
+          <CommandGroup heading="AI Design System">
+            {primaryNavigation.map((item) => {
+              const Icon = navigationIcons[item.id] ?? LayoutDashboardIcon
+              return (
+                <CommandItem
+                  key={item.id}
+                  value={item.label}
+                  onSelect={() => handleSelect(item.route)}
+                >
+                  <Icon />
+                  <span>{item.label}</span>
+                </CommandItem>
+              )
+            })}
+          </CommandGroup>
+          {exampleNavigation.length > 0 ? (
+            <CommandGroup heading="Example Apps">
+              {exampleNavigation.map((item) => {
+                const Icon = navigationIcons[item.id] ?? LayoutDashboardIcon
+                return (
+                  <CommandItem
+                    key={item.id}
+                    value={item.label}
+                    onSelect={() => handleSelect(item.route)}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          ) : null}
+        </CommandList>
+      </Command>
+    </CommandDialog>
+  )
+}
+
 function EmptyWindowState() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
@@ -662,6 +742,7 @@ export function StudioLayout({ children }: { children: ReactNode }) {
         {windows.length > 0 ? children : <EmptyWindowState />}
       </SidebarInset>
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <CommandPalette />
     </SidebarProvider>
   )
 }
