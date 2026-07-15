@@ -22,6 +22,7 @@ import {
   KeyRoundIcon,
   LayoutDashboardIcon,
   MenuIcon,
+  PlusIcon,
   ReceiptTextIcon,
   RocketIcon,
   Settings2Icon,
@@ -33,6 +34,7 @@ import {
   exampleNavigation,
   isPrimaryNavigationRoute,
 } from "@/lib/studio-portfolio/app-spec"
+import { cn } from "@/lib/utils"
 import { ResizableSidebarRail } from "@/components/resizable-sidebar-rail"
 import { SettingsDialog } from "@/components/studio-portfolio/settings-page"
 import {
@@ -43,13 +45,25 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar,
@@ -70,6 +84,7 @@ import {
 const ZOOM_STEP = 10
 const ZOOM_MIN = 50
 const ZOOM_MAX = 200
+const WINDOW_ROUTE_MIME = "application/x-window-route"
 
 function SidebarMenuBar() {
   const zoomRef = useRef(100)
@@ -131,7 +146,6 @@ function SidebarMenuBar() {
         <DropdownMenu>
           <DropdownMenuTrigger render={<SidebarMenuButton tooltip="メニュー" />}>
             <MenuIcon />
-            <span>メニュー</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
             <DropdownMenuSub>
@@ -204,6 +218,12 @@ function PrimaryNavigation() {
               onClick={() => {
                 if (isMobile) setOpenMobile(false)
               }}
+              draggable
+              onDragStart={(event: React.DragEvent) => {
+                event.dataTransfer.setData(WINDOW_ROUTE_MIME, item.route)
+                event.dataTransfer.setData("text/plain", item.route)
+                event.dataTransfer.effectAllowed = "copy"
+              }}
             >
               <Icon />
               <span>{item.label}</span>
@@ -237,6 +257,12 @@ function ExampleNavigation() {
               onClick={() => {
                 if (isMobile) setOpenMobile(false)
               }}
+              draggable
+              onDragStart={(event: React.DragEvent) => {
+                event.dataTransfer.setData(WINDOW_ROUTE_MIME, item.route)
+                event.dataTransfer.setData("text/plain", item.route)
+                event.dataTransfer.effectAllowed = "copy"
+              }}
             >
               <Icon />
               <span>{item.label}</span>
@@ -266,7 +292,7 @@ function getChildRouteLabel(pathname: string) {
   return null
 }
 
-function AppHeader() {
+function useWindowManager() {
   const pathname = usePathname()
   const router = useRouter()
   const [windows, setWindows] = useState<AppWindow[]>(() => [
@@ -275,7 +301,6 @@ function AppHeader() {
   const [activeWindowId, setActiveWindowId] = useState("window-1")
   const activeWindowIdRef = useRef(activeWindowId)
   const pendingWindowRoute = useRef<string | null>(null)
-  const childRouteLabel = getChildRouteLabel(pathname)
 
   useEffect(() => {
     activeWindowIdRef.current = activeWindowId
@@ -287,22 +312,36 @@ function AppHeader() {
       return
     }
 
-    setWindows((currentWindows) =>
-      currentWindows.map((window) =>
+    setWindows((currentWindows) => {
+      if (currentWindows.length === 0) {
+        const id = `window-${Date.now()}`
+        activeWindowIdRef.current = id
+        setActiveWindowId(id)
+        return [{ id, route: pathname }]
+      }
+      return currentWindows.map((window) =>
         window.id === activeWindowIdRef.current
           ? { ...window, route: pathname }
           : window
       )
-    )
+    })
   }, [pathname])
 
   const openWindow = useCallback((route: string) => {
-    const id = `window-${Date.now()}`
+    const id = `window-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
     pendingWindowRoute.current = route
     activeWindowIdRef.current = id
     setWindows((currentWindows) => [...currentWindows, { id, route }])
     setActiveWindowId(id)
   }, [])
+
+  const openWindowAndNavigate = useCallback(
+    (route: string) => {
+      openWindow(route)
+      router.push(route)
+    },
+    [openWindow, router]
+  )
 
   useEffect(() => {
     const handleWindowLink = (event: globalThis.MouseEvent) => {
@@ -326,18 +365,142 @@ function AppHeader() {
     return () => window.removeEventListener("click", handleWindowLink, true)
   }, [openWindow])
 
-  const closeWindow = (id: string) => {
-    if (windows.length === 1) return
-    const windowIndex = windows.findIndex((window) => window.id === id)
-    const nextWindow = windows[windowIndex === 0 ? 1 : windowIndex - 1]
-    setWindows((currentWindows) =>
-      currentWindows.filter((window) => window.id !== id)
-    )
-    if (id === activeWindowId) {
-      activeWindowIdRef.current = nextWindow.id
-      setActiveWindowId(nextWindow.id)
-      router.push(nextWindow.route)
-    }
+  const closeWindow = useCallback(
+    (id: string) => {
+      setWindows((currentWindows) => {
+        const windowIndex = currentWindows.findIndex(
+          (window) => window.id === id
+        )
+        if (windowIndex === -1) return currentWindows
+        const remaining = currentWindows.filter((window) => window.id !== id)
+        if (id === activeWindowIdRef.current) {
+          if (remaining.length === 0) {
+            activeWindowIdRef.current = ""
+            setActiveWindowId("")
+          } else {
+            const nextWindow =
+              currentWindows[windowIndex === 0 ? 1 : windowIndex - 1]
+            activeWindowIdRef.current = nextWindow.id
+            setActiveWindowId(nextWindow.id)
+            router.push(nextWindow.route)
+          }
+        }
+        return remaining
+      })
+    },
+    [router]
+  )
+
+  const switchWindow = useCallback(
+    (id: string, route: string) => {
+      activeWindowIdRef.current = id
+      setActiveWindowId(id)
+      router.push(route)
+    },
+    [router]
+  )
+
+  return {
+    windows,
+    activeWindowId,
+    openWindowAndNavigate,
+    closeWindow,
+    switchWindow,
+  }
+}
+
+function AddWindowMenu({
+  onSelect,
+}: {
+  onSelect: (route: string) => void
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <button
+            type="button"
+            aria-label="新しいウィンドウを追加"
+            className="mb-1.5 grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          />
+        }
+      >
+        <PlusIcon className="size-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-56">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>AI Design System</DropdownMenuLabel>
+          {primaryNavigation.map((item) => {
+            const Icon = navigationIcons[item.id] ?? LayoutDashboardIcon
+            return (
+              <DropdownMenuItem
+                key={item.id}
+                onClick={() => onSelect(item.route)}
+              >
+                <Icon />
+                <span>{item.label}</span>
+              </DropdownMenuItem>
+            )
+          })}
+        </DropdownMenuGroup>
+        {exampleNavigation.length > 0 ? (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Example Apps</DropdownMenuLabel>
+              {exampleNavigation.map((item) => {
+                const Icon = navigationIcons[item.id] ?? LayoutDashboardIcon
+                return (
+                  <DropdownMenuItem
+                    key={item.id}
+                    onClick={() => onSelect(item.route)}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </DropdownMenuItem>
+                )
+              })}
+            </DropdownMenuGroup>
+          </>
+        ) : null}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+function AppHeader({
+  windows,
+  activeWindowId,
+  switchWindow,
+  closeWindow,
+  openWindowAndNavigate,
+}: {
+  windows: AppWindow[]
+  activeWindowId: string
+  switchWindow: (id: string, route: string) => void
+  closeWindow: (id: string) => void
+  openWindowAndNavigate: (route: string) => void
+}) {
+  const pathname = usePathname()
+  const [isDragOver, setIsDragOver] = useState(false)
+  const childRouteLabel =
+    windows.length > 0 ? getChildRouteLabel(pathname) : null
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    if (!event.dataTransfer.types.includes(WINDOW_ROUTE_MIME)) return
+    event.preventDefault()
+    event.dataTransfer.dropEffect = "copy"
+    setIsDragOver(true)
+  }
+
+  const handleDragLeave = () => setIsDragOver(false)
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const route = event.dataTransfer.getData(WINDOW_ROUTE_MIME)
+    setIsDragOver(false)
+    if (!route) return
+    event.preventDefault()
+    openWindowAndNavigate(route)
   }
 
   return (
@@ -345,32 +508,36 @@ function AppHeader() {
       <SidebarTrigger className="mb-1.5 shrink-0" />
       <Separator orientation="vertical" className="mb-1.5 h-5 shrink-0" />
       <div
-        role="tablist"
-        aria-label="Open pages"
-        className="flex min-w-max items-end gap-1"
+        className={cn(
+          "flex min-w-0 flex-1 items-end gap-1 rounded-t-md",
+          isDragOver && "bg-primary/5 outline-2 outline-dashed outline-primary/40"
+        )}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
       >
-        {windows.map((window) => {
-          const isActive = window.id === activeWindowId
-          return (
-            <div
-              key={window.id}
-              data-active={isActive}
-              className="flex h-10 min-w-36 items-center gap-1 rounded-t-md border border-b-0 bg-background px-2 text-sm shadow-sm data-[active=false]:border-transparent data-[active=false]:bg-transparent data-[active=false]:text-muted-foreground data-[active=false]:shadow-none"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                className="min-w-0 flex-1 truncate text-left font-medium outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => {
-                  activeWindowIdRef.current = window.id
-                  setActiveWindowId(window.id)
-                  router.push(window.route)
-                }}
+        <div
+          role="tablist"
+          aria-label="Open pages"
+          className="flex min-w-max items-end gap-1"
+        >
+          {windows.map((window) => {
+            const isActive = window.id === activeWindowId
+            return (
+              <div
+                key={window.id}
+                data-active={isActive}
+                className="flex h-10 min-w-36 items-center gap-1 rounded-t-md border border-b-0 bg-background px-2 text-sm shadow-sm data-[active=false]:border-transparent data-[active=false]:bg-transparent data-[active=false]:text-muted-foreground data-[active=false]:shadow-none"
               >
-                {getWindowLabel(window.route)}
-              </button>
-              {windows.length > 1 ? (
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className="min-w-0 flex-1 truncate text-left font-medium outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+                  onClick={() => switchWindow(window.id, window.route)}
+                >
+                  {getWindowLabel(window.route)}
+                </button>
                 <button
                   type="button"
                   aria-label={`Close ${getWindowLabel(window.route)}`}
@@ -379,10 +546,11 @@ function AppHeader() {
                 >
                   <XIcon className="size-3.5" />
                 </button>
-              ) : null}
-            </div>
-          )
-        })}
+              </div>
+            )
+          })}
+        </div>
+        <AddWindowMenu onSelect={openWindowAndNavigate} />
       </div>
       {childRouteLabel ? (
         <p className="mb-2 ml-2 hidden min-w-max text-xs text-muted-foreground md:block">
@@ -394,9 +562,99 @@ function AppHeader() {
   )
 }
 
+function CommandPalette() {
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault()
+        setOpen((current) => !current)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
+
+  const handleSelect = useCallback(
+    (route: string) => {
+      setOpen(false)
+      router.push(route)
+    },
+    [router]
+  )
+
+  return (
+    <CommandDialog
+      open={open}
+      onOpenChange={setOpen}
+      title="コマンドパレット"
+      description="ページを検索して移動"
+    >
+      <Command>
+        <CommandInput placeholder="ページを検索..." />
+        <CommandList>
+          <CommandEmpty>該当する項目がありません</CommandEmpty>
+          <CommandGroup heading="AI Design System">
+            {primaryNavigation.map((item) => {
+              const Icon = navigationIcons[item.id] ?? LayoutDashboardIcon
+              return (
+                <CommandItem
+                  key={item.id}
+                  value={item.label}
+                  onSelect={() => handleSelect(item.route)}
+                >
+                  <Icon />
+                  <span>{item.label}</span>
+                </CommandItem>
+              )
+            })}
+          </CommandGroup>
+          {exampleNavigation.length > 0 ? (
+            <CommandGroup heading="Example Apps">
+              {exampleNavigation.map((item) => {
+                const Icon = navigationIcons[item.id] ?? LayoutDashboardIcon
+                return (
+                  <CommandItem
+                    key={item.id}
+                    value={item.label}
+                    onSelect={() => handleSelect(item.route)}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          ) : null}
+        </CommandList>
+      </Command>
+    </CommandDialog>
+  )
+}
+
+function EmptyWindowState() {
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
+      <LayoutDashboardIcon className="size-12 text-muted-foreground/40" />
+      <p className="max-w-sm text-sm text-muted-foreground">
+        Ai Design Systemへようこそ。サイドバーからコンテンツを選択してください
+      </p>
+    </div>
+  )
+}
+
 export function StudioLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const {
+    windows,
+    activeWindowId,
+    openWindowAndNavigate,
+    closeWindow,
+    switchWindow,
+  } = useWindowManager()
   return (
     <SidebarProvider
       style={
@@ -473,11 +731,18 @@ export function StudioLayout({ children }: { children: ReactNode }) {
         </SidebarFooter>
         <ResizableSidebarRail />
       </Sidebar>
-      <SidebarInset>
-        <AppHeader />
-        {children}
+      <SidebarInset className="min-w-0">
+        <AppHeader
+          windows={windows}
+          activeWindowId={activeWindowId}
+          switchWindow={switchWindow}
+          closeWindow={closeWindow}
+          openWindowAndNavigate={openWindowAndNavigate}
+        />
+        {windows.length > 0 ? children : <EmptyWindowState />}
       </SidebarInset>
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <CommandPalette />
     </SidebarProvider>
   )
 }
