@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import ReactMarkdown from "react-markdown"
 import {
@@ -80,6 +81,7 @@ import studioPortfolioData from "@/lib/studio-portfolio/studio-portfolio-data.js
 import { studioContent } from "@/lib/studio-portfolio/studio-content"
 import { studioEvidence } from "@/lib/studio-portfolio/evidence"
 import { studioScenarios } from "@/lib/studio-portfolio/studio-scenarios"
+import { cn } from "@/lib/utils"
 
 const data = studioPortfolioData
 
@@ -88,21 +90,40 @@ function PageFrame({
   description,
   context,
   children,
+  titleClassName,
+  centered,
 }: {
   title: string
   description: string
   context?: ReactNode
   children: ReactNode
+  titleClassName?: string
+  centered?: boolean
 }) {
+  const titleBlock = (
+    <div className={cn("max-w-3xl", titleClassName)}>
+      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        {description}
+      </p>
+      {context ? <div className="mt-3">{context}</div> : null}
+    </div>
+  )
+
+  if (centered) {
+    return (
+      <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+        <div className="mx-auto w-full max-w-3xl space-y-6">
+          {titleBlock}
+          {children}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
-      <div className="max-w-3xl">
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          {description}
-        </p>
-        {context ? <div className="mt-3">{context}</div> : null}
-      </div>
+      {titleBlock}
       {children}
     </div>
   )
@@ -130,7 +151,7 @@ function SectionHeader({
   actionLabel?: string
 }) {
   return (
-    <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+    <div className="mb-3 flex flex-wrap items-end gap-3">
       <div>
         <h2 id={id} className="text-base font-medium">
           {title}
@@ -172,8 +193,8 @@ function ExampleAppsSection() {
         actionHref={builtExampleApps[0]?.route ?? "/examples"}
         actionLabel="最初の例を開く"
       />
-      <div className="group relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-        <div className="flex w-max animate-[example-apps-marquee_50s_linear_infinite] group-hover:[animation-play-state:paused]">
+      <div className="group relative mx-auto w-4/5 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_35%,black_65%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_35%,black_65%,transparent)]">
+        <div className="flex w-max animate-[example-apps-marquee_50s_linear_infinite]">
           {marqueeApps.map((app, index) => (
             <Link
               key={`${app.id}-${index}`}
@@ -1342,11 +1363,11 @@ export function StudioPage() {
       </section>
 
       <section aria-labelledby="trace-heading">
-        <h2 id="trace-heading" className="mb-3 text-base font-medium">
+        <h2 id="trace-heading" className="mb-4 text-lg font-medium">
           判断の記録を辿る
         </h2>
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-          <div className="flex gap-2 overflow-x-auto pb-1 lg:w-48 lg:shrink-0 lg:flex-col lg:overflow-visible lg:pb-0">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+          <div className="flex gap-3 overflow-x-auto pb-1 lg:w-64 lg:shrink-0 lg:flex-col lg:overflow-visible lg:pb-0">
             {studioSteps.map((step, index) => {
               const isSelected = step.id === selectedStepId
               return (
@@ -1355,14 +1376,14 @@ export function StudioPage() {
                   type="button"
                   aria-pressed={isSelected}
                   onClick={() => setSelectedStepId(step.id)}
-                  className={`flex shrink-0 items-center gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full ${isSelected ? "border-primary bg-primary/8" : "bg-card hover:bg-muted/50"}`}
+                  className={`flex shrink-0 items-center gap-3 rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full ${isSelected ? "border-primary bg-primary/8" : "bg-card hover:bg-muted/50"}`}
                 >
                   <span
-                    className={`flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                    className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
                   >
                     {index + 1}
                   </span>
-                  <span className="text-sm font-medium whitespace-nowrap">
+                  <span className="text-base font-medium whitespace-nowrap">
                     {step.label}
                   </span>
                 </button>
@@ -1372,7 +1393,7 @@ export function StudioPage() {
 
           <div className="min-w-0 flex-1">
             {selectedStepId === "brief" ? (
-              <DetailOverview
+              <QualityFieldsCard
                 title="Brief"
                 status="Selected sample"
                 fields={[
@@ -1389,7 +1410,7 @@ export function StudioPage() {
                 ]}
               />
             ) : selectedStepId === "flow-spec" ? (
-              <DetailOverview
+              <QualityFieldsCard
                 title="FlowSpec"
                 status="Prebuilt"
                 fields={[
@@ -1411,7 +1432,7 @@ export function StudioPage() {
                 ]}
               />
             ) : selectedStepId === "selection-spec" ? (
-              <DetailOverview
+              <QualityFieldsCard
                 title="SelectionSpec"
                 status="Prebuilt"
                 fields={[
@@ -1428,7 +1449,7 @@ export function StudioPage() {
                 ]}
               />
             ) : selectedStepId === "build-report" ? (
-              <DetailOverview
+              <QualityFieldsCard
                 title="BuildReport"
                 status={selectedScenario.buildReport.status}
                 fields={[
@@ -1445,7 +1466,7 @@ export function StudioPage() {
                 ]}
               />
             ) : (
-              <Card>
+              <Card className="max-w-3xl">
                 <CardHeader>
                   <CardTitle>UI previewを確認する</CardTitle>
                   <CardDescription>
@@ -1500,16 +1521,16 @@ function QualityFieldsCard({
   fields: { id: string; label: string; value: string }[]
 }) {
   return (
-    <Card>
+    <Card className="max-w-3xl">
       <CardHeader className="flex-row items-center justify-between">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-lg">{title}</CardTitle>
         <Badge variant="secondary">{status}</Badge>
       </CardHeader>
       <Separator />
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-5">
         {fields.map((field) => (
-          <div key={field.id} className="flex items-baseline gap-4 text-sm">
-            <span className="w-32 shrink-0 text-muted-foreground">
+          <div key={field.id} className="flex items-baseline gap-4 text-base">
+            <span className="w-36 shrink-0 text-muted-foreground">
               {field.label}
             </span>
             <span className="min-w-0 break-all">{field.value}</span>
@@ -1525,8 +1546,9 @@ export function QualityPage() {
     <PageFrame
       title="Quality"
       description="品質の主張を、契約・生成物・来歴まで遡って確認します。"
+      centered
     >
-      <div className="max-w-3xl space-y-4 text-sm leading-6 text-muted-foreground">
+      <div className="space-y-4 text-sm leading-6 text-muted-foreground">
         <p>
           brief から画面ができるまでの各段階(FlowSpec → SelectionSpec →
           BuildReport)は、それぞれ「契約」として内容が固定されています。契約は
@@ -1537,7 +1559,7 @@ export function QualityPage() {
           sidecarという記録が添えられます。これは入力ファイルの digest(内容から計算した指紋のようなもの)を保存する仕組みで、後から入力が書き換えられていないかを機械的に照合できます。「この画面はこのbriefと選定結果から作られた」という対応関係を、見た目ではなく検証可能な形で示します。
         </p>
       </div>
-      <Card>
+      <Card className="max-w-2xl">
         <CardContent className="space-y-4">
           <div className="space-y-1">
             <CardTitle>Coverage matrix</CardTitle>
@@ -1545,7 +1567,7 @@ export function QualityPage() {
               ScreenType・blockRoleの在庫が網羅されているかを確認します。
             </CardDescription>
           </div>
-          <div className="max-w-xl space-y-2">
+          <div className="space-y-2">
             {[
               { label: "screenTypes", value: data.inventory.screenTypes },
               { label: "blockRoles", value: data.inventory.blockRoles },
@@ -1611,7 +1633,7 @@ export function QualityPage() {
                     },
                   ]}
                 />
-                <pre className="overflow-x-auto rounded-md border bg-muted/40 p-3 font-mono text-xs dark:bg-card">
+                <pre className="max-w-2xl overflow-x-auto rounded-md border bg-muted/40 p-3 font-mono text-xs dark:bg-card">
                   {JSON.stringify(
                     {
                       $schema: contract.schemaFile,
@@ -1772,6 +1794,7 @@ export function GeneratedPreviewPage() {
 }
 
 export function CoverageMatrixPage() {
+  const router = useRouter()
   const allPatterns = [
     ...data.inventory.screenPatterns,
     ...data.inventory.blockPatterns,
@@ -1786,7 +1809,7 @@ export function CoverageMatrixPage() {
             {
               id: "quality",
               label: "Quality",
-              onSelect: () => window.location.assign("/quality"),
+              onSelect: () => router.push("/quality"),
             },
           ]}
           currentLabel="Coverage matrix"
@@ -1869,29 +1892,64 @@ export function CoverageMatrixPage() {
   )
 }
 
+function splitCaseStudySections(markdown: string) {
+  const lines = markdown.split("\n")
+  const sections: { heading: string; body: string }[] = []
+  let current: { heading: string; body: string[] } | null = null
+  for (const line of lines) {
+    const match = /^# (.+)$/.exec(line)
+    if (match) {
+      if (current) {
+        sections.push({ heading: current.heading, body: current.body.join("\n") })
+      }
+      current = { heading: match[1], body: [line] }
+    } else if (current) {
+      current.body.push(line)
+    }
+  }
+  if (current) {
+    sections.push({ heading: current.heading, body: current.body.join("\n") })
+  }
+  return sections
+}
+
+const caseStudySectionBaseClass = cn(
+  "[&_h1]:flex [&_h1]:items-baseline [&_h1]:gap-3 [&_h1]:border-b [&_h1]:pb-3 [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:tracking-tight",
+  "[&_h1]:[counter-increment:cs-section]",
+  "[&_h1]:before:content-[counter(cs-section,decimal-leading-zero)]",
+  "[&_h1]:before:flex [&_h1]:before:size-7 [&_h1]:before:items-center [&_h1]:before:justify-center",
+  "[&_h1]:before:rounded-full [&_h1]:before:border [&_h1]:before:border-primary/40",
+  "[&_h1]:before:font-mono [&_h1]:before:text-xs [&_h1]:before:font-normal [&_h1]:before:text-foreground",
+  "[&_h2]:mt-8 [&_h2]:text-base [&_h2]:font-semibold",
+  "[&_code]:rounded [&_code]:border [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs",
+  "[&_li]:relative [&_li]:pl-5",
+  "[&_li]:before:absolute [&_li]:before:top-[0.8em] [&_li]:before:left-0 [&_li]:before:h-1.5 [&_li]:before:w-1.5 [&_li]:before:rounded-full [&_li]:before:bg-muted-foreground/50 [&_li]:before:content-['']",
+  "[&_ol]:space-y-2 [&_ul]:space-y-2",
+  "[&_ul]:rounded-lg [&_ul]:border [&_ul]:bg-muted/20 dark:[&_ul]:bg-card [&_ul]:p-4 [&_ul]:pl-5",
+  "[&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 dark:[&_pre]:bg-card [&_pre]:p-4"
+)
+
 export function CaseStudyPage({ markdown }: { markdown: string }) {
+  const sections = useMemo(() => splitCaseStudySections(markdown), [markdown])
+
   return (
     <PageFrame
       title="Case Study"
       description="今回の開発の過程や学んだことのまとめ。"
+      centered
     >
-      <div
-        className="max-w-3xl space-y-5 text-[0.9375rem] leading-8 text-foreground
-          [counter-reset:cs-section]
-          [&_code]:rounded [&_code]:border [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs
-          [&_h1]:mt-14 first:[&_h1]:mt-0 [&_h1]:flex [&_h1]:items-baseline [&_h1]:gap-3 [&_h1]:border-b [&_h1]:pb-3 [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:tracking-tight
-          [&_h1]:[counter-increment:cs-section]
-          [&_h1]:before:content-[counter(cs-section,decimal-leading-zero)]
-          [&_h1]:before:font-mono [&_h1]:before:text-sm [&_h1]:before:font-normal [&_h1]:before:text-primary
-          [&_h2]:mt-8 [&_h2]:text-base [&_h2]:font-semibold
-          [&_li]:relative [&_li]:pl-5
-          [&_li]:before:absolute [&_li]:before:top-[0.8em] [&_li]:before:left-0 [&_li]:before:h-1.5 [&_li]:before:w-1.5 [&_li]:before:rounded-full [&_li]:before:bg-primary/60 [&_li]:before:content-['']
-          [&_ol]:space-y-2 [&_ul]:space-y-2
-          [&_ul]:rounded-lg [&_ul]:border [&_ul]:bg-muted/20 dark:[&_ul]:bg-card [&_ul]:p-4 [&_ul]:pl-5
-          [&_strong]:font-semibold [&_strong]:text-primary
-          [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 dark:[&_pre]:bg-card [&_pre]:p-4"
-      >
-        <ReactMarkdown>{markdown}</ReactMarkdown>
+      <div className="space-y-5 text-[0.9375rem] leading-8 text-foreground [counter-reset:cs-section]">
+        {sections.map((section, index) => (
+          <div
+            key={section.heading}
+            className={cn(
+              index === 0 ? "[&_h1]:mt-0" : "[&_h1]:mt-14",
+              caseStudySectionBaseClass
+            )}
+          >
+            <ReactMarkdown>{section.body}</ReactMarkdown>
+          </div>
+        ))}
       </div>
     </PageFrame>
   )

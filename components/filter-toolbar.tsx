@@ -65,7 +65,6 @@ export function FilterToolbar({
           </SelectGroup>
         </SelectContent>
       </Select>
-      <div className="flex-1" />
       <ToggleGroup
         multiple={false}
         value={[view]}
