@@ -197,7 +197,7 @@ export function OrientationLanding() {
             }
           `}</style>
 
-          <h1 className="mt-8 max-w-full text-2xl font-bold tracking-tighter whitespace-nowrap text-white sm:text-4xl md:text-6xl lg:text-7xl">
+          <h1 className="mt-8 max-w-full text-2xl font-bold tracking-tighter whitespace-nowrap text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
             <span
               className="inline-block animate-[orientation-title-emerge_1s_ease-out] motion-reduce:animate-none"
               style={{ animationFillMode: "backwards" }}
