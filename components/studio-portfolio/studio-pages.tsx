@@ -202,7 +202,7 @@ function ExampleAppsSection() {
               data-open-window
               aria-hidden={index >= builtExampleApps.length}
               tabIndex={index >= builtExampleApps.length ? -1 : undefined}
-              className="group/card mr-6 flex w-72 shrink-0 flex-col overflow-hidden rounded-lg transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group/card mr-6 flex w-72 shrink-0 flex-col overflow-hidden rounded-lg text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-muted/20">
                 {app.previewRoute && basePath !== null ? (
