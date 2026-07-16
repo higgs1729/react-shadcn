@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "in=$(cat); case \"$in\" in *'\"stop_hook_active\":true'*) exit 0;; esac; npm run validate >/dev/null 2>&1 || { echo 'npm run validate failed — validate を実行して失敗内容を確認し、修正してから終了すること' >&2; exit 2; }",
+            "timeout": 120,
+            "statusMessage": "npm run validate を実行中..."
+          }
+        ]
+      }
+    ]
+  }
+}

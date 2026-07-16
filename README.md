@@ -1,73 +1,32 @@
+<!-- encoding:UTF-8 -->
+
 # AI Design System
 
-This repository turns an app brief into a checked implementation plan for shadcn/ui patterns.
-The handoff between agents is intentionally mechanical: FlowSpec, SelectionSpec, and BuildReport
-artifacts are JSON files validated with JSON Schema and ajv.
+アプリの brief(要件の短い記述)を、機械検証済みの実装計画と画面に変換するリポジトリです。
+AI が brief → JTBD → フロー → パターン選定 → 実装 と段階的に分解し、各段階の受け渡し
+(FlowSpec / SelectionSpec / BuildReport)は JSON Schema + ajv による契約で強制されます。
 
-## Pipeline
+このシステム自体の実証として、shadcn/ui ベースのポートフォリオ作品(studioApp)を同居させています。
 
-1. Brief: describe the user, job, screens, and constraints.
-2. JTBD and flow: clarify the work the app must help users complete.
-3. FlowSpec: record the screens, routes, and user-facing flow.
-4. SelectionSpec: choose screen types and blocks from the pattern inventory.
-5. Implementation: build the selected UI with the local Next.js and base-ui conventions.
-6. BuildReport: report what was built, what checks ran, and unresolved issues.
+## 仕組み(概要)
 
-## Repository Map
+1. **Brief** — 利用者・解決したい仕事・画面・制約を記述する
+2. **FlowSpec** — 画面・ルート・ユーザーフローを契約として固定する
+3. **SelectionSpec** — パターン在庫(`registry/`)から screenType と block を選定する
+4. **実装 + BuildReport** — 選定どおりに構築し、実行した検証と未解決事項を報告する
 
-- [docs/STATUS.md](docs/STATUS.md): current project state and next candidate work.
-- [docs/contracts/](docs/contracts/): JSON Schemas for FlowSpec, SelectionSpec, BuildReport, facets, and profiles.
-- [docs/layers/10-upstream/](docs/layers/10-upstream/): upstream brief and flow notes.
-- [docs/layers/20-selection/](docs/layers/20-selection/): screen and block selection guidance plus canonical profiles.
-- [docs/layers/30-implementation/](docs/layers/30-implementation/): implementation rules for executors.
-- [docs/tasks/](docs/tasks/): pending or in-flight executor briefs.
-- [docs/rfcs/](docs/rfcs/): rationale for reliability and process improvements.
-- [docs/examples/](docs/examples/): current golden-flow artifacts.
-- [registry/](registry/): pattern inventory; AI metadata lives under `meta.aiDesignSystem`.
-- [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md): root agent instructions.
+各生成物には provenance sidecar(入力の digest 記録)が添えられ、改変を機械的に検出できます。
 
-## Quick Start
+## 動かし方
 
 ```bash
 npm install
-npm run validate
-npm run checks
+npm run validate   # スキーマ・プロファイル・指示同期の検証
+npm run checks     # BuildReport で使う検証スイート
+npm run dev        # ローカル開発サーバー
 ```
 
-Use `npm run dev` for local development and `npm run build` before release-oriented review.
-This repo uses Next.js 16 and base-ui through shadcn/ui; read the local component source when an
-API is unclear.
+## 詳細情報の在り処
 
-## Current Golden Flow
-
-The current golden flow is `dryrun-saas-ops-01`.
-
-- FlowSpec: [docs/examples/flowspec-dryrun-saas-ops-01.json](docs/examples/flowspec-dryrun-saas-ops-01.json)
-- SelectionSpec: [docs/examples/selectionspec-dryrun-saas-ops-01.json](docs/examples/selectionspec-dryrun-saas-ops-01.json)
-- BuildReport: [docs/examples/buildreport-dryrun-saas-ops-01.json](docs/examples/buildreport-dryrun-saas-ops-01.json)
-
-It covers three built screens: login, overview, and invoice-list. The latest BuildReport is verified
-with zero unresolved issues.
-
-## Validation
-
-- `npm run validate`: validates profiles, facets, specs, and root agent instruction sync.
-- `npm run validate:agents`: verifies that `AGENTS.md` remains the canonical instruction source and
-  `CLAUDE.md` remains the deterministic `@AGENTS.md` shim.
-- `npm run checks`: runs the verification suite used by BuildReport checks.
-
-The agent-sync check runs offline and accepts optional paths for review work:
-
-```bash
-npm run validate:agents -- CLAUDE.md
-```
-
-## Human Approval Boundaries
-
-- Commit and push only after explicit human approval.
-- Do not promote pattern maturity from `experimental` to `canonical` without human review.
-- Do not edit contract schemas, canonical selection guidance, registry facet values, or archived
-  documents as part of routine executor work.
-- Do not add path-specific instruction files until a directory has repeated, concrete rules that
-  would reduce root-level noise. Until then, keep root instructions concise and link to the detailed
-  docs above.
+- 現在の到達状態・次の作業候補: [docs/STATUS.md](docs/STATUS.md)
+- リポジトリ構成の地図・エージェント運用ルール(編集禁止領域・承認境界を含む): [AGENTS.md](AGENTS.md)
