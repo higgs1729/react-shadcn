@@ -9,7 +9,8 @@
 - `STATUS.md` — 現在地の要約キャッシュ。正本は git log
 - `contracts/` — FlowSpec / SelectionSpec / BuildReport / facets / profiles の JSON Schema
 - `layers/` — 3層の手順書(10-upstream / 20-selection[編集禁止] / 30-implementation)
-- `tasks/` — 下位AI委任 brief(pending のみ。完了後は archive へ)
+- `task/` — 別executorへ渡す横断的な実行brief
+- `tasks/` — 恒常化されたタスク：下位AI委任 brief
 - `examples/` — 現行 golden flow の成果物(最新のみ)
 - `provenance/` — provenance sidecar のスキーマと運用
 - `apps/` — app ごとの文書。studioApp の spec 正本と Example App 成果物
@@ -20,6 +21,6 @@
 
 ## このディレクトリだけの約束
 
-- 各ノードは「①その階層が何か ②直下の子の索引 ③その階層だけの約束」のみを書く。孫の詳細を書かない(深さ1原則)
 - `examples/` は flow ID ごとの三つ組(FlowSpec・SelectionSpec・BuildReport)のみを最新状態で保持する。古い版は `git log` を正本とし、ここには置かない
-- `tasks/` に brief を置いたら、完了・検証後は同じ回で `archive/tasks/` へ移動する
+- 新たにtaskを作る場合は`task/`を参照して作成する
+- `tasks/` に置くものは`task/`で繰り返し使用したタスクである

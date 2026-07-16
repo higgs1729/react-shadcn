@@ -15,6 +15,7 @@ const EXCLUDED_DIRS = new Set([
   'out',
   'storybook-static',
   'test-results',
+  'sampleforYou',
   'docs',
   '.claude',
 ])

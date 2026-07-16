@@ -1,20 +1,23 @@
-# Task Briefs
+# Reusable task playbooks
 
-Self-contained work orders for delegating work in any layer to executor AIs.
-Each brief carries its own context, numbered requirements, and runnable acceptance
-criteria — the executor should not need the orchestrator's conversation history.
+複数回の成功実績があり、対象を差し替えて繰り返し使う手順を保持する。
+新規・進行中の具体的なwork orderは `docs/task/` に置き、`docs/task/template.md` に従う。
 
-Lifecycle: the orchestrator AI writes a brief here (following the template below) →
-hands the executor that one file → independently verifies the result → moves the
-completed brief to `docs/archive/tasks/`. This folder holds only briefs that are
-currently pending or in flight.
+playbookは対象値のプレースホルダーと共通手順を持てるが、それ自体を直接実行しない。
+実行時は必要な内容を `docs/task/task-{taskId}.md` へ展開し、具体化済みactive task 1枚を
+実行者へ渡す。個々の実行完了時にplaybookをarchiveしない。
+既存playbookに残るcoordinator/WP分割は旧運用として扱い、新しいactive taskではexecutor
+一人が直接実行・自己検証・報告する形へ展開する。下位executorへの再委任は行わない。
 
 ## Shared ground rules for every executor
 
-Briefs reference this section instead of restating it. Read it before starting.
+Reusable playbooks may reference this section. When a playbook is expanded into an active
+task, copy the applicable rules into that task so the executor receives one self-contained
+work order.
 
-- Contracts live in `docs/contracts/` and are enforced by `npm run validate` — it must
-  exit 0 when you finish.
+- Contracts live in `docs/contracts/` and are enforced by the task-specific validation.
+  Run only the checks named by the concrete active task; BuildReport verification tasks
+  include `npm run checks`.
 - Resolve docs by basename via `scripts/lib/paths.mjs` (`readDoc`); never hardcode
   `docs/` subfolders in scripts.
 - Never edit `components/ui/*`, `registry/*.json` facet values, `docs/contracts/*`, or
@@ -30,9 +33,8 @@ Briefs reference this section instead of restating it. Read it before starting.
   Done, regenerate the provenance sidecar of every flow that references a changed item and
   leave `npm run validate:provenance` at exit 0. (Provenance digests are selection-scoped, so
   unrelated additions no longer invalidate other flows — but a *referenced* item still must.)
-- Commit promptly after a task is complete and verified. Uncommitted results from parallel
-  work bleed across tasks (stale digests, `next build` lock contention). Commits are the
-  user's to make: end a completed task by prompting the user to commit.
+- Never commit or push without the user's explicit approval. Executorは検証結果を報告し、
+  人間承認が必要な場合は停止して承認を待つ。
 
 ## Execution permission failures (Codex sandbox)
 
@@ -67,43 +69,12 @@ Build and browser checks normally write caches even when their user-visible purp
 verification. After a successful elevated run, continue with the task's ordinary validation
 and provenance steps; elevation does not bypass any repository rule.
 
-## Brief template
+## Promotion criteria
 
-The orchestrator generates each brief from this template. Rules for filling it in:
+`docs/task/` の単発taskをそのままここへ移さない。次をすべて満たす手順だけを、対象値を
+プレースホルダー化したplaybookとして追加する。
 
-- File name: `task-NN-<kebab-slug>.md` (NN continues the sequence in `docs/archive/tasks/`).
-- Keep the first line (`Prerequisite`) verbatim — it replaces restating the ground rules.
-- Every Requirement must be independently checkable; every Acceptance criterion must be
-  a runnable command or an observable fact, with expected outcome.
-- Include in Context every repo fact the executor needs that is not in the ground
-  rules — target file paths, contract names, existing patterns to imitate. Do not
-  assume the executor knows anything from the orchestrator's conversation.
-- Omit a section only if it is genuinely empty; do not merge sections.
-
-```markdown
-# Task NN: <imperative title>
-
-Prerequisite: read "Shared ground rules for every executor" in `docs/tasks/README.md`
-before starting. They apply to this task.
-
-## Objective
-<1–3 sentences: what to accomplish and why. Single most important outcome.>
-
-## Context
-- <repo facts the executor needs: relevant paths, contracts, patterns to imitate>
-- <current state vs. desired state, if applicable>
-
-## Requirements
-1. <concrete, independently checkable statement>
-2. <...>
-
-## Constraints
-- <task-specific things NOT to do, beyond the shared ground rules>
-
-## Acceptance criteria
-- [ ] <runnable command + expected result, e.g. `npm run validate` exits 0>
-- [ ] <observable fact, e.g. file X exists and validates against schema Y>
-
-## Out of scope
-- <explicitly excluded work, to prevent scope creep>
-```
+- 同種のtaskで複数回成功し、変動部分と不変手順を説明できる
+- 入力宣言、開始ゲート、終了状態、検証コマンドが明確である
+- 特定アプリ・一時的な移行・単発の不具合修正に依存しない
+- 実行時に `docs/task/template.md` へ展開できる

@@ -4,7 +4,8 @@
   "explorer.autoReveal": false,
   "explorer.sortOrder": "foldersNestsFiles",
   "explorer.compactFolders": false,
-  "explorer.openEditors.visible": 0,
+  "explorer.openEditors.visible": 1,
+  "json.schemaDownload.enable": true,
   "files.exclude": {
     "**/node_modules": true,
     "**/.next": true,

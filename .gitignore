@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+/sampleforYou/
 
 # debug
 npm-debug.log*

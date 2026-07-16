@@ -3,6 +3,7 @@
 # STATUS
 
 - 現在地の要約キャッシュ。正本は git log。経緯・詳細はコミット履歴と `docs/examples/` を参照。
+- 下記の「到達状況」は最新の５個、「進行中の作業」は最新のものを最大３つ書く。
 - gitlogと差異があった場合、内容に合わせて下のどれかを編集する
 
 ## 到達状態
@@ -13,12 +14,9 @@
 - システム/作品の分断済み(2026-07-16): 在庫実体は `app/(system)/`+`components/blocks/`、作品は `app/(studio)/`+`components/studio-portfolio/`+`lib/studio-portfolio/`+`docs/apps/studio/`。URL は route group のため不変。registry パス変更に伴い provenance sidecar は両フロー再生成済み
 - 文書の役割分担を整理済み: README=概要のみ / AGENTS.md=規範と地図 / 本書=現在地
 
-## 進行中・次の作業
-
-1. `docs/apps/studio/` を正本に StudioLayout・5 Page・ChildRoute・Drawer/Dialog を静的実装し GitHub Pages へ配布
-   (route はトップレベル。`/` は Orientation を表示し完了/skip で `/overview` へ。Pages source の設定は人間が行う)
-2. 次の ScreenType 候補: `spatial-explorer` / `calendar-scheduler` / `operations-console`(いずれも新 role 必要性の評価から)
-3. maturity 昇格(人間レビュー専用)と blockRole 実装品質の一覧化は未着手
+## 着手予定の作業
+- maturity 昇格(人間レビュー専用)と blockRole 実装品質の一覧化
+- 次の ScreenType 候補: `spatial-explorer` / `calendar-scheduler` / `operations-console`(いずれも新 role 必要性の評価から)
 
 ## 既知の課題
 
