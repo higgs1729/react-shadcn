@@ -8,7 +8,7 @@
   "registryDependencies": ["navigation-menu", "button"],
   "files": [
     {
-      "path": "components/app-shell-topnav-01.tsx",
+      "path": "components/blocks/app-shell-topnav-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no routing wired in. Alternative to app-shell-sidebar; do not combine both on one screen."
       },
       "extensions": {
-        "localEvidence": ["components/app-shell-topnav-01.tsx"]
+        "localEvidence": ["components/blocks/app-shell-topnav-01.tsx"]
       }
     }
   }

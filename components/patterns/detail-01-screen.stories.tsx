@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { DetailScreen } from '@/app/detail-01/detail-screen'
+import { DetailScreen } from '@/app/(system)/detail-01/detail-screen'
 
 const meta = {
   title: 'Patterns/detail/Detail 01',

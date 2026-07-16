@@ -1,9 +1,9 @@
 // Generates the per-step Next.js route wrappers for a flow's RESOLVED steps
 // from its SelectionSpec (+ BuildReport for the resolved/unresolved split),
-// writing app/flows/<flowId>/<stepId>/page.tsx for each resolved step.
+// writing app/(system)/flows/<flowId>/<stepId>/page.tsx for each resolved step.
 //
-// Convention reproduced (see app/flows/studio-portfolio-01/* and
-// app/flows/dryrun-saas-ops-01/*):
+// Convention reproduced (see app/(system)/flows/studio-portfolio-01/* and
+// app/(system)/flows/dryrun-saas-ops-01/*):
 //   - multi-state steps (stateCoveragePlan length > 1) are Client Components that
 //     read `?state=` via useSearchParams inside a <Suspense> boundary and wrap the
 //     shared app/<pattern>/<pattern>-screen.tsx (per Next.js useSearchParams docs,
@@ -181,14 +181,14 @@ for (const screen of resolvedScreens) {
     stateCoveragePlan: screen.stateCoveragePlan,
     id: flowId,
   })
-  const dir = join(ROOT, 'app', 'flows', flowId, screen.stepId)
+  const dir = join(ROOT, 'app', '(system)', 'flows', flowId, screen.stepId)
   const outPath = join(dir, 'page.tsx')
   const prior = existsSync(outPath) ? readFileSync(outPath, 'utf8') : null
   if (prior === source) {
     unchanged++
     continue
   }
-  changed.push(`app/flows/${flowId}/${screen.stepId}/page.tsx`)
+  changed.push(`app/(system)/flows/${flowId}/${screen.stepId}/page.tsx`)
   if (!check) {
     mkdirSync(dir, { recursive: true })
     writeFileSync(outPath, source)

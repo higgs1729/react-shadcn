@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { SectionCards } from '@/components/section-cards'
+import { SectionCards } from '@/components/blocks/section-cards'
 
 const meta = {
   title: 'Blocks/summary-metric-row/Summary Metric Row 01',

@@ -8,7 +8,7 @@
   "registryDependencies": ["popover", "item", "badge", "button"],
   "files": [
     {
-      "path": "components/notification-center-01.tsx",
+      "path": "components/blocks/notification-center-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching, persistence, or real-time transport wired in."
       },
       "extensions": {
-        "localEvidence": ["components/notification-center-01.tsx"]
+        "localEvidence": ["components/blocks/notification-center-01.tsx"]
       }
     }
   }

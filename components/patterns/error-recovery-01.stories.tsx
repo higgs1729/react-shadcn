@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { ErrorRecovery01 } from '@/components/error-recovery-01'
+import { ErrorRecovery01 } from '@/components/blocks/error-recovery-01'
 
 function ErrorRecovery01Demo() {
   const [retryCount, setRetryCount] = React.useState(0)

@@ -8,8 +8,8 @@
       "route": "/flows/dryrun-saas-ops-01/login",
       "status": "built",
       "filesCreated": [
-        "app/flows/dryrun-saas-ops-01/page.tsx",
-        "app/flows/dryrun-saas-ops-01/login/page.tsx",
+        "app/(system)/flows/dryrun-saas-ops-01/page.tsx",
+        "app/(system)/flows/dryrun-saas-ops-01/login/page.tsx",
         "components/patterns/form-section-login-01.stories.tsx",
         "components/patterns/login-03-screen.stories.tsx"
       ],
@@ -27,7 +27,7 @@
       "route": "/flows/dryrun-saas-ops-01/overview",
       "status": "built",
       "filesCreated": [
-        "app/flows/dryrun-saas-ops-01/overview/page.tsx",
+        "app/(system)/flows/dryrun-saas-ops-01/overview/page.tsx",
         "components/patterns/sidebar-07.stories.tsx",
         "components/patterns/page-header-actions-01.stories.tsx",
         "components/patterns/summary-metric-row-01.stories.tsx",
@@ -53,7 +53,7 @@
       "route": "/flows/dryrun-saas-ops-01/invoice-list",
       "status": "built",
       "filesCreated": [
-        "app/flows/dryrun-saas-ops-01/invoice-list/page.tsx"
+        "app/(system)/flows/dryrun-saas-ops-01/invoice-list/page.tsx"
       ],
       "storiesCreated": [
         "patterns-collection-collection-table-01--default",

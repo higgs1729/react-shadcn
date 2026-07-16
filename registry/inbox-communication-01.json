@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "avatar", "badge", "button", "card", "empty", "input-group", "item", "scroll-area", "select", "sidebar", "skeleton", "textarea", "toggle-group"],
   "files": [
     {
-      "path": "app/inbox-communication-01/inbox-screen.tsx",
+      "path": "app/(system)/inbox-communication-01/inbox-screen.tsx",
       "type": "registry:component",
-      "target": "app/inbox-communication-01/inbox-screen.tsx"
+      "target": "app/(system)/inbox-communication-01/inbox-screen.tsx"
     },
     {
-      "path": "app/inbox-communication-01/data.json",
+      "path": "app/(system)/inbox-communication-01/data.json",
       "type": "registry:file",
-      "target": "app/inbox-communication-01/data.json"
+      "target": "app/(system)/inbox-communication-01/data.json"
     }
   ],
   "meta": {
@@ -84,8 +84,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/inbox-communication-01/inbox-screen.tsx",
-          "app/inbox-communication-01/data.json",
+          "app/(system)/inbox-communication-01/inbox-screen.tsx",
+          "app/(system)/inbox-communication-01/data.json",
           "components/patterns/inbox-communication-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "Human conversation triage has ownership and resolution lifecycle actions that collection lacks, without the AI delegation and token streaming central to conversation-assistant."

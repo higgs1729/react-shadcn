@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { ConversationAssistantScreen } from '@/app/conversation-assistant-01/conversation-assistant-screen'
+import { ConversationAssistantScreen } from '@/app/(system)/conversation-assistant-01/conversation-assistant-screen'
 
 const meta = {
   title: 'Patterns/conversation-assistant/Conversation Assistant 01',

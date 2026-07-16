@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Button } from '@/components/ui/button'
-import { DrawerInspector01 } from '@/components/drawer-inspector-01'
+import { DrawerInspector01 } from '@/components/blocks/drawer-inspector-01'
 
 function DrawerInspector01Demo() {
   const [open, setOpen] = React.useState(true)

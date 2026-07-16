@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   CommentThread,
   type CommentThreadComment,
-} from '@/components/comment-thread-01'
+} from '@/components/blocks/comment-thread-01'
 
 function CommentThreadDemo() {
   const [comments, setComments] = React.useState<CommentThreadComment[]>([

@@ -15,29 +15,29 @@
   ],
   "files": [
     {
-      "path": "components/app-sidebar.tsx",
+      "path": "components/blocks/app-sidebar.tsx",
       "type": "registry:component"
     },
     {
-      "path": "components/nav-main.tsx",
+      "path": "components/blocks/nav-main.tsx",
       "type": "registry:component"
     },
     {
-      "path": "components/nav-projects.tsx",
+      "path": "components/blocks/nav-projects.tsx",
       "type": "registry:component"
     },
     {
-      "path": "components/nav-user.tsx",
+      "path": "components/blocks/nav-user.tsx",
       "type": "registry:component"
     },
     {
-      "path": "components/team-switcher.tsx",
+      "path": "components/blocks/team-switcher.tsx",
       "type": "registry:component"
     },
     {
-      "path": "app/dashboard/page.tsx",
+      "path": "app/(system)/dashboard/page.tsx",
       "type": "registry:page",
-      "target": "app/dashboard/page.tsx"
+      "target": "app/(system)/dashboard/page.tsx"
     }
   ],
   "meta": {
@@ -107,12 +107,12 @@
       },
       "extensions": {
         "localEvidence": [
-          "components/app-sidebar.tsx",
-          "components/nav-main.tsx",
-          "components/nav-projects.tsx",
-          "components/nav-user.tsx",
-          "components/team-switcher.tsx",
-          "app/dashboard/page.tsx"
+          "components/blocks/app-sidebar.tsx",
+          "components/blocks/nav-main.tsx",
+          "components/blocks/nav-projects.tsx",
+          "components/blocks/nav-user.tsx",
+          "components/blocks/team-switcher.tsx",
+          "app/(system)/dashboard/page.tsx"
         ]
       }
     }

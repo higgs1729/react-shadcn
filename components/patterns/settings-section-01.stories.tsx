@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   SettingsSection,
   type SettingsSectionRow,
-} from '@/components/settings-section-01'
+} from '@/components/blocks/settings-section-01'
 
 function SettingsSectionDemo() {
   const [settings, setSettings] = React.useState<SettingsSectionRow[]>([

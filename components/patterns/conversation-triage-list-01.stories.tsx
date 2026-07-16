@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-import { ConversationTriageList } from "@/components/conversation-triage-list-01"
+import { ConversationTriageList } from "@/components/blocks/conversation-triage-list-01"
 
 const conversations = [
   { id: "conv-101", sender: "Maya Chen", subject: "Unable to update billing address", preview: "The save button stays disabled after I edit the address.", status: "open" as const, priority: "high" as const, assignee: "Ari", updated: "2m" },

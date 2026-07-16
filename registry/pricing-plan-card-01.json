@@ -8,7 +8,7 @@
   "registryDependencies": ["card", "button", "badge", "separator"],
   "files": [
     {
-      "path": "components/pricing-plan-card-01.tsx",
+      "path": "components/blocks/pricing-plan-card-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching, checkout, or payment logic."
       },
       "extensions": {
-        "localEvidence": ["components/pricing-plan-card-01.tsx"]
+        "localEvidence": ["components/blocks/pricing-plan-card-01.tsx"]
       }
     }
   }

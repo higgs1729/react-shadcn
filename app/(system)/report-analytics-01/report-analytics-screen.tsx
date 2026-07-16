@@ -3,11 +3,11 @@
 import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
-import { FilterToolbar } from "@/components/filter-toolbar"
-import { SectionCards } from "@/components/section-cards"
-import { SiteHeader } from "@/components/site-header"
+import { ChartAreaInteractive } from "@/components/blocks/chart-area-interactive"
+import { DataTable } from "@/components/blocks/data-table"
+import { FilterToolbar } from "@/components/blocks/filter-toolbar"
+import { SectionCards } from "@/components/blocks/section-cards"
+import { SiteHeader } from "@/components/blocks/site-header"
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,7 +20,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
-import tableData from "@/app/dashboard-01/data.json"
+import tableData from "@/app/(system)/dashboard-01/data.json"
 import reportConfig from "./data.json"
 
 export type ReportAnalyticsState = "default" | "loading" | "empty" | "error"

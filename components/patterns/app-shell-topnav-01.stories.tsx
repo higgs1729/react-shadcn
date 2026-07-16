@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   AppShellTopnav,
   type AppShellTopnavItem,
-} from '@/components/app-shell-topnav-01'
+} from '@/components/blocks/app-shell-topnav-01'
 
 const items: AppShellTopnavItem[] = [
   { id: 'overview', label: 'Overview' },

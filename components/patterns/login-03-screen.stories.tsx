@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent, within } from 'storybook/test'
-import Screen from '@/app/flows/dryrun-saas-ops-01/login/page'
+import Screen from '@/app/(system)/flows/dryrun-saas-ops-01/login/page'
 
 const meta = {
   title: 'Patterns/auth/Login 03',

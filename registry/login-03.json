@@ -8,9 +8,9 @@
   "registryDependencies": ["button", "card", "field", "input"],
   "files": [
     {
-      "path": "app/login/page.tsx",
+      "path": "app/(system)/login/page.tsx",
       "type": "registry:page",
-      "target": "app/login/page.tsx"
+      "target": "app/(system)/login/page.tsx"
     }
   ],
   "meta": {
@@ -74,7 +74,7 @@
         "notes": "Form has no submit handler, validation, or error state; it is a visual pattern only. Auth wiring is downstream work."
       },
       "extensions": {
-        "localEvidence": ["app/login/page.tsx", "components/login-form.tsx"]
+        "localEvidence": ["app/(system)/login/page.tsx", "components/blocks/login-form.tsx"]
       }
     }
   }

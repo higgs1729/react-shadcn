@@ -3,9 +3,9 @@
 import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
-import { ActionFooter } from "@/components/action-footer-01"
-import { FileUploadArea, type FileUploadAreaFile } from "@/components/file-upload-area-01"
-import { SiteHeader } from "@/components/site-header"
+import { ActionFooter } from "@/components/blocks/action-footer-01"
+import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
+import { SiteHeader } from "@/components/blocks/site-header"
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

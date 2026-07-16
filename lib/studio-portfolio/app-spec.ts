@@ -1,4 +1,4 @@
-import rawSpec from "@/studioAppSpec/studio-app-spec.json"
+import rawSpec from "@/docs/apps/studio/studio-app-spec.json"
 
 type PrimaryNavigationItem = {
   id: string

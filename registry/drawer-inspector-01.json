@@ -8,7 +8,7 @@
   "registryDependencies": ["sheet", "button", "field", "input"],
   "files": [
     {
-      "path": "components/drawer-inspector-01.tsx",
+      "path": "components/blocks/drawer-inspector-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; open state, field values, and save are supplied by the caller."
       },
       "extensions": {
-        "localEvidence": ["components/drawer-inspector-01.tsx"]
+        "localEvidence": ["components/blocks/drawer-inspector-01.tsx"]
       }
     }
   }

@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation"
 import {
   CollectionTableScreen,
   type CollectionState,
-} from "@/app/collection-01/collection-screen"
+} from "@/app/(system)/collection-01/collection-screen"
 
 const STATES: readonly CollectionState[] = ["default", "loading", "empty", "error"]
 

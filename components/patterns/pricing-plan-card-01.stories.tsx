@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { PricingPlanCard } from '@/components/pricing-plan-card-01'
+import { PricingPlanCard } from '@/components/blocks/pricing-plan-card-01'
 
 function PricingPlanCardDemo() {
   const [selectedPlanId, setSelectedPlanId] = React.useState('pro')

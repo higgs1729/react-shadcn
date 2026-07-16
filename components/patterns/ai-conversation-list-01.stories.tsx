@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   AiConversationList,
   type AiConversationListItem,
-} from '@/components/ai-conversation-list-01'
+} from '@/components/blocks/ai-conversation-list-01'
 
 const conversations: AiConversationListItem[] = [
   {

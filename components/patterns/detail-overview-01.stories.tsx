@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { DetailOverview } from '@/components/detail-overview-01'
+import { DetailOverview } from '@/components/blocks/detail-overview-01'
 
 function DetailOverviewDemo() {
   return (

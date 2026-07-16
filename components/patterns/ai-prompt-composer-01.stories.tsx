@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { AiPromptComposer } from '@/components/ai-prompt-composer-01'
+import { AiPromptComposer } from '@/components/blocks/ai-prompt-composer-01'
 
 function AiPromptComposerDemo() {
   const [value, setValue] = React.useState('')

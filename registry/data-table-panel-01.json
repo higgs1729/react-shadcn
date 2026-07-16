@@ -21,7 +21,7 @@
   ],
   "files": [
     {
-      "path": "components/data-table.tsx",
+      "path": "components/blocks/data-table.tsx",
       "type": "registry:component"
     }
   ],
@@ -106,7 +106,7 @@
         "notes": "Table data comes from a static JSON prop; drag-reorder lacks keyboard support; no loading/empty/error variants."
       },
       "extensions": {
-        "localEvidence": ["components/data-table.tsx"],
+        "localEvidence": ["components/blocks/data-table.tsx"],
         "extractedFrom": "dashboard-01"
       }
     }

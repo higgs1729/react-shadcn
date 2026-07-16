@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 
-import { BoardColumn, type BoardColumnCard } from "@/components/board-column-01"
-import { AppSidebar } from "@/components/app-sidebar"
-import { FilterToolbar } from "@/components/filter-toolbar"
-import { SiteHeader } from "@/components/site-header"
+import { BoardColumn, type BoardColumnCard } from "@/components/blocks/board-column-01"
+import { AppSidebar } from "@/components/blocks/app-sidebar"
+import { FilterToolbar } from "@/components/blocks/filter-toolbar"
+import { SiteHeader } from "@/components/blocks/site-header"
 import { Button } from "@/components/ui/button"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 

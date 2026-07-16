@@ -8,7 +8,7 @@
   "registryDependencies": ["input-group", "select", "toggle-group", "button"],
   "files": [
     {
-      "path": "components/filter-toolbar.tsx",
+      "path": "components/blocks/filter-toolbar.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or persistence."
       },
       "extensions": {
-        "localEvidence": ["components/filter-toolbar.tsx"]
+        "localEvidence": ["components/blocks/filter-toolbar.tsx"]
       }
     }
   }

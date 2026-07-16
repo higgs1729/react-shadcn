@@ -8,7 +8,7 @@
   "registryDependencies": ["item", "scroll-area", "button"],
   "files": [
     {
-      "path": "components/ai-conversation-list-01.tsx",
+      "path": "components/blocks/ai-conversation-list-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching, persistence, or real-time transport wired in."
       },
       "extensions": {
-        "localEvidence": ["components/ai-conversation-list-01.tsx"]
+        "localEvidence": ["components/blocks/ai-conversation-list-01.tsx"]
       }
     }
   }

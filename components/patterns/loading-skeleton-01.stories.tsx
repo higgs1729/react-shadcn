@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { LoadingSkeleton01 } from '@/components/loading-skeleton-01'
+import { LoadingSkeleton01 } from '@/components/blocks/loading-skeleton-01'
 
 function LoadingSkeleton01Demo() {
   return <LoadingSkeleton01 rows={4} />

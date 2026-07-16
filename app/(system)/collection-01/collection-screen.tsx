@@ -3,9 +3,9 @@
 import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
-import { AppSidebar } from "@/components/app-sidebar"
-import { SiteHeader } from "@/components/site-header"
-import { FilterToolbar } from "@/components/filter-toolbar"
+import { AppSidebar } from "@/components/blocks/app-sidebar"
+import { SiteHeader } from "@/components/blocks/site-header"
+import { FilterToolbar } from "@/components/blocks/filter-toolbar"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Alert, AlertTitle, AlertDescription, AlertAction } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"

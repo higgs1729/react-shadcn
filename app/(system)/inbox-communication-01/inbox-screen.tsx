@@ -9,12 +9,12 @@ import {
   SendIcon,
 } from "lucide-react"
 
-import { CommentThread } from "@/components/comment-thread-01"
+import { CommentThread } from "@/components/blocks/comment-thread-01"
 import {
   ConversationTriageItem,
   ConversationTriageList,
-} from "@/components/conversation-triage-list-01"
-import { FilterToolbar } from "@/components/filter-toolbar"
+} from "@/components/blocks/conversation-triage-list-01"
+import { FilterToolbar } from "@/components/blocks/filter-toolbar"
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"

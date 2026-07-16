@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "breadcrumb", "button", "button-group", "card", "field", "input", "separator", "sidebar", "skeleton", "switch", "tabs"],
   "files": [
     {
-      "path": "app/settings-admin-01/settings-admin-screen.tsx",
+      "path": "app/(system)/settings-admin-01/settings-admin-screen.tsx",
       "type": "registry:component",
-      "target": "app/settings-admin-01/settings-admin-screen.tsx"
+      "target": "app/(system)/settings-admin-01/settings-admin-screen.tsx"
     },
     {
-      "path": "app/settings-admin-01/data.json",
+      "path": "app/(system)/settings-admin-01/data.json",
       "type": "registry:file",
-      "target": "app/settings-admin-01/data.json"
+      "target": "app/(system)/settings-admin-01/data.json"
     }
   ],
   "meta": {
@@ -83,8 +83,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/settings-admin-01/settings-admin-screen.tsx",
-          "app/settings-admin-01/data.json",
+          "app/(system)/settings-admin-01/settings-admin-screen.tsx",
+          "app/(system)/settings-admin-01/data.json",
           "components/patterns/settings-admin-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "settings-admin is a sectioned preferences/admin surface (profile, notifications, security policies) under a persistent secondary nav, distinct from create-edit (a single record form) and detail (a read-mostly record page); toggles carry permission-model and workspace-wide policy semantics rather than editing one business record."

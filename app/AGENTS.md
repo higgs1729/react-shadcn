@@ -1,0 +1,17 @@
+<!-- encoding:UTF-8 -->
+
+# app/
+
+Next.js route。route group でシステムと作品を分離しており、URL にグループ名は現れない。
+
+## 索引
+
+- `(system)/` — デザインシステム側。在庫 screen 実体(`*-01/`)・golden flow demo(`login/`・`dashboard/`・`flows/`)・`example-previews/`
+- `(studio)/` — 作品(studioApp)側。ポートフォリオの Page 群
+- `orientation/`・`page.tsx` — 作品側の入口(`/` は Orientation を表示し、完了/skip で `/overview` へ)
+- `layout.tsx`・`globals.css` — 全体共有
+
+## このディレクトリだけの約束
+
+- `(system)/` の screen 実体は registry(`files[].path`・`localEvidence`)から参照される。移動・改名時は registry のパスと provenance sidecar の再生成まで一体で行う
+- 新しい route を追加するときは、どちらの group に属するかを最初に決める。直下に裸のディレクトリを増やさない

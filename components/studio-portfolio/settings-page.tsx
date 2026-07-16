@@ -12,7 +12,7 @@ import { AccessibilityIcon, PaletteIcon } from "lucide-react"
 import {
   SettingsSection,
   type SettingsSectionRow,
-} from "@/components/settings-section-01"
+} from "@/components/blocks/settings-section-01"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {

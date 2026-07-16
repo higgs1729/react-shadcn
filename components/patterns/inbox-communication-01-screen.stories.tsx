@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { InboxCommunicationScreen } from '@/app/inbox-communication-01/inbox-screen'
+import { InboxCommunicationScreen } from '@/app/(system)/inbox-communication-01/inbox-screen'
 
 const meta = {
   title: 'Patterns/inbox-communication/Inbox Communication 01',

@@ -8,7 +8,7 @@
   "registryDependencies": ["card", "avatar", "textarea", "button"],
   "files": [
     {
-      "path": "components/comment-thread-01.tsx",
+      "path": "components/blocks/comment-thread-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching, persistence, or real-time transport wired in."
       },
       "extensions": {
-        "localEvidence": ["components/comment-thread-01.tsx"]
+        "localEvidence": ["components/blocks/comment-thread-01.tsx"]
       }
     }
   }

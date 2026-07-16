@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { WizardStepper, type WizardStep } from '@/components/wizard-stepper-01'
+import { WizardStepper, type WizardStep } from '@/components/blocks/wizard-stepper-01'
 
 const steps: WizardStep[] = [
   { id: 'account', label: 'Account' },

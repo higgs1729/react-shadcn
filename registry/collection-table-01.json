@@ -8,19 +8,19 @@
   "registryDependencies": ["sidebar", "input-group", "select", "toggle-group", "button", "table", "checkbox", "card", "empty", "alert", "skeleton"],
   "files": [
     {
-      "path": "app/collection-01/page.tsx",
+      "path": "app/(system)/collection-01/page.tsx",
       "type": "registry:page",
-      "target": "app/collection-01/page.tsx"
+      "target": "app/(system)/collection-01/page.tsx"
     },
     {
-      "path": "app/collection-01/collection-screen.tsx",
+      "path": "app/(system)/collection-01/collection-screen.tsx",
       "type": "registry:component",
-      "target": "app/collection-01/collection-screen.tsx"
+      "target": "app/(system)/collection-01/collection-screen.tsx"
     },
     {
-      "path": "app/collection-01/data.json",
+      "path": "app/(system)/collection-01/data.json",
       "type": "registry:file",
-      "target": "app/collection-01/data.json"
+      "target": "app/(system)/collection-01/data.json"
     }
   ],
   "meta": {
@@ -86,10 +86,10 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/collection-01/page.tsx",
-          "app/collection-01/collection-screen.tsx",
-          "app/collection-01/data.json",
-          "components/filter-toolbar.tsx"
+          "app/(system)/collection-01/page.tsx",
+          "app/(system)/collection-01/collection-screen.tsx",
+          "app/(system)/collection-01/data.json",
+          "components/blocks/filter-toolbar.tsx"
         ]
       }
     }

@@ -171,7 +171,7 @@ for (const screen of spec.screens ?? []) {
       imports.push(`import { SidebarProvider } from '@/components/ui/sidebar'`)
       render = `<SidebarProvider><${primary} /></SidebarProvider>`
     } else if (config.needsData) {
-      imports.push(`import data from '@/app/dashboard-01/data.json'`)
+      imports.push(`import data from '@/app/(system)/dashboard-01/data.json'`)
       render = `<${primary} data={data} />`
     } else {
       render = `<${primary} />`
@@ -195,7 +195,7 @@ for (const screen of spec.screens ?? []) {
     } else {
       const { path: itemPath, item } = loadItem(screenName)
       const facets = item.meta.aiDesignSystem
-      const pagePath = `@/app/flows/${spec.flowId}/${screen.stepId}/page`
+      const pagePath = `@/app/(system)/flows/${spec.flowId}/${screen.stepId}/page`
       const imports = [`import Screen from '${pagePath}'`]
       const render = `<Screen />`
       const title = `Patterns/${screen.resolvedScreenType}/${item.title}`

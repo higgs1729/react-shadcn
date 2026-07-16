@@ -8,7 +8,7 @@
   "registryDependencies": ["skeleton"],
   "files": [
     {
-      "path": "components/loading-skeleton-01.tsx",
+      "path": "components/blocks/loading-skeleton-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Purely decorative and stateless; no data fetching, no interaction."
       },
       "extensions": {
-        "localEvidence": ["components/loading-skeleton-01.tsx"]
+        "localEvidence": ["components/blocks/loading-skeleton-01.tsx"]
       }
     }
   }

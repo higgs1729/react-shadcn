@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-import { BoardColumn } from "@/components/board-column-01"
+import { BoardColumn } from "@/components/blocks/board-column-01"
 
 const meta = {
   title: "Blocks/board-column/Board Column 01",

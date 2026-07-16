@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "avatar", "badge", "button", "input-group", "item", "scroll-area", "skeleton", "tooltip"],
   "files": [
     {
-      "path": "app/conversation-assistant-01/conversation-assistant-screen.tsx",
+      "path": "app/(system)/conversation-assistant-01/conversation-assistant-screen.tsx",
       "type": "registry:component",
-      "target": "app/conversation-assistant-01/conversation-assistant-screen.tsx"
+      "target": "app/(system)/conversation-assistant-01/conversation-assistant-screen.tsx"
     },
     {
-      "path": "app/conversation-assistant-01/data.json",
+      "path": "app/(system)/conversation-assistant-01/data.json",
       "type": "registry:file",
-      "target": "app/conversation-assistant-01/data.json"
+      "target": "app/(system)/conversation-assistant-01/data.json"
     }
   ],
   "meta": {
@@ -83,8 +83,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/conversation-assistant-01/conversation-assistant-screen.tsx",
-          "app/conversation-assistant-01/data.json",
+          "app/(system)/conversation-assistant-01/conversation-assistant-screen.tsx",
+          "app/(system)/conversation-assistant-01/data.json",
           "components/patterns/conversation-assistant-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "conversation-assistant is a turn-based AI delegation workspace with prompt composer, explainability labeling, and agent activity, distinct from inbox-communication (human correspondence triage with ownership/resolution lifecycle rather than AI token streaming)."

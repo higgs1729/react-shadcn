@@ -8,7 +8,7 @@
   "registryDependencies": ["separator", "badge"],
   "files": [
     {
-      "path": "components/wizard-stepper-01.tsx",
+      "path": "components/blocks/wizard-stepper-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or persistence. No stepper primitive exists yet, so this composes separator and badge."
       },
       "extensions": {
-        "localEvidence": ["components/wizard-stepper-01.tsx"]
+        "localEvidence": ["components/blocks/wizard-stepper-01.tsx"]
       }
     }
   }

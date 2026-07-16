@@ -8,7 +8,7 @@
   "registryDependencies": ["card", "field", "input", "textarea", "attachment", "badge", "scroll-area"],
   "files": [
     {
-      "path": "components/document-body-editor-01.tsx",
+      "path": "components/blocks/document-body-editor-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching, persistence, real-time transport, or conflict resolution wired in. Real-time collaboration cursors/presence are not implemented."
       },
       "extensions": {
-        "localEvidence": ["components/document-body-editor-01.tsx"]
+        "localEvidence": ["components/blocks/document-body-editor-01.tsx"]
       }
     }
   }

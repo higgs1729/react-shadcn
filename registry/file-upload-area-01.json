@@ -8,7 +8,7 @@
   "registryDependencies": ["attachment", "button"],
   "files": [
     {
-      "path": "components/file-upload-area-01.tsx",
+      "path": "components/blocks/file-upload-area-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no actual file upload/network transport is wired in."
       },
       "extensions": {
-        "localEvidence": ["components/file-upload-area-01.tsx"]
+        "localEvidence": ["components/blocks/file-upload-area-01.tsx"]
       }
     }
   }

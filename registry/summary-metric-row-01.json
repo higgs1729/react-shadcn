@@ -8,7 +8,7 @@
   "registryDependencies": ["card", "badge"],
   "files": [
     {
-      "path": "components/section-cards.tsx",
+      "path": "components/blocks/section-cards.tsx",
       "type": "registry:component"
     }
   ],
@@ -66,7 +66,7 @@
         "notes": "Metric values are hardcoded sample data; no loading/empty variants yet."
       },
       "extensions": {
-        "localEvidence": ["components/section-cards.tsx"],
+        "localEvidence": ["components/blocks/section-cards.tsx"],
         "extractedFrom": "dashboard-01"
       }
     }

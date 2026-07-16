@@ -3,12 +3,12 @@
 import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
-import { ActionFooter } from "@/components/action-footer-01"
-import { ActivityFeed, type ActivityFeedEntry } from "@/components/activity-feed-01"
-import { BreadcrumbContext01 } from "@/components/breadcrumb-context-01"
-import { CommentThread, type CommentThreadComment } from "@/components/comment-thread-01"
-import { DetailOverview, type DetailOverviewField } from "@/components/detail-overview-01"
-import { SiteHeader } from "@/components/site-header"
+import { ActionFooter } from "@/components/blocks/action-footer-01"
+import { ActivityFeed, type ActivityFeedEntry } from "@/components/blocks/activity-feed-01"
+import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
+import { CommentThread, type CommentThreadComment } from "@/components/blocks/comment-thread-01"
+import { DetailOverview, type DetailOverviewField } from "@/components/blocks/detail-overview-01"
+import { SiteHeader } from "@/components/blocks/site-header"
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {

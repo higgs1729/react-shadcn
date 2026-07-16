@@ -8,7 +8,7 @@
   "registryDependencies": ["card", "badge"],
   "files": [
     {
-      "path": "components/collection-grid-01.tsx",
+      "path": "components/blocks/collection-grid-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or persistence."
       },
       "extensions": {
-        "localEvidence": ["components/collection-grid-01.tsx"]
+        "localEvidence": ["components/blocks/collection-grid-01.tsx"]
       }
     }
   }

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   NotificationCenter,
   type NotificationCenterNotification,
-} from '@/components/notification-center-01'
+} from '@/components/blocks/notification-center-01'
 
 function NotificationCenterDemo() {
   const [open, setOpen] = React.useState(true)

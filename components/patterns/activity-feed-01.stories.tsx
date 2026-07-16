@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   ActivityFeed,
   type ActivityFeedEntry,
-} from '@/components/activity-feed-01'
+} from '@/components/blocks/activity-feed-01'
 
 const entries: ActivityFeedEntry[] = [
   {

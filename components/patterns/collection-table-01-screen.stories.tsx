@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CollectionTableScreen } from '@/app/collection-01/collection-screen'
+import { CollectionTableScreen } from '@/app/(system)/collection-01/collection-screen'
 
 const meta = {
   title: 'Patterns/collection/Collection Table 01',

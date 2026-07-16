@@ -3,10 +3,10 @@
 import * as React from "react"
 import { FileTextIcon, FolderIcon, Trash2Icon, UndoIcon } from "lucide-react"
 
-import { BreadcrumbContext01 } from "@/components/breadcrumb-context-01"
-import { CommentThread, type CommentThreadComment } from "@/components/comment-thread-01"
-import { DocumentBodyEditor } from "@/components/document-body-editor-01"
-import { FileUploadArea, type FileUploadAreaFile } from "@/components/file-upload-area-01"
+import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
+import { CommentThread, type CommentThreadComment } from "@/components/blocks/comment-thread-01"
+import { DocumentBodyEditor } from "@/components/blocks/document-body-editor-01"
+import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
 import { Button } from "@/components/ui/button"
 
 type SavedState = "saved" | "saving" | "unsaved"

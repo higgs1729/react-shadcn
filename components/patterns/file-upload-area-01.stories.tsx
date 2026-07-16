@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   FileUploadArea,
   type FileUploadAreaFile,
-} from '@/components/file-upload-area-01'
+} from '@/components/blocks/file-upload-area-01'
 
 function FileUploadAreaDemo() {
   const [files, setFiles] = React.useState<FileUploadAreaFile[]>([

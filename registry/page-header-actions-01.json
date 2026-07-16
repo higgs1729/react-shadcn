@@ -8,7 +8,7 @@
   "registryDependencies": ["button", "separator", "sidebar"],
   "files": [
     {
-      "path": "components/site-header.tsx",
+      "path": "components/blocks/site-header.tsx",
       "type": "registry:component"
     }
   ],
@@ -66,7 +66,7 @@
         "notes": "Depends on being placed inside a SidebarProvider (uses SidebarTrigger); title/actions are hardcoded sample content."
       },
       "extensions": {
-        "localEvidence": ["components/site-header.tsx"],
+        "localEvidence": ["components/blocks/site-header.tsx"],
         "extractedFrom": "dashboard-01"
       }
     }

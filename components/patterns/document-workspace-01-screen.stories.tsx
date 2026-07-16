@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { DocumentWorkspaceScreen } from '@/app/document-workspace-01/document-workspace-screen'
+import { DocumentWorkspaceScreen } from '@/app/(system)/document-workspace-01/document-workspace-screen'
 
 const meta = {
   title: 'Patterns/document-workspace/Document Workspace 01',

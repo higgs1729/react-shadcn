@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { SettingsAdminScreen } from '@/app/settings-admin-01/settings-admin-screen'
+import { SettingsAdminScreen } from '@/app/(system)/settings-admin-01/settings-admin-screen'
 
 const meta = {
   title: 'Patterns/settings-admin/Settings Admin 01',

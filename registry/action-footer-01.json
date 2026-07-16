@@ -8,7 +8,7 @@
   "registryDependencies": ["button-group", "button"],
   "files": [
     {
-      "path": "components/action-footer-01.tsx",
+      "path": "components/blocks/action-footer-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or persistence."
       },
       "extensions": {
-        "localEvidence": ["components/action-footer-01.tsx"]
+        "localEvidence": ["components/blocks/action-footer-01.tsx"]
       }
     }
   }

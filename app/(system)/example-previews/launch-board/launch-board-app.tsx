@@ -12,7 +12,7 @@ import {
   Trash2Icon,
 } from "lucide-react"
 
-import { BoardColumn, type BoardColumnCard } from "@/components/board-column-01"
+import { BoardColumn, type BoardColumnCard } from "@/components/blocks/board-column-01"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,

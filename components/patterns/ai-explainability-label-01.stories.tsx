@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { AiExplainabilityLabel } from '@/components/ai-explainability-label-01'
+import { AiExplainabilityLabel } from '@/components/blocks/ai-explainability-label-01'
 
 function AiExplainabilityLabelDemo() {
   return (

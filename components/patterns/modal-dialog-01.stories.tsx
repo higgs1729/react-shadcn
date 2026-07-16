@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Button } from '@/components/ui/button'
-import { ModalDialog01 } from '@/components/modal-dialog-01'
+import { ModalDialog01 } from '@/components/blocks/modal-dialog-01'
 
 function ModalDialog01Demo() {
   const [open, setOpen] = React.useState(true)

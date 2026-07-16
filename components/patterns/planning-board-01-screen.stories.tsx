@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-import { PlanningBoardScreen } from "@/app/planning-board-01/planning-board-screen"
+import { PlanningBoardScreen } from "@/app/(system)/planning-board-01/planning-board-screen"
 
 const meta = {
   title: "Patterns/planning-board/Planning Board 01",

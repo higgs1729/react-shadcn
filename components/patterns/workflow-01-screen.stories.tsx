@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { WorkflowScreen } from '@/app/workflow-01/workflow-screen'
+import { WorkflowScreen } from '@/app/(system)/workflow-01/workflow-screen'
 
 const meta = {
   title: 'Patterns/workflow/Workflow 01',

@@ -8,7 +8,7 @@
   "registryDependencies": ["badge", "tooltip"],
   "files": [
     {
-      "path": "components/ai-explainability-label-01.tsx",
+      "path": "components/blocks/ai-explainability-label-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or persistence."
       },
       "extensions": {
-        "localEvidence": ["components/ai-explainability-label-01.tsx"]
+        "localEvidence": ["components/blocks/ai-explainability-label-01.tsx"]
       }
     }
   }

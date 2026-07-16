@@ -10,30 +10,29 @@ This version has breaking changes — APIs, conventions, and file structure may 
 shadcn/ui 上で、AI がアプリを brief→JTBD→flow→選定→実装 に機械分解するリポジトリ。
 全 handoff は JSON Schema + ajv で契約強制。
 
-## Map
+## Map(深さ1のみ。下位は各ノードの AGENTS.md を読む)
 
-- `docs/STATUS.md` — 現在地(到達状態・次の実装候補)。正本は git log、これはその要約キャッシュ
-- `docs/contracts/` — 契約スキーマ(FlowSpec / SelectionSpec / BuildReport / facets / profiles)
-- `docs/layers/20-selection/` — screenType・block 選定の手順書 + canonical profiles
-- `docs/layers/30-implementation/` — 実装規約
-- `docs/tasks/` — 下位AI委任 brief 置き場(pending のみ)
-- `docs/examples/` — 現行 golden flow の成果物(最新のみ)
+- `docs/` — 契約・手順書・現在地・委任 brief。詳細は `docs/AGENTS.md`
 - `registry/*.json` — pattern 在庫(facets は `meta.aiDesignSystem`)
+- `app/` — route(システム/作品を route group で分離)。境界は `app/AGENTS.md`
+- `components/` — UI 実体(基盤/在庫/story/作品)。内訳は `components/AGENTS.md`
+- `lib/` — 作品データ(`studio-portfolio/`)と共通 util
 
 ## Instruction Sync
 
-- `AGENTS.md` がルートエージェント規則の正本。
 - ルート指示を変更したら `npm run validate:agents` を実行する。シムがズレていると差分付きで失敗する。
 - パス別の指示ファイルは、そのディレクトリに「ルートに置くとノイズになる具体的な規則」が繰り返し発生してから追加する。
 
 ## 文書の規律
 
-- 手順の詳細はこのファイルに書かない。読む場所の近く(docs/layers・docs/tasks 等)に置き、パスで参照する
-- ルート直下に文書ディレクトリを増やさない。app 固有の文書は将来 `docs/apps/<app>/` に集約する
+- どのディレクトリも「①階層の役割 ②直下の子の1行索引 ③その階層だけの約束」のみを書く(深さ1原則)。孫の詳細は書かない
+- 手順の詳細はこのファイルに書かない。読む場所の近く(`docs/AGENTS.md` 配下の各ノード等)に置き、パスで参照する
+- サブディレクトリの規則は `AGENTS.md` + `CLAUDE.md`(シム)のペアで持つ。
 
 ## Do
 
-- 変更後は `npm run validate` と `npm run checks` を exit 0 に保つ
+- Stop hook が `npm run validate`を実行するので実行は不要
+- `npm run checks` は BuildReport 検証時に手動実行
 - コンポーネント API に迷ったら `components/ui/` のソースを読む(base-ui。合成は `render={<.../>}`)
 - 下位AIへの委任: `docs/tasks/README.md` のテンプレから自己完結 brief を生成し、そのファイル1枚だけを渡す(完了・検証後は `docs/archive/tasks/` へ移動)
 - コミット・push は毎回ユーザーの明示承認を得る

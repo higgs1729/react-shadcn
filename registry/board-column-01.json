@@ -6,7 +6,7 @@
   "description": "A controlled workflow-status lane with ordered work-item cards and drag-and-drop status transitions.",
   "categories": ["block:board", "role:board-column"],
   "registryDependencies": ["badge", "button", "card"],
-  "files": [{ "path": "components/board-column-01.tsx", "type": "registry:component" }],
+  "files": [{ "path": "components/blocks/board-column-01.tsx", "type": "registry:component" }],
   "meta": {
     "aiDesignSystem": {
       "assetKind": "block-pattern",
@@ -49,7 +49,7 @@
         "missingStates": ["loading", "error", "permission-denied", "rtl"],
         "notes": "The component is controlled and does not persist a transition. The consuming board validates workflow permissions and owns keyboard cross-column reordering."
       },
-      "extensions": { "localEvidence": ["components/board-column-01.tsx"] }
+      "extensions": { "localEvidence": ["components/blocks/board-column-01.tsx"] }
     }
   }
 }

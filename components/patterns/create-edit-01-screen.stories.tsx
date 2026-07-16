@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CreateEditScreen } from '@/app/create-edit-01/create-edit-screen'
+import { CreateEditScreen } from '@/app/(system)/create-edit-01/create-edit-screen'
 
 const meta = {
   title: 'Patterns/create-edit/Create Edit 01',

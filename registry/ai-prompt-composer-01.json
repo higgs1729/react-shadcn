@@ -8,7 +8,7 @@
   "registryDependencies": ["input-group", "button"],
   "files": [
     {
-      "path": "components/ai-prompt-composer-01.tsx",
+      "path": "components/blocks/ai-prompt-composer-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no streaming transport or network calls wired in."
       },
       "extensions": {
-        "localEvidence": ["components/ai-prompt-composer-01.tsx"]
+        "localEvidence": ["components/blocks/ai-prompt-composer-01.tsx"]
       }
     }
   }

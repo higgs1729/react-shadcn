@@ -8,7 +8,7 @@
   "registryDependencies": ["breadcrumb"],
   "files": [
     {
-      "path": "components/breadcrumb-context-01.tsx",
+      "path": "components/blocks/breadcrumb-context-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or routing."
       },
       "extensions": {
-        "localEvidence": ["components/breadcrumb-context-01.tsx"]
+        "localEvidence": ["components/blocks/breadcrumb-context-01.tsx"]
       }
     }
   }

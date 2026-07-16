@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CheckoutSummary } from '@/components/checkout-summary-01'
+import { CheckoutSummary } from '@/components/blocks/checkout-summary-01'
 
 function CheckoutSummaryDemo() {
   const [confirmed, setConfirmed] = React.useState(false)

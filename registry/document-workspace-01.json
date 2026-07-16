@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "attachment", "avatar", "badge", "breadcrumb", "button", "card", "empty", "field", "input", "scroll-area", "separator", "sidebar", "skeleton", "textarea"],
   "files": [
     {
-      "path": "app/document-workspace-01/document-workspace-screen.tsx",
+      "path": "app/(system)/document-workspace-01/document-workspace-screen.tsx",
       "type": "registry:component",
-      "target": "app/document-workspace-01/document-workspace-screen.tsx"
+      "target": "app/(system)/document-workspace-01/document-workspace-screen.tsx"
     },
     {
-      "path": "app/document-workspace-01/data.json",
+      "path": "app/(system)/document-workspace-01/data.json",
       "type": "registry:file",
-      "target": "app/document-workspace-01/data.json"
+      "target": "app/(system)/document-workspace-01/data.json"
     }
   ],
   "meta": {
@@ -85,8 +85,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/document-workspace-01/document-workspace-screen.tsx",
-          "app/document-workspace-01/data.json",
+          "app/(system)/document-workspace-01/document-workspace-screen.tsx",
+          "app/(system)/document-workspace-01/data.json",
           "components/patterns/document-workspace-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "document-workspace's primary job is inline-editing a free-form document body with in-context comments/attachments, unlike detail (read-mostly labelled record fields) and create-edit (discrete validated form fields with submit/cancel)."

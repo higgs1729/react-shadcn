@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CollectionGrid } from '@/components/collection-grid-01'
+import { CollectionGrid } from '@/components/blocks/collection-grid-01'
 
 function CollectionGridDemo() {
   const [selectedId, setSelectedId] = React.useState('1')

@@ -8,7 +8,7 @@
   "registryDependencies": ["command", "dialog", "input-group"],
   "files": [
     {
-      "path": "components/command-search-01.tsx",
+      "path": "components/blocks/command-search-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; open state and item data/callbacks are supplied by the caller."
       },
       "extensions": {
-        "localEvidence": ["components/command-search-01.tsx"]
+        "localEvidence": ["components/blocks/command-search-01.tsx"]
       }
     }
   }

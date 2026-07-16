@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { ChartAreaInteractive } from '@/components/chart-area-interactive'
+import { ChartAreaInteractive } from '@/components/blocks/chart-area-interactive'
 
 const meta = {
   title: 'Blocks/chart-panel/Chart Panel 01',

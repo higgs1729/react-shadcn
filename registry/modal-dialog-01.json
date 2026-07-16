@@ -8,7 +8,7 @@
   "registryDependencies": ["dialog", "button", "field", "input"],
   "files": [
     {
-      "path": "components/modal-dialog-01.tsx",
+      "path": "components/blocks/modal-dialog-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; open state, field value, and submit are supplied by the caller."
       },
       "extensions": {
-        "localEvidence": ["components/modal-dialog-01.tsx"]
+        "localEvidence": ["components/blocks/modal-dialog-01.tsx"]
       }
     }
   }

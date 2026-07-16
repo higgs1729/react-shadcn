@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { ActionFooter } from '@/components/action-footer-01'
+import { ActionFooter } from '@/components/blocks/action-footer-01'
 
 function ActionFooterDemo() {
   const [message, setMessage] = React.useState('')

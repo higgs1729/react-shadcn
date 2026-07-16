@@ -1,0 +1,30 @@
+{
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.autoReveal": false,
+  "explorer.sortOrder": "foldersNestsFiles",
+  "explorer.compactFolders": false,
+  "explorer.openEditors.visible": 0,
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/.cache": true,
+    "**/coverage": true,
+    "**/test-results": true,
+    "**/playwright-report": true,
+    "**/storybook-static": true,
+    "**/out": true,
+    "**/build": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/.cache": true,
+    "**/coverage": true,
+    "**/test-results": true,
+    "**/playwright-report": true,
+    "**/storybook-static": true,
+    "**/out": true,
+    "**/build": true
+  }
+}

@@ -7,7 +7,7 @@
   "categories": ["block:conversation", "role:conversation-triage-list"],
   "registryDependencies": ["badge", "button", "item", "scroll-area"],
   "files": [
-    { "path": "components/conversation-triage-list-01.tsx", "type": "registry:component" }
+    { "path": "components/blocks/conversation-triage-list-01.tsx", "type": "registry:component" }
   ],
   "meta": {
     "aiDesignSystem": {
@@ -56,7 +56,7 @@
         "notes": "Controlled presentation component; persistence and real-time transport belong to the consuming screen."
       },
       "extensions": {
-        "localEvidence": ["components/conversation-triage-list-01.tsx"],
+        "localEvidence": ["components/blocks/conversation-triage-list-01.tsx"],
         "taxonomyDecision": "Owns inbox-specific prioritization and lifecycle controls. Generic data tables do not express these semantics, while AI conversation lists require AI delegation and streaming."
       }
     }

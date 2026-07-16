@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { FilterToolbar } from '@/components/filter-toolbar'
+import { FilterToolbar } from '@/components/blocks/filter-toolbar'
 
 function FilterToolbarDemo() {
   const [search, setSearch] = React.useState('')

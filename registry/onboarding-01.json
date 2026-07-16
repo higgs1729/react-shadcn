@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "attachment", "badge", "button", "button-group", "card", "empty", "field", "input", "separator", "skeleton"],
   "files": [
     {
-      "path": "app/onboarding-01/onboarding-screen.tsx",
+      "path": "app/(system)/onboarding-01/onboarding-screen.tsx",
       "type": "registry:component",
-      "target": "app/onboarding-01/onboarding-screen.tsx"
+      "target": "app/(system)/onboarding-01/onboarding-screen.tsx"
     },
     {
-      "path": "app/onboarding-01/data.json",
+      "path": "app/(system)/onboarding-01/data.json",
       "type": "registry:file",
-      "target": "app/onboarding-01/data.json"
+      "target": "app/(system)/onboarding-01/data.json"
     }
   ],
   "meta": {
@@ -83,8 +83,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/onboarding-01/onboarding-screen.tsx",
-          "app/onboarding-01/data.json",
+          "app/(system)/onboarding-01/onboarding-screen.tsx",
+          "app/(system)/onboarding-01/data.json",
           "components/patterns/onboarding-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "onboarding is a sequential first-run setup wizard (stepper-driven, low density), distinct from create-edit (a single non-wizard record form) and workflow (progress toward a committed transaction rather than initial account/workspace setup)."

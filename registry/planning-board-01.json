@@ -6,7 +6,7 @@
   "description": "A high-density planning board for moving work items across workflow-status columns.",
   "categories": ["screen:planning-board", "intent:monitor", "density:high"],
   "registryDependencies": ["badge", "button", "card", "input", "sidebar"],
-  "files": [{ "path": "app/planning-board-01/planning-board-screen.tsx", "type": "registry:component", "target": "app/planning-board-01/planning-board-screen.tsx" }],
+  "files": [{ "path": "app/(system)/planning-board-01/planning-board-screen.tsx", "type": "registry:component", "target": "app/(system)/planning-board-01/planning-board-screen.tsx" }],
   "meta": { "aiDesignSystem": {
     "assetKind": "screen-pattern", "maturity": "experimental", "source": "internal", "screenType": "planning-board",
     "blockRoles": ["app-shell-sidebar", "page-header-actions", "filter-toolbar", "board-column"],
@@ -18,6 +18,6 @@
     "verification": { "storybookStories": ["patterns-planning-board-planning-board-01--default", "patterns-planning-board-planning-board-01--loading", "patterns-planning-board-planning-board-01--empty", "patterns-planning-board-planning-board-01--error"], "interactionTests": false, "accessibilityTests": false, "visualSnapshots": false, "lintTypecheck": false },
     "evidence": { "sourceCount": 2, "confidence": "medium", "verifiedAt": "2026-07-12", "sourceUrls": ["https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-board/", "https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-the-board-layout"] },
     "risk": { "level": "medium", "missingStates": ["permission-denied", "offline", "rtl"], "notes": "Cards are local seed data. State transitions are client-only and do not enforce remote workflow permissions or persist changes." },
-    "extensions": { "localEvidence": ["app/planning-board-01/planning-board-screen.tsx", "components/patterns/planning-board-01-screen.stories.tsx"], "taxonomyDecision": "Planning-board centers a categorical workflow-status transition performed by moving cards between lanes; collection centers browsing records and workflow centers one sequential transaction." }
+    "extensions": { "localEvidence": ["app/(system)/planning-board-01/planning-board-screen.tsx", "components/patterns/planning-board-01-screen.stories.tsx"], "taxonomyDecision": "Planning-board centers a categorical workflow-status transition performed by moving cards between lanes; collection centers browsing records and workflow centers one sequential transaction." }
   }}
 }

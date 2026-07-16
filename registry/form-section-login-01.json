@@ -8,7 +8,7 @@
   "registryDependencies": ["button", "card", "field", "input"],
   "files": [
     {
-      "path": "components/login-form.tsx",
+      "path": "components/blocks/login-form.tsx",
       "type": "registry:component"
     }
   ],
@@ -66,7 +66,7 @@
         "notes": "No client-side validation or error states yet; submit is a plain form action."
       },
       "extensions": {
-        "localEvidence": ["components/login-form.tsx"],
+        "localEvidence": ["components/blocks/login-form.tsx"],
         "extractedFrom": "login-03"
       }
     }

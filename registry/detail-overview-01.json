@@ -8,7 +8,7 @@
   "registryDependencies": ["card", "field", "separator", "badge"],
   "files": [
     {
-      "path": "components/detail-overview-01.tsx",
+      "path": "components/blocks/detail-overview-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or persistence."
       },
       "extensions": {
-        "localEvidence": ["components/detail-overview-01.tsx"]
+        "localEvidence": ["components/blocks/detail-overview-01.tsx"]
       }
     }
   }

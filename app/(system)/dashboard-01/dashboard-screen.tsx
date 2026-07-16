@@ -2,11 +2,11 @@
 
 import { RotateCcwIcon } from "lucide-react"
 
-import { AppSidebar } from "@/components/dashboard-01/app-sidebar"
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
-import { SectionCards, type SummaryMetric } from "@/components/section-cards"
-import { SiteHeader } from "@/components/site-header"
+import { AppSidebar } from "@/components/blocks/dashboard-01/app-sidebar"
+import { ChartAreaInteractive } from "@/components/blocks/chart-area-interactive"
+import { DataTable } from "@/components/blocks/data-table"
+import { SectionCards, type SummaryMetric } from "@/components/blocks/section-cards"
+import { SiteHeader } from "@/components/blocks/site-header"
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"

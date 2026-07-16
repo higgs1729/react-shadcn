@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { DashboardScreen } from '@/app/dashboard-01/dashboard-screen'
+import { DashboardScreen } from '@/app/(system)/dashboard-01/dashboard-screen'
 
 const meta = {
   title: 'Patterns/dashboard/Dashboard 01',

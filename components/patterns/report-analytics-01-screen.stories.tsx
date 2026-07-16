@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { ReportAnalyticsScreen } from '@/app/report-analytics-01/report-analytics-screen'
+import { ReportAnalyticsScreen } from '@/app/(system)/report-analytics-01/report-analytics-screen'
 
 const meta = {
   title: 'Patterns/report-analytics/Report Analytics 01',

@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "badge", "button", "button-group", "card", "field", "input", "separator", "skeleton"],
   "files": [
     {
-      "path": "app/workflow-01/workflow-screen.tsx",
+      "path": "app/(system)/workflow-01/workflow-screen.tsx",
       "type": "registry:component",
-      "target": "app/workflow-01/workflow-screen.tsx"
+      "target": "app/(system)/workflow-01/workflow-screen.tsx"
     },
     {
-      "path": "app/workflow-01/data.json",
+      "path": "app/(system)/workflow-01/data.json",
       "type": "registry:file",
-      "target": "app/workflow-01/data.json"
+      "target": "app/(system)/workflow-01/data.json"
     }
   ],
   "meta": {
@@ -83,8 +83,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/workflow-01/workflow-screen.tsx",
-          "app/workflow-01/data.json",
+          "app/(system)/workflow-01/workflow-screen.tsx",
+          "app/(system)/workflow-01/data.json",
           "components/patterns/workflow-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "workflow drives progress toward a committed transaction (plan → billing → confirm) with a checkout summary, distinct from onboarding (first-run setup with no transactional commit) and create-edit (editing one record without a staged multi-step commit)."

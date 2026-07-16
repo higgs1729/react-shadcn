@@ -8,7 +8,7 @@
   "registryDependencies": ["card", "separator", "button"],
   "files": [
     {
-      "path": "components/checkout-summary-01.tsx",
+      "path": "components/blocks/checkout-summary-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no payment processing or network calls."
       },
       "extensions": {
-        "localEvidence": ["components/checkout-summary-01.tsx"]
+        "localEvidence": ["components/blocks/checkout-summary-01.tsx"]
       }
     }
   }

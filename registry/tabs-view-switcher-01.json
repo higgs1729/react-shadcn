@@ -8,7 +8,7 @@
   "registryDependencies": ["tabs"],
   "files": [
     {
-      "path": "components/tabs-view-switcher-01.tsx",
+      "path": "components/blocks/tabs-view-switcher-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; view content is supplied by the caller."
       },
       "extensions": {
-        "localEvidence": ["components/tabs-view-switcher-01.tsx"]
+        "localEvidence": ["components/blocks/tabs-view-switcher-01.tsx"]
       }
     }
   }

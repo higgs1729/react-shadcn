@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { TabsViewSwitcher01 } from '@/components/tabs-view-switcher-01'
+import { TabsViewSwitcher01 } from '@/components/blocks/tabs-view-switcher-01'
 
 function TabsViewSwitcher01Demo() {
   const [view, setView] = React.useState('list')

@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "attachment", "button", "button-group", "card", "field", "input", "sidebar", "skeleton", "textarea"],
   "files": [
     {
-      "path": "app/create-edit-01/create-edit-screen.tsx",
+      "path": "app/(system)/create-edit-01/create-edit-screen.tsx",
       "type": "registry:component",
-      "target": "app/create-edit-01/create-edit-screen.tsx"
+      "target": "app/(system)/create-edit-01/create-edit-screen.tsx"
     },
     {
-      "path": "app/create-edit-01/data.json",
+      "path": "app/(system)/create-edit-01/data.json",
       "type": "registry:file",
-      "target": "app/create-edit-01/data.json"
+      "target": "app/(system)/create-edit-01/data.json"
     }
   ],
   "meta": {
@@ -83,8 +83,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/create-edit-01/create-edit-screen.tsx",
-          "app/create-edit-01/data.json",
+          "app/(system)/create-edit-01/create-edit-screen.tsx",
+          "app/(system)/create-edit-01/data.json",
           "components/patterns/create-edit-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "create-edit is a single non-wizard record form whose primary job is submitting discrete validated field changes, distinct from onboarding/workflow (sequential stepper flows) and document-workspace (free-form document body authoring)."

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Button } from '@/components/ui/button'
-import { CommandSearch01 } from '@/components/command-search-01'
+import { CommandSearch01 } from '@/components/blocks/command-search-01'
 
 function CommandSearch01Demo() {
   const [open, setOpen] = React.useState(true)

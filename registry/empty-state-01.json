@@ -8,7 +8,7 @@
   "registryDependencies": ["empty", "button"],
   "files": [
     {
-      "path": "components/empty-state-01.tsx",
+      "path": "components/blocks/empty-state-01.tsx",
       "type": "registry:component"
     }
   ],
@@ -65,7 +65,7 @@
         "notes": "Presentational and fully controlled; no data fetching or persistence."
       },
       "extensions": {
-        "localEvidence": ["components/empty-state-01.tsx"]
+        "localEvidence": ["components/blocks/empty-state-01.tsx"]
       }
     }
   }

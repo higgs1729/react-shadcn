@@ -8,14 +8,14 @@
   "registryDependencies": ["alert", "badge", "button", "card", "chart", "checkbox", "drawer", "dropdown-menu", "empty", "input", "input-group", "label", "select", "separator", "sidebar", "skeleton", "table", "tabs", "toggle-group"],
   "files": [
     {
-      "path": "app/report-analytics-01/report-analytics-screen.tsx",
+      "path": "app/(system)/report-analytics-01/report-analytics-screen.tsx",
       "type": "registry:component",
-      "target": "app/report-analytics-01/report-analytics-screen.tsx"
+      "target": "app/(system)/report-analytics-01/report-analytics-screen.tsx"
     },
     {
-      "path": "app/report-analytics-01/data.json",
+      "path": "app/(system)/report-analytics-01/data.json",
       "type": "registry:file",
-      "target": "app/report-analytics-01/data.json"
+      "target": "app/(system)/report-analytics-01/data.json"
     }
   ],
   "meta": {
@@ -83,8 +83,8 @@
       },
       "extensions": {
         "localEvidence": [
-          "app/report-analytics-01/report-analytics-screen.tsx",
-          "app/report-analytics-01/data.json",
+          "app/(system)/report-analytics-01/report-analytics-screen.tsx",
+          "app/(system)/report-analytics-01/data.json",
           "components/patterns/report-analytics-01-screen.stories.tsx"
         ],
         "taxonomyDecision": "report-analytics is a historical, filter-driven readout for deep trend analysis with no real-time updates, distinct from dashboard (time-sensitive at-a-glance monitoring with a persistent nav shell and live data)."

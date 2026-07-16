@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-import { DocumentBodyEditor } from "@/components/document-body-editor-01"
+import { DocumentBodyEditor } from "@/components/blocks/document-body-editor-01"
 
 const attachments = [
   { id: "att-1", name: "roadmap-q3.pdf", meta: "1.2 MB" },
