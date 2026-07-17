@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3DゾンビサバイバルFPS - スナイパー＆特殊技版</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            user-select: none;
+            background-color: #05050a;
+        }
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #00ffcc;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10;
+        }
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 4px;
+            height: 4px;
+            background: #00ffcc;
+            border-radius: 50%;
+        }
+        /* スナイパーのスコープ画面 */
+        #sniper-scope {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.95) 60%);
+            pointer-events: none;
+            z-index: 9;
+            display: none;
+            box-sizing: border-box;
+            border: 2px solid #00ff00;
+        }
+        #sniper-scope::before, #sniper-scope::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 255, 0, 0.5);
+        }
+        #sniper-scope::before {
+            top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
+        }
+        #sniper-scope::after {
+            left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%);
+        }
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 10;
+            text-shadow: 2px 2px 4px #000;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .hud-item {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ff3333;
+        }
+        /* 特殊わざゲージHUD */
+        #skill-hud {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 10;
+            text-shadow: 2px 2px 4px #000;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border-radius: 5px;
+            border-right: 4px solid #ff00ff;
+            text-align: right;
+        }
+        #skill-bar-container {
+            width: 150px;
+            height: 12px;
+            background: #222;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+            border: 1px solid #ff00ff;
+        }
+        #skill-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            transition: width 0.2s ease;
+        }
+        #skill-ready-prompt {
+            color: #00ffff;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            animation: blink 0.4s infinite alternate;
+        }
+        #hp-bar-container {
+            width: 200px;
+            height: 15px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        #hp-bar {
+            width: 100%;
+            height: 100%;
+            background: #ff3333;
+            transition: width 0.1s ease;
+        }
+        #reload-indicator {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffcc00;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #000;
+            display: none;
+            z-index: 10;
+        }
+        #overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 15, 0.85);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn {
+            background: #ff3355;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(255, 51, 85, 0.4);
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background: #ff5577;
+            transform: scale(1.05);
+        }
+        #results {
+            display: none;
+            background: rgba(20, 20, 30, 0.9);
+            border: 2px solid #ff3355;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 80%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 18px;
+            border-bottom: 1px dashed #444;
+            padding-bottom: 5px;
+        }
+        #boss-warning {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff0033;
+            font-size: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(255,0,0,0.8);
+            display: none;
+            z-index: 10;
+            animation: blink 0.5s infinite alternate;
+        }
+        #skill-announcement {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #00ffff;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #00ffff;
+            display: none;
+            z-index: 10;
+            animation: blink 0.3s 4 alternate;
+        }
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1.0; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div id="crosshair"></div>
+    <div id="sniper-scope"></div>
+    <div id="reload-indicator">RELOADING...</div>
+    <div id="boss-warning">WARNING: BOSS APPROACHING!</div>
+    <div id="skill-announcement">TENTACLE STRIKE!</div>
+    
+    <div id="hud">
+        <div class="hud-item" id="timer-item" style="border-left-color: #00ffcc;">タイム: <span id="timer">120</span>s <span id="speed-indicator" style="color:#00ffff; font-size:14px; display:none;">[SPEED UP]</span><span id="wallrun-indicator" style="color:#ff00ff; font-size:14px; display:none; margin-left: 10px;">[WALL RUN]</span></div>
+        <div class="hud-item" style="border-left-color: #ff3355;">現在の武器: <span id="weapon-name" style="color: #ff3355;">PISTOL</span></div>
+        <div class="hud-item" style="border-left-color: #ffcc00;">倒した数: <span id="kill-count">0</span></div>
+        <div class="hud-item" style="border-left-color: #00aaff;" id="ammo-hud">弾薬: <span id="ammo-clip">12</span> / <span id="ammo-reserve">36</span></div>
+        <div class="hud-item" style="border-left-color: #ff00ff;">手榴弾: <span id="grenade-count">2</span> (Gキー)</div>
+        <div class="hud-item">
+            HP: <span id="hp-text">100</span>
+            <div id="hp-bar-container"><div id="hp-bar"></div></div>
+        </div>
+    </div>
+
+    <!-- 右上：特殊わざHUD -->
+    <div id="skill-hud">
+        <div>SPECIAL SKILL</div>
+        <div id="skill-bar-container"><div id="skill-bar"></div></div>
+        <div id="skill-ready-prompt">【Eキー】で特殊わざ発動！</div>
+    </div>
+
+    <div id="overlay">
+        <div id="start-menu">
+            <h1 style="font-size: 42px; margin-bottom: 10px; color: #ff3355; text-shadow: 0 0 10px rgba(255,51,85,0.5);">ZOMBIE SURVIVAL 3D</h1>
+            <p style="font-size: 18px; color: #aaa;">迫り来るゾンビを撃ち倒し、120秒間生き延びろ！</p>
+            <p style="font-size: 16px; color: #ff00ff; font-weight: bold;">【新能力】ゾンビを5体倒すごとに「Eキー」で特殊必殺技発動！</p>
+            <p style="font-size: 13px; color: #ff99ff;">※特殊技でゾンビを倒しても特殊ゲージはたまりません。</p>
+            <button class="btn">ゲーム開始</button>
+            <p style="color: #888; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                【操作方法】<br>
+                移動: W, A, S, D ｜ ジャンプ: Space キー (空中壁際で壁走り / 壁走りはSpaceで壁キック)<br>
+                視点: マウス移動 ｜ 射撃: 左クリック ｜ <b>スナイパー時ズーム: 右クリック長押し</b><br>
+                武器切替(メイン/サブ): <b>Q キー</b> ｜ <b>特殊わざ発動: E キー (ゲージMAX時)</b><br>
+                手榴弾: G キー ｜ リロード: R キー ｜ Esc キー
+            </p>
+        </div>
+
+        <div id="results">
+            <h2 id="result-title" style="font-size: 28px; color: #ff3355; margin-top: 0;">GAME OVER</h2>
+            <div class="result-row"><span>撃退したゾンビ:</span><span id="res-kills" style="color: #ffcc00; font-weight:bold;">0</span></div>
+            <div class="result-row"><span>攻撃・発射数:</span><span id="res-shots">0</span></div>
+            <div class="result-row"><span>命中率:</span><span id="res-accuracy" style="color: #00ffcc;">0%</span></div>
+            <div class="result-row"><span>スコア:</span><span id="res-score" style="color: #ff3355; font-weight:bold;">0</span></div>
+            <button class="btn" id="retry-btn">もう一度挑戦</button>
+        </div>
+    </div>
+
+    <script>
+        /* ===== コイン連携 ===== */
+        const COIN_COST = 1;    // 1プレイの消費コイン
+        const COIN_REWARD = 3;  // クリア報酬（難易度: 難）
+
+        function notifyGameEnded(coin) {
+            window.parent.postMessage({ type: 'game:ended', coin: coin }, '*');
+        }
+
+        // --- ゲーム状態管理 ---
+        let gameActive = false;
+        let hp = 100;
+        let timeLeft = 120; 
+        let killCount = 0;
+        let shotsFired = 0;
+        let shotsHit = 0;
+        let score = 0;
+        let timerInterval;
+
+        let grenadeCount = 2;
+        let speedBoostTimer = 0;
+        let baseMoveSpeed = 100.0;
+
+        // 特殊技ゲージ (5体倒すとMAX)
+        let skillKills = 0;
+        const KILLS_FOR_SKILL = 5;
+        let isSkillReady = false;
+
+        // --- ジャンプ・物理用パラメータ ---
+        const PLAYER_HEIGHT = 1.6;
+        let isGrounded = true;
+        let yVelocity = 0;
+        const GRAVITY = 22.0;    
+        const JUMP_FORCE = 8.5;  
+
+        // --- 壁走り（ウォールラン）パラメータ ---
+        let isWallRunning = false;
+        let wallRunNormal = new THREE.Vector3(); 
+        let wallRunHand = 0; 
+        const WALL_RUN_GRAVITY = 3.0; 
+        const WALL_RUN_SPEED_MULTIPLIER = 1.3; 
+
+        // --- 武器データの定義 ---
+        const WEAPONS = {
+            PISTOL: { name: "ピストル", clipSize: 12, maxReserve: 48, reloadDuration: 1.0, fireRate: 0.25, auto: false, recoil: 0.06, bulletSpeed: 120, color: 0x1a1a1c, isRocket: false, isMelee: false, isSniper: false },
+            REVOLVER: { name: "リボルバー", clipSize: 6, maxReserve: 24, reloadDuration: 1.8, fireRate: 0.6, auto: false, recoil: 0.15, bulletSpeed: 150, color: 0x55555c, isRocket: false, isMelee: false, isSniper: false },
+            SMG: { name: "サブマシンガン", clipSize: 30, maxReserve: 120, reloadDuration: 1.2, fireRate: 0.08, auto: true, recoil: 0.04, bulletSpeed: 100, color: 0x223322, isRocket: false, isMelee: false, isSniper: false },
+            RIFLE: { name: "アサルトライフル", clipSize: 25, maxReserve: 75, reloadDuration: 1.5, fireRate: 0.15, auto: true, recoil: 0.07, bulletSpeed: 140, color: 0x3d3d35, isRocket: false, isMelee: false, isSniper: false },
+            SNIPER: { name: "スナイパーライフル", clipSize: 5, maxReserve: 15, reloadDuration: 2.5, fireRate: 1.2, auto: false, recoil: 0.35, bulletSpeed: 220, color: 0x112211, isRocket: false, isMelee: false, isSniper: true },
+            ROCKET: { name: "ロケットランチャー", clipSize: 1, maxReserve: 5, reloadDuration: 2.2, fireRate: 1.0, auto: false, recoil: 0.3, bulletSpeed: 45, color: 0x334433, isRocket: true, isMelee: false, isSniper: false },
+            KATANA: { name: "刀 (KATANA)", clipSize: 0, maxReserve: 0, reloadDuration: 0, fireRate: 0.3, auto: false, recoil: 0, bulletSpeed: 0, color: 0xdddddd, isRocket: false, isMelee: true, isSniper: false }
+        };
+
+        let activeMainWeaponKey = "PISTOL"; 
+        let currentWeaponKey = "PISTOL";
+        let currentWeapon = WEAPONS[currentWeaponKey];
+
+        const weaponAmmoBuffer = {
+            PISTOL: { clip: 12, reserve: 36 },
+            REVOLVER: { clip: 6, reserve: 18 },
+            SMG: { clip: 30, reserve: 90 },
+            RIFLE: { clip: 25, reserve: 50 },
+            SNIPER: { clip: 5, reserve: 10 },
+            ROCKET: { clip: 1, reserve: 3 }
+        };
+
+        let ammoInClip = 12;
+        let ammoReserve = 36;
+        let isReloading = false;
+        let reloadTimer = 0;
+        let lastFireTime = 0;
+        let isMouseDown = false;
+        let isRightMouseDown = false; // スナイパーズーム用
+        let isZoomed = false;
+
+        let slashAnimationTimer = 0;
+        let isSlashing = false;
+
+        // --- 基本設定 ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05050a); 
+        scene.fog = new THREE.FogExp2(0x05050a, 0.012); 
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        scene.add(camera);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0x555566, 1.5); 
+        scene.add(ambientLight);
+
+        const flashlight = new THREE.SpotLight(0xffffff, 3.0, 60, Math.PI / 4, 0.5, 1);
+        flashlight.castShadow = true;
+        scene.add(flashlight);
+        scene.add(flashlight.target); 
+
+        const floorGeo = new THREE.PlaneGeometry(100, 100);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x111115, roughness: 0.9 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        const gridHelper = new THREE.GridHelper(100, 50, 0x222233, 0x111122);
+        gridHelper.position.y = 0.01;
+        scene.add(gridHelper);
+
+        // --- 壁（障害物）の生成とコリジョン用配列 ---
+        const collidableWalls = [];
+        const wallGeo = new THREE.BoxGeometry(4, 8, 4);
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0x2d2d35, roughness: 0.7 });
+        for (let i = 0; i < 20; i++) {
+            const wall = new THREE.Mesh(wallGeo, wallMat);
+            wall.position.x = (Math.random() - 0.5) * 80;
+            wall.position.z = (Math.random() - 0.5) * 80;
+            wall.position.y = 4;
+            wall.castShadow = true;
+            wall.receiveShadow = true;
+            scene.add(wall);
+            collidableWalls.push(wall); 
+        }
+
+        const gunGroup = new THREE.Group();
+        const defaultGunPos = new THREE.Vector3(0.2, -0.22, -0.4);
+        const defaultKatanaPos = new THREE.Vector3(0.25, -0.3, -0.35); 
+        gunGroup.position.copy(defaultGunPos);
+        camera.add(gunGroup);
+
+        let recoilOffset = 0;
+
+        function rebuildGunMesh(weaponKey) {
+            while(gunGroup.children.length > 0){
+                gunGroup.remove(gunGroup.children[0]);
+            }
+
+            const info = WEAPONS[weaponKey];
+            const mat = new THREE.MeshStandardMaterial({ color: info.color, metalness: 0.7, roughness: 0.4 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x111113, roughness: 0.8 });
+
+            if (weaponKey === 'KATANA') {
+                const bladeGeo = new THREE.BoxGeometry(0.01, 0.04, 0.6); 
+                const bladeMat = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, metalness: 0.95, roughness: 0.1 });
+                const blade = new THREE.Mesh(bladeGeo, bladeMat);
+                blade.position.set(0, 0, -0.3);
+
+                const tsubaGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.01, 16);
+                const tsubaMat = new THREE.MeshStandardMaterial({ color: 0xccaa00, metalness: 0.8 }); 
+                const tsuba = new THREE.Mesh(tsubaGeo, tsubaMat);
+                tsuba.rotation.x = Math.PI / 2;
+                tsuba.position.set(0, 0, 0);
+
+                const hiltGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.18, 8);
+                const hiltMat = new THREE.MeshStandardMaterial({ color: 0xaa1111, roughness: 0.7 }); 
+                const hilt = new THREE.Mesh(hiltGeo, hiltMat);
+                hilt.rotation.x = Math.PI / 2;
+                hilt.position.set(0, 0, 0.09);
+
+                gunGroup.add(blade, tsuba, hilt);
+                gunGroup.position.copy(defaultKatanaPos);
+                gunGroup.rotation.set(0.2, 0.4, -0.3); 
+
+            } else {
+                if (weaponKey === 'PISTOL') {
+                    const barrelGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8).rotateX(Math.PI / 2);
+                    const barrel = new THREE.Mesh(barrelGeo, mat);
+                    const bodyGeo = new THREE.BoxGeometry(0.05, 0.06, 0.25);
+                    const body = new THREE.Mesh(bodyGeo, mat);
+                    body.position.set(0, 0.02, 0.02);
+                    const gripGeo = new THREE.BoxGeometry(0.04, 0.1, 0.04);
+                    const grip = new THREE.Mesh(gripGeo, darkMat);
+                    grip.position.set(0, -0.06, 0.06);
+                    grip.rotation.x = -Math.PI / 6;
+                    gunGroup.add(barrel, body, grip);
+                } else if (weaponKey === 'REVOLVER') {
+                    const barrelGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.35, 8).rotateX(Math.PI / 2);
+                    const barrel = new THREE.Mesh(barrelGeo, mat);
+                    const cylGeo = new THREE.CylinderGeometry(0.035, 0.035, 0.12, 6).rotateX(Math.PI / 2);
+                    const cyl = new THREE.Mesh(cylGeo, new THREE.MeshStandardMaterial({color: 0x888899, metalness:0.9}));
+                    cyl.position.set(0, 0.01, 0.12);
+                    const gripGeo = new THREE.BoxGeometry(0.04, 0.1, 0.05);
+                    const grip = new THREE.Mesh(gripGeo, new THREE.MeshStandardMaterial({color: 0x5a3d28, roughness:0.9})); 
+                    grip.position.set(0, -0.06, 0.16);
+                    grip.rotation.x = -Math.PI / 4;
+                    gunGroup.add(barrel, cyl, grip);
+                } else if (weaponKey === 'SMG') {
+                    const bodyGeo = new THREE.BoxGeometry(0.06, 0.08, 0.4);
+                    const body = new THREE.Mesh(bodyGeo, mat);
+                    const magGeo = new THREE.BoxGeometry(0.03, 0.18, 0.04);
+                    const mag = new THREE.Mesh(magGeo, darkMat);
+                    mag.position.set(0, -0.1, -0.05);
+                    const gripGeo = new THREE.BoxGeometry(0.04, 0.1, 0.04);
+                    const grip = new THREE.Mesh(gripGeo, darkMat);
+                    grip.position.set(0, -0.06, 0.15);
+                    gunGroup.add(body, mag, grip);
+                } else if (weaponKey === 'RIFLE') {
+                    const barrelGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.6, 8).rotateX(Math.PI / 2);
+                    const barrel = new THREE.Mesh(barrelGeo, darkMat);
+                    barrel.position.z = -0.2;
+                    const bodyGeo = new THREE.BoxGeometry(0.06, 0.09, 0.5);
+                    const body = new THREE.Mesh(bodyGeo, mat);
+                    const magGeo = new THREE.BoxGeometry(0.04, 0.22, 0.06);
+                    const mag = new THREE.Mesh(magGeo, darkMat);
+                    mag.position.set(0, -0.12, -0.05);
+                    mag.rotation.x = Math.PI / 12;
+                    const stockGeo = new THREE.BoxGeometry(0.05, 0.08, 0.2);
+                    const stock = new THREE.Mesh(stockGeo, mat);
+                    stock.position.set(0, -0.02, 0.35);
+                    gunGroup.add(barrel, body, mag, stock);
+                } else if (weaponKey === 'SNIPER') {
+                    // スナイパーライフルモデル（ロングバレル＋スコープ）
+                    const barrelGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.8, 8).rotateX(Math.PI / 2);
+                    const barrel = new THREE.Mesh(barrelGeo, darkMat);
+                    barrel.position.z = -0.3;
+                    const bodyGeo = new THREE.BoxGeometry(0.05, 0.07, 0.65);
+                    const body = new THREE.Mesh(bodyGeo, mat);
+                    const stockGeo = new THREE.BoxGeometry(0.04, 0.09, 0.25);
+                    const stock = new THREE.Mesh(stockGeo, mat);
+                    stock.position.set(0, -0.02, 0.38);
+                    // スコープパーツ
+                    const scopeGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.2, 8).rotateX(Math.PI / 2);
+                    const scope = new THREE.Mesh(scopeGeo, darkMat);
+                    scope.position.set(0, 0.07, 0.05);
+                    gunGroup.add(barrel, body, stock, scope);
+                } else if (weaponKey === 'ROCKET') {
+                    const tubeGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.9, 12).rotateX(Math.PI / 2);
+                    const tube = new THREE.Mesh(tubeGeo, mat);
+                    const gripGeo = new THREE.BoxGeometry(0.04, 0.12, 0.04);
+                    const grip = new THREE.Mesh(gripGeo, darkMat);
+                    grip.position.set(0, -0.14, 0);
+                    const scopeGeo = new THREE.BoxGeometry(0.04, 0.04, 0.15);
+                    const scope = new THREE.Mesh(scopeGeo, darkMat);
+                    scope.position.set(0, 0.1, 0);
+                    gunGroup.add(tube, grip, scope);
+                }
+                gunGroup.position.copy(defaultGunPos);
+                gunGroup.rotation.set(0, 0, 0);
+            }
+        }
+
+        function switchWeapon(weaponKey) {
+            // 現在のズーム状態を解除
+            setZoom(false);
+
+            if (!currentWeapon.isMelee && currentWeaponKey !== 'KATANA') {
+                weaponAmmoBuffer[currentWeaponKey].clip = ammoInClip;
+                weaponAmmoBuffer[currentWeaponKey].reserve = ammoReserve;
+            }
+
+            currentWeaponKey = weaponKey;
+            currentWeapon = WEAPONS[weaponKey];
+
+            isReloading = false;
+            document.getElementById('reload-indicator').style.display = 'none';
+            gunGroup.rotation.set(0,0,0);
+
+            if (currentWeapon.isMelee) {
+                document.getElementById('ammo-hud').style.visibility = 'hidden'; 
+            } else {
+                document.getElementById('ammo-hud').style.visibility = 'visible';
+                activeMainWeaponKey = weaponKey; 
+                ammoInClip = weaponAmmoBuffer[weaponKey].clip;
+                ammoReserve = weaponAmmoBuffer[weaponKey].reserve;
+            }
+
+            document.getElementById('weapon-name').textContent = currentWeapon.name;
+            document.getElementById('weapon-name').style.color = 
+                weaponKey === 'KATANA' ? '#e0e0e0' :
+                weaponKey === 'ROCKET' ? '#ff3333' : 
+                weaponKey === 'SNIPER' ? '#00ff00' :
+                weaponKey === 'RIFLE' ? '#ffaa00' : 
+                weaponKey === 'SMG' ? '#00ffcc' : 
+                weaponKey === 'REVOLVER' ? '#aaff00' : '#ffffff';
+
+            rebuildGunMesh(weaponKey);
+            updateHUD();
+        }
+
+        // スナイパーライフル専用ズーム制御
+        function setZoom(zoomOn) {
+            isZoomed = zoomOn;
+            if (zoomOn && currentWeapon.isSniper) {
+                camera.fov = 25; // 視野角を絞って拡大
+                camera.updateProjectionMatrix();
+                document.getElementById('crosshair').style.display = 'none';
+                document.getElementById('sniper-scope').style.display = 'block';
+                gunGroup.visible = false; // 覗き込み中は銃本体を隠す
+            } else {
+                camera.fov = 75;
+                camera.updateProjectionMatrix();
+                document.getElementById('crosshair').style.display = 'block';
+                document.getElementById('sniper-scope').style.display = 'none';
+                gunGroup.visible = true;
+            }
+        }
+
+        function toggleSubWeapon() {
+            if (currentWeaponKey === 'KATANA') switchWeapon(activeMainWeaponKey);
+            else switchWeapon('KATANA');
+        }
+
+        // --- プレイヤーの設定 ---
+        camera.position.set(0, PLAYER_HEIGHT, 0);
+        let moveForward = false; let moveBackward = false; let moveLeft = false; let moveRight = false;
+
+        const velocity = new THREE.Vector3();
+        const direction = new THREE.Vector3();
+        let prevTime = performance.now();
+        let pitch = 0; let yaw = 0;
+
+        // --- UIイベント ---
+        const overlay = document.getElementById('overlay');
+        const startMenu = document.getElementById('start-menu');
+        const resultsMenu = document.getElementById('results');
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            if (gameActive) document.body.requestPointerLock();
+        });
+
+        document.getElementById('retry-btn').addEventListener('click', () => {
+            initGame(); document.body.requestPointerLock();
+        });
+
+        startMenu.querySelector('button').addEventListener('click', () => {
+            initGame(); document.body.requestPointerLock();
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            if (document.pointerLockElement === document.body) {
+                overlay.style.display = 'none';
+                if (!gameActive) gameActive = true;
+            } else {
+                overlay.style.display = 'flex';
+                isMouseDown = false;
+                isRightMouseDown = false;
+                setZoom(false);
+                if (hp <= 0 || timeLeft <= 0) {
+                    startMenu.style.display = 'none'; resultsMenu.style.display = 'block';
+                } else {
+                    startMenu.style.display = 'block'; resultsMenu.style.display = 'none';
+                    startMenu.querySelector('h1').textContent = "PAUSED";
+                    startMenu.querySelector('p').textContent = "クリックして再開";
+                }
+            }
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            if (document.pointerLockElement !== document.body) return;
+            // ズーム中は感度を下げる
+            const sensitivity = isZoomed ? 0.0006 : 0.002;
+            yaw -= event.movementX * sensitivity;
+            pitch -= event.movementY * sensitivity;
+            pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, pitch));
+
+            const qx = new THREE.Quaternion(); qx.setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
+            const qy = new THREE.Quaternion(); qy.setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+            camera.quaternion.copy(qy).multiply(qx);
+        });
+
+        const onKeyDown = (event) => {
+            switch (event.code) {
+                case 'KeyW': moveForward = true; break;
+                case 'KeyA': moveLeft = true; break;
+                case 'KeyS': moveBackward = true; break;
+                case 'KeyD': moveRight = true; break;
+                case 'Space': 
+                    if (gameActive) {
+                        if (isWallRunning) {
+                            yVelocity = JUMP_FORCE * 0.9;
+                            velocity.x += wallRunNormal.x * 25.0;
+                            velocity.z += wallRunNormal.z * 25.0;
+                            isWallRunning = false;
+                        } else if (isGrounded) {
+                            yVelocity = JUMP_FORCE;
+                            isGrounded = false;
+                        }
+                    }
+                    break;
+                case 'KeyR': if(!currentWeapon.isMelee) startReload(); break;
+                case 'KeyQ': toggleSubWeapon(); break; 
+                case 'KeyG': throwGrenade(); break; 
+                case 'KeyE': if(isSkillReady) triggerSpecialSkill(); break; // 特殊わざ発動
+            }
+        };
+
+        const onKeyUp = (event) => {
+            switch (event.code) {
+                case 'KeyW': moveForward = false; break;
+                case 'KeyA': moveLeft = false; break;
+                case 'KeyS': moveBackward = false; break;
+                case 'KeyD': moveRight = false; break;
+            }
+        };
+
+        document.addEventListener('keydown', onKeyDown);
+        document.addEventListener('keyup', onKeyUp);
+
+        function startReload() {
+            if (isReloading || ammoInClip === currentWeapon.clipSize || ammoReserve <= 0) return;
+            isReloading = true; reloadTimer = currentWeapon.reloadDuration;
+            setZoom(false); // リロード時はズームを強制解除
+            document.getElementById('reload-indicator').style.display = 'block';
+        }
+
+        // --- 手榴弾システム ---
+        const activeGrenades = [];
+        function throwGrenade() {
+            if (!gameActive || document.pointerLockElement !== document.body || grenadeCount <= 0) return;
+            grenadeCount--; updateHUD();
+
+            const grenGeo = new THREE.DodecahedronGeometry(0.12);
+            const grenMat = new THREE.MeshStandardMaterial({ color: 0x334422, roughness: 0.9 });
+            const gren = new THREE.Mesh(grenGeo, grenMat);
+            gren.position.copy(camera.position).y -= 0.2;
+
+            const throwDir = new THREE.Vector3();
+            camera.getWorldDirection(throwDir);
+            throwDir.y += 0.2; throwDir.normalize();
+
+            gren.userData = { velocity: throwDir.multiplyScalar(18), createdAt: performance.now(), fuse: 2.0 };
+            scene.add(gren); activeGrenades.push(gren);
+        }
+
+        // --- 特殊わざ発動処理 ---
+        const activeTentacles = [];
+        const activeLasers = [];
+
+        function triggerSpecialSkill() {
+            isSkillReady = false;
+            skillKills = 0;
+            updateHUD();
+
+            const isTentacle = Math.random() < 0.5; // 50%で触手かレーザーか
+            const announcement = document.getElementById('skill-announcement');
+
+            if (isTentacle) {
+                announcement.textContent = "TENTACLE CRUSH!";
+                announcement.style.color = "#ff00ff";
+                announcement.style.textShadow = "0 0 10px #ff00ff";
+                announcement.style.display = "block";
+                setTimeout(() => announcement.style.display = "none", 1500);
+
+                // プレイヤーの周囲に触手を数本突き出させる
+                const tentacleCount = 6;
+                for(let i=0; i<tentacleCount; i++) {
+                    const angle = (i / tentacleCount) * Math.PI * 2;
+                    const radius = 4 + Math.random() * 3;
+                    const x = camera.position.x + Math.cos(angle) * radius;
+                    const z = camera.position.z + Math.sin(angle) * radius;
+
+                    const tentacleGeo = new THREE.ConeGeometry(0.3, 5.0, 6);
+                    const tentacleMat = new THREE.MeshStandardMaterial({ color: 0x880033, roughness: 0.9, emissive: 0x330011 });
+                    const tentacle = new THREE.Mesh(tentacleGeo, tentacleMat);
+                    tentacle.position.set(x, -2.5, z); // 地下にスタンバイ
+                    scene.add(tentacle);
+
+                    activeTentacles.push({
+                        mesh: tentacle,
+                        state: 'rise', // rise -> static -> fall
+                        timer: 0,
+                        targetY: 2.5,
+                        baseX: x,
+                        baseZ: z,
+                        angleOffset: Math.random() * 10
+                    });
+                }
+            } else {
+                announcement.textContent = "MEGA LASER BEAM!";
+                announcement.style.color = "#00ffff";
+                announcement.style.textShadow = "0 0 10px #00ffff";
+                announcement.style.display = "block";
+                setTimeout(() => announcement.style.display = "none", 1500);
+
+                // 目の前に極太レーザーを照射
+                const laserGeo = new THREE.CylinderGeometry(1.2, 1.2, 80, 16).rotateX(Math.PI / 2);
+                const laserMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.85 });
+                const laser = new THREE.Mesh(laserGeo, laserMat);
+
+                const dir = new THREE.Vector3();
+                camera.getWorldDirection(dir);
+                dir.y = 0; dir.normalize();
+
+                // プレイヤーの前方40mを中心とする
+                laser.position.copy(camera.position).addScaledVector(dir, 40).y = 1.0;
+                laser.lookAt(laser.position.clone().add(dir));
+                scene.add(laser);
+
+                activeLasers.push({
+                    mesh: laser,
+                    direction: dir.clone(),
+                    startPos: camera.position.clone(),
+                    createdAt: performance.now(),
+                    duration: 1.2 // 1.2秒間照射
+                });
+            }
+        }
+
+        // --- 攻撃（射撃 & 斬撃）システム ---
+        const bullets = []; const explosions = [];
+
+        const useWeapon = () => {
+            if (document.pointerLockElement !== document.body || !gameActive) return;
+            const now = performance.now() / 1000;
+            if (now - lastFireTime < currentWeapon.fireRate) return; 
+            lastFireTime = now;
+
+            // --- 刀（近接攻撃）の場合 ---
+            if (currentWeapon.isMelee) {
+                shotsFired++; isSlashing = true; slashAnimationTimer = 0.2; 
+
+                const playerPos = new THREE.Vector3(camera.position.x, 0, camera.position.z);
+                const rayDir = new THREE.Vector3();
+                camera.getWorldDirection(rayDir);
+                rayDir.y = 0; rayDir.normalize();
+
+                for (let j = zombies.length - 1; j >= 0; j--) {
+                    const z = zombies[j];
+                    const toZombie = new THREE.Vector3().subVectors(z.position, playerPos);
+                    const distance = toZombie.length();
+
+                    if (distance < 3.5) { 
+                        toZombie.normalize();
+                        const angle = rayDir.dot(toZombie); 
+                        if (angle > 0.5) { 
+                            shotsHit++;
+                            z.userData.hp--;
+                            if(z.userData.hp <= 0) {
+                                // 近接攻撃による撃破なので isSpecialDamage = false
+                                killZombie(j, z, false);
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+
+            // --- 遠距離武器の場合 ---
+            if (isReloading) return;
+            if (ammoInClip <= 0) { startReload(); return; }
+
+            ammoInClip--; shotsFired++; updateHUD();
+            recoilOffset = currentWeapon.recoil; 
+
+            let bulletGeo = currentWeapon.isRocket ? 
+                new THREE.CylinderGeometry(0.04, 0.04, 0.3, 8).rotateX(Math.PI/2) : 
+                new THREE.SphereGeometry(currentWeaponKey === 'REVOLVER' ? 0.07 : (currentWeaponKey === 'SNIPER' ? 0.08 : 0.05), 8, 8);
+            
+            const bulletMat = new THREE.MeshBasicMaterial({ 
+                color: currentWeapon.isRocket ? 0xff3300 : (currentWeaponKey === 'SMG' ? 0x00ffcc : (currentWeaponKey === 'SNIPER' ? 0x00ff00 : 0xffff00)) 
+            }); 
+            const bullet = new THREE.Mesh(bulletGeo, bulletMat);
+            bullet.position.copy(camera.position).y -= 0.15; 
+
+            const dir = new THREE.Vector3(); camera.getWorldDirection(dir);
+            // bounceCount: 跳弾した回数 (最大2回反射可能)
+            bullet.userData = { 
+                direction: dir.clone(), 
+                createdAt: performance.now(), 
+                isRocket: currentWeapon.isRocket, 
+                isSniper: currentWeapon.isSniper,
+                bounceCount: 0 
+            };
+            if(currentWeapon.isRocket) bullet.lookAt(bullet.position.clone().add(dir));
+
+            scene.add(bullet); bullets.push(bullet);
+        };
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.button === 0) { isMouseDown = true; useWeapon(); }
+            if (e.button === 2 && currentWeapon.isSniper) { isRightMouseDown = true; setZoom(true); }
+        });
+        document.addEventListener('mouseup', (e) => {
+            if (e.button === 0) isMouseDown = false;
+            if (e.button === 2) { isRightMouseDown = false; setZoom(false); }
+        });
+        // 右クリックメニューの無効化（ゲーム操作に割り当てるため）
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        function createExplosion(pos, radius = 5.0) {
+            const expGroup = new THREE.Group(); expGroup.position.copy(pos); scene.add(expGroup);
+            const particleGeo = new THREE.SphereGeometry(0.2, 4, 4);
+            const particleMat = new THREE.MeshBasicMaterial({color: 0xff5500, transparent: true, opacity: 1});
+            
+            const particles = [];
+            for(let i=0; i<20; i++) {
+                const p = new THREE.Mesh(particleGeo, particleMat.clone());
+                p.userData = { velocity: new THREE.Vector3((Math.random() - 0.5) * 10, (Math.random()) * 8, (Math.random() - 0.5) * 10) };
+                expGroup.add(p); particles.push(p);
+            }
+            explosions.push({ group: expGroup, particles: particles, createdAt: performance.now(), duration: 0.5 });
+
+            for (let j = zombies.length - 1; j >= 0; j--) {
+                const z = zombies[j];
+                if (pos.distanceTo(z.position) < radius) {
+                    z.userData.hp -= 3; 
+                    if (z.userData.hp <= 0) {
+                        // 爆発（手榴弾やロケラン）による撃破は通常撃破扱いで gauge 増加（isSpecialDamage = false）
+                        killZombie(j, z, false);
+                    }
+                }
+            }
+        }
+
+        // --- ドロップアイテムシステム ---
+        const drops = [];
+        const spawnDropItem = (x, z) => {
+            if (Math.random() > 0.7) return;
+            const rand = Math.random();
+            const dropGroup = new THREE.Group();
+            let type = 'hp';
+
+            if (rand < 0.35) {
+                const boxGeo = new THREE.IcosahedronGeometry(0.25, 0);
+                const boxMat = new THREE.MeshStandardMaterial({ color: 0xbd00ff, emissive: 0x440066 });
+                dropGroup.add(new THREE.Mesh(boxGeo, boxMat));
+                type = 'weapon';
+            } else if (rand < 0.55) {
+                const boxGeo = new THREE.BoxGeometry(0.35, 0.35, 0.35);
+                const boxMat = new THREE.MeshStandardMaterial({ color: 0x00ff66, emissive: 0x004411 });
+                dropGroup.add(new THREE.Mesh(boxGeo, boxMat));
+                type = 'hp';
+            } else if (rand < 0.75) {
+                const boxGeo = new THREE.BoxGeometry(0.3, 0.25, 0.4);
+                const boxMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: 0x553300 });
+                dropGroup.add(new THREE.Mesh(boxGeo, boxMat));
+                type = 'ammo';
+            } else if (rand < 0.90) {
+                const boxGeo = new THREE.DodecahedronGeometry(0.2);
+                const boxMat = new THREE.MeshStandardMaterial({ color: 0x334422, emissive: 0x112200, metalness: 0.6 });
+                dropGroup.add(new THREE.Mesh(boxGeo, boxMat));
+                type = 'grenade';
+            } else {
+                const boxGeo = new THREE.ConeGeometry(0.2, 0.4, 4).rotateX(Math.PI);
+                const boxMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x005555, roughness: 0.1 });
+                dropGroup.add(new THREE.Mesh(boxGeo, boxMat));
+                type = 'speed';
+            }
+
+            dropGroup.position.set(x, 0.3, z); scene.add(dropGroup);
+            drops.push({ mesh: dropGroup, type: type, spawnTime: performance.now() });
+        };
+
+        // --- ゾンビシステム ---
+        const zombies = [];
+        let zombieSpeed = 4.5; 
+
+        const createZombieMesh = (isBoss = false) => {
+            const zombieGroup = new THREE.Group();
+            
+            const bodyColor = isBoss ? 0xff0000 : 0x1a331a;
+            const headColor = isBoss ? 0xcc0000 : 0x2e5c2e;
+
+            const bodyGeo = new THREE.CylinderGeometry(0.4, 0.2, 1.2, 8);
+            const bodyMat = new THREE.MeshStandardMaterial({ color: bodyColor, roughness: 0.8 });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.y = 0.6; body.castShadow = true;
+            zombieGroup.add(body);
+
+            const headGeo = new THREE.SphereGeometry(0.3, 8, 8);
+            const headMat = new THREE.MeshStandardMaterial({ color: headColor, roughness: 0.6 });
+            const head = new THREE.Mesh(headGeo, headMat);
+            head.position.y = 1.3; head.castShadow = true;
+            zombieGroup.add(head);
+
+            const eyeGeo = new THREE.SphereGeometry(0.05, 4, 4);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffff00 }); 
+            const leftEye = new THREE.Mesh(eyeGeo, eyeMat); leftEye.position.set(-0.1, 1.35, 0.25);
+            const rightEye = new THREE.Mesh(eyeGeo, eyeMat); rightEye.position.set(0.1, 1.35, 0.25);
+            zombieGroup.add(leftEye, rightEye);
+
+            if (isBoss) {
+                zombieGroup.scale.set(3.3, 3.3, 3.3);
+            }
+
+            return zombieGroup;
+        };
+
+        const spawnZombie = (isBoss = false) => {
+            const zombie = createZombieMesh(isBoss);
+            let x, z, dist;
+            do {
+                x = (Math.random() - 0.5) * 70; z = (Math.random() - 0.5) * 70;
+                dist = Math.hypot(x - camera.position.x, z - camera.position.z);
+            } while (dist < 15); 
+
+            zombie.position.set(x, 0, z);
+            
+            zombie.userData = {
+                isBoss: isBoss,
+                hp: isBoss ? 3 : 1, 
+                lastAttackTime: 0
+            };
+
+            scene.add(zombie); zombies.push(zombie);
+        };
+
+        // ★【修正】killZombieに特殊ダメージ判定（isSpecialDamage）を追記
+        function killZombie(index, zombieObj, isSpecialDamage = false) {
+            spawnDropItem(zombieObj.position.x, zombieObj.position.z);
+            scene.remove(zombieObj); zombies.splice(index, 1);
+            
+            if (!zombieObj.userData.isBoss) {
+                spawnZombie(false);
+                if (Math.random() > 0.6 && zombies.length < 18) spawnZombie(false); 
+            }
+            killCount++; 
+
+            // ★【修正コア】特殊技（触手・レーザー）以外での撃破時のみ、ゲージを蓄積する
+            if (!isSkillReady && !isSpecialDamage) {
+                skillKills++;
+                if (skillKills >= KILLS_FOR_SKILL) {
+                    skillKills = KILLS_FOR_SKILL;
+                    isSkillReady = true;
+                }
+            }
+
+            updateHUD();
+        }
+
+        // --- ゲームの初期化 ---
+        function initGame() {
+            zombies.forEach(z => scene.remove(z)); bullets.forEach(b => scene.remove(b));
+            drops.forEach(d => scene.remove(d.mesh)); explosions.forEach(e => scene.remove(e.group));
+            activeGrenades.forEach(g => scene.remove(g));
+            activeTentacles.forEach(t => scene.remove(t.mesh));
+            activeLasers.forEach(l => scene.remove(l.mesh));
+            zombies.length = 0; bullets.length = 0; drops.length = 0; explosions.length = 0; activeGrenades.length = 0; activeTentacles.length = 0; activeLasers.length = 0;
+
+            hp = 100; timeLeft = 120; killCount = 0; shotsFired = 0; shotsHit = 0; score = 0;
+            grenadeCount = 2; speedBoostTimer = 0; isMouseDown = false; isSlashing = false;
+            skillKills = 0; isSkillReady = false;
+
+            // ジャンプ・物理リセット
+            isGrounded = true;
+            yVelocity = 0;
+            isWallRunning = false;
+            setZoom(false);
+
+            weaponAmmoBuffer.PISTOL = { clip: 12, reserve: 36 };
+            weaponAmmoBuffer.REVOLVER = { clip: 6, reserve: 18 };
+            weaponAmmoBuffer.SMG = { clip: 30, reserve: 90 };
+            weaponAmmoBuffer.RIFLE = { clip: 25, reserve: 50 };
+            weaponAmmoBuffer.SNIPER = { clip: 5, reserve: 10 };
+            weaponAmmoBuffer.ROCKET = { clip: 1, reserve: 3 };
+
+            activeMainWeaponKey = "PISTOL"; switchWeapon("PISTOL");
+            gameActive = true; camera.position.set(0, PLAYER_HEIGHT, 0); pitch = 0; yaw = 0;
+            updateHUD();
+
+            for (let i = 0; i < 8; i++) spawnZombie(false);
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (document.pointerLockElement === document.body && gameActive) {
+                    timeLeft--; updateHUD();
+                    zombieSpeed = 4.5 + (120 - timeLeft) * 0.03;
+
+                    if (timeLeft > 0 && timeLeft % 30 === 0) {
+                        spawnZombie(true); 
+                        
+                        const warning = document.getElementById('boss-warning');
+                        warning.style.display = 'block';
+                        setTimeout(() => { warning.style.display = 'none'; }, 3000);
+                    }
+
+                    if (timeLeft % 8 === 0 && zombies.length < 15) spawnZombie(false);
+                    if (timeLeft <= 0) endGame(true); 
+                }
+            }, 1000);
+        }
+
+        function updateHUD() {
+            document.getElementById('timer').textContent = timeLeft;
+            document.getElementById('kill-count').textContent = killCount;
+            document.getElementById('hp-text').textContent = Math.ceil(hp);
+            document.getElementById('hp-bar').style.width = hp + '%';
+            document.getElementById('ammo-clip').textContent = ammoInClip;
+            document.getElementById('ammo-reserve').textContent = ammoReserve;
+            document.getElementById('grenade-count').textContent = grenadeCount;
+
+            const timerItem = document.getElementById('timer-item');
+            const speedInd = document.getElementById('speed-indicator');
+            if (speedBoostTimer > 0) {
+                timerItem.style.borderLeftColor = "#00ffff"; speedInd.style.display = "inline";
+            } else {
+                timerItem.style.borderLeftColor = "#00ffcc"; speedInd.style.display = "none";
+            }
+
+            const wallrunInd = document.getElementById('wallrun-indicator');
+            wallrunInd.style.display = isWallRunning ? "inline" : "none";
+
+            // 特殊技ゲージHUD更新
+            const percent = (skillKills / KILLS_FOR_SKILL) * 100;
+            document.getElementById('skill-bar').style.width = percent + '%';
+            document.getElementById('skill-ready-prompt').style.display = isSkillReady ? "block" : "none";
+        }
+
+        function endGame(isClear) {
+            gameActive = false; isMouseDown = false; clearInterval(timerInterval); document.exitPointerLock();
+            const accuracy = shotsFired > 0 ? Math.round((shotsHit / shotsFired) * 100) : 0;
+            score = (killCount * 150) + (accuracy * 10) + (isClear ? (Math.ceil(hp) * 20) : 0);
+
+            const resultTitle = document.getElementById('result-title');
+            if (isClear) { resultTitle.textContent = "MISSION CLEAR!"; resultTitle.style.color = "#00ffcc"; }
+            else { resultTitle.textContent = "YOU DIED"; resultTitle.style.color = "#ff3355"; }
+
+            document.getElementById('res-kills').textContent = killCount;
+            document.getElementById('res-shots').textContent = shotsFired;
+            document.getElementById('res-accuracy').textContent = accuracy + "%";
+            document.getElementById('res-score').textContent = score;
+
+            startMenu.style.display = 'none';
+            resultsMenu.style.display = 'block';
+            overlay.style.display = 'flex';
+
+            notifyGameEnded(isClear ? COIN_REWARD : 0);
+        }
+
+        // --- メインゲームループ ---
+        const animate = () => {
+            requestAnimationFrame(animate);
+            const time = performance.now();
+            const delta = (time - prevTime) / 1000;
+
+            if (document.pointerLockElement === document.body && gameActive) {
+                if (isMouseDown && currentWeapon.auto) useWeapon();
+
+                let currentMoveSpeed = baseMoveSpeed;
+                if (speedBoostTimer > 0) {
+                    speedBoostTimer -= delta; currentMoveSpeed *= 1.6;
+                    if (speedBoostTimer <= 0) updateHUD();
+                }
+
+                if (isWallRunning) {
+                    currentMoveSpeed *= WALL_RUN_SPEED_MULTIPLIER;
+                }
+
+                // W,A,S,D 移動ベクトルの算出
+                velocity.x -= velocity.x * 10.0 * delta; velocity.z -= velocity.z * 10.0 * delta;
+                direction.z = Number(moveForward) - Number(moveBackward); direction.x = Number(moveRight) - Number(moveLeft);
+                direction.normalize();
+
+                const camDir = new THREE.Vector3(); camera.getWorldDirection(camDir); camDir.y = 0; camDir.normalize();
+                const camRight = new THREE.Vector3(); camRight.crossVectors(camDir, new THREE.Vector3(0, 1, 0)).normalize();
+
+                if (moveForward || moveBackward) velocity.z += direction.z * currentMoveSpeed * delta;
+                if (moveLeft || moveRight) velocity.x += direction.x * currentMoveSpeed * delta;
+
+                const moveStep = new THREE.Vector3();
+                moveStep.addScaledVector(camDir, velocity.z * delta);
+                moveStep.addScaledVector(camRight, velocity.x * delta);
+
+                const targetPosition = camera.position.clone().add(moveStep);
+
+                // --- 壁との衝突判定 ＆ 壁走り判定 ---
+                const playerRadius = 0.8; 
+                let collisionDetected = false;
+                let wallForRun = null; 
+                let minWallDist = Infinity;
+
+                for (let i = 0; i < collidableWalls.length; i++) {
+                    const wall = collidableWalls[i];
+                    const wallBox = new THREE.Box3().setFromObject(wall);
+                    
+                    const playerBox = new THREE.Box3(
+                        new THREE.Vector3(targetPosition.x - playerRadius, 0, targetPosition.z - playerRadius),
+                        new THREE.Vector3(targetPosition.x + playerRadius, 8, targetPosition.z + playerRadius)
+                    );
+
+                    if (wallBox.intersectsBox(playerBox)) {
+                        collisionDetected = true;
+                    }
+
+                    const wallXZ = new THREE.Vector2(wall.position.x, wall.position.z);
+                    const playerXZ = new THREE.Vector2(camera.position.x, camera.position.z);
+                    const dist = playerXZ.distanceTo(wallXZ);
+                    if (dist < minWallDist) {
+                        minWallDist = dist;
+                        wallForRun = wall;
+                    }
+                }
+
+                let prevWallRun = isWallRunning;
+                isWallRunning = false;
+
+                if (!isGrounded && wallForRun && minWallDist < 3.8 && (moveForward || moveLeft || moveRight)) {
+                    isWallRunning = true;
+
+                    const pToW = new THREE.Vector3(wallForRun.position.x - camera.position.x, 0, wallForRun.position.z - camera.position.z);
+                    pToW.normalize();
+
+                    const absX = Math.abs(camera.position.x - wallForRun.position.x);
+                    const absZ = Math.abs(camera.position.z - wallForRun.position.z);
+                    wallRunNormal.set(0, 0, 0);
+                    if (absX > absZ) {
+                        wallRunNormal.x = camera.position.x > wallForRun.position.x ? 1 : -1;
+                    } else {
+                        wallRunNormal.z = camera.position.z > wallForRun.position.z ? 1 : -1;
+                    }
+
+                    const keepDist = 2.75; 
+                    if (wallRunNormal.x !== 0) {
+                        camera.position.x = wallForRun.position.x + wallRunNormal.x * keepDist;
+                    } else if (wallRunNormal.z !== 0) {
+                        camera.position.z = wallForRun.position.z + wallRunNormal.z * keepDist;
+                    }
+                }
+
+                if (prevWallRun !== isWallRunning) {
+                    updateHUD();
+                }
+
+                if (!collisionDetected && !isWallRunning) {
+                    camera.position.x = targetPosition.x;
+                    camera.position.z = targetPosition.z;
+                }
+
+                camera.position.x = Math.max(-48, Math.min(48, camera.position.x));
+                camera.position.z = Math.max(-48, Math.min(48, camera.position.z));
+
+                // --- 重力物理演算 ---
+                if (!isGrounded) {
+                    const currentGravity = isWallRunning ? WALL_RUN_GRAVITY : GRAVITY;
+                    if (isWallRunning && yVelocity < -2.0) {
+                        yVelocity = -2.0; 
+                    }
+                    yVelocity -= currentGravity * delta;
+                }
+                camera.position.y += yVelocity * delta;
+
+                if (camera.position.y <= PLAYER_HEIGHT) {
+                    camera.position.y = PLAYER_HEIGHT;
+                    yVelocity = 0;
+                    isGrounded = true;
+                    if (isWallRunning) {
+                        isWallRunning = false;
+                        updateHUD();
+                    }
+                }
+
+                flashlight.position.copy(camera.position);
+                const lightTargetPos = new THREE.Vector3(); camera.getWorldDirection(lightTargetPos);
+                flashlight.target.position.copy(camera.position).add(lightTargetPos);
+
+                // --- 武器アニメーション処理 ---
+                if (currentWeaponKey === 'KATANA') {
+                    if (isSlashing) {
+                        slashAnimationTimer -= delta; const progress = slashAnimationTimer / 0.2; 
+                        const slashX = defaultKatanaPos.x - Math.sin(progress * Math.PI) * 0.4;
+                        const slashY = defaultKatanaPos.y + Math.cos(progress * Math.PI) * 0.2;
+                        const slashRotZ = -0.3 - (1 - progress) * Math.PI * 1.5;
+                        const slashRotX = 0.2 + (1 - progress) * 1.0;
+                        gunGroup.position.set(slashX, slashY, defaultKatanaPos.z - 0.1);
+                        gunGroup.rotation.set(slashRotX, 0.4, slashRotZ);
+                        if (slashAnimationTimer <= 0) isSlashing = false;
+                    } else {
+                        gunGroup.position.set(defaultKatanaPos.x, defaultKatanaPos.y + Math.sin(time * 0.003) * 0.01, defaultKatanaPos.z);
+                        gunGroup.rotation.set(0.2, 0.4, -0.3);
+                    }
+                } else {
+                    if (recoilOffset > 0) { recoilOffset -= 0.4 * delta; if (recoilOffset < 0) recoilOffset = 0; }
+                    if (isReloading) {
+                        reloadTimer -= delta; const progress = reloadTimer / currentWeapon.reloadDuration; 
+                        const angle = Math.sin(progress * Math.PI) * -0.6; 
+                        gunGroup.rotation.z = angle; gunGroup.rotation.x = angle * 0.5;
+                        gunGroup.position.set(defaultGunPos.x, defaultGunPos.y - Math.sin(progress * Math.PI) * 0.15, defaultGunPos.z + recoilOffset);
+                        if (reloadTimer <= 0) {
+                            isReloading = false; document.getElementById('reload-indicator').style.display = 'none';
+                            gunGroup.rotation.set(0, 0, 0);
+                            const needed = currentWeapon.clipSize - ammoInClip; const transfer = Math.min(needed, ammoReserve);
+                            ammoInClip += transfer; ammoReserve -= transfer; updateHUD();
+                        }
+                    } else {
+                        // ズーム（覗き込み）中のスナイパーライフルの位置調整（中央寄り）
+                        if (isZoomed && currentWeapon.isSniper) {
+                            gunGroup.position.set(0, -0.05, -0.2);
+                        } else {
+                            gunGroup.position.set(defaultGunPos.x, defaultGunPos.y, defaultGunPos.z + recoilOffset);
+                        }
+                    }
+                }
+            }
+
+            // --- 触手（特殊わざ）の制御アニメーション ---
+            for (let i = activeTentacles.length - 1; i >= 0; i--) {
+                const t = activeTentacles[i];
+                t.timer += delta;
+
+                // ウネウネとした動き
+                t.mesh.rotation.x = Math.sin(t.timer * 4 + t.angleOffset) * 0.25;
+                t.mesh.rotation.z = Math.cos(t.timer * 4 + t.angleOffset) * 0.25;
+
+                if (t.state === 'rise') {
+                    t.mesh.position.y += 15 * delta;
+                    if (t.mesh.position.y >= t.targetY) {
+                        t.mesh.position.y = t.targetY;
+                        t.state = 'static';
+                        t.timer = 0; // 静止タイマーリセット
+                    }
+                } else if (t.state === 'static') {
+                    // 周囲のゾンビに継続ダメージ＆ドロップ化
+                    for(let j=zombies.length - 1; j>=0; j--) {
+                        const z = zombies[j];
+                        if (t.mesh.position.distanceTo(z.position) < 3.5) {
+                            z.userData.hp -= 2;
+                            if (z.userData.hp <= 0) {
+                                // ★【修正】特殊技（触手）による撃破なので isSpecialDamage = true
+                                killZombie(j, z, true);
+                            }
+                        }
+                    }
+                    if (t.timer > 2.0) { // 2秒間暴れたら退避
+                        t.state = 'fall';
+                    }
+                } else if (t.state === 'fall') {
+                    t.mesh.position.y -= 10 * delta;
+                    if (t.mesh.position.y <= -3.0) {
+                        scene.remove(t.mesh);
+                        activeTentacles.splice(i, 1);
+                    }
+                }
+            }
+
+            // --- レーザービーム（特殊わざ）の制御 ---
+            for (let i = activeLasers.length - 1; i >= 0; i--) {
+                const l = activeLasers[i];
+                const age = (time - l.createdAt) / 1000;
+
+                // 照射中の極太ビーム判定（幅3.0以内の全ゾンビを消滅させる）
+                for (let j = zombies.length - 1; j >= 0; j--) {
+                    const z = zombies[j];
+                    // プレイヤーからゾンビへのベクトル
+                    const pToZ = new THREE.Vector3().subVectors(z.position, l.startPos);
+                    const projection = pToZ.dot(l.direction); // 前方への距離
+
+                    if (projection > 0 && projection < 80) { // レーザー射程距離
+                        const closestPoint = l.startPos.clone().addScaledVector(l.direction, projection);
+                        const lateralDist = z.position.distanceTo(closestPoint);
+                        if (lateralDist < 3.2) { // 極太レーザーの判定
+                            z.userData.hp = 0;
+                            // ★【修正】特殊技（レーザー）による撃破なので isSpecialDamage = true
+                            killZombie(j, z, true);
+                        }
+                    }
+                }
+
+                // 時間経過で徐々に細くして消去
+                const sizeRatio = 1.0 - (age / l.duration);
+                if (sizeRatio <= 0) {
+                    scene.remove(l.mesh);
+                    activeLasers.splice(i, 1);
+                } else {
+                    l.mesh.scale.set(sizeRatio, 1, sizeRatio);
+                }
+            }
+
+            // 手榴弾の物理挙動
+            for (let i = activeGrenades.length - 1; i >= 0; i--) {
+                const g = activeGrenades[i]; const age = (time - g.userData.createdAt) / 1000;
+                g.userData.velocity.y -= 9.8 * delta; g.position.addScaledVector(g.userData.velocity, delta);
+                if (g.position.y < 0.12) {
+                    g.position.y = 0.12; g.userData.velocity.y *= -0.4; g.userData.velocity.x *= 0.6; g.userData.velocity.z *= 0.6;
+                }
+                if (age >= g.userData.fuse) {
+                    createExplosion(g.position, 8.0); 
+                    scene.remove(g); activeGrenades.splice(i, 1);
+                }
+            }
+
+            // 爆発エフェクト
+            for(let i = explosions.length - 1; i >= 0; i--) {
+                const exp = explosions[i]; const age = (time - exp.createdAt) / 1000;
+                if(age > exp.duration) { scene.remove(exp.group); explosions.splice(i, 1); }
+                else { exp.particles.forEach(p => { p.position.addScaledVector(p.userData.velocity, delta); p.material.opacity = 1 - (age / exp.duration); }); }
+            }
+
+            // ドロップアイテムの回収
+            if (gameActive) {
+                const playerPos = new THREE.Vector3(camera.position.x, 0, camera.position.z);
+                for (let i = drops.length - 1; i >= 0; i--) {
+                    const drop = drops[i]; drop.mesh.rotation.y += 1.5 * delta; drop.mesh.position.y = 0.35 + Math.sin(time * 0.005) * 0.08;
+                    if (drop.mesh.position.distanceTo(playerPos) < 1.4) {
+                        if (drop.type === 'hp') hp = Math.min(100, hp + 30); 
+                        else if (drop.type === 'ammo') {
+                            const targetKey = currentWeapon.isMelee ? activeMainWeaponKey : currentWeaponKey;
+                            const addedReserve = Math.floor(WEAPONS[targetKey].clipSize * 1.5);
+                            if (currentWeapon.isMelee) weaponAmmoBuffer[targetKey].reserve = Math.min(WEAPONS[targetKey].maxReserve, weaponAmmoBuffer[targetKey].reserve + addedReserve);
+                            else ammoReserve = Math.min(currentWeapon.maxReserve, ammoReserve + addedReserve);
+                        } else if (drop.type === 'weapon') {
+                            const keys = Object.keys(WEAPONS).filter(k => k !== 'KATANA' && k !== activeMainWeaponKey);
+                            const chosenKey = keys[Math.floor(Math.random() * keys.length)];
+                            weaponAmmoBuffer[chosenKey].clip = WEAPONS[chosenKey].clipSize; weaponAmmoBuffer[chosenKey].reserve = WEAPONS[chosenKey].maxReserve;
+                            switchWeapon(chosenKey);
+                        } else if (drop.type === 'grenade') grenadeCount += 2;
+                        else if (drop.type === 'speed') speedBoostTimer = 5.0;
+                        updateHUD(); scene.remove(drop.mesh); drops.splice(i, 1);
+                    }
+                }
+            }
+
+            // ゾンビAI移動 & 攻撃
+            if (gameActive && document.pointerLockElement === document.body) {
+                zombies.forEach((zombie) => {
+                    const targetPos = new THREE.Vector3(camera.position.x, 0, camera.position.z);
+                    zombie.lookAt(targetPos);
+
+                    const actualSpeed = zombie.userData.isBoss ? zombieSpeed * 1.2 : zombieSpeed;
+                    const dir = new THREE.Vector3().subVectors(targetPos, zombie.position).normalize();
+                    zombie.position.addScaledVector(dir, actualSpeed * delta);
+
+                    const distToPlayer = zombie.position.distanceTo(new THREE.Vector3(camera.position.x, 0, camera.position.z));
+                    const attackRange = zombie.userData.isBoss ? 3.0 : 1.2;
+
+                    if (distToPlayer < attackRange) {
+                        if (time - zombie.userData.lastAttackTime > 1000) {
+                            const damage = zombie.userData.isBoss ? 30 : 8;
+                            
+                            hp -= damage;
+                            hp = Math.max(0, hp);
+                            updateHUD();
+
+                            zombie.userData.lastAttackTime = time;
+                            if (hp <= 0) endGame(false); 
+                        }
+                    }
+                });
+            }
+
+            // 弾の移動 & 衝突 ＆ 跳弾システム
+            const bulletLifespan = 1500; 
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                const b = bullets[i]; 
+                b.position.addScaledVector(b.userData.direction, currentWeapon.bulletSpeed * delta);
+                
+                if (time - b.userData.createdAt > bulletLifespan || b.position.y < 0) {
+                    if (b.userData.isRocket) createExplosion(b.position);
+                    scene.remove(b); bullets.splice(i, 1); continue;
+                }
+
+                // --- 弾と壁の衝突（跳弾）判定 ---
+                let ricochetOccurred = false;
+                if (!b.userData.isRocket) { 
+                    for (let w = 0; w < collidableWalls.length; w++) {
+                        const wall = collidableWalls[w];
+                        const wallBox = new THREE.Box3().setFromObject(wall);
+                        
+                        if (wallBox.containsPoint(b.position)) {
+                            // スナイパー弾は壁を貫通するように進む(跳弾なし)か、あるいは通常弾のように跳ね返ります
+                            const maxBounces = b.userData.isSniper ? 1 : 2;
+                            if (b.userData.bounceCount < maxBounces) { 
+                                b.userData.bounceCount++;
+                                ricochetOccurred = true;
+
+                                const absX = Math.abs(b.position.x - wall.position.x);
+                                const absZ = Math.abs(b.position.z - wall.position.z);
+                                const normal = new THREE.Vector3();
+
+                                if (absX > absZ) {
+                                    normal.x = b.position.x > wall.position.x ? 1 : -1;
+                                } else {
+                                    normal.z = b.position.z > wall.position.z ? 1 : -1;
+                                }
+
+                                const incoming = b.userData.direction.clone();
+                                const dot = incoming.dot(normal);
+                                const reflect = incoming.sub(normal.multiplyScalar(2 * dot)).normalize();
+                                b.userData.direction.copy(reflect);
+
+                                b.position.addScaledVector(reflect, 0.2);
+                                b.lookAt(b.position.clone().add(reflect));
+                            } else {
+                                scene.remove(b); bullets.splice(i, 1);
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (ricochetOccurred) continue; 
+
+                // ゾンビとの衝突
+                for (let j = zombies.length - 1; j >= 0; j--) {
+                    const z = zombies[j];
+                    const zombieCenter = new THREE.Vector3(z.position.x, z.userData.isBoss ? 2.5 : 0.9, z.position.z);
+                    const hitRadius = z.userData.isBoss ? 2.5 : 1.0;
+
+                    if (b.position.distanceTo(zombieCenter) < hitRadius) { 
+                        shotsHit++;
+                        if (b.userData.isRocket) {
+                            createExplosion(z.position);
+                        } else if (b.userData.isSniper) {
+                            // スナイパーは超大ダメージ（ボスでも一撃クラス）
+                            z.userData.hp -= 4;
+                            if (z.userData.hp <= 0) {
+                                // 通常銃（スナイパー）による撃破なので isSpecialDamage = false
+                                killZombie(j, z, false);
+                            }
+                        } else {
+                            z.userData.hp--; 
+                            if (z.userData.hp <= 0) {
+                                // 通常銃（ピストル等）による撃破なので isSpecialDamage = false
+                                killZombie(j, z, false);
+                            }
+                        }
+                        scene.remove(b); bullets.splice(i, 1); break;
+                    }
+                }
+            }
+
+            prevTime = time; renderer.render(scene, camera);
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>

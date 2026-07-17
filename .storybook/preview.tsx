@@ -30,6 +30,32 @@ const preview: Preview = {
       defaultTheme: 'light',
     }),
   ],
+  loaders: [
+    async ({ viewMode }) => {
+      if (viewMode !== 'docs') {
+        return {}
+      }
+
+      // Storybook's interaction instrumentation replaces `focus` with an
+      // accessor. React Aria, used by the Docs renderer, reads
+      // `HTMLElement.prototype.focus` directly; invoking that accessor on the
+      // prototype throws `Illegal invocation` and leaves the Docs iframe blank.
+      const descriptor = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        'focus',
+      )
+
+      if (descriptor?.get) {
+        Object.defineProperty(HTMLElement.prototype, 'focus', {
+          configurable: true,
+          writable: true,
+          value: descriptor.get.call(document.body),
+        })
+      }
+
+      return {}
+    },
+  ],
 }
 
 export default preview

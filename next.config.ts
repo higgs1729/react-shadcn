@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   basePath: basePath || undefined,
   assetPrefix: basePath || undefined,
+  // Exposed to client code so URL helpers (e.g. Team T's getApiPageUrl) can
+  // build absolute asset paths instead of relying on route-relative links.
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
   // Pin the workspace root to this project. A stray package-lock.json in the
   // user's home directory otherwise makes Turbopack treat the entire home
   // folder as the workspace, scanning/watching it until the heap OOMs.

@@ -4,7 +4,7 @@
 
 ## 現在地
 
-Team T アプリは、既存の `react-shadcn` Next.js アプリ内に独立した作品 route として構築する。プロダクト要件、job、flow、データ境界、実装順序は各承認済み文書を正本とする。画面構造と既存在庫の採否は `ui-selection.md` でreview中。
+Team T アプリは、既存の `react-shadcn` Next.js アプリ内に独立した作品 route として構築する。プロダクト要件、job、flow、データ境界、実装順序は各承認済み文書を正本とする。画面構造と既存在庫の採否は、承認済みの `ui-selection.md` を正本とする。
 
 ## 配置
 
@@ -41,12 +41,15 @@ route composition
 - 現行 FlowSpec / SelectionSpec / BuildReport は自然に表現できる route-level screen の検討と検証に限って利用する
 - Drawer / Dialog やアプリ全体構造を、現行の flat step 契約へ無理に合わせない
 
-## 未決事項
+## 実装済み境界
 
-- `ui-selection.md` に記載した専用shell composition、設定の再利用境界、preview構造の人間承認
-- 主要なユーザーフロー
-- データの正本と永続化方式
-- 認証・認可の要否
-- 外部サービスとの連携
-- route map と画面 composition
-- GitHub Pages の静的境界を超える場合のホスティング方針
+- Slice 1–2 は専用shell composition、型付きcatalog、明示IDのおすすめ、同一originの紹介HTML asset、URL hashによる選択復元で構成する
+- `public/` assetはNext.jsの`assetPrefix`対象外のため、`/team-t-app/` routeからの相対URLを専用helperで生成する
+- Slice 3 の端末内プロフィールと表示設定(動きを減らす)は `team-t:v1:preferences` と `team-t:v1:profile` だけを操作する。保存不可・不正データ時は既定値で継続し、全体のtheme storageや認証状態には触れない
+- 見た目はミッドナイトトロフィールーム(黒地・ゴールド・紫)へ一本化した固定theme。theme/accentのユーザー切替は提供しない(2026-07-17、`ui-selection.md` Human decisions #4)
+- サーバー認証、永続backend、外部APIの事前稼働保証はV1境界に含めない
+
+## 後続判断
+
+- reward、game runtimeの詳細component API
+- GitHub Pages の静的境界を超える機能が必要になった場合のbackendとホスティング
