@@ -38,7 +38,7 @@ Team T全体へそのまま適用できる既存screen patternはない。`dashb
 | Loading | `loading-skeleton-01` | reuse/adapt | catalogとpreviewの領域サイズに合わせrowsを調整 |
 | API summary | Card/Badge/Button primitives | compose | `detail-overview-01`のstatus必須APIはV1方針と合わないため専用compact summary |
 | API preview | native iframe + Card/Alert | new composition | loading/ready/error/missingとbase-path URLを所有するTeam T固有境界 |
-| Settings | `SettingsDialog` / `SettingsPage` | adapt | 見た目とpreviewを再利用し、Team T namespace、profile、resetへ変更。theme/accent切替は2026-07-17にミッドナイトトロフィールーム一本化へ置き換え、UIから撤去 |
+| Settings | `SettingsDialog` / `SettingsPage` | adapt | 見た目とpreviewを再利用し、Team T namespace、profile、resetへ変更。theme/accent切替は2026-07-17に撤去したが、2026-07-21にTeam T独自の3theme(既定=ミッドナイト)＋accent(ミッドナイト時disabled)＋枠線強調として復活 |
 | Settings rows | `settings-section-01` | reuse | controlled toggle/rowとして利用可能 |
 | Profile edit | Dialog/Field/Input primitives | compose | 単一入力の`modal-dialog-01`も利用可能だが文言・ID固定を避け専用dialogへ統合 |
 | Game hub | `collection-grid-01` topology | adapt | cost、difficulty、reward、disabled、actionが必要で既存API不足。専用GameCard/Gridを作る |
@@ -172,3 +172,7 @@ Slice 1では以下だけを使用・作成する。
 
 4. アプリ全体をミッドナイトトロフィールーム(黒地・ゴールド・紫)の見た目へ一本化し、light/dark切替と3色アクセント選択を設定から撤去してよいか。既存IA(sidebar catalog tree、window-tabヘッダー、Welcome構成)は変更せず、見た目(配色・タイポ・装飾)のみ変更する
 5. コンテスト発表用(PC・フルHD前提)として、Welcomeに全画面開始ボタンを置き、ゲームdialogは背景フレーム画像と同じ縦横比(1678:942)へ固定して金線ずれを構造的に解消してよいか。表示スケール差異に備え、位置合わせはフルHD決め打ちでなくアスペクト固定+%パディングで行う
+
+2026-07-21 に以下を承認済み(上記4のtheme/accent撤去を置き換え)。
+
+6. ミッドナイトトロフィールームを既定としたまま、ライト・ダークを設定へ復活させてよいか。3themeともゴールドの意匠は残し、明度トークンだけを差し替える(ライトはゴールドを濃色化してコントラストを確保)。アクセント5色はlight/darkでのみ有効とし、ミッドナイト選択中はdisabledにする。適用先はラッパーdivではなく `<html>` 属性とし、モバイルsidebar(Sheetポータル)が親テーマを継承しない不具合も同時に解消する。ゲームdialogは演出上ミッドナイト固定を維持する

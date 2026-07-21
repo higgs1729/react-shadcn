@@ -38,6 +38,7 @@ import { TeamTHeader, type TeamTWindow } from "./team-t-header"
 import { TeamTSettingsDialog } from "./team-t-settings-dialog"
 import { TeamTSidebar } from "./team-t-sidebar"
 import { TeamTWelcome } from "./team-t-welcome"
+import { useTeamTAppearance } from "./use-team-t-appearance"
 
 interface TeamTAppShellProps {
   catalog: readonly ApiCatalogItem[]
@@ -82,26 +83,24 @@ function TeamTAppContent({
   preferences,
   profile,
   reward,
-  onReduceMotionChange,
+  onPreferencesChange,
   onProfileChange,
   onReset,
   onPreviewInteraction,
   onSpendCoins,
   onRefundCoins,
   onAwardCoins,
-  themeClassName,
 }: TeamTAppShellProps & {
   preferences: TeamTPreferences
   profile: TeamTProfile
   reward: TeamTRewardState
-  onReduceMotionChange: (reduceMotion: boolean) => void
+  onPreferencesChange: (update: Partial<TeamTPreferences>) => void
   onProfileChange: (profile: TeamTProfile) => void
   onReset: () => void
   onPreviewInteraction: () => boolean
   onSpendCoins: (cost: number) => boolean
   onRefundCoins: (cost: number) => void
   onAwardCoins: (coins: number) => void
-  themeClassName: string
 }) {
   const { isMobile, setOpenMobile } = useSidebar()
   const [query, setQuery] = React.useState("")
@@ -314,15 +313,13 @@ function TeamTAppContent({
         preferences={preferences}
         profile={profile}
         onOpenChange={setSettingsOpen}
-        onReduceMotionChange={onReduceMotionChange}
+        onPreferencesChange={onPreferencesChange}
         onProfileChange={onProfileChange}
         onReset={onReset}
-        themeClassName={themeClassName}
       />
       <TeamTGameDialog
         open={gamesOpen}
         coinCount={reward.coins}
-        themeClassName={themeClassName}
         onOpenChange={setGamesOpen}
         onSpend={onSpendCoins}
         onRefund={onRefundCoins}
@@ -434,68 +431,23 @@ export function TeamTAppShell({ catalog }: TeamTAppShellProps) {
     [updateReward]
   )
 
-  const themeClassName = `team-t-theme${preferences.reduceMotion ? " team-t-reduce-motion" : ""}`
+  useTeamTAppearance(preferences)
 
   return (
-    <>
-      <TeamTPreferenceStyles />
-      <SidebarProvider className={themeClassName}>
-        <TeamTAppContent
-          catalog={catalog}
-          preferences={preferences}
-          profile={profile}
-          reward={reward}
-          onReduceMotionChange={(reduceMotion) =>
-            updatePreferences({ reduceMotion })
-          }
-          onProfileChange={updateProfile}
-          onReset={resetPreferences}
-          onPreviewInteraction={recordInteraction}
-          onSpendCoins={spendCoins}
-          onRefundCoins={refundCoins}
-          onAwardCoins={awardCoins}
-          themeClassName={themeClassName}
-        />
-      </SidebarProvider>
-    </>
-  )
-}
-
-function TeamTPreferenceStyles() {
-  return (
-    <style>{`
-      .team-t-theme {
-        color: var(--foreground);
-        background-color: var(--background);
-        --background: #09090b;
-        --foreground: #f2ead9;
-        --card: #121116;
-        --card-foreground: #f2ead9;
-        --popover: #121116;
-        --popover-foreground: #f2ead9;
-        --primary: #4c2378;
-        --primary-foreground: #ffffff;
-        --secondary: #1c1a20;
-        --secondary-foreground: #f2ead9;
-        --muted: #17151a;
-        --muted-foreground: #a89f92;
-        --accent: #241c33;
-        --accent-foreground: #f2ead9;
-        --border: rgba(185, 154, 92, 0.28);
-        --input: rgba(185, 154, 92, 0.22);
-        --ring: #9b6cff;
-        --sidebar: #0c0b0e;
-        --sidebar-foreground: #f0e9dc;
-        --sidebar-primary: #4c2378;
-        --sidebar-primary-foreground: #ffffff;
-        --sidebar-accent: #1d1a22;
-        --sidebar-accent-foreground: #f2ead9;
-        --sidebar-border: rgba(185, 154, 92, 0.22);
-        --sidebar-ring: #9b6cff;
-        --team-t-gold: #c7ab70;
-        --team-t-gold-strong: #d8bf88;
-        --team-t-gold-line: rgba(185, 154, 92, 0.35);
-      }
-    `}</style>
+    <SidebarProvider>
+      <TeamTAppContent
+        catalog={catalog}
+        preferences={preferences}
+        profile={profile}
+        reward={reward}
+        onPreferencesChange={updatePreferences}
+        onProfileChange={updateProfile}
+        onReset={resetPreferences}
+        onPreviewInteraction={recordInteraction}
+        onSpendCoins={spendCoins}
+        onRefundCoins={refundCoins}
+        onAwardCoins={awardCoins}
+      />
+    </SidebarProvider>
   )
 }

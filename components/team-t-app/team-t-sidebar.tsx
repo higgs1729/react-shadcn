@@ -52,7 +52,7 @@ export function TeamTSidebar({
     <Sidebar variant="inset" collapsible="offcanvas">
       <style>{`
         /* 共有 ui/sidebar.tsx は編集禁止のため、右端の金線はここから当てる */
-        .team-t-theme [data-slot="sidebar-inner"] { border-right: 1px solid var(--team-t-gold-line); }
+        html[data-team-t-theme] [data-slot="sidebar-inner"] { border-right: 1px solid var(--team-t-gold-line); }
         [data-team-t-disclosure][data-panel-open] [data-chevron] { transform: rotate(90deg); }
         [data-team-t-disclosure] { color: color-mix(in oklab, var(--sidebar-foreground) 62%, transparent) !important; }
         [data-team-t-disclosure] > span { color: inherit !important; }
@@ -63,7 +63,7 @@ export function TeamTSidebar({
       `}</style>
       <SidebarHeader className="gap-4 border-b border-sidebar-border p-4">
         <div className="flex items-center gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-[color:var(--team-t-gold-line)] bg-primary text-[color:var(--team-t-gold-strong)] shadow-[0_0_16px_rgba(139,92,246,0.25)]">
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-[color:var(--team-t-gold-line)] bg-primary text-[color:var(--team-t-gold-on-primary)] shadow-[0_0_16px_rgba(139,92,246,0.25)]">
             <TrophyIcon className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
@@ -105,7 +105,7 @@ export function TeamTSidebar({
           <Progress
             aria-label={`次のコインまで ${rewardProgress} / 5`}
             value={(rewardProgress / 5) * 100}
-            className="team-t-coin-progress [&_[data-slot=progress-indicator]]:bg-amber-500 [&_[data-slot=progress-track]]:bg-black/40"
+            className="team-t-coin-progress [&_[data-slot=progress-indicator]]:bg-amber-500 [&_[data-slot=progress-track]]:bg-foreground/15"
           />
         </div>
         <Button

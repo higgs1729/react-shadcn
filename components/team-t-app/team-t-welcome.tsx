@@ -54,7 +54,7 @@ export function TeamTWelcome({
             className="border-[color:var(--team-t-gold-line)] bg-card"
           >
             <CardHeader className="flex-row items-center gap-3 space-y-0">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary text-[color:var(--team-t-gold-strong)] shadow-[0_0_14px_rgba(139,92,246,0.3)]">
+              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary text-[color:var(--team-t-gold-on-primary)] shadow-[0_0_14px_rgba(139,92,246,0.3)]">
                 <item.icon className="size-4" aria-hidden="true" />
               </div>
               <CardTitle>{item.title}</CardTitle>
