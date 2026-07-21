@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ネオントンネル</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;overflow:hidden;background:#05030a}
+  body{font-family:"Segoe UI",system-ui,sans-serif;color:#f7f1e7;user-select:none;-webkit-user-select:none}
+  #c{display:block;width:100%;height:100%}
+
+  #hud{position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:18px 22px}
+  .row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+
+  .panel{background:rgba(6,4,12,.55);border:1px solid rgba(185,154,92,.38);border-radius:10px;padding:8px 14px;backdrop-filter:blur(6px)}
+  .label{font-size:10px;letter-spacing:.18em;color:#b6a98f;text-transform:uppercase}
+  .value{font-size:26px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+
+  #time .value{color:#d8bf88}
+  #time.warn .value{color:#ff7a5c}
+  #speed .value{font-size:20px;color:#b79cff}
+
+  #bar{height:6px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden;border:1px solid rgba(185,154,92,.28)}
+  #barFill{height:100%;width:0%;background:linear-gradient(90deg,#9b6cff,#d8bf88);transition:width .08s linear}
+  #barWrap{flex:1;display:flex;flex-direction:column;gap:6px}
+
+  #flash{position:absolute;inset:0;pointer-events:none;background:#ff5c3c;opacity:0;transition:opacity .18s ease-out}
+
+  #center{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;text-align:center}
+  #msg{font-size:clamp(28px,7vw,64px);font-weight:700;letter-spacing:.08em;opacity:0;transform:scale(.9);
+       transition:opacity .3s ease,transform .3s ease;text-shadow:0 0 28px rgba(155,108,255,.85)}
+  #msg.show{opacity:1;transform:scale(1)}
+  #sub{margin-top:10px;font-size:clamp(12px,2.2vw,18px);color:#c9bfae;opacity:0;transition:opacity .3s ease .12s}
+  #sub.show{opacity:1}
+
+  .hint{font-size:11px;letter-spacing:.12em;color:#9a917f}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <div class="row">
+    <div class="panel" id="time"><div class="label">TIME</div><div class="value" id="timeV">50.0</div></div>
+    <div id="barWrap">
+      <div class="panel" style="padding:8px 14px">
+        <div class="label">DISTANCE</div>
+        <div id="bar"><div id="barFill"></div></div>
+      </div>
+    </div>
+    <div class="panel" id="speed"><div class="label">SPEED</div><div class="value" id="speedV">0</div></div>
+  </div>
+  <div class="row">
+    <div class="hint">← → / A D でコースを回避</div>
+    <div class="hint" id="hitsV">HIT 0</div>
+  </div>
+</div>
+
+<div id="flash"></div>
+<div id="center"><div><div id="msg"></div><div id="sub"></div></div></div>
+
+<script src="./vendor/three.min.js"></script>
+<script>
+/* ===== コイン連携（Team T のゲーム画面から iframe で起動される想定） =====
+   開始処理: 消費コインは親側が起動前に減算済み。よってこのゲームは
+             タイトル画面を持たず、読み込み直後に即開始する。
+   終了処理: 走破(クリア) / 時間切れ(失敗) 時に親へ game:ended を通知
+             coin 0 = 失敗 / 1以上 = クリア報酬
+   契約の正本: components/team-t-app/team-t-game-dialog.tsx */
+function notifyGameEnded(coin){
+  try { window.parent.postMessage({ type:'game:ended', coin: coin }, '*'); } catch(e){}
+}
+
+/* ===== 調整パラメータ =====
+   失敗条件は「時間切れ」のみ。被弾による即死を併設すると、そちらが先に発動して
+   制限時間が一度も制約にならなくなる(実測: 被弾4回でも残り17.9秒あった)。
+   被弾は速度を落とすことで「時間を失わせる」形にのみ効かせる。
+   下の値は走破時間シミュレーションで決定:
+     被弾0回=36.6秒 / 1回ごとに約3.4秒を失い / 4回でちょうど時間切れ。 */
+const TIME_LIMIT   = 50;    // 制限時間(秒)
+const COURSE_LEN   = 3200;  // コース全長(距離単位)
+const BASE_SPEED   = 66;    // 基準速度(単位/秒)
+const MAX_SPEED    = 96;
+const ACCEL        = 7;     // 加速度(単位/秒^2)
+const HIT_DROP     = 0.30;  // 被弾時に速度へ掛ける係数。時間ロスの実体はこれ
+const HIT_FLOOR    = 14;    // 被弾後の下限速度(復帰不能を防ぐ)
+const MAX_REWARD   = 3;     // lib/team-t-app/games.ts の maxReward と一致させること
+
+/* ===== クリア判定とコイン配分 =====
+   残り時間だけで決める。被弾は既に「時間を失う」形で効いているため、
+   ここへ被弾数を混ぜると同じペナルティを二重に数えることになる。 */
+function computeCoin(finished, timeLeft){
+  if (!finished) return 0;
+  if (timeLeft >= 12) return 3;  // 実質ノーミス
+  if (timeLeft >= 5)  return 2;
+  return 1;
+}
+
+/* ===== 3D セットアップ ===== */
+if (typeof THREE === 'undefined') {
+  document.getElementById('msg').textContent = '読み込みに失敗しました';
+  document.getElementById('msg').classList.add('show');
+  throw new Error('three.js unavailable');
+}
+
+const canvas   = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const scene  = new THREE.Scene();
+scene.background = new THREE.Color(0x05030a);
+scene.fog = new THREE.FogExp2(0x05030a, 0.0075);
+
+const camera = new THREE.PerspectiveCamera(78, 16/9, 0.1, 900);
+
+function resize(){
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+
+const COL_PURPLE = new THREE.Color(0x9b6cff);
+const COL_GOLD   = new THREE.Color(0xd8bf88);
+const TUBE_R     = 7.2;   // トンネル半径
+const SHIP_R     = 4.6;   // 自機の周回半径(障害物の径方向レンジ内に収める)
+const CAM_Z      = 7;     // 自機の後方どれだけにカメラを置くか
+const RECYCLE    = CAM_Z + 2.5; // これだけ後方へ抜けた物体を前方へ再配置する
+
+/* --- トンネルのリング(手続き的生成。外部モデルを持たない) --- */
+const RING_COUNT = 60;
+const RING_GAP   = 9;
+const rings = [];
+for (let i = 0; i < RING_COUNT; i++){
+  // 6本ごとに太いゴールドのゲートリングを挟み、距離とリズムを読ませる
+  const accent = i % 6 === 0;
+  const geo = new THREE.TorusGeometry(TUBE_R, accent ? 0.22 : 0.055, 8, 80);
+  const mat = new THREE.MeshBasicMaterial({
+    color: accent ? COL_GOLD : COL_PURPLE,
+    transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.userData.s = i * RING_GAP;
+  m.userData.op = accent ? 1 : 0.5;
+  scene.add(m);
+  rings.push(m);
+}
+
+/* --- 壁面を流れる光のダッシュ --- */
+const DASH_COUNT = 150;
+const dashes = [];
+const dashGeo = new THREE.BoxGeometry(0.1, 0.1, 6.5);
+for (let i = 0; i < DASH_COUNT; i++){
+  const mat = new THREE.MeshBasicMaterial({
+    color: Math.random() < .5 ? 0x9b6cff : 0xd8bf88,
+    transparent:true, opacity:.5, blending:THREE.AdditiveBlending, depthWrite:false
+  });
+  const m = new THREE.Mesh(dashGeo, mat);
+  m.userData.s = Math.random() * RING_COUNT * RING_GAP;
+  m.userData.a = Math.random() * Math.PI * 2;
+  scene.add(m);
+  dashes.push(m);
+}
+
+/* --- 障害物: トンネル円周の一部を塞ぐアーチ --- */
+const OBST_COUNT = 26;
+const obstacles = [];
+for (let i = 0; i < OBST_COUNT; i++){
+  const half = 0.55 + Math.random() * 0.5;              // 角度半幅(rad)
+  // 壁面から自機の周回半径より内側まで張り出す板。角度で避けさせる
+  const geo  = new THREE.TorusGeometry(5.9, 1.5, 10, 30, half * 2);
+  const mat  = new THREE.MeshBasicMaterial({
+    color:0xffab4d, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.userData = { s: 200 + i * 78 + Math.random() * 30, a: Math.random() * Math.PI * 2, half, hit:false };
+  scene.add(m);
+  obstacles.push(m);
+}
+
+/* --- 自機(プリミティブの組み合わせで構成) --- */
+const ship = new THREE.Group();
+const bodyMat = new THREE.MeshBasicMaterial({ color:0xf4e8d1 });
+const body = new THREE.Mesh(new THREE.ConeGeometry(0.38, 1.5, 5), bodyMat);
+body.rotation.x = -Math.PI / 2;
+ship.add(body);
+const finMat = new THREE.MeshBasicMaterial({ color:0xb99a5c });
+[-1, 1].forEach(sx => {
+  const fin = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.06, 0.42), finMat);
+  fin.position.set(sx * 0.34, 0, 0.34);
+  fin.rotation.z = sx * 0.34;
+  ship.add(fin);
+});
+const glow = new THREE.Mesh(
+  new THREE.SphereGeometry(0.42, 12, 12),
+  new THREE.MeshBasicMaterial({ color:0x9b6cff, transparent:true, opacity:.75, blending:THREE.AdditiveBlending, depthWrite:false })
+);
+glow.position.z = 0.75;
+ship.add(glow);
+scene.add(ship);
+
+/* ===== 入力 ===== */
+const keys = Object.create(null);
+addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].includes(e.code)) e.preventDefault();
+});
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+let pointerDir = 0;
+function pointerFrom(x){ pointerDir = x < window.innerWidth / 2 ? -1 : 1; }
+addEventListener('pointerdown', e => pointerFrom(e.clientX));
+addEventListener('pointermove', e => { if (e.buttons) pointerFrom(e.clientX); });
+addEventListener('pointerup',  () => { pointerDir = 0; });
+addEventListener('pointercancel', () => { pointerDir = 0; });
+
+/* ===== 状態 ===== */
+let progress   = 0;              // コース上の到達距離
+let angle      = 0;              // 自機の周回角
+let angVel     = 0;
+let speed      = BASE_SPEED * .45;
+let hits       = 0;
+let timeLeft   = TIME_LIMIT;
+let over       = false;
+let camRoll    = 0;
+
+const elTime  = document.getElementById('timeV');
+const elTimeP = document.getElementById('time');
+const elSpeed = document.getElementById('speedV');
+const elBar   = document.getElementById('barFill');
+const elHits  = document.getElementById('hitsV');
+const elFlash = document.getElementById('flash');
+const elMsg   = document.getElementById('msg');
+const elSub   = document.getElementById('sub');
+
+function shortAngle(a){ return Math.atan2(Math.sin(a), Math.cos(a)); }
+
+function hit(){
+  hits++;
+  // 即死させず速度だけを削る。この減速が約3.4秒の遅れとして時間を圧迫する
+  speed = Math.max(HIT_FLOOR, speed * HIT_DROP);
+  elFlash.style.opacity = '.42';
+  setTimeout(() => { elFlash.style.opacity = '0'; }, 90);
+  elHits.textContent = 'HIT ' + hits + ' ・ 約' + (hits * 3.4).toFixed(1) + '秒ロス';
+}
+
+function finish(finished){
+  if (over) return;
+  over = true;
+  const coin = computeCoin(finished, timeLeft);
+  elMsg.textContent = finished ? 'COURSE CLEAR' : 'TIME UP';
+  elMsg.style.color = finished ? '#d8bf88' : '#ff7a5c';
+  elSub.textContent = finished
+    ? `残り ${timeLeft.toFixed(1)} 秒 ・ 被弾 ${hits} 回 ・ +${coin}`
+    : `到達率 ${(progress / COURSE_LEN * 100).toFixed(0)}% ・ 被弾 ${hits} 回`;
+  elMsg.classList.add('show');
+  elSub.classList.add('show');
+  setTimeout(() => notifyGameEnded(coin), 1400);
+}
+
+/* ===== メインループ(読み込み直後に即開始) ===== */
+let prev = performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt = Math.min((now - prev) / 1000, 0.05);
+  prev = now;
+
+  if (!over){
+    timeLeft -= dt;
+    elTimeP.classList.toggle('warn', timeLeft <= 10);
+    if (timeLeft <= 0){ timeLeft = 0; finish(false); }
+
+    // 加速: 被弾しなければ徐々に最高速へ
+    speed = Math.min(MAX_SPEED, speed + ACCEL * dt);
+    progress += speed * dt;
+    if (progress >= COURSE_LEN) finish(true);
+  }
+
+  // 旋回(慣性つき)
+  let input = 0;
+  if (keys.ArrowLeft  || keys.KeyA) input -= 1;
+  if (keys.ArrowRight || keys.KeyD) input += 1;
+  if (!input) input = pointerDir;
+  if (over) input = 0;
+  angVel += input * 9.5 * dt;
+  angVel *= Math.pow(0.0016, dt);
+  angle  += angVel * dt;
+
+  // 自機とカメラ
+  ship.position.set(Math.cos(angle) * SHIP_R, Math.sin(angle) * SHIP_R, 0);
+  ship.rotation.z = angle + Math.PI / 2;
+  ship.rotation.y = -angVel * 0.06;
+  glow.scale.setScalar(1 + Math.sin(now * 0.012) * 0.18);
+
+  camRoll += (angle - camRoll) * Math.min(1, 8 * dt);
+  const camOff = SHIP_R * 0.26;
+  const cx = Math.cos(camRoll) * camOff, cy = Math.sin(camRoll) * camOff;
+  camera.position.set(cx, cy, CAM_Z);
+  // 自機がリング上のどこにいても画面下側に来るよう、up を自機の逆向きに取る
+  camera.up.set(-Math.cos(camRoll), -Math.sin(camRoll), 0);
+  camera.lookAt(cx * 0.45, cy * 0.45, -46);
+
+  // リングを循環させる
+  const span = RING_COUNT * RING_GAP;
+  for (const m of rings){
+    let z = m.userData.s - progress;
+    if (z < -RECYCLE){ m.userData.s += span; z += span; }
+    m.position.z = -z;
+    // カメラを抜ける直前に消し込み、後方の巨大なリングが視界に残らないようにする
+    m.material.opacity = m.userData.op * Math.min(1, (z + RECYCLE) / 14);
+  }
+
+  // ダッシュ
+  for (const m of dashes){
+    let z = m.userData.s - progress;
+    if (z < -RECYCLE){ m.userData.s += span; z += span; }
+    m.position.set(Math.cos(m.userData.a) * (TUBE_R - .2), Math.sin(m.userData.a) * (TUBE_R - .2), -z);
+    // 手前のダッシュは巨大な棒として視界を横切るので、遠方だけを見せる
+    m.material.opacity = 0.6 * Math.min(1, Math.max(0, z - 8) / 26);
+  }
+
+  // 障害物と当たり判定
+  for (const m of obstacles){
+    const z = m.userData.s - progress;
+    if (z < -RECYCLE){
+      // 使い終わったら前方へ再配置
+      m.userData.s += OBST_COUNT * 78;
+      m.userData.a  = Math.random() * Math.PI * 2;
+      m.userData.hit = false;
+    }
+    m.position.z = -z;
+    m.rotation.z = m.userData.a - m.userData.half;
+
+    if (!over && !m.userData.hit && z < 1.2 && z > -1.2){
+      const d = Math.abs(shortAngle(angle - m.userData.a));
+      if (d < m.userData.half + 0.16){
+        m.userData.hit = true;
+        hit();
+      }
+    }
+  }
+
+  // HUD
+  elTime.textContent  = timeLeft.toFixed(1);
+  elSpeed.textContent = Math.round(speed * 3.4);
+  elBar.style.width   = Math.min(100, progress / COURSE_LEN * 100) + '%';
+
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
