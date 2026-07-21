@@ -10,6 +10,7 @@ Team T アプリ専用の UI 実体を置く。
 - `team-t-settings-dialog.tsx`・`use-team-t-appearance.ts`・`category-icon.tsx` — 端末内設定、外観の `<html>` 適用、カタログの意味アイコン
 - `catalog-search.tsx`・`catalog-tree.tsx` — カタログの検索・階層選択
 - `team-t-welcome.tsx`・`api-summary.tsx`・`api-preview.tsx` — welcome、選択概要、iframe workspace
+- `team-t-intro.tsx`・`intro-api-card.tsx` — 紹介タブの5ページ送りと、API1件分の縮小プレビュー・Javaコード・デモ導線
 - `*.stories.tsx` — Team T 固有 UI の主要状態を再現する Storybook story
 
 ## このディレクトリだけの約束

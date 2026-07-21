@@ -1,16 +1,16 @@
 "use client"
 
 import {
+  BookOpenIcon,
   Gamepad2Icon,
   MaximizeIcon,
   SearchIcon,
   ShapesIcon,
-  StarIcon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
-import { catalogStats, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
+import { catalogStats } from "@/lib/team-t-app/catalog"
 
 const startingPoints = [
   {
@@ -28,14 +28,10 @@ const startingPoints = [
 ]
 
 interface TeamTWelcomeProps {
-  firstRecommendation?: ApiCatalogItem
-  onSelect: (id: string) => void
+  onIntroOpen: () => void
 }
 
-export function TeamTWelcome({
-  firstRecommendation,
-  onSelect,
-}: TeamTWelcomeProps) {
+export function TeamTWelcome({ onIntroOpen }: TeamTWelcomeProps) {
   return (
     <section className="mx-auto flex min-h-[calc(100svh-3.5rem)] max-w-5xl flex-col justify-center px-4 py-10 md:px-8">
       <div className="max-w-2xl">
@@ -74,16 +70,14 @@ export function TeamTWelcome({
           <MaximizeIcon data-icon="inline-start" />
           全画面で開始
         </Button>
-        {firstRecommendation ? (
-          <Button
-            variant="outline"
-            onClick={() => onSelect(firstRecommendation.id)}
-            className="border-[color:var(--team-t-gold-line)] text-[color:var(--team-t-gold-strong)] hover:bg-primary/25 hover:text-[color:var(--team-t-gold-strong)]"
-          >
-            <StarIcon data-icon="inline-start" />
-            おすすめの「{firstRecommendation.title}」を試す
-          </Button>
-        ) : null}
+        <Button
+          variant="outline"
+          onClick={onIntroOpen}
+          className="border-[color:var(--team-t-gold-line)] text-[color:var(--team-t-gold-strong)] hover:bg-primary/25 hover:text-[color:var(--team-t-gold-strong)]"
+        >
+          <BookOpenIcon data-icon="inline-start" />
+          このアプリの紹介を見る →
+        </Button>
       </div>
       <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-2 border-t border-[color:var(--team-t-gold-line)] pt-6 text-sm">
         <div className="flex items-baseline gap-2">

@@ -13,11 +13,13 @@ export const recommendationIds = [
   "waifu",
   "countrysearch",
   "kabu",
-  "time",
   "weather",
   "anime",
   "sindan",
   "poke",
+  "zyouku",
+  "useless",
+  "utyu",
 ] as const
 
 export function getRecommendedItems(): ApiCatalogItem[] {

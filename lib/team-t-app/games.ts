@@ -79,6 +79,16 @@ export const teamTGames = [
     cost: 3,
     maxReward: 3,
   },
+  {
+    id: "neon-tunnel",
+    fileName: "neon-tunnel.html",
+    previewFileName: "neon-tunnel.png",
+    title: "ネオントンネル",
+    description: "光の回廊を駆け抜ける、制限時間つき3Dランナー。",
+    difficulty: "むずかしい",
+    cost: 3,
+    maxReward: 3,
+  },
 ] as const
 
 export type TeamTGame = (typeof teamTGames)[number]

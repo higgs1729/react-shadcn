@@ -47,6 +47,12 @@ Team T全体へそのまま適用できる既存screen patternはない。`dashb
 | Coin | Badge/Button primitives | compose | headerとgame hubで同じcontrolled表示を再利用 |
 | Progress | `components/ui/progress.tsx` | reuse | value/labelをcontrolledで表示 |
 | Guidance | Sonner + inline hint | compose | 初回進捗・coin獲得はtoast、常設入口はheader/sidebar。`notification-center-01`は過剰 |
+| Intro card primitives | Badge/Button/Collapsible | reuse | 無改変で使用 |
+| Intro card container | `ui/card`の`Card` | new | 当初案の reuse から変更。`Card`は`render`非対応で`<article>`にできず、既定の`ring-1 ring-foreground/10`が`--team-t-gold-line`の金線・グロー表現と両立しない。`team-t-game-dialog.tsx`・`team-t-settings-dialog.tsx`と同じ手組みコンテナ方針に揃え、`bg-card`等のtokenのみ流用する |
+| Intro page position | `ui/progress` | new | 当初案の reuse から変更。5ページの離散ナビでは、ドットが各ページへのジャンプ先(`aria-label="Nページ目へ"`)を兼ねる。非対話の`Progress`では機能が減る |
+| Intro live preview | `api-preview.tsx`のiframe表示パターン | adapt | 縮小ライブプレビューへ流用 |
+| Window tabs (intro) | `team-t-header.tsx`のタブ機構 | adapt | `kind`を追加して拡張し、探索/紹介/APIタブの種別をタブアイコン解決の正本にする |
+| Intro tour | new composition | new | `team-t-intro.tsx`・`intro-api-card.tsx` |
 
 ## Proposed component tree
 
@@ -159,6 +165,33 @@ Slice 1では以下だけを使用・作成する。
 - Game runtime: spend/refund、iframe lifecycle、trusted message validationを所有
 
 これらをregistryへ追加しない。別アプリで反復利用が実証された場合だけ後日stock taskを検討する。
+
+## Intro tour design decisions
+
+紹介タブ(Slice 7)固有のUI構造判断と、実装状態の窓口。
+
+### UI構造判断
+
+- メインAPIを各ページ先頭に置く。referenceの記載順ではサブとメインが混在していたが、主役を最初に見せる方が視線走査と一致するため。後から入れ替え可能な範囲の判断である
+- 視覚要素はiframeの縮小ライブプレビューを採用。スクリーンショットPNGは持たない。撮り直し運用が発生しないため。`loading="lazy"`と`pointer-events:none`でスクロールジャックを防ぐ
+- コード抜粋は既定で折りたたむ。1ページに3ブロックあり全開は認知負荷が高いため
+
+### Window/state ownership
+
+- `TeamTWindow.kind: "explore" | "intro" | "api"`を追加。探索と紹介はどちらも`apiId: null`のため、`apiId`の有無では判別できない。描画分岐とタブアイコン解決(`windowIcons`)の正本を`kind`に置いた
+- 紹介タブは常に1枚。既に開いていれば新規作成せずそのタブへ戻る(`openIntroWindow`)
+- 紹介タブ表示中のカタログ選択は現タブを上書きせず、新規APIタブを開く。読んでいた位置を潰さないため(`selectItem`が`openApiWindow`へ委譲)
+- hash同期は紹介タブを上書きしない(`window.kind !== "intro"`のガード)
+- 紹介の表示ページ番号はshellが所有(`introPageNumber`)。タブを離れると`TeamTIntro`はunmountされるため、component内stateでは読んでいた位置が失われる。この結果`TeamTIntro`はcontrolledになった
+- 縮小プレビューはiframeを1280×720の実寸で描画し、マウント時に`getBoundingClientRect()`で測った幅からscaleを算出する。`ResizeObserver`の初回通知は環境によって発火しないため、ROとwindowのresizeは追随用の補助として併用する
+- グリッドアイテムに`min-w-0`、コード開閉トリガーに`whitespace-normal`。`ui/button`既定の`whitespace-nowrap`が長いメソッド名でカード幅を押し広げ、モバイルでレイアウトが破綻したため
+- ページ送り後は見出し(`tabIndex={-1}`のh1)へフォーカスを移す。初回マウント時は移動しない
+
+### 未決事項(確定仕様ではない)
+
+- `sindan`(ブラック企業診断)と`3d`(多ジャンル3Dモデル召喚)は、実際には`WebApiController.java`に対応メソッドが存在しない。前者はHTML内で完結するローカルロジック、後者はthree.jsがglTFを直接取得している
+- 紹介ページ上のこの2件のJavaコードは、「Javaで実装されていたら」の想定コードであり実装の正本ではない。`sindan`は類似APIとしてOpenTDBのURLを用いている
+- 対応表の詳細は`lib/team-t-app/intro-tour.ts`を正本とし、本書では再掲しない
 
 ## Human decisions
 

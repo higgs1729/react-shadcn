@@ -35,6 +35,7 @@ import { ApiPreview } from "./api-preview"
 import { TeamTCoinBurst } from "./team-t-coin-burst"
 import { TeamTGameDialog } from "./team-t-game-dialog"
 import { TeamTHeader, type TeamTWindow } from "./team-t-header"
+import { TeamTIntro } from "./team-t-intro"
 import { TeamTSettingsDialog } from "./team-t-settings-dialog"
 import { TeamTSidebar } from "./team-t-sidebar"
 import { TeamTWelcome } from "./team-t-welcome"
@@ -111,9 +112,15 @@ function TeamTAppContent({
   const [gamesOpen, setGamesOpen] = React.useState(false)
   const [rewardJustEarned, setRewardJustEarned] = React.useState(false)
   const [windows, setWindows] = React.useState<TeamTWindow[]>([
-    { id: "window-1", apiId: null, title: "探索" },
+    { id: "window-1", kind: "explore", apiId: null, title: "探索" },
   ])
   const [activeWindowId, setActiveWindowId] = React.useState("window-1")
+  const activeWindow = windows.find((window) => window.id === activeWindowId)
+  // 紹介タブは離れると unmount されるので、読んでいたページは shell が保持する
+  const [introPageNumber, setIntroPageNumber] = React.useState(1)
+
+  const createWindowId = () =>
+    `window-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 
   React.useEffect(() => {
     if (!rewardJustEarned) return
@@ -132,8 +139,9 @@ function TeamTAppContent({
         if (item) {
           setWindows((current) =>
             current.map((window) =>
-              window.id === activeWindowId
-                ? { ...window, apiId: item.id, title: item.title }
+              // 紹介タブは hash を持たないので、外部からの hash 変更で上書きしない
+              window.id === activeWindowId && window.kind !== "intro"
+                ? { ...window, kind: "api", apiId: item.id, title: item.title }
                 : window
             )
           )
@@ -157,26 +165,49 @@ function TeamTAppContent({
     () => filterCatalog(getRecommendedItems(), query),
     [query]
   )
-  const allRecommendedItems = React.useMemo(() => getRecommendedItems(), [])
   const selectedItem = selection.selectedId
     ? catalog.find((item) => item.id === selection.selectedId)
     : undefined
-  const selectItem = (
-    id: string,
-    source: Exclude<SelectionState["source"], null>
-  ) => {
+  const pushHash = (id: string) =>
     window.history.pushState(
       null,
       "",
       `${window.location.pathname}${window.location.search}#${encodeURIComponent(id)}`
     )
+
+  /** 紹介の「デモを見る」用。今のタブを保ったまま、そのAPIのタブを追加して遷移する。 */
+  const openApiWindow = (id: string) => {
+    const item = catalog.find((entry) => entry.id === id)
+    if (!item) return
+    const windowId = createWindowId()
+    setWindows((current) => [
+      ...current,
+      { id: windowId, kind: "api", apiId: item.id, title: item.title },
+    ])
+    setActiveWindowId(windowId)
+    pushHash(id)
+    setSelection({ selectedId: id, invalidHash: null, source: "catalog" })
+    if (isMobile) setOpenMobile(false)
+    window.requestAnimationFrame(() => previewRef.current?.focus())
+  }
+
+  const selectItem = (
+    id: string,
+    source: Exclude<SelectionState["source"], null>
+  ) => {
+    // 紹介タブを見ている最中の選択は、読んでいた位置を潰さないよう別タブで開く
+    if (activeWindow?.kind === "intro") {
+      openApiWindow(id)
+      return
+    }
+    pushHash(id)
     setSelection({ selectedId: id, invalidHash: null, source })
     const item = catalog.find((entry) => entry.id === id)
     if (item) {
       setWindows((current) =>
         current.map((window) =>
           window.id === activeWindowId
-            ? { ...window, apiId: item.id, title: item.title }
+            ? { ...window, kind: "api", apiId: item.id, title: item.title }
             : window
         )
       )
@@ -195,15 +226,30 @@ function TeamTAppContent({
   }
 
   const openWindow = () => {
-    const id = `window-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
-    setWindows((current) => [...current, { id, apiId: null, title: "探索" }])
+    const id = createWindowId()
+    setWindows((current) => [
+      ...current,
+      { id, kind: "explore", apiId: null, title: "探索" },
+    ])
     setActiveWindowId(id)
-    window.history.replaceState(
-      null,
-      "",
-      `${window.location.pathname}${window.location.search}`
-    )
-    setSelection(emptySelection)
+    clearSelection()
+  }
+
+  /** ウェルカムの「このアプリの紹介を見る」用。紹介タブは1枚だけ持ち、既にあればそこへ戻る。 */
+  const openIntroWindow = () => {
+    const existing = windows.find((window) => window.kind === "intro")
+    if (existing) {
+      setActiveWindowId(existing.id)
+      clearSelection()
+      return
+    }
+    const id = createWindowId()
+    setWindows((current) => [
+      ...current,
+      { id, kind: "intro", apiId: null, title: "紹介" },
+    ])
+    setActiveWindowId(id)
+    clearSelection()
   }
 
   const switchWindow = (id: string) => {
@@ -281,7 +327,13 @@ function TeamTAppContent({
           onWindowSwitch={switchWindow}
           onWindowClose={closeWindow}
         />
-        {selection.invalidHash ? (
+        {activeWindow?.kind === "intro" ? (
+          <TeamTIntro
+            pageNumber={introPageNumber}
+            onPageChange={setIntroPageNumber}
+            onDemoOpen={openApiWindow}
+          />
+        ) : selection.invalidHash ? (
           <div className="grid min-h-[calc(100svh-3.5rem)] place-items-center p-8">
             <ErrorRecovery01
               title="指定されたAPIが見つかりません"
@@ -302,10 +354,7 @@ function TeamTAppContent({
             />
           </div>
         ) : (
-          <TeamTWelcome
-            firstRecommendation={allRecommendedItems[0]}
-            onSelect={(id) => selectItem(id, "catalog")}
-          />
+          <TeamTWelcome onIntroOpen={openIntroWindow} />
         )}
       </SidebarInset>
       <TeamTSettingsDialog

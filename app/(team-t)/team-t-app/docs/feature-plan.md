@@ -22,6 +22,7 @@
 | Game runtime | 消費・結果・返却を安全に処理する | P1 | game hub, message validation |
 | Local profile | 端末内表示名を設定する | P2 | preferences storage |
 | Catalog checks | 177/200とasset整合を守る | P0 | typed catalog |
+| App introduction | 初回ユーザーがWelcomeから紹介ツアーで主要APIを掴める | P1 | catalog, shell |
 
 ## Feature boundaries
 
@@ -62,6 +63,14 @@
 - namespaced storage migration/reset
 - storage unavailable/invalid JSON fallback
 - 「ログイン」「アカウント」表現を使用しない
+
+### App introduction
+
+- welcomeの「このアプリの紹介を見る →」から紹介タブを開く
+- 紹介タブは常に1枚。既に開いていれば新規作成せずそのタブへ戻る
+- 5ページ×(メイン1+サブ2)=15 APIを送る。対応の正本は`lib/team-t-app/intro-tour.ts`
+- 各ページのメインAPIの「デモを見る →」で新規APIタブを開いて遷移する
+- おすすめリストは`zyouku`・`useless`・`utyu`を追加、`time`・`ohuzake`を削除(15→16件)。正本は`lib/team-t-app/recommendations.ts`
 
 ### Reward and game
 
@@ -184,6 +193,26 @@ Done when:
 - app shellに重大なa11y違反がない
 - 外部API失敗がshellを停止させない
 - 177ページ・200 APIの掲載数を正しく表示する
+
+### Slice 7 — App introduction tour
+
+```text
+recommendations diff
+→ intro data (intro-tour.ts)
+→ welcome CTA
+→ window kind: intro
+→ TeamTIntro paging
+→ demo open to API window
+→ story coverage
+```
+
+Done when:
+
+- welcomeから紹介タブを開き、Page1〜5を送れる
+- 各ページのメインAPIから新規APIタブへ遷移できる
+- おすすめリスト16件と紹介15 APIの対応が`intro-tour.ts`と一致する
+
+実装順序の実績: 1〜4(データとボタン) → 5(ウィンドウ種別) → 6(紹介ビュー) → 7(デモ遷移) → 8(story)
 
 ## Dependencies and sequencing
 

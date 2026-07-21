@@ -1,17 +1,30 @@
 "use client"
 
-import { CompassIcon, PlusIcon, XIcon } from "lucide-react"
+import { BookOpenIcon, CompassIcon, PlusIcon, XIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
 import { ApiPageIcon } from "./category-icon"
 
+/**
+ * 探索と紹介はどちらも apiId を持たないため、apiId の有無だけでは種別を判別できない。
+ * 描画とタブ切替の分岐は kind を正本にする。
+ */
+export type TeamTWindowKind = "explore" | "intro" | "api"
+
 export interface TeamTWindow {
   id: string
+  kind: TeamTWindowKind
   apiId: string | null
   title: string
 }
+
+const windowIcons = {
+  explore: CompassIcon,
+  intro: BookOpenIcon,
+  api: ApiPageIcon,
+} as const
 
 interface TeamTHeaderProps {
   windows: readonly TeamTWindow[]
@@ -41,7 +54,7 @@ export function TeamTHeader({
       >
         {windows.map((window) => {
           const active = window.id === activeWindowId
-          const Icon = window.apiId ? ApiPageIcon : CompassIcon
+          const Icon = windowIcons[window.kind]
           return (
             <div
               key={window.id}
