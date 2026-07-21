@@ -73,7 +73,7 @@ export const SubCard: Story = {
   },
 }
 
-export const CodeExpanded: Story = {
+export const MainCardCodeExpanded: Story = {
   args: {
     entry: carsEntry,
     item: carsItem,
@@ -84,5 +84,53 @@ export const CodeExpanded: Story = {
       name: /Javaの実装コードを見る（/,
     })
     await userEvent.click(trigger)
+  },
+}
+
+export const SubCardCodeExpanded: Story = {
+  args: {
+    entry: zyoukuEntry,
+    item: zyoukuItem,
+    variant: "sub",
+    onDemoOpen: undefined,
+  },
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole("button", {
+      name: /Javaの実装コードを見る（/,
+    })
+    await userEvent.click(trigger)
+  },
+}
+
+export const MainCardCodeDialogOpened: Story = {
+  args: {
+    entry: carsEntry,
+    item: carsItem,
+    variant: "main",
+  },
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole("button", {
+      name: /Javaの実装コードを見る（/,
+    })
+    await userEvent.click(trigger)
+    const expandButton = canvas.getByRole("button", { name: "拡大して表示" })
+    await userEvent.click(expandButton)
+  },
+}
+
+export const SubCardCodeDialogOpened: Story = {
+  args: {
+    entry: zyoukuEntry,
+    item: zyoukuItem,
+    variant: "sub",
+    onDemoOpen: undefined,
+  },
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole("button", {
+      name: /Javaの実装コードを見る（/,
+    })
+    await userEvent.click(trigger)
+    const expandButton = canvas.getByRole("button", { name: "拡大して表示" })
+    await userEvent.click(expandButton)
   },
 }

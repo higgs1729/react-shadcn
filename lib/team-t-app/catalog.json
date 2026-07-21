@@ -2018,7 +2018,7 @@
     "category": "エンタメ・おもしろ系",
     "categoryPath": ["エンタメ・おもしろ系"],
     "description": "質問に答えてブラック企業適性を診断する",
-    "apiName": "ローカルデータ",
+    "apiName": "getSindanQuestions",
     "icon": "ti-help",
     "apiCount": 1
   },

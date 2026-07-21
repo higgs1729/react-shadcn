@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ChevronRightIcon, PlayIcon } from "lucide-react"
+import { ChevronRightIcon, Maximize2Icon, PlayIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -10,24 +10,55 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { getApiPageUrl, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
 import type { IntroApiEntry } from "@/lib/team-t-app/intro-tour"
 
 import { CategoryIcon } from "./category-icon"
+import { JavaCodeBlock } from "./java-code-block"
 
 // iframe を「縮小したデスクトップ画面」として見せるための基準サイズ。
 // 実寸で描画してから ResizeObserver で測った幅に合わせて scale する。
 const PREVIEW_WIDTH = 1280
 const PREVIEW_HEIGHT = 720
 
-/** intro-tour.ts の javaCode は可読性のためインデント付きで書かれているので、表示前に揃える。 */
-function dedent(code: string) {
-  const lines = code.replace(/^\n+/, "").replace(/\s+$/, "").split("\n")
-  const indents = lines
-    .filter((line) => line.trim())
-    .map((line) => line.length - line.trimStart().length)
-  const shortest = indents.length ? Math.min(...indents) : 0
-  return lines.map((line) => line.slice(shortest)).join("\n")
+/**
+ * ダイアログは document.body へ portal されるため、Team T の SidebarInset
+ * (サイドバー右側の表示領域)の外に描画される。components/ui/dialog.tsx の
+ * left-1/2 のままだとブラウザ画面全体の中央に揃い、サイドバー幅の分だけ
+ * 表示領域の中心より左寄りに見えてしまう。SidebarInset を実測してその中心へ
+ * left を明示的に上書きし、見つからない場合(story など)は class 側の
+ * left-1/2 にフォールバックする。
+ */
+function useDialogCenterLeft(open: boolean) {
+  const [left, setLeft] = React.useState<number | null>(null)
+
+  React.useEffect(() => {
+    if (!open) return
+    const inset = document.querySelector<HTMLElement>(
+      '[data-slot="sidebar-inset"]'
+    )
+    if (!inset) return
+    const measure = () => {
+      const rect = inset.getBoundingClientRect()
+      setLeft(rect.left + rect.width / 2)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(inset)
+    window.addEventListener("resize", measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener("resize", measure)
+    }
+  }, [open])
+
+  return left
 }
 
 function LivePreview({
@@ -99,6 +130,8 @@ export function IntroApiCard({
   onDemoOpen,
 }: IntroApiCardProps) {
   const isMain = variant === "main"
+  const [dialogOpen, setDialogOpen] = React.useState(false)
+  const dialogLeft = useDialogCenterLeft(dialogOpen)
 
   return (
     <article
@@ -153,9 +186,40 @@ export function IntroApiCard({
           Javaの実装コードを見る（{entry.javaMethodNames.join(" / ")}）
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <pre className="mt-2 max-h-80 overflow-auto rounded-lg border border-border bg-black/45 p-3 text-xs leading-relaxed">
-            <code className="text-foreground/85">{dedent(entry.javaCode)}</code>
-          </pre>
+          <div className="relative mt-2">
+            <JavaCodeBlock code={entry.javaCode} className="max-h-80" />
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger
+                data-team-t-code-dialog-trigger
+                render={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon-sm"
+                    className="absolute top-2 right-2 z-10 border-[color:var(--team-t-gold-line)] bg-card/90 text-muted-foreground shadow-sm backdrop-blur-sm hover:text-[color:var(--team-t-gold-strong)]"
+                  />
+                }
+              >
+                <Maximize2Icon />
+                <span className="sr-only">拡大して表示</span>
+              </DialogTrigger>
+              <DialogContent
+                className="sm:max-w-5xl"
+                style={dialogLeft != null ? { left: dialogLeft } : undefined}
+              >
+                {/* 見た目上のタイトルは不要という要望だが、DialogTitle が無いと
+                    aria-labelledby が付かずダイアログの目的が伝わらないため、
+                    視覚的に隠したまま残す。 */}
+                <DialogTitle className="sr-only">
+                  {item.title} の実装コード
+                </DialogTitle>
+                <JavaCodeBlock
+                  code={entry.javaCode}
+                  className="max-h-[65vh]"
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </CollapsibleContent>
       </Collapsible>
 

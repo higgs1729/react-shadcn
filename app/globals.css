@@ -227,6 +227,26 @@ html[data-emphasize-borders="true"][data-team-t-theme="light"] {
   --team-t-gold-line: rgba(109, 85, 31, 0.7);
 }
 
+/* Java code highlighting (components/team-t-app/java-code-block.tsx). Token
+   colors are shiki's css-variables theme output (--shiki-token-*), mapped
+   onto tokens the app already themes elsewhere (--muted, --chart-*,
+   --team-t-gold-strong). Because these are live var() references and not
+   copied values, switching Team T theme/accent re-colors the code block
+   automatically — no per-theme duplication needed here. */
+:root {
+  --shiki-background: var(--muted);
+  --shiki-foreground: var(--foreground);
+  --shiki-token-comment: var(--muted-foreground);
+  --shiki-token-punctuation: var(--muted-foreground);
+  --shiki-token-parameter: var(--foreground);
+  --shiki-token-keyword: var(--chart-2);
+  --shiki-token-function: var(--chart-3);
+  --shiki-token-constant: var(--chart-1);
+  --shiki-token-string: var(--team-t-gold-strong, var(--chart-4));
+  --shiki-token-string-expression: var(--team-t-gold-strong, var(--chart-4));
+  --shiki-token-link: var(--team-t-gold-strong, var(--chart-4));
+}
+
 /* The pattern-inventory preview boxes carry a placeholder border (transparent
    by default so they blend in) that becomes visible only while border
    emphasis is on. */
