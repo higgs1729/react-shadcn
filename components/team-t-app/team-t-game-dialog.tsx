@@ -45,7 +45,6 @@ function getSlideMetrics(carousel: HTMLDivElement) {
 interface TeamTGameDialogProps {
   open: boolean
   coinCount: number
-  themeClassName: string
   onOpenChange: (open: boolean) => void
   onSpend: (cost: number) => boolean
   onRefund: (cost: number) => void
@@ -61,7 +60,6 @@ type GameResult =
 export function TeamTGameDialog({
   open,
   coinCount,
-  themeClassName,
   onOpenChange,
   onSpend,
   onRefund,
@@ -152,7 +150,7 @@ export function TeamTGameDialog({
   return (
     <Dialog open={open} onOpenChange={closeGame}>
       <DialogContent
-        className={`${themeClassName} dark aspect-[1678/942] h-auto w-[min(80rem,calc(100vw-2rem),calc((100dvh-2rem)*1.781))] max-w-none min-w-0 overflow-hidden border-0 bg-[#09090b] p-0 text-[#f7f1e7] shadow-[0_28px_90px_rgba(0,0,0,0.7)] sm:max-w-none`}
+        className="team-t-midnight-surface dark aspect-[1678/942] h-auto w-[min(80rem,calc(100vw-2rem),calc((100dvh-2rem)*1.781))] max-w-none min-w-0 overflow-hidden border-0 bg-[#09090b] p-0 text-[#f7f1e7] shadow-[0_28px_90px_rgba(0,0,0,0.7)] sm:max-w-none"
         style={{
           backgroundImage: `url("${gamePopupFrameUrl}")`,
           backgroundPosition: "center",

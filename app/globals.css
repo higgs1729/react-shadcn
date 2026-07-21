@@ -116,6 +116,83 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Team T app themes. Applied as data-team-t-theme on <html> while the Team T
+   route is mounted, so portals (mobile sidebar Sheet, dialogs) inherit the
+   tokens too. dark/midnight also carry the .dark class so the dark: variants
+   inside components/ui/* resolve; these blocks win over :root/.dark because
+   html[attr] outranks a bare class. */
+html[data-team-t-theme="midnight"],
+.team-t-midnight-surface {
+  --background: #09090b;
+  --foreground: #f2ead9;
+  --card: #121116;
+  --card-foreground: #f2ead9;
+  --popover: #121116;
+  --popover-foreground: #f2ead9;
+  --primary: #4c2378;
+  --primary-foreground: #ffffff;
+  --secondary: #1c1a20;
+  --secondary-foreground: #f2ead9;
+  --muted: #17151a;
+  --muted-foreground: #a89f92;
+  --accent: #241c33;
+  --accent-foreground: #f2ead9;
+  --border: rgba(185, 154, 92, 0.28);
+  --input: rgba(185, 154, 92, 0.22);
+  --ring: #9b6cff;
+  --sidebar: #0c0b0e;
+  --sidebar-foreground: #f0e9dc;
+  --sidebar-primary: #4c2378;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1d1a22;
+  --sidebar-accent-foreground: #f2ead9;
+  --sidebar-border: rgba(185, 154, 92, 0.22);
+  --sidebar-ring: #9b6cff;
+  --team-t-gold: #c7ab70;
+  --team-t-gold-strong: #d8bf88;
+  --team-t-gold-on-primary: #d8bf88;
+  --team-t-gold-line: rgba(185, 154, 92, 0.35);
+}
+
+html[data-team-t-theme="dark"] {
+  --primary: #5a2c8c;
+  --primary-foreground: #ffffff;
+  --ring: #9b6cff;
+  --border: rgba(185, 154, 92, 0.24);
+  --input: rgba(185, 154, 92, 0.2);
+  --sidebar-primary: #5a2c8c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-border: rgba(185, 154, 92, 0.2);
+  --sidebar-ring: #9b6cff;
+  --team-t-gold: #c7ab70;
+  --team-t-gold-strong: #d8bf88;
+  --team-t-gold-on-primary: #d8bf88;
+  --team-t-gold-line: rgba(185, 154, 92, 0.3);
+}
+
+/* Light keeps the gold identity but has to darken it: the midnight gold sits at
+   roughly 2:1 on a near-white surface. gold-on-primary stays light because it
+   is only used on the solid purple primary fill. */
+html[data-team-t-theme="light"] {
+  --primary: #4c2378;
+  --primary-foreground: #ffffff;
+  --ring: #7c4dcc;
+  --border: rgba(109, 85, 31, 0.28);
+  --input: rgba(109, 85, 31, 0.24);
+  --sidebar: #faf7f0;
+  --sidebar-foreground: #201c14;
+  --sidebar-primary: #4c2378;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1ece0;
+  --sidebar-accent-foreground: #201c14;
+  --sidebar-border: rgba(109, 85, 31, 0.22);
+  --sidebar-ring: #7c4dcc;
+  --team-t-gold: #6d551f;
+  --team-t-gold-strong: #5f4a1e;
+  --team-t-gold-on-primary: #e8d3a0;
+  --team-t-gold-line: rgba(109, 85, 31, 0.35);
+}
+
 /* Emphasize borders: keeps background and foreground colors untouched and only
    darkens the border/input/sidebar-border tokens so element outlines read
    clearly. Toggled from Settings > 外観 via the data-emphasize-borders
@@ -131,6 +208,23 @@ html[data-emphasize-borders="true"].dark {
   --border: oklch(0.556 0 0);
   --input: oklch(0.556 0 0);
   --sidebar-border: oklch(0.556 0 0);
+}
+
+/* Team T emphasizes with gold rather than neutral grey, so the outline still
+   reads as part of the trophy-room identity. Two attributes on <html> outrank
+   the single-attribute theme blocks above. */
+html[data-emphasize-borders="true"][data-team-t-theme] {
+  --border: rgba(199, 171, 112, 0.6);
+  --input: rgba(199, 171, 112, 0.55);
+  --sidebar-border: rgba(199, 171, 112, 0.5);
+  --team-t-gold-line: rgba(199, 171, 112, 0.7);
+}
+
+html[data-emphasize-borders="true"][data-team-t-theme="light"] {
+  --border: rgba(109, 85, 31, 0.65);
+  --input: rgba(109, 85, 31, 0.6);
+  --sidebar-border: rgba(109, 85, 31, 0.55);
+  --team-t-gold-line: rgba(109, 85, 31, 0.7);
 }
 
 /* The pattern-inventory preview boxes carry a placeholder border (transparent

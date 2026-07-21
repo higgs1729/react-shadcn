@@ -45,8 +45,9 @@ route composition
 
 - Slice 1–2 は専用shell composition、型付きcatalog、明示IDのおすすめ、同一originの紹介HTML asset、URL hashによる選択復元で構成する
 - `public/` assetはNext.jsの`assetPrefix`対象外のため、`/team-t-app/` routeからの相対URLを専用helperで生成する
-- Slice 3 の端末内プロフィールと表示設定(動きを減らす)は `team-t:v1:preferences` と `team-t:v1:profile` だけを操作する。保存不可・不正データ時は既定値で継続し、全体のtheme storageや認証状態には触れない
-- 見た目はミッドナイトトロフィールーム(黒地・ゴールド・紫)へ一本化した固定theme。theme/accentのユーザー切替は提供しない(2026-07-17、`ui-selection.md` Human decisions #4)
+- Slice 3 の端末内プロフィールと表示設定(theme・accent・枠線・動きを減らす)は `team-t:v1:preferences` と `team-t:v1:profile` だけを操作する。保存不可・不正データ時は既定値で継続し、ルートのnext-themes storageや認証状態には触れない
+- 見た目は ミッドナイトトロフィールーム(既定) / ダーク / ライト の3themeをユーザーが選べる。ミッドナイトは配色固定でaccent変更不可、light/darkのみ5色accentが効く(2026-07-21、`ui-selection.md` Human decisions #6)
+- theme・accent・枠線・reduce motion は `<html>` の `data-team-t-theme` 属性(と `.dark` クラス、accentのinline custom property)へ適用する。共有 `components/ui/sidebar.tsx` がモバイルsidebarをSheetポータルで描画し className も渡さないため、ラッパーdivスコープではポータルへ変数が届かない。`<html>` はルートのnext-themesと共有するので、mount時の状態を控えてunmountで復元する(`components/team-t-app/use-team-t-appearance.ts`)
 - サーバー認証、永続backend、外部APIの事前稼働保証はV1境界に含めない
 
 ## 後続判断

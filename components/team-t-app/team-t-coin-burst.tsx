@@ -19,7 +19,7 @@ export function TeamTCoinBurst({ visible }: { visible: boolean }) {
           100% { opacity: 0; transform: translateY(-0.5rem) scale(0.96); }
         }
         .team-t-coin-burst { animation: team-t-coin-burst 1.8s ease-out both; }
-        .team-t-reduce-motion .team-t-coin-burst { animation: none; }
+        html[data-reduce-motion="true"] .team-t-coin-burst { animation: none; }
         @media (prefers-reduced-motion: reduce) {
           .team-t-coin-burst { animation: none; }
         }

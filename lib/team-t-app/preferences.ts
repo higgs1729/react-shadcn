@@ -4,7 +4,61 @@ export const teamTStorageKeys = {
   reward: "team-t:v1:reward",
 } as const
 
+export const teamTThemes = ["midnight", "dark", "light"] as const
+
+export type TeamTTheme = (typeof teamTThemes)[number]
+
+export const teamTThemeLabels: Record<TeamTTheme, string> = {
+  midnight: "ミッドナイトトロフィールーム",
+  dark: "ダーク",
+  light: "ライト",
+}
+
+/** ミッドナイトは配色が固定なので、アクセントは light/dark でだけ効く。 */
+export const teamTAccents = [
+  {
+    id: "violet",
+    label: "バイオレット",
+    primary: "#4c2378",
+    sidebar: "#5a2c8c",
+    ring: "#9b6cff",
+  },
+  {
+    id: "indigo",
+    label: "インディゴ",
+    primary: "oklch(0.457 0.24 277.023)",
+    sidebar: "oklch(0.511 0.262 276.966)",
+    ring: "oklch(0.511 0.262 276.966)",
+  },
+  {
+    id: "cyan",
+    label: "シアン",
+    primary: "oklch(0.5 0.15 220)",
+    sidebar: "oklch(0.56 0.16 220)",
+    ring: "oklch(0.56 0.16 220)",
+  },
+  {
+    id: "emerald",
+    label: "エメラルド",
+    primary: "oklch(0.49 0.14 155)",
+    sidebar: "oklch(0.55 0.15 155)",
+    ring: "oklch(0.55 0.15 155)",
+  },
+  {
+    id: "amber",
+    label: "アンバー",
+    primary: "oklch(0.58 0.15 80)",
+    sidebar: "oklch(0.63 0.16 80)",
+    ring: "oklch(0.63 0.16 80)",
+  },
+] as const
+
+export type TeamTAccentId = (typeof teamTAccents)[number]["id"]
+
 export interface TeamTPreferences {
+  theme: TeamTTheme
+  accent: TeamTAccentId
+  emphasizeBorders: boolean
   reduceMotion: boolean
 }
 
@@ -13,6 +67,9 @@ export interface TeamTProfile {
 }
 
 export const defaultTeamTPreferences: TeamTPreferences = {
+  theme: "midnight",
+  accent: "violet",
+  emphasizeBorders: false,
   reduceMotion: false,
 }
 
@@ -31,12 +88,35 @@ function readJSON(storage: StorageLike, key: string): unknown {
   }
 }
 
+function isTeamTTheme(value: unknown): value is TeamTTheme {
+  return teamTThemes.some((theme) => theme === value)
+}
+
+function isTeamTAccentId(value: unknown): value is TeamTAccentId {
+  return teamTAccents.some((accent) => accent.id === value)
+}
+
+export function getTeamTAccent(id: TeamTAccentId) {
+  return teamTAccents.find((accent) => accent.id === id) ?? teamTAccents[0]
+}
+
 export function readTeamTPreferences(storage: StorageLike): TeamTPreferences {
   const value = readJSON(storage, teamTStorageKeys.preferences)
   if (!value || typeof value !== "object") return defaultTeamTPreferences
 
+  // 外観設定を足す前に保存された記録には theme/accent が無いので、既定へ落とす。
   const candidate = value as Partial<TeamTPreferences>
   return {
+    theme: isTeamTTheme(candidate.theme)
+      ? candidate.theme
+      : defaultTeamTPreferences.theme,
+    accent: isTeamTAccentId(candidate.accent)
+      ? candidate.accent
+      : defaultTeamTPreferences.accent,
+    emphasizeBorders:
+      typeof candidate.emphasizeBorders === "boolean"
+        ? candidate.emphasizeBorders
+        : defaultTeamTPreferences.emphasizeBorders,
     reduceMotion:
       typeof candidate.reduceMotion === "boolean"
         ? candidate.reduceMotion

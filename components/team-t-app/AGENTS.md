@@ -7,7 +7,7 @@ Team T アプリ専用の UI 実体を置く。
 ## 索引
 
 - `team-t-app-shell.tsx`・`team-t-sidebar.tsx`・`team-t-header.tsx` — Team T の状態所有と探索 shell
-- `team-t-settings-dialog.tsx`・`category-icon.tsx` — 端末内設定とカタログの意味アイコン
+- `team-t-settings-dialog.tsx`・`use-team-t-appearance.ts`・`category-icon.tsx` — 端末内設定、外観の `<html>` 適用、カタログの意味アイコン
 - `catalog-search.tsx`・`catalog-tree.tsx` — カタログの検索・階層選択
 - `team-t-welcome.tsx`・`api-summary.tsx`・`api-preview.tsx` — welcome、選択概要、iframe workspace
 - `*.stories.tsx` — Team T 固有 UI の主要状態を再現する Storybook story
