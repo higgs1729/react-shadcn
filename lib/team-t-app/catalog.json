@@ -597,7 +597,8 @@
     "apiName": "CountriesNow API",
     "officialUrl": "https://countriesnow.space/",
     "icon": "ti-globe",
-    "apiCount": 1
+    "apiCount": 1,
+    "previewFileName": "countrysearch.png"
   },
   {
     "id": "ziptastic",
@@ -980,7 +981,8 @@
     "apiName": "気象庁 予報JSON",
     "officialUrl": "https://www.jma.go.jp/bosai/forecast/",
     "icon": "ti-planet",
-    "apiCount": 1
+    "apiCount": 1,
+    "previewFileName": "weather.png"
   },
   {
     "id": "wttr-in",

@@ -11,6 +11,8 @@ export interface ApiCatalogItem {
   officialUrl?: string
   icon: string
   apiCount: number
+  /** 静止画で紹介プレビューを差し替えたい item だけが持つ (未指定なら iframe のまま) */
+  previewFileName?: string
 }
 
 export interface ApiCatalogGroup {
@@ -83,4 +85,10 @@ export function getApiPageUrl(item: ApiCatalogItem) {
     .join("/")
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
   return `${basePath}/team-t-app/api-pages/${safePath}`
+}
+
+export function getApiPreviewImageUrl(item: ApiCatalogItem) {
+  if (!item.previewFileName) return undefined
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+  return `${basePath}/team-t-app/api-page-previews/${encodeURIComponent(item.previewFileName)}`
 }
