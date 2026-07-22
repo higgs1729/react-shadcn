@@ -116,7 +116,7 @@ export function TeamTWorldExitGate({
               : "border-[#9b6cff]/70 bg-[#0b0710]/85 text-[#d8cfc0]"
           }`}
         >
-          {active ? "E でアーケードを出る" : "帰還ゲート"}
+          {active ? "Enter でアーケードを出る" : "帰還ゲート"}
         </button>
       </Html>
     </group>

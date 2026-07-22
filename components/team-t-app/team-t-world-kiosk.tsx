@@ -79,7 +79,7 @@ export function TeamTWorldKioskMesh({
               className="mt-2 w-full rounded-lg border border-[#c7ab70] bg-[#4c2378] px-3 py-1.5 text-xs font-semibold text-white shadow-[0_0_18px_rgba(139,92,246,0.5)] transition-colors hover:bg-[#613392]"
               onClick={() => onInteract(kiosk.index)}
             >
-              E で起動
+              Enter で起動
             </button>
           </div>
         </Html>
