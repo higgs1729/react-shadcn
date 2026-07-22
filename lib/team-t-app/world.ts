@@ -1,4 +1,5 @@
 import { teamTGames, type TeamTGame } from "./games"
+import type { TeamTWorldSkinId } from "./preferences"
 
 /** APIアーケード(3Dゲーム選択)の純データ。 */
 
@@ -11,6 +12,49 @@ export const TEAM_T_WORLD_PALETTE = {
   gold: "#d8bf88",
   goldBright: "#ffe6a8",
 } as const
+
+/** 同一ゲーマーモデルへ適用する色・発光アクセント違いのスキン。 */
+export const TEAM_T_WORLD_SKINS: readonly {
+  id: TeamTWorldSkinId
+  label: string
+  description: string
+  tint: string
+  emissive: string
+  preview: readonly [string, string]
+}[] = [
+  {
+    id: "violet",
+    label: "ネオンバイオレット",
+    description: "アーケードの紫光になじむ定番カラー",
+    tint: "#d9c8ff",
+    emissive: "#9b6cff",
+    preview: ["#9b6cff", "#d84bff"],
+  },
+  {
+    id: "cyan",
+    label: "サイバーシアン",
+    description: "青緑の光が映えるクールなカラー",
+    tint: "#b9f3ff",
+    emissive: "#42d9ff",
+    preview: ["#42d9ff", "#5478ff"],
+  },
+  {
+    id: "sunset",
+    label: "サンセットゴールド",
+    description: "金とマゼンタを合わせた暖色カラー",
+    tint: "#ffe0b8",
+    emissive: "#ff9d5c",
+    preview: ["#ffe6a8", "#ff6fae"],
+  },
+  {
+    id: "mono",
+    label: "ミッドナイトモノ",
+    description: "落ち着いた白銀のハイコントラスト",
+    tint: "#e1e5f0",
+    emissive: "#f7f1e7",
+    preview: ["#f7f1e7", "#626779"],
+  },
+]
 
 /** 店内の寸法と操作判定。座標系は y-up、入口側が +Z。 */
 export const WORLD_LAYOUT = {
