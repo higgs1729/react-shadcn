@@ -22,5 +22,8 @@
 
 - (a11y) `badge` の `destructive` variant が contrast ≈4.0:1 < 4.5。`components/ui/*` 保護のため token 修正は人間承認待ち
 - (互換) `command-search-01` story が storybook vitest browser + React 19 で render crash(cmdk 非互換、a11y ではない)
+- (CI) 両 workflow の `actions/checkout@v4`・`actions/setup-node@v4` が Node 20 を指しており、runner 側で
+  Node 24 へ強制実行されている(GitHub の Node 20 廃止告知による警告)。現状は警告のみで失敗しないが、
+  廃止完了までに `@v5` 系へ更新する
 - (小粒) `validate:pipeline` 引数フォールバックの必須化余地 / `run-eval.mjs` の編集禁止パスが AGENTS.md と重複 /
   BOM 除去処理の重複 / `gen-pattern-stories.mjs` の手書き fixture 依存 / `file-upload-area-01` の nativeButton 警告
