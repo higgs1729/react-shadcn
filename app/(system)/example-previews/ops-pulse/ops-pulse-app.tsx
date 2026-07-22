@@ -12,6 +12,7 @@ import {
   ServerCogIcon,
   ShieldCheckIcon,
   TriangleAlertIcon,
+  type LucideIcon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -54,7 +55,10 @@ const opsFixture = {
   ] satisfies Incident[],
 }
 
-const navItems: { view: View; label: string; icon: React.ElementType }[] = [
+// Icon slots are typed as LucideIcon, not React.ElementType: @react-three/fiber
+// augments JSX.IntrinsicElements with three.js tags, and ElementType defaults to
+// every intrinsic tag — which makes DOM props like className resolve to never.
+const navItems: { view: View; label: string; icon: LucideIcon }[] = [
   { view: "overview", label: "Overview", icon: LayoutDashboardIcon },
   { view: "incidents", label: "Incidents", icon: TriangleAlertIcon },
   { view: "services", label: "Services", icon: ServerCogIcon },
@@ -67,7 +71,7 @@ function StatusBadge({ status }: { status: IncidentStatus | "Operational" | "Deg
   </span>
 }
 
-function MetricCard({ label, value, detail, icon: Icon }: { label: string; value: string; detail: string; icon: React.ElementType }) {
+function MetricCard({ label, value, detail, icon: Icon }: { label: string; value: string; detail: string; icon: LucideIcon }) {
   return <section className="rounded-xl border bg-card p-4 shadow-sm"><div className="flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><Icon className="size-4" aria-hidden="true" /></div><p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></section>
 }
 

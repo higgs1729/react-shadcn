@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { Settings2Icon } from "lucide-react"
 
+import { ResizableSidebarRail } from "@/components/resizable-sidebar-rail"
 import { Button } from "@/components/ui/button"
 import {
   Sidebar,
@@ -153,7 +154,9 @@ export function TeamTSidebar({
           onEnter={onGamesOpen}
         />
       </SidebarFooter>
-      <SidebarRail />
+      {/* variant="inset" は container 側に p-2 があるので、rail の位置合わせを
+          既定 variant と分ける必要がある。 */}
+      <ResizableSidebarRail variant="inset" />
     </Sidebar>
   )
 }

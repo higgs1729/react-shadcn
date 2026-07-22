@@ -80,6 +80,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --scrollbar-thumb: oklch(0.145 0 0 / 26%);
+  --scrollbar-track: transparent;
 }
 
 .dark {
@@ -114,6 +116,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --scrollbar-thumb: oklch(0.985 0 0 / 24%);
+  --scrollbar-track: transparent;
 }
 
 /* Team T app themes. Applied as data-team-t-theme on <html> while the Team T
@@ -151,14 +155,49 @@ html[data-team-t-theme="midnight"],
   --team-t-gold-strong: #d8bf88;
   --team-t-gold-on-primary: #d8bf88;
   --team-t-gold-line: rgba(185, 154, 92, 0.35);
+  --scrollbar-thumb: rgba(185, 154, 92, 0.42);
+  --scrollbar-track: transparent;
 }
 
-html[data-team-t-theme="dark"],
+html[data-team-t-theme="dark"] {
+  --primary: #5a2c8c;
+  --primary-foreground: #ffffff;
+  --ring: #9b6cff;
+  --border: rgba(185, 154, 92, 0.24);
+  --input: rgba(185, 154, 92, 0.2);
+  --sidebar-primary: #5a2c8c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-border: rgba(185, 154, 92, 0.2);
+  --sidebar-ring: #9b6cff;
+  --team-t-gold: #c7ab70;
+  --team-t-gold-strong: #d8bf88;
+  --team-t-gold-on-primary: #d8bf88;
+  --team-t-gold-line: rgba(185, 154, 92, 0.3);
+  --scrollbar-thumb: rgba(185, 154, 92, 0.4);
+}
+
+/* Light keeps the gold identity but has to darken it: the midnight gold sits at
+   roughly 2:1 on a near-white surface. gold-on-primary stays light because it
+   is only used on the solid purple primary fill. */
 html[data-team-t-theme="light"] {
-  --team-t-gold: var(--primary);
-  --team-t-gold-strong: var(--foreground);
-  --team-t-gold-on-primary: var(--primary-foreground);
-  --team-t-gold-line: var(--border);
+  --primary: #4c2378;
+  --primary-foreground: #ffffff;
+  --ring: #7c4dcc;
+  --border: rgba(109, 85, 31, 0.28);
+  --input: rgba(109, 85, 31, 0.24);
+  --sidebar: #faf7f0;
+  --sidebar-foreground: #201c14;
+  --sidebar-primary: #4c2378;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1ece0;
+  --sidebar-accent-foreground: #201c14;
+  --sidebar-border: rgba(109, 85, 31, 0.22);
+  --sidebar-ring: #7c4dcc;
+  --team-t-gold: #6d551f;
+  --team-t-gold-strong: #5f4a1e;
+  --team-t-gold-on-primary: #e8d3a0;
+  --team-t-gold-line: rgba(109, 85, 31, 0.35);
+  --scrollbar-thumb: rgba(109, 85, 31, 0.42);
 }
 
 /* Emphasize borders: keeps background and foreground colors untouched and only
@@ -170,12 +209,14 @@ html[data-emphasize-borders="true"]:not(.dark) {
   --border: oklch(0.556 0 0);
   --input: oklch(0.556 0 0);
   --sidebar-border: oklch(0.556 0 0);
+  --scrollbar-thumb: oklch(0.145 0 0 / 45%);
 }
 
 html[data-emphasize-borders="true"].dark {
   --border: oklch(0.556 0 0);
   --input: oklch(0.556 0 0);
   --sidebar-border: oklch(0.556 0 0);
+  --scrollbar-thumb: oklch(0.985 0 0 / 42%);
 }
 
 /* Only midnight keeps the gold border treatment. Dark and light use the
@@ -185,6 +226,15 @@ html[data-emphasize-borders="true"][data-team-t-theme="midnight"] {
   --input: rgba(199, 171, 112, 0.55);
   --sidebar-border: rgba(199, 171, 112, 0.5);
   --team-t-gold-line: rgba(199, 171, 112, 0.7);
+  --scrollbar-thumb: rgba(199, 171, 112, 0.65);
+}
+
+html[data-emphasize-borders="true"][data-team-t-theme="light"] {
+  --border: rgba(109, 85, 31, 0.65);
+  --input: rgba(109, 85, 31, 0.6);
+  --sidebar-border: rgba(109, 85, 31, 0.55);
+  --team-t-gold-line: rgba(109, 85, 31, 0.7);
+  --scrollbar-thumb: rgba(109, 85, 31, 0.65);
 }
 
 /* Java code highlighting (components/team-t-app/java-code-block.tsx). Token
@@ -231,27 +281,29 @@ html[data-emphasize-borders="true"] .inventory-preview {
   html {
     @apply font-sans;
   }
-
-  *::-webkit-scrollbar {
-    width: 0.75rem;
-    height: 0.75rem;
+  /* スクロールバーの根本解決。個々の overflow 箇所にユーティリティを足して回る
+     運用をやめ、ここ一箇所で全スクロール領域(文書スクロールバーを含む)と、
+     今後増える箇所も既定でテーマ色にする。値はトークン参照なので dark /
+     Team T の各テーマとボーダー強調にそのまま追従する。
+     二段構えなのは継承の違いによる: scrollbar-color は継承プロパティなので
+     html に一度書けば伝播するが、scrollbar-width は非継承なので * が要る。
+     opt-out は base より後の utilities レイヤーが勝つため、no-scrollbar・
+     scrollbar-none・message-scroller の scrollbar-thumb-* は従来どおり効く。
+     未対応ブラウザ(Safari 18.1 以前)は OS 既定へフォールバックする。 */
+  html {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
-
-  *::-webkit-scrollbar-track {
-    background: transparent;
+  * {
+    scrollbar-width: thin;
   }
+}
 
-  *::-webkit-scrollbar-thumb {
-    border: 0.2rem solid transparent;
-    border-radius: 9999px;
-    background: color-mix(in oklab, var(--foreground) 18%, transparent);
-    background-clip: padding-box;
-  }
-
-  *::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in oklab, var(--foreground) 30%, transparent);
-    background-clip: padding-box;
-  }
+/* サイドバーのドラッグ中だけ幅の transition を切る。ui/sidebar.tsx の
+   transition-[width] duration-200 が残ったままだとポインタに 200ms 遅れて
+   ついてくる。ui/* は編集禁止なのでここから当てる。 */
+html[data-sidebar-resizing="true"] [data-slot="sidebar-gap"],
+html[data-sidebar-resizing="true"] [data-slot="sidebar-container"] {
+  transition: none !important;
 }
 
 html[data-reduce-motion="true"] *,

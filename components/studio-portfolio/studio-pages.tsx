@@ -883,7 +883,7 @@ export function PatternsPage() {
             </DrawerDescription>
           </DrawerHeader>
           {selectedPattern && (
-            <div className="min-h-0 overflow-y-auto px-4 py-4">
+            <div className="min-h-0 scrollbar-gutter-stable overflow-y-auto px-4 py-4">
               <DetailOverview
                 title={selectedPattern.name}
                 status={selectedPattern.maturity}
@@ -1154,7 +1154,7 @@ export function LegacyStudioWorkspace() {
               不足条件を説明し、briefへ反映するための補助です。
             </DrawerDescription>
           </DrawerHeader>
-          <div className="space-y-4 overflow-y-auto px-4 py-4">
+          <div className="scrollbar-gutter-stable space-y-4 overflow-y-auto px-4 py-4">
             <AiExplainabilityLabel
               confidence="medium"
               explanation="提案は静的なsample briefとSelectionSpecに基づきます。"
@@ -1221,7 +1221,7 @@ export function LegacyStudioWorkspace() {
               採用候補、score、前提、riskをSelectionSpecから表示します。
             </DrawerDescription>
           </DrawerHeader>
-          <div className="space-y-3 overflow-y-auto px-4 py-4">
+          <div className="scrollbar-gutter-stable space-y-3 overflow-y-auto px-4 py-4">
             {studioEvidence.selections.map((selection) => (
               <Card key={selection.stepId} size="sm">
                 <CardHeader>

@@ -17,6 +17,9 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Build artifacts that must never be linted:
     "storybook-static/**",
+    // Third-party bundles served verbatim to the game iframes. Minified vendor
+    // code is not ours to fix, and linting it only produces noise.
+    "public/**/vendor/**",
   ]),
   ...storybook.configs["flat/recommended"],
   {

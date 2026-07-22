@@ -90,7 +90,7 @@ export function TeamTSettingsDialog({
               />
             </nav>
           </aside>
-          <div className="min-h-0 overflow-y-auto p-5 sm:p-6">
+          <div className="min-h-0 scrollbar-gutter-stable overflow-y-auto p-5 sm:p-6">
             {section === "appearance" ? (
               <AppearanceSettings
                 preferences={preferences}

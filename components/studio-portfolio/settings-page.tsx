@@ -442,7 +442,7 @@ export function SettingsDialog({
               この端末のローカル設定
             </p>
           </aside>
-          <div className="min-h-0 overflow-y-auto">
+          <div className="min-h-0 scrollbar-gutter-stable overflow-y-auto">
             <SettingsPage embedded section={activeSection} />
           </div>
         </div>

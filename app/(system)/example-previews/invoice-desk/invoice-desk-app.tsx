@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { BadgeDollarSignIcon, CheckCircle2Icon, ChevronRightIcon, CreditCardIcon, Grid2X2Icon, LayoutListIcon, ReceiptTextIcon, SearchIcon, UsersRoundIcon } from "lucide-react"
+import { BadgeDollarSignIcon, CheckCircle2Icon, ChevronRightIcon, CreditCardIcon, Grid2X2Icon, LayoutListIcon, ReceiptTextIcon, SearchIcon, UsersRoundIcon, type LucideIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -26,7 +26,10 @@ const invoiceFixture = {
   ] satisfies Invoice[],
 }
 
-const navItems: { view: View; label: string; icon: React.ElementType }[] = [
+// Icon slots are typed as LucideIcon, not React.ElementType: @react-three/fiber
+// augments JSX.IntrinsicElements with three.js tags, and ElementType defaults to
+// every intrinsic tag — which makes DOM props like className resolve to never.
+const navItems: { view: View; label: string; icon: LucideIcon }[] = [
   { view: "invoices", label: "Invoices", icon: ReceiptTextIcon },
   { view: "customers", label: "Customers", icon: UsersRoundIcon },
   { view: "collections", label: "Collections", icon: BadgeDollarSignIcon },
@@ -37,7 +40,7 @@ function StatusBadge({ status }: { status: InvoiceStatus }) {
   const style = status === "Paid" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : status === "Overdue" ? "bg-rose-500/10 text-rose-700 dark:text-rose-400" : "bg-amber-500/10 text-amber-700 dark:text-amber-300"
   return <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${style}`}>{status}</span>
 }
-function SummaryCard({ label, value, detail, icon: Icon }: { label: string; value: string; detail: string; icon: React.ElementType }) { return <section className="rounded-xl border bg-card p-4 shadow-sm"><div className="flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><Icon className="size-4" aria-hidden="true" /></div><p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></section> }
+function SummaryCard({ label, value, detail, icon: Icon }: { label: string; value: string; detail: string; icon: LucideIcon }) { return <section className="rounded-xl border bg-card p-4 shadow-sm"><div className="flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><Icon className="size-4" aria-hidden="true" /></div><p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></section> }
 
 export function InvoiceDeskApp() {
   const [view, setView] = React.useState<View>("invoices")

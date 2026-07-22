@@ -29,6 +29,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Gate the deploy on the same contract/lint/type checks the checks
+      # workflow runs. Without this the two workflows are independent, and a red
+      # `checks` run still publishes (that is how the vendored three.min.js lint
+      # failure went unnoticed from 6cbc202). The build and storybook checks are
+      # omitted here because the two steps below already perform them.
+      - run: npm run checks -- --only contracts,lint,typecheck
       # Static export -> out/
       - run: npm run build
       # Component lab co-located at /<repo>/storybook (relative-asset build).

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { ChevronRightIcon, Maximize2Icon, PlayIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -16,7 +17,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { getApiPageUrl, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
+import {
+  getApiPageUrl,
+  getApiPreviewImageUrl,
+  type ApiCatalogItem,
+} from "@/lib/team-t-app/catalog"
 import type { IntroApiEntry } from "@/lib/team-t-app/intro-tour"
 
 import { CategoryIcon } from "./category-icon"
@@ -70,8 +75,10 @@ function LivePreview({
 }) {
   const frameRef = React.useRef<HTMLDivElement>(null)
   const [scale, setScale] = React.useState(0)
+  const previewImageUrl = getApiPreviewImageUrl(item)
 
   React.useEffect(() => {
+    if (previewImageUrl) return
     const element = frameRef.current
     if (!element) return
     // ResizeObserver の初回通知は環境によって飛ばないため、マウント時に必ず自分で測る。
@@ -87,7 +94,7 @@ function LivePreview({
       observer.disconnect()
       window.removeEventListener("resize", measure)
     }
-  }, [])
+  }, [previewImageUrl])
 
   return (
     <div
@@ -96,22 +103,34 @@ function LivePreview({
         variant === "main" ? "aspect-[16/9]" : "aspect-[16/10]"
       }`}
     >
-      <iframe
-        title={`${item.title} のプレビュー`}
-        src={getApiPageUrl(item)}
-        loading="lazy"
-        scrolling="no"
-        tabIndex={-1}
-        referrerPolicy="strict-origin-when-cross-origin"
-        // 静止プレビューなので操作は受け付けない。触るのは「デモを見る」から開く実タブ。
-        className="pointer-events-none absolute top-0 left-0 origin-top-left border-0"
-        style={{
-          width: PREVIEW_WIDTH,
-          height: PREVIEW_HEIGHT,
-          transform: `scale(${scale})`,
-          visibility: scale ? "visible" : "hidden",
-        }}
-      />
+      {previewImageUrl ? (
+        // 静止画プレビュー: 元画像とカード比率がずれても余白が出ないよう object-cover で拡縮する。
+        <Image
+          src={previewImageUrl}
+          alt={`${item.title} のプレビュー`}
+          fill
+          unoptimized
+          sizes={variant === "main" ? "100vw" : "50vw"}
+          className="object-cover object-top"
+        />
+      ) : (
+        <iframe
+          title={`${item.title} のプレビュー`}
+          src={getApiPageUrl(item)}
+          loading="lazy"
+          scrolling="no"
+          tabIndex={-1}
+          referrerPolicy="strict-origin-when-cross-origin"
+          // 静止プレビューなので操作は受け付けない。触るのは「デモを見る」から開く実タブ。
+          className="pointer-events-none absolute top-0 left-0 origin-top-left border-0"
+          style={{
+            width: PREVIEW_WIDTH,
+            height: PREVIEW_HEIGHT,
+            transform: `scale(${scale})`,
+            visibility: scale ? "visible" : "hidden",
+          }}
+        />
+      )}
     </div>
   )
 }

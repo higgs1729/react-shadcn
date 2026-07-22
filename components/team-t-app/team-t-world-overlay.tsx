@@ -956,7 +956,7 @@ function ResultPanel({
  */
 function FallbackList({ onSelect }: { onSelect: (index: number) => void }) {
   return (
-    <div className="h-full w-full overflow-y-auto bg-[#05030a] p-4 sm:p-6">
+    <div className="h-full w-full scrollbar-gutter-stable overflow-y-auto bg-[#05030a] p-4 sm:p-6">
       <p className="mx-auto mb-4 max-w-4xl text-sm text-[#b9b2a7]">
         この環境では3Dワールドの代わりに一覧から選びます。
       </p>
