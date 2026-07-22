@@ -43,7 +43,7 @@ export const teamTGames = [
     id: "survival",
     fileName: "undertale.html",
     previewFileName: "survival.png",
-    title: "よけるサバイバル",
+    title: "ほねサバイバル",
     description: "迫る攻撃を避け続けるサバイバルアクション。",
     difficulty: "ふつう",
     cost: 2,
