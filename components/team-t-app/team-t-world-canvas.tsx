@@ -9,6 +9,7 @@ import {
   teamTWorldKiosks,
   WORLD_LAYOUT,
 } from "@/lib/team-t-app/world"
+import type { TeamTWorldSkinId } from "@/lib/team-t-app/preferences"
 
 import { TeamTWorldAvatar } from "./team-t-world-avatar"
 import { useWorldControls } from "./team-t-world-controls"
@@ -90,6 +91,7 @@ export function TeamTWorldCanvas({
   onInteract,
   onExit,
   onReady,
+  skinId,
 }: {
   reduceMotion: boolean
   controlsEnabled: boolean
@@ -99,6 +101,7 @@ export function TeamTWorldCanvas({
   onInteract: (index: number) => void
   onExit: () => void
   onReady?: () => void
+  skinId: TeamTWorldSkinId
 }) {
   const positionRef = React.useRef(
     new THREE.Vector3(...WORLD_LAYOUT.spawnPosition)
@@ -144,20 +147,23 @@ export function TeamTWorldCanvas({
       dpr={[1, 1.75]}
       camera={{ position: [0, 7.5, 18.5], fov: 50, near: 0.1, far: 80 }}
       gl={{ antialias: true, powerPreference: "high-performance" }}
-      onCreated={() => onReady?.()}
+      onCreated={({ gl }) => {
+        gl.toneMappingExposure = 1.12
+        onReady?.()
+      }}
     >
       <color attach="background" args={[TEAM_T_WORLD_PALETTE.void]} />
       <fogExp2 attach="fog" args={[TEAM_T_WORLD_PALETTE.void, 0.013]} />
 
-      <ambientLight intensity={0.48} color={TEAM_T_WORLD_PALETTE.ink} />
+      <ambientLight intensity={0.62} color={TEAM_T_WORLD_PALETTE.ink} />
       <hemisphereLight
-        intensity={0.42}
+        intensity={0.55}
         color={TEAM_T_WORLD_PALETTE.amethyst}
         groundColor={TEAM_T_WORLD_PALETTE.void}
       />
       <directionalLight
         position={[8, 14, 10]}
-        intensity={0.7}
+        intensity={0.82}
         color={TEAM_T_WORLD_PALETTE.gold}
       />
 
@@ -181,6 +187,7 @@ export function TeamTWorldCanvas({
           controlsRef={controlsRef}
           positionRef={positionRef}
           reduceMotion={reduceMotion}
+          skinId={skinId}
         />
       </React.Suspense>
 

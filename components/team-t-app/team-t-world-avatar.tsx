@@ -1,60 +1,70 @@
 "use client"
 
 import * as React from "react"
-import { useAnimations, useGLTF } from "@react-three/drei"
+import { useAnimations } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 
-import {
-  getTeamTWorldAssetUrl,
-  teamTWorldKiosks,
-  WORLD_AVATAR_FILE,
-  WORLD_LAYOUT,
-} from "@/lib/team-t-app/world"
+import type { TeamTWorldSkinId } from "@/lib/team-t-app/preferences"
+import { teamTWorldKiosks, WORLD_LAYOUT } from "@/lib/team-t-app/world"
 
+import {
+  pickTeamTWorldCharacterClip,
+  useTeamTWorldCharacter,
+} from "./team-t-world-character"
 import type { WorldControlState } from "./team-t-world-controls"
 
 const MOVE_SPEED = 6.5 // units / sec
+const SPRINT_MULTIPLIER = 1.7
+const JUMP_VELOCITY = 8.2
+const GRAVITY = 21
 const TURN_LERP = 0.18
 const AVATAR_SCALE = 2.4
-
-/** names の中から pattern 群に最初に一致するクリップ名を返す(無ければ先頭)。 */
-function pickClip(names: string[], patterns: RegExp[]): string | undefined {
-  for (const pattern of patterns) {
-    const hit = names.find((name) => pattern.test(name))
-    if (hit) return hit
-  }
-  return names[0]
-}
 
 export function TeamTWorldAvatar({
   controlsRef,
   positionRef,
   reduceMotion,
+  skinId,
 }: {
   controlsRef: React.RefObject<WorldControlState>
   /** アバターのワールド座標を毎フレーム書き込む共有 ref(カメラ・近接判定が読む)。 */
   positionRef: React.RefObject<THREE.Vector3>
   reduceMotion: boolean
+  skinId: TeamTWorldSkinId
 }) {
   const groupRef = React.useRef<THREE.Group>(null)
-  const url = getTeamTWorldAssetUrl(WORLD_AVATAR_FILE)
-  const { scene, animations } = useGLTF(url)
+  const { scene: avatarScene, animations } = useTeamTWorldCharacter(skinId)
   const { actions, names } = useAnimations(animations, groupRef)
 
   const idleName = React.useMemo(
-    () => pickClip(names, [/idle/i, /breath/i, /stand/i]),
+    () => pickTeamTWorldCharacterClip(names, [/idle/i, /breath/i, /stand/i]),
     [names]
   )
   const walkName = React.useMemo(
-    () => pickClip(names, [/walk/i, /run/i, /jog/i]),
+    () => pickTeamTWorldCharacterClip(names, [/^walk$/i, /walk/i]),
+    [names]
+  )
+  const sprintName = React.useMemo(
+    () => pickTeamTWorldCharacterClip(names, [/^sprint$/i, /run/i]),
+    [names]
+  )
+  const jumpName = React.useMemo(
+    () => pickTeamTWorldCharacterClip(names, [/^jump$/i]),
+    [names]
+  )
+  const nodName = React.useMemo(
+    () => pickTeamTWorldCharacterClip(names, [/^emote-yes$/i, /yes/i]),
     [names]
   )
   const currentActionRef = React.useRef<string | null>(null)
   const headingRef = React.useRef(0)
+  const jumpVelocityRef = React.useRef(0)
+  const jumpingRef = React.useRef(false)
+  const gestureRemainingRef = React.useRef(0)
 
   const playAction = React.useCallback(
-    (name: string | undefined) => {
+    (name: string | undefined, once = false) => {
       if (!name || currentActionRef.current === name) return
       const next = actions[name]
       if (!next) return
@@ -62,7 +72,12 @@ export function TeamTWorldAvatar({
         ? actions[currentActionRef.current]
         : null
       prev?.fadeOut(0.2)
-      next.reset().fadeIn(0.2).play()
+      next.reset()
+      next.setLoop(
+        once ? THREE.LoopOnce : THREE.LoopRepeat,
+        once ? 1 : Infinity
+      )
+      next.fadeIn(0.2).play()
       currentActionRef.current = name
     },
     [actions]
@@ -88,6 +103,42 @@ export function TeamTWorldAvatar({
     if (!group || !controls) return
     const delta = Math.min(rawDelta, 0.05) // タブ復帰時の巨大 delta を抑える
 
+    if (controls.jumpRequested) {
+      controls.jumpRequested = false
+      if (!jumpingRef.current) {
+        jumpingRef.current = true
+        jumpVelocityRef.current = JUMP_VELOCITY
+        gestureRemainingRef.current = 0
+        playAction(jumpName, true)
+      }
+    }
+
+    if (controls.nodRequested) {
+      controls.nodRequested = false
+      if (!jumpingRef.current && nodName) {
+        const nodClip = animations.find((clip) => clip.name === nodName)
+        gestureRemainingRef.current = nodClip?.duration ?? 1
+        playAction(nodName, true)
+      }
+    }
+
+    if (jumpingRef.current) {
+      jumpVelocityRef.current -= GRAVITY * delta
+      group.position.y += jumpVelocityRef.current * delta
+      if (group.position.y <= 0) {
+        group.position.y = 0
+        jumpVelocityRef.current = 0
+        jumpingRef.current = false
+        currentActionRef.current = null
+      }
+    } else if (gestureRemainingRef.current > 0) {
+      gestureRemainingRef.current = Math.max(
+        0,
+        gestureRemainingRef.current - delta
+      )
+      if (gestureRemainingRef.current === 0) currentActionRef.current = null
+    }
+
     let moveX = (controls.right ? 1 : 0) - (controls.left ? 1 : 0)
     let moveZ = (controls.back ? 1 : 0) - (controls.forward ? 1 : 0)
     const moving = moveX !== 0 || moveZ !== 0
@@ -97,10 +148,11 @@ export function TeamTWorldAvatar({
       moveX /= length
       moveZ /= length
 
+      const speed = MOVE_SPEED * (controls.sprint ? SPRINT_MULTIPLIER : 1)
       const candidate = new THREE.Vector3(
-        group.position.x + moveX * MOVE_SPEED * delta,
+        group.position.x + moveX * speed * delta,
         0,
-        group.position.z + moveZ * MOVE_SPEED * delta
+        group.position.z + moveZ * speed * delta
       )
 
       // 店内の矩形境界から外へ出ないようにする。
@@ -141,8 +193,14 @@ export function TeamTWorldAvatar({
         diff = Math.atan2(Math.sin(diff), Math.cos(diff)) // 最短角へ
         headingRef.current += diff * TURN_LERP
       }
-      playAction(walkName)
-    } else if (!reduceMotion) {
+      if (!jumpingRef.current && gestureRemainingRef.current === 0) {
+        playAction(controls.sprint ? sprintName : walkName)
+      }
+    } else if (
+      !reduceMotion &&
+      !jumpingRef.current &&
+      gestureRemainingRef.current === 0
+    ) {
       playAction(idleName)
     }
 
@@ -152,9 +210,7 @@ export function TeamTWorldAvatar({
 
   return (
     <group ref={groupRef} position={WORLD_LAYOUT.spawnPosition}>
-      <primitive object={scene} scale={AVATAR_SCALE} />
+      <primitive object={avatarScene} scale={AVATAR_SCALE} />
     </group>
   )
 }
-
-useGLTF.preload(getTeamTWorldAssetUrl(WORLD_AVATAR_FILE))

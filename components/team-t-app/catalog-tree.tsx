@@ -18,6 +18,7 @@ import {
 import { groupCatalog, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
 
 import { ApiPageIcon, CategoryIcon } from "./category-icon"
+import { TeamTOverflowLabel } from "./team-t-overflow-label"
 
 interface CatalogTreeProps {
   items: readonly ApiCatalogItem[]
@@ -73,9 +74,12 @@ export function CatalogTree({
                     category={group.category}
                     className="size-4 shrink-0"
                   />
-                  <span className="min-w-0 flex-1 truncate">
-                    {group.category}
-                  </span>
+                  <TeamTOverflowLabel
+                    text={group.category}
+                    side="right"
+                    align="start"
+                    className="flex-1"
+                  />
                   <span className="shrink-0 text-xs text-sidebar-foreground/60 tabular-nums">
                     {groupCount}
                   </span>
@@ -108,9 +112,12 @@ export function CatalogTree({
                             category={group.category}
                             className="size-3.5 shrink-0"
                           />
-                          <span className="min-w-0 flex-1 truncate">
-                            {section.label}
-                          </span>
+                          <TeamTOverflowLabel
+                            text={section.label}
+                            side="right"
+                            align="start"
+                            className="flex-1"
+                          />
                           <span className="shrink-0 text-sidebar-foreground/60 tabular-nums">
                             {section.items.length}
                           </span>
@@ -141,9 +148,13 @@ export function CatalogTree({
                               onClick={() => onSelect(item.id)}
                             >
                               <ApiPageIcon className="size-4" />
-                              <span className="line-clamp-2 whitespace-normal">
-                                {item.title}
-                              </span>
+                              <TeamTOverflowLabel
+                                text={item.title}
+                                lines={2}
+                                side="right"
+                                align="start"
+                                className="flex-1"
+                              />
                             </SidebarMenuButton>
                           </SidebarMenuSubItem>
                         ))}

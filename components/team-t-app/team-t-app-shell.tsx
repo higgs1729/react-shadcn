@@ -8,6 +8,7 @@ import {
   SidebarProvider,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { TooltipProvider } from "@/components/ui/tooltip"
 import { filterCatalog, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
 import {
   defaultTeamTPreferences,
@@ -15,6 +16,7 @@ import {
   readTeamTPreferences,
   readTeamTProfile,
   resetTeamTPreferences,
+  teamTStorageKeys,
   type TeamTPreferences,
   type TeamTProfile,
   writeTeamTPreferences,
@@ -38,6 +40,7 @@ import { TeamTHeader, type TeamTWindow } from "./team-t-header"
 import { TeamTIntro } from "./team-t-intro"
 import { TeamTSettingsDialog } from "./team-t-settings-dialog"
 import { TeamTSidebar } from "./team-t-sidebar"
+import { teamTOverflowTooltipDelayMs } from "./team-t-overflow-label"
 import { TeamTWelcome } from "./team-t-welcome"
 import { useTeamTAppearance } from "./use-team-t-appearance"
 
@@ -110,6 +113,9 @@ function TeamTAppContent({
   const previewRef = React.useRef<HTMLDivElement>(null)
   const [settingsOpen, setSettingsOpen] = React.useState(false)
   const [gamesOpen, setGamesOpen] = React.useState(false)
+  const [categoryFilterGuideOpen, setCategoryFilterGuideOpen] =
+    React.useState(false)
+  const categoryFilterGuideShown = React.useRef(false)
   const [rewardJustEarned, setRewardJustEarned] = React.useState(false)
   const [windows, setWindows] = React.useState<TeamTWindow[]>([
     { id: "window-1", kind: "explore", apiId: null, title: "探索" },
@@ -118,6 +124,34 @@ function TeamTAppContent({
   const activeWindow = windows.find((window) => window.id === activeWindowId)
   // 紹介タブは離れると unmount されるので、読んでいたページは shell が保持する
   const [introPageNumber, setIntroPageNumber] = React.useState(1)
+
+  const dismissCategoryFilterGuide = () => {
+    setCategoryFilterGuideOpen(false)
+    try {
+      getLocalStorage()?.setItem(teamTStorageKeys.categoryFilterGuide, "seen")
+    } catch {
+      // Storage が使えない環境では、このセッション中だけ表示済みとして扱う。
+    }
+  }
+
+  const handleCategoryExplore = (category: string) => {
+    setQuery(category)
+
+    let hasSeenGuide = categoryFilterGuideShown.current
+    try {
+      hasSeenGuide ||=
+        getLocalStorage()?.getItem(teamTStorageKeys.categoryFilterGuide) ===
+        "seen"
+    } catch {
+      // Storage が使えなくてもガイド自体は表示する。
+    }
+
+    if (!hasSeenGuide) {
+      categoryFilterGuideShown.current = true
+      setCategoryFilterGuideOpen(true)
+    }
+    if (isMobile) setOpenMobile(true)
+  }
 
   const createWindowId = () =>
     `window-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
@@ -329,7 +363,12 @@ function TeamTAppContent({
         recommendationSelectedId={
           selection.source === "catalog" ? null : selection.selectedId
         }
-        onQueryChange={setQuery}
+        categoryFilterGuideOpen={categoryFilterGuideOpen}
+        onQueryChange={(nextQuery) => {
+          setQuery(nextQuery)
+          if (!nextQuery) dismissCategoryFilterGuide()
+        }}
+        onCategoryFilterGuideDismiss={dismissCategoryFilterGuide}
         onSelectCatalog={(id) => selectItem(id, "catalog")}
         onSelectRecommendation={(id) => selectItem(id, "recommendation")}
         onSettingsOpen={() => setSettingsOpen(true)}
@@ -371,6 +410,7 @@ function TeamTAppContent({
         ) : (
           <TeamTWelcome
             key={activeWindow?.id ?? "explore"}
+            onCategoryExplore={handleCategoryExplore}
             onIntroOpen={openIntroWindow}
           />
         )}
@@ -502,20 +542,22 @@ export function TeamTAppShell({ catalog }: TeamTAppShellProps) {
   useTeamTAppearance(preferences)
 
   return (
-    <SidebarProvider>
-      <TeamTAppContent
-        catalog={catalog}
-        preferences={preferences}
-        profile={profile}
-        reward={reward}
-        onPreferencesChange={updatePreferences}
-        onProfileChange={updateProfile}
-        onReset={resetPreferences}
-        onPreviewInteraction={recordInteraction}
-        onSpendCoins={spendCoins}
-        onRefundCoins={refundCoins}
-        onAwardCoins={awardCoins}
-      />
-    </SidebarProvider>
+    <TooltipProvider delay={teamTOverflowTooltipDelayMs}>
+      <SidebarProvider>
+        <TeamTAppContent
+          catalog={catalog}
+          preferences={preferences}
+          profile={profile}
+          reward={reward}
+          onPreferencesChange={updatePreferences}
+          onProfileChange={updateProfile}
+          onReset={resetPreferences}
+          onPreviewInteraction={recordInteraction}
+          onSpendCoins={spendCoins}
+          onRefundCoins={refundCoins}
+          onAwardCoins={awardCoins}
+        />
+      </SidebarProvider>
+    </TooltipProvider>
   )
 }

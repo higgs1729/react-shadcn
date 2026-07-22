@@ -1,14 +1,9 @@
 "use client"
 
-import {
-  ArrowRightIcon,
-  Gamepad2Icon,
-  Settings2Icon,
-  TrophyIcon,
-} from "lucide-react"
+import Image from "next/image"
+import { Settings2Icon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
 import {
   Sidebar,
   SidebarContent,
@@ -19,11 +14,15 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import type { ApiCatalogItem } from "@/lib/team-t-app/catalog"
+import { interactionsPerCoin } from "@/lib/team-t-app/rewards"
 
 import { CatalogSearch } from "./catalog-search"
 import { CatalogTree } from "./catalog-tree"
 import { RecommendationTree } from "./recommendation-tree"
-import { TeamTCoinBalance } from "./team-t-coin-balance"
+import { TeamTRewardCard } from "./team-t-reward-card"
+import { TeamTOverflowLabel } from "./team-t-overflow-label"
+
+const teamTLabMarkSrc = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/team-t-app/assets/team-t-lab-mark.png`
 
 interface TeamTSidebarProps {
   items: readonly ApiCatalogItem[]
@@ -34,7 +33,9 @@ interface TeamTSidebarProps {
   query: string
   catalogSelectedId: string | null
   recommendationSelectedId: string | null
+  categoryFilterGuideOpen: boolean
   onQueryChange: (query: string) => void
+  onCategoryFilterGuideDismiss: () => void
   onSelectCatalog: (id: string) => void
   onSelectRecommendation: (id: string) => void
   onSettingsOpen: () => void
@@ -49,11 +50,18 @@ export function TeamTSidebar({
   query,
   catalogSelectedId,
   recommendationSelectedId,
+  categoryFilterGuideOpen,
   onQueryChange,
+  onCategoryFilterGuideDismiss,
   onSelectCatalog,
   onSelectRecommendation,
   onSettingsOpen,
 }: TeamTSidebarProps) {
+  const interactionsUntilCoin = Math.max(
+    0,
+    interactionsPerCoin - rewardProgress
+  )
+
   return (
     <Sidebar variant="inset" collapsible="offcanvas">
       <style>{`
@@ -70,19 +78,35 @@ export function TeamTSidebar({
       `}</style>
       <SidebarHeader className="gap-4 border-b border-sidebar-border p-4">
         <div className="flex items-center gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-[color:var(--team-t-gold-line)] bg-primary text-[color:var(--team-t-gold-on-primary)] shadow-[0_0_16px_rgba(139,92,246,0.25)]">
-            <TrophyIcon className="size-5" aria-hidden="true" />
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border border-[color:var(--team-t-gold-line)] bg-primary">
+            <Image
+              src={teamTLabMarkSrc}
+              alt=""
+              aria-hidden="true"
+              fill
+              priority
+              sizes="40px"
+              className="scale-110 object-cover select-none"
+            />
           </div>
           <div className="min-w-0">
-            <p className="truncate font-semibold tracking-[0.08em] text-[color:var(--team-t-gold-strong)] uppercase">
-              Team T API Lab
-            </p>
+            <TeamTOverflowLabel
+              text="Team T API Lab"
+              side="right"
+              align="start"
+              className="font-semibold tracking-[0.08em] text-[color:var(--team-t-gold-strong)] uppercase"
+            />
             <p className="text-xs text-sidebar-foreground/65">
               触って見つける Web API
             </p>
           </div>
         </div>
-        <CatalogSearch value={query} onChange={onQueryChange} />
+        <CatalogSearch
+          value={query}
+          onChange={onQueryChange}
+          guideOpen={categoryFilterGuideOpen}
+          onGuideDismiss={onCategoryFilterGuideDismiss}
+        />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup className="p-2">
@@ -109,62 +133,7 @@ export function TeamTSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="gap-2 border-t border-sidebar-border p-2">
-        <div className="relative overflow-hidden rounded-2xl border border-sidebar-border bg-[linear-gradient(145deg,color-mix(in_oklab,var(--sidebar-accent)_72%,var(--sidebar)),var(--sidebar))] p-2.5 shadow-[0_10px_28px_color-mix(in_oklab,var(--sidebar-foreground)_8%,transparent),inset_0_1px_color-mix(in_oklab,var(--sidebar-foreground)_8%,transparent)]">
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-12 -right-10 size-28 rounded-full bg-primary/10 blur-2xl"
-          />
-          <div className="relative flex items-end justify-between gap-3 px-1">
-            <div>
-              <p className="text-[0.625rem] font-semibold tracking-[0.14em] text-sidebar-foreground/50 uppercase">
-                Reward wallet
-              </p>
-              <TeamTCoinBalance
-                coins={coinCount}
-                className="mt-1 text-base leading-none"
-              />
-            </div>
-            <div className="text-right tabular-nums">
-              <p className="text-[0.625rem] text-sidebar-foreground/50">
-                次のコイン
-              </p>
-              <p className="text-sm font-semibold text-sidebar-foreground">
-                {rewardProgress}
-                <span className="ml-0.5 text-[0.65rem] font-medium text-sidebar-foreground/45">
-                  / 5
-                </span>
-              </p>
-            </div>
-          </div>
-          <Progress
-            aria-label={`次のコインまで ${rewardProgress} / 5`}
-            value={(rewardProgress / 5) * 100}
-            className="team-t-coin-progress relative mt-2.5 h-1.5 [&_[data-slot=progress-indicator]]:bg-[linear-gradient(90deg,#b7791f,#f6cf62)] [&_[data-slot=progress-indicator]]:shadow-[0_0_8px_rgba(235,180,55,0.45)] [&_[data-slot=progress-track]]:bg-sidebar-foreground/10"
-          />
-          <Button
-            type="button"
-            size="lg"
-            data-team-t-arcade-button
-            className="relative mt-3 h-12 w-full justify-start overflow-hidden border border-white/10 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--primary)_88%,#171019),var(--primary))] px-2.5 text-white shadow-[0_8px_20px_color-mix(in_oklab,var(--primary)_26%,transparent),inset_0_1px_rgba(255,255,255,0.15)] hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--primary)_78%,#171019),color-mix(in_oklab,var(--primary)_90%,white))] hover:shadow-[0_12px_26px_color-mix(in_oklab,var(--primary)_34%,transparent),inset_0_1px_rgba(255,255,255,0.18)]"
-            onClick={onGamesOpen}
-          >
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/12 text-[color:var(--team-t-gold-on-primary)] ring-1 ring-white/12">
-              <Gamepad2Icon className="size-4" aria-hidden="true" />
-            </span>
-            <span className="flex min-w-0 flex-col items-start leading-none">
-              <span className="text-[0.58rem] font-bold tracking-[0.16em] text-white/55 uppercase">
-                3D Map
-              </span>
-              <span className="mt-1 truncate text-xs font-semibold">
-                APIアーケードへ
-              </span>
-            </span>
-            <span className="ml-auto grid size-7 shrink-0 place-items-center rounded-full bg-black/15 ring-1 ring-white/10">
-              <ArrowRightIcon className="size-3.5" aria-hidden="true" />
-            </span>
-          </Button>
-        </div>
+      <div className="px-2 pb-2">
         <Button
           type="button"
           variant="ghost"
@@ -175,6 +144,14 @@ export function TeamTSidebar({
           <Settings2Icon data-icon="inline-start" />
           設定
         </Button>
+      </div>
+      <SidebarFooter className="gap-2 border-t border-sidebar-border p-2">
+        <TeamTRewardCard
+          rewardAmount={coinCount}
+          remaining={interactionsUntilCoin}
+          total={interactionsPerCoin}
+          onEnter={onGamesOpen}
+        />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

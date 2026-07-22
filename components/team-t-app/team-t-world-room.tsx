@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Html, useGLTF } from "@react-three/drei"
+import { useGLTF } from "@react-three/drei"
 import * as THREE from "three"
 
 import {
@@ -32,7 +32,10 @@ function ArcadeFloor({ source }: { source: SceneAsset }) {
         const column = index % FLOOR_COLUMNS
         const row = Math.floor(index / FLOOR_COLUMNS)
         return {
-          object: cloneTinted(source, (column + row) % 2 ? FLOOR_DARK : FLOOR_LIGHT),
+          object: cloneTinted(
+            source,
+            (column + row) % 2 ? FLOOR_DARK : FLOOR_LIGHT
+          ),
           position: [
             (column - (FLOOR_COLUMNS - 1) / 2) * FLOOR_SIZE,
             -0.03,
@@ -75,7 +78,8 @@ function ArcadeWalls({
     }[] = []
 
     for (let index = 0; index < FLOOR_COLUMNS; index++) {
-      const source = index === 3 ? door : index === 1 || index === 6 ? window : wall
+      const source =
+        index === 3 ? door : index === 1 || index === 6 ? window : wall
       result.push({
         object: cloneTinted(source, WALL_TINT),
         position: [
@@ -150,22 +154,27 @@ export function TeamTWorldRoom() {
         column={column}
       />
 
-      <Html
-        position={[0, 3.35, -11.5]}
-        center
-        transform
-        distanceFactor={13}
-        occlude
-        zIndexRange={[1, 0]}
-      >
-        <div className="pointer-events-none whitespace-nowrap rounded-md border border-[#d8bf88]/70 bg-[#160d25]/90 px-5 py-2 text-center text-sm font-black tracking-[0.38em] text-[#ffe6a8] shadow-[0_0_24px_rgba(216,75,255,0.65)]">
-          API ARCADE
-        </div>
-      </Html>
-
-      <pointLight position={[-9, 3.6, -4]} color={TEAM_T_WORLD_PALETTE.magenta} intensity={16} distance={11} />
-      <pointLight position={[9, 3.6, -4]} color={TEAM_T_WORLD_PALETTE.amethyst} intensity={18} distance={11} />
-      <pointLight position={[0, 3.8, 6]} color={TEAM_T_WORLD_PALETTE.gold} intensity={11} distance={10} />
+      <pointLight
+        position={[-9, 4.4, -4]}
+        color={TEAM_T_WORLD_PALETTE.magenta}
+        intensity={18}
+        distance={14}
+        decay={1.8}
+      />
+      <pointLight
+        position={[9, 4.4, -4]}
+        color={TEAM_T_WORLD_PALETTE.amethyst}
+        intensity={20}
+        distance={14}
+        decay={1.8}
+      />
+      <pointLight
+        position={[0, 4.8, 6]}
+        color={TEAM_T_WORLD_PALETTE.gold}
+        intensity={13}
+        distance={13}
+        decay={1.8}
+      />
     </group>
   )
 }

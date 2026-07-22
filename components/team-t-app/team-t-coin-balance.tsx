@@ -3,7 +3,7 @@ import type { CSSProperties } from "react"
 
 import { cn } from "@/lib/utils"
 
-const teamTCoinSrc = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/team-t-app/assets/team-t-coin.png`
+const teamTCoinSrc = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/team-t-app/assets/reward-card-coin.png`
 
 export function TeamTCoinImage({
   className,
