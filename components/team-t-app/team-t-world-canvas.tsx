@@ -1,6 +1,12 @@
 "use client"
 
 import * as React from "react"
+// 注意: @react-three/fiber は `declare module 'react'` で JSX.IntrinsicElements に
+// three.js の全タグ(<mesh> 等)を足す。この副作用はリポジトリ全体に効くため、
+// `React.ElementType`(既定で Tag = keyof JSX.IntrinsicElements)が three.js タグまで
+// 含むようになり、className など DOM の props が never へ潰れて型検査が落ちる。
+// アイコン等の component slot は `React.ElementType` ではなく `LucideIcon` のような
+// 具体型で受けること。実例は app/(system)/example-previews/ の各 *-app.tsx。
 import { Canvas, useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 

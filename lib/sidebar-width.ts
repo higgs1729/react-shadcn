@@ -75,15 +75,23 @@ export function writeStoredSidebarWidth(
   }
 }
 
-export function applySidebarWidth(width: number) {
+/**
+ * 幅を実際に反映する。正本は `<html>` の `--app-sidebar-width` だが、
+ * `SidebarProvider` にその参照を渡していない画面(在庫 screen が使う
+ * `components/blocks/app-sidebar.tsx` 経由など)もあるので、直近の wrapper の
+ * `--sidebar-width` にも直接書く。wrapper のインラインスタイルは常に勝つため、
+ * どちらの構成でも同じ操作で幅が変わる。
+ */
+export function applySidebarWidth(width: number, from?: Element | null) {
   if (typeof document === "undefined") {
     return
   }
 
-  document.documentElement.style.setProperty(
-    SIDEBAR_WIDTH_CSS_VAR,
-    `${clampSidebarWidth(width)}px`
-  )
+  const value = `${clampSidebarWidth(width)}px`
+  document.documentElement.style.setProperty(SIDEBAR_WIDTH_CSS_VAR, value)
+
+  const wrapper = from?.closest<HTMLElement>('[data-slot="sidebar-wrapper"]')
+  wrapper?.style.setProperty("--sidebar-width", value)
 }
 
 /**

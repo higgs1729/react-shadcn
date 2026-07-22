@@ -45,7 +45,7 @@ export function ResizableSidebarRail({
     if (stored !== null) {
       widthRef.current = stored
       setWidth(stored)
-      applySidebarWidth(stored)
+      applySidebarWidth(stored, railRef.current)
     }
   }, [])
 
@@ -53,7 +53,7 @@ export function ResizableSidebarRail({
     const clamped = clampSidebarWidth(nextWidth)
     widthRef.current = clamped
     setWidth(clamped)
-    applySidebarWidth(clamped)
+    applySidebarWidth(clamped, railRef.current)
     return clamped
   }, [])
 
