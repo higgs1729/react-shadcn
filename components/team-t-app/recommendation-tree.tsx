@@ -17,6 +17,7 @@ import {
 import type { ApiCatalogItem } from "@/lib/team-t-app/catalog"
 
 import { ApiPageIcon, CategoryIcon } from "./category-icon"
+import { TeamTOverflowLabel } from "./team-t-overflow-label"
 
 interface RecommendationTreeProps {
   items: readonly ApiCatalogItem[]
@@ -51,8 +52,16 @@ export function RecommendationTree({
             data-team-t-disclosure
             className="flex h-9 w-full items-center gap-2 rounded-md px-2 text-left text-sm font-semibold outline-none hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-sidebar-ring"
           >
-            <StarIcon className="size-4 text-primary" aria-hidden="true" />
-            <span className="min-w-0 flex-1 truncate">おすすめから始める</span>
+            <StarIcon
+              className="size-4 fill-[#d7a43a] text-[#d7a43a]"
+              aria-hidden="true"
+            />
+            <TeamTOverflowLabel
+              text="おすすめから始める"
+              side="right"
+              align="start"
+              className="flex-1"
+            />
             <span className="text-xs font-normal text-sidebar-foreground/60 tabular-nums">
               {items.length}
             </span>
@@ -117,7 +126,12 @@ function RecommendationCategory({
           className="flex h-8 w-full items-center gap-2 rounded-md px-2 text-left text-xs font-medium text-sidebar-foreground/75 outline-none hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-sidebar-ring"
         >
           <CategoryIcon category={category} className="size-3.5 shrink-0" />
-          <span className="min-w-0 flex-1 truncate">{category}</span>
+          <TeamTOverflowLabel
+            text={category}
+            side="right"
+            align="start"
+            className="flex-1"
+          />
           <span className="shrink-0 text-sidebar-foreground/60 tabular-nums">
             {items.length}
           </span>
@@ -144,9 +158,13 @@ function RecommendationCategory({
                   onClick={() => onSelect(item.id)}
                 >
                   <ApiPageIcon className="size-4" />
-                  <span className="line-clamp-2 whitespace-normal">
-                    {item.title}
-                  </span>
+                  <TeamTOverflowLabel
+                    text={item.title}
+                    lines={2}
+                    side="right"
+                    align="start"
+                    className="flex-1"
+                  />
                 </SidebarMenuButton>
               </SidebarMenuSubItem>
             ))}

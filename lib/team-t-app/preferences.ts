@@ -2,6 +2,8 @@ export const teamTStorageKeys = {
   preferences: "team-t:v1:preferences",
   profile: "team-t:v1:profile",
   reward: "team-t:v1:reward",
+  arcadeWorld: "team-t:v1:arcade-world",
+  categoryFilterGuide: "team-t:v1:category-filter-guide",
 } as const
 
 export const teamTThemes = ["midnight", "dark", "light"] as const
@@ -66,6 +68,15 @@ export interface TeamTProfile {
   displayName: string
 }
 
+export const teamTWorldSkinIds = ["violet", "cyan", "sunset", "mono"] as const
+
+export type TeamTWorldSkinId = (typeof teamTWorldSkinIds)[number]
+
+export interface TeamTArcadeWorldSettings {
+  tutorialCompleted: boolean
+  skinId: TeamTWorldSkinId
+}
+
 export const defaultTeamTPreferences: TeamTPreferences = {
   theme: "midnight",
   accent: "violet",
@@ -75,6 +86,11 @@ export const defaultTeamTPreferences: TeamTPreferences = {
 
 export const defaultTeamTProfile: TeamTProfile = {
   displayName: "",
+}
+
+export const defaultTeamTArcadeWorldSettings: TeamTArcadeWorldSettings = {
+  tutorialCompleted: false,
+  skinId: "violet",
 }
 
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">
@@ -94,6 +110,10 @@ function isTeamTTheme(value: unknown): value is TeamTTheme {
 
 function isTeamTAccentId(value: unknown): value is TeamTAccentId {
   return teamTAccents.some((accent) => accent.id === value)
+}
+
+function isTeamTWorldSkinId(value: unknown): value is TeamTWorldSkinId {
+  return teamTWorldSkinIds.some((skinId) => skinId === value)
 }
 
 export function getTeamTAccent(id: TeamTAccentId) {
@@ -137,6 +157,26 @@ export function readTeamTProfile(storage: StorageLike): TeamTProfile {
   }
 }
 
+export function readTeamTArcadeWorldSettings(
+  storage: StorageLike
+): TeamTArcadeWorldSettings {
+  const value = readJSON(storage, teamTStorageKeys.arcadeWorld)
+  if (!value || typeof value !== "object") {
+    return defaultTeamTArcadeWorldSettings
+  }
+
+  const candidate = value as Partial<TeamTArcadeWorldSettings>
+  return {
+    tutorialCompleted:
+      typeof candidate.tutorialCompleted === "boolean"
+        ? candidate.tutorialCompleted
+        : defaultTeamTArcadeWorldSettings.tutorialCompleted,
+    skinId: isTeamTWorldSkinId(candidate.skinId)
+      ? candidate.skinId
+      : defaultTeamTArcadeWorldSettings.skinId,
+  }
+}
+
 export function writeTeamTPreferences(
   storage: StorageLike,
   preferences: TeamTPreferences
@@ -156,11 +196,24 @@ export function writeTeamTProfile(storage: StorageLike, profile: TeamTProfile) {
   }
 }
 
+export function writeTeamTArcadeWorldSettings(
+  storage: StorageLike,
+  settings: TeamTArcadeWorldSettings
+) {
+  try {
+    storage.setItem(teamTStorageKeys.arcadeWorld, JSON.stringify(settings))
+  } catch {
+    // ローカル保存不可でも、現在のセッションでは React state の選択を使う。
+  }
+}
+
 export function resetTeamTPreferences(storage: StorageLike) {
   try {
     storage.removeItem(teamTStorageKeys.preferences)
     storage.removeItem(teamTStorageKeys.profile)
     storage.removeItem(teamTStorageKeys.reward)
+    storage.removeItem(teamTStorageKeys.arcadeWorld)
+    storage.removeItem(teamTStorageKeys.categoryFilterGuide)
   } catch {
     // 保存不可の環境では削除も不要。呼び出し側が表示状態を既定値へ戻す。
   }
