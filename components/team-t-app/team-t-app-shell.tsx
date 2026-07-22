@@ -484,7 +484,15 @@ export function TeamTAppShell({ catalog }: TeamTAppShellProps) {
   useTeamTAppearance(preferences)
 
   return (
-    <SidebarProvider>
+    <SidebarProvider
+      style={
+        {
+          // 実値は <html> の --app-sidebar-width(lib/sidebar-width.ts)。
+          // ResizableSidebarRail がそこを書き換えるので provider は無改造で済む。
+          "--sidebar-width": "var(--app-sidebar-width, 16rem)",
+        } as React.CSSProperties
+      }
+    >
       <TeamTAppContent
         catalog={catalog}
         preferences={preferences}
