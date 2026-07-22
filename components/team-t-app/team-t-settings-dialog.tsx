@@ -134,8 +134,9 @@ function SettingsNavButton({
     <Button
       type="button"
       variant="ghost"
-      className="w-full justify-start data-[active=true]:bg-primary/10"
+      className="relative w-full justify-start overflow-hidden before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--team-t-gold)] before:opacity-0 before:content-[''] data-[active=true]:bg-[color-mix(in_oklab,var(--primary)_22%,transparent)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[active=true]:before:opacity-100"
       data-active={active}
+      aria-current={active ? "page" : undefined}
       onClick={onClick}
     >
       <Icon data-icon="inline-start" />

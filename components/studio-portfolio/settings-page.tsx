@@ -417,16 +417,22 @@ export function SettingsDialog({
             <nav aria-label="Settings sections" className="mt-3 space-y-1">
               <Button
                 variant="ghost"
-                className="w-full justify-start data-[active=true]:bg-primary/10"
+                className="relative w-full justify-start overflow-hidden before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-primary before:opacity-0 before:content-[''] data-[active=true]:bg-[color-mix(in_oklab,var(--primary)_22%,transparent)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[active=true]:before:opacity-100"
                 data-active={activeSection === "appearance"}
+                aria-current={
+                  activeSection === "appearance" ? "page" : undefined
+                }
                 onClick={() => setActiveSection("appearance")}
               >
                 <PaletteIcon /> 外観
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start data-[active=true]:bg-primary/10"
+                className="relative w-full justify-start overflow-hidden before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-primary before:opacity-0 before:content-[''] data-[active=true]:bg-[color-mix(in_oklab,var(--primary)_22%,transparent)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[active=true]:before:opacity-100"
                 data-active={activeSection === "behavior"}
+                aria-current={
+                  activeSection === "behavior" ? "page" : undefined
+                }
                 onClick={() => setActiveSection("behavior")}
               >
                 <AccessibilityIcon /> 操作

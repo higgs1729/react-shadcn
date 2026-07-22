@@ -278,6 +278,11 @@ function TeamTAppContent({
     if (index === -1) return
 
     if (windows.length === 1) {
+      if (windows[0]?.kind === "explore") {
+        window.location.reload()
+        return
+      }
+
       const exploreId = createWindowId()
       setWindows([
         { id: exploreId, kind: "explore", apiId: null, title: "探索" },
