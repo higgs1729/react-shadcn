@@ -17,7 +17,7 @@ export const teamTGames = [
     description: "制限時間内にターゲットを狙う反射神経ゲーム。",
     difficulty: "やさしい",
     cost: 1,
-    maxReward: 1,
+    maxReward: 3,
   },
   {
     id: "slide-puzzle",
@@ -57,7 +57,7 @@ export const teamTGames = [
     description: "ボールを跳ね返してブロックを壊すアーケードゲーム。",
     difficulty: "むずかしい",
     cost: 2,
-    maxReward: 1,
+    maxReward: 3,
   },
   {
     id: "rpg",

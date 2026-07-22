@@ -33,9 +33,16 @@ WebGL ビルドして `public/team-t-app/games/` に追加する」だった。
 | `coin` は `0`〜`maxReward` の整数。`0` は失敗扱い | :110-117 |
 | iframe の `load` が10秒以内に発火しないと `load-error` + コイン返却 | :92-95 |
 | プレイボタンは親が持ち、コインは**起動前**に減算される | :130-136 |
-| `sandbox="allow-scripts allow-same-origin"`。フルスクリーン/ポインタロック不可 | :526 |
+| `sandbox="allow-scripts allow-same-origin allow-pointer-lock"`。フルスクリーン不可 | `team-t-game-runtime.tsx` |
 
 この契約から、ゲーム側の必須要件が決まる。
+
+`allow-pointer-lock` は同一オリジンに同梱したゾンビシューターの照準操作にだけ使う。
+外部URLの読込・フルスクリーン・ポップアップ等は引き続き許可しない。
+
+`scripts/validate-team-t-app.mjs` は `games.ts` の全 `fileName` を正本として9本を導出し、
+各HTMLの存在と `game:ended` の `postMessage` 実装を検証する。的あて・ブロック崩しは
+ゲーム内難易度で最大3コインを返すため、親側の `maxReward` も3に合わせる。
 
 - 単一 HTML ファイル、同一オリジン同梱
 - **ゲーム内タイトル画面を持たず、読み込み直後に開始する**(課金済みのため)

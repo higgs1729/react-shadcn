@@ -33,7 +33,7 @@ import {
 
 import { ApiPreview } from "./api-preview"
 import { TeamTCoinBurst } from "./team-t-coin-burst"
-import { TeamTGameDialog } from "./team-t-game-dialog"
+import { TeamTWorldOverlay } from "./team-t-world-overlay"
 import { TeamTHeader, type TeamTWindow } from "./team-t-header"
 import { TeamTIntro } from "./team-t-intro"
 import { TeamTSettingsDialog } from "./team-t-settings-dialog"
@@ -124,7 +124,7 @@ function TeamTAppContent({
 
   React.useEffect(() => {
     if (!rewardJustEarned) return
-    const timeout = window.setTimeout(() => setRewardJustEarned(false), 4000)
+    const timeout = window.setTimeout(() => setRewardJustEarned(false), 3000)
     return () => window.clearTimeout(timeout)
   }, [rewardJustEarned])
 
@@ -366,9 +366,10 @@ function TeamTAppContent({
         onProfileChange={onProfileChange}
         onReset={onReset}
       />
-      <TeamTGameDialog
+      <TeamTWorldOverlay
         open={gamesOpen}
         coinCount={reward.coins}
+        preferences={preferences}
         onOpenChange={setGamesOpen}
         onSpend={onSpendCoins}
         onRefund={onRefundCoins}

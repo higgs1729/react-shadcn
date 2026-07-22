@@ -11,6 +11,7 @@ Team T アプリ専用の UI 実体を置く。
 - `catalog-search.tsx`・`catalog-tree.tsx` — カタログの検索・階層選択
 - `team-t-welcome.tsx`・`api-summary.tsx`・`api-preview.tsx` — welcome、選択概要、iframe workspace
 - `team-t-intro.tsx`・`intro-api-card.tsx` — 紹介タブの5ページ送りと、API1件分の縮小プレビュー・Javaコード・デモ導線
+- `team-t-world-*.tsx`・`team-t-game-runtime.tsx` — APIアーケードの3D店内、帰還ゲート、筐体選択、ゲーム実行、共通リザルト
 - `*.stories.tsx` — Team T 固有 UI の主要状態を再現する Storybook story
 
 ## このディレクトリだけの約束

@@ -110,13 +110,18 @@ export function TeamTSidebar({
         </div>
         <Button
           type="button"
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start hover:bg-primary/25 hover:text-[color:var(--team-t-gold-strong)]"
+          size="lg"
+          data-team-t-arcade-button
+          className="relative w-full justify-start overflow-hidden border-[color:var(--team-t-gold-line)] bg-[linear-gradient(135deg,color-mix(in_oklab,var(--primary)_88%,#171019),var(--primary))] text-white shadow-[0_8px_24px_rgba(76,35,120,0.28),inset_0_1px_rgba(255,255,255,0.12)] hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--primary)_78%,#171019),color-mix(in_oklab,var(--primary)_90%,white))] hover:shadow-[0_12px_28px_rgba(76,35,120,0.34),inset_0_1px_rgba(255,255,255,0.16)]"
           onClick={onGamesOpen}
         >
-          <Gamepad2Icon data-icon="inline-start" />
-          ゲーム
+          <span className="grid size-6 place-items-center rounded-md bg-white/12 text-[color:var(--team-t-gold-on-primary)] ring-1 ring-white/10">
+            <Gamepad2Icon className="size-4" aria-hidden="true" />
+          </span>
+          <span className="font-semibold">APIアーケード</span>
+          <span className="ml-auto rounded-full border border-white/15 bg-black/15 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-[0.12em] text-[color:var(--team-t-gold-on-primary)] uppercase">
+            Play
+          </span>
         </Button>
         <Button
           type="button"

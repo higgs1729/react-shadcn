@@ -5,6 +5,7 @@ const projectRoot = process.cwd()
 const catalogPath = path.join(projectRoot, "lib/team-t-app/catalog.json")
 const assetRoot = path.join(projectRoot, "public/team-t-app/api-pages")
 const gameAssetRoot = path.join(projectRoot, "public/team-t-app/games")
+const gamesSourcePath = path.join(projectRoot, "lib/team-t-app/games.ts")
 const recommendationPath = path.join(
   projectRoot,
   "lib/team-t-app/recommendations.ts"
@@ -12,16 +13,14 @@ const recommendationPath = path.join(
 const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"))
 const errors = []
 const ids = new Set()
+const gamesSource = fs.readFileSync(gamesSourcePath, "utf8")
 const expectedGameAssets = [
-  "Tilegame.html",
-  "target.html",
-  "pazuru.html",
-  "picross.html",
-  "undertale.html",
-  "burroku.html",
-  "game.html",
-  "syuuthingu.html",
-]
+  ...gamesSource.matchAll(/fileName:\s*"([^"]+\.html)"/g),
+].map(([, fileName]) => fileName)
+
+if (expectedGameAssets.length === 0) {
+  errors.push("games.ts must define at least one HTML game asset")
+}
 
 if (catalog.length !== 177) {
   errors.push(`catalog must contain 177 pages; found ${catalog.length}`)
@@ -120,8 +119,19 @@ if (htmlAssets.length !== 177) {
 }
 
 for (const fileName of expectedGameAssets) {
-  if (!fs.existsSync(path.join(gameAssetRoot, fileName))) {
+  const gamePath = path.join(gameAssetRoot, fileName)
+  if (!fs.existsSync(gamePath)) {
     errors.push(`missing game asset ${fileName}`)
+    continue
+  }
+
+  const html = fs.readFileSync(gamePath, "utf8")
+  if (
+    !/postMessage\s*\(\s*\{\s*type\s*:\s*['"]game:ended['"]\s*,\s*coin\s*:/m.test(
+      html
+    )
+  ) {
+    errors.push(`${fileName}: missing game:ended postMessage contract`)
   }
 }
 
