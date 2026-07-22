@@ -31,6 +31,13 @@ const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
+const SIDEBAR_MIN_WIDTH = 208
+const SIDEBAR_MAX_WIDTH = 384
+const SIDEBAR_RESIZE_STEP = 16
+
+function clampSidebarWidth(width: number) {
+  return Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, width))
+}
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -278,18 +285,107 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
-  const { toggleSidebar } = useSidebar()
+  const [width, setWidth] = React.useState(Number.parseFloat(SIDEBAR_WIDTH) * 16)
+  const dragState = React.useRef<{
+    pointerId: number
+    startX: number
+    startWidth: number
+    side: "left" | "right"
+  } | null>(null)
+
+  const applyWidth = React.useCallback(
+    (rail: HTMLButtonElement, nextWidth: number) => {
+      const clampedWidth = clampSidebarWidth(nextWidth)
+      rail
+        .closest<HTMLElement>('[data-slot="sidebar-wrapper"]')
+        ?.style.setProperty("--sidebar-width", `${clampedWidth}px`)
+      setWidth(clampedWidth)
+    },
+    []
+  )
 
   return (
     <button
+      type="button"
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="Toggle Sidebar"
-      tabIndex={-1}
-      onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      role="separator"
+      aria-label="Resize sidebar"
+      aria-orientation="vertical"
+      aria-valuemin={SIDEBAR_MIN_WIDTH}
+      aria-valuemax={SIDEBAR_MAX_WIDTH}
+      aria-valuenow={width}
+      tabIndex={0}
+      title="Drag to resize sidebar"
+      onPointerDown={(event) => {
+        if (event.button !== 0) return
+        const sidebar = event.currentTarget.closest<HTMLElement>(
+          '[data-slot="sidebar"]'
+        )
+        const container = sidebar?.querySelector<HTMLElement>(
+          '[data-slot="sidebar-container"]'
+        )
+        const measuredWidth = container?.getBoundingClientRect().width ?? width
+        dragState.current = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startWidth: measuredWidth,
+          side: sidebar?.dataset.side === "right" ? "right" : "left",
+        }
+        event.preventDefault()
+        event.currentTarget.setPointerCapture(event.pointerId)
+      }}
+      onPointerMove={(event) => {
+        const drag = dragState.current
+        if (!drag || drag.pointerId !== event.pointerId) return
+        const direction = drag.side === "right" ? -1 : 1
+        applyWidth(
+          event.currentTarget,
+          drag.startWidth + (event.clientX - drag.startX) * direction
+        )
+      }}
+      onPointerUp={(event) => {
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.releasePointerCapture(event.pointerId)
+        }
+        dragState.current = null
+      }}
+      onPointerCancel={(event) => {
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.releasePointerCapture(event.pointerId)
+        }
+        dragState.current = null
+      }}
+      onKeyDown={(event) => {
+        const sidebar = event.currentTarget.closest<HTMLElement>(
+          '[data-slot="sidebar"]'
+        )
+        const direction = sidebar?.dataset.side === "right" ? -1 : 1
+        if (event.key === "ArrowLeft") {
+          event.preventDefault()
+          applyWidth(
+            event.currentTarget,
+            width - SIDEBAR_RESIZE_STEP * direction
+          )
+        }
+        if (event.key === "ArrowRight") {
+          event.preventDefault()
+          applyWidth(
+            event.currentTarget,
+            width + SIDEBAR_RESIZE_STEP * direction
+          )
+        }
+        if (event.key === "Home") {
+          event.preventDefault()
+          applyWidth(event.currentTarget, SIDEBAR_MIN_WIDTH)
+        }
+        if (event.key === "End") {
+          event.preventDefault()
+          applyWidth(event.currentTarget, SIDEBAR_MAX_WIDTH)
+        }
+      }}
       className={cn(
-        "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
+        "absolute inset-y-0 z-20 hidden w-4 touch-none outline-hidden transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] hover:after:bg-sidebar-border focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
         "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",
         "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
         "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar",
@@ -371,7 +467,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        "no-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "scrollbar-thin scrollbar-gutter-stable scrollbar-track-transparent scrollbar-thumb-[color-mix(in_oklab,var(--sidebar-foreground)_18%,transparent)] flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
         className
       )}
       {...props}

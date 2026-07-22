@@ -118,9 +118,8 @@
 
 /* Team T app themes. Applied as data-team-t-theme on <html> while the Team T
    route is mounted, so portals (mobile sidebar Sheet, dialogs) inherit the
-   tokens too. dark/midnight also carry the .dark class so the dark: variants
-   inside components/ui/* resolve; these blocks win over :root/.dark because
-   html[attr] outranks a bare class. */
+   tokens too. Midnight owns its trophy-room palette; dark and light inherit
+   the standard root palettes and only map the legacy Team T semantic names. */
 html[data-team-t-theme="midnight"],
 .team-t-midnight-surface {
   --background: #09090b;
@@ -154,43 +153,12 @@ html[data-team-t-theme="midnight"],
   --team-t-gold-line: rgba(185, 154, 92, 0.35);
 }
 
-html[data-team-t-theme="dark"] {
-  --primary: #5a2c8c;
-  --primary-foreground: #ffffff;
-  --ring: #9b6cff;
-  --border: rgba(185, 154, 92, 0.24);
-  --input: rgba(185, 154, 92, 0.2);
-  --sidebar-primary: #5a2c8c;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-border: rgba(185, 154, 92, 0.2);
-  --sidebar-ring: #9b6cff;
-  --team-t-gold: #c7ab70;
-  --team-t-gold-strong: #d8bf88;
-  --team-t-gold-on-primary: #d8bf88;
-  --team-t-gold-line: rgba(185, 154, 92, 0.3);
-}
-
-/* Light keeps the gold identity but has to darken it: the midnight gold sits at
-   roughly 2:1 on a near-white surface. gold-on-primary stays light because it
-   is only used on the solid purple primary fill. */
+html[data-team-t-theme="dark"],
 html[data-team-t-theme="light"] {
-  --primary: #4c2378;
-  --primary-foreground: #ffffff;
-  --ring: #7c4dcc;
-  --border: rgba(109, 85, 31, 0.28);
-  --input: rgba(109, 85, 31, 0.24);
-  --sidebar: #faf7f0;
-  --sidebar-foreground: #201c14;
-  --sidebar-primary: #4c2378;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1ece0;
-  --sidebar-accent-foreground: #201c14;
-  --sidebar-border: rgba(109, 85, 31, 0.22);
-  --sidebar-ring: #7c4dcc;
-  --team-t-gold: #6d551f;
-  --team-t-gold-strong: #5f4a1e;
-  --team-t-gold-on-primary: #e8d3a0;
-  --team-t-gold-line: rgba(109, 85, 31, 0.35);
+  --team-t-gold: var(--primary);
+  --team-t-gold-strong: var(--foreground);
+  --team-t-gold-on-primary: var(--primary-foreground);
+  --team-t-gold-line: var(--border);
 }
 
 /* Emphasize borders: keeps background and foreground colors untouched and only
@@ -210,21 +178,13 @@ html[data-emphasize-borders="true"].dark {
   --sidebar-border: oklch(0.556 0 0);
 }
 
-/* Team T emphasizes with gold rather than neutral grey, so the outline still
-   reads as part of the trophy-room identity. Two attributes on <html> outrank
-   the single-attribute theme blocks above. */
-html[data-emphasize-borders="true"][data-team-t-theme] {
+/* Only midnight keeps the gold border treatment. Dark and light use the
+   neutral global emphasis rules above. */
+html[data-emphasize-borders="true"][data-team-t-theme="midnight"] {
   --border: rgba(199, 171, 112, 0.6);
   --input: rgba(199, 171, 112, 0.55);
   --sidebar-border: rgba(199, 171, 112, 0.5);
   --team-t-gold-line: rgba(199, 171, 112, 0.7);
-}
-
-html[data-emphasize-borders="true"][data-team-t-theme="light"] {
-  --border: rgba(109, 85, 31, 0.65);
-  --input: rgba(109, 85, 31, 0.6);
-  --sidebar-border: rgba(109, 85, 31, 0.55);
-  --team-t-gold-line: rgba(109, 85, 31, 0.7);
 }
 
 /* Java code highlighting (components/team-t-app/java-code-block.tsx). Token
@@ -257,6 +217,9 @@ html[data-emphasize-borders="true"] .inventory-preview {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    scrollbar-color: color-mix(in oklab, var(--foreground) 18%, transparent)
+      transparent;
+    scrollbar-width: thin;
   }
   body {
     @apply bg-background text-foreground;
@@ -267,6 +230,27 @@ html[data-emphasize-borders="true"] .inventory-preview {
   }
   html {
     @apply font-sans;
+  }
+
+  *::-webkit-scrollbar {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border: 0.2rem solid transparent;
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--foreground) 18%, transparent);
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--foreground) 30%, transparent);
+    background-clip: padding-box;
   }
 }
 

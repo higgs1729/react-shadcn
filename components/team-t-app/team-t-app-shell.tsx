@@ -274,9 +274,19 @@ function TeamTAppContent({
   }
 
   const closeWindow = (id: string) => {
-    if (windows.length === 1) return
     const index = windows.findIndex((window) => window.id === id)
     if (index === -1) return
+
+    if (windows.length === 1) {
+      const exploreId = createWindowId()
+      setWindows([
+        { id: exploreId, kind: "explore", apiId: null, title: "探索" },
+      ])
+      setActiveWindowId(exploreId)
+      clearSelection()
+      return
+    }
+
     const remaining = windows.filter((window) => window.id !== id)
     setWindows(remaining)
     if (id === activeWindowId) {
@@ -354,7 +364,10 @@ function TeamTAppContent({
             />
           </div>
         ) : (
-          <TeamTWelcome onIntroOpen={openIntroWindow} />
+          <TeamTWelcome
+            key={activeWindow?.id ?? "explore"}
+            onIntroOpen={openIntroWindow}
+          />
         )}
       </SidebarInset>
       <TeamTSettingsDialog

@@ -1,9 +1,11 @@
 "use client"
 
+import * as React from "react"
 import {
   BookOpenIcon,
   Gamepad2Icon,
   MaximizeIcon,
+  MinimizeIcon,
   SearchIcon,
   ShapesIcon,
 } from "lucide-react"
@@ -32,6 +34,26 @@ interface TeamTWelcomeProps {
 }
 
 export function TeamTWelcome({ onIntroOpen }: TeamTWelcomeProps) {
+  const [isFullscreen, setIsFullscreen] = React.useState(false)
+
+  React.useEffect(() => {
+    const syncFullscreen = () =>
+      setIsFullscreen(Boolean(document.fullscreenElement))
+
+    syncFullscreen()
+    document.addEventListener("fullscreenchange", syncFullscreen)
+    return () =>
+      document.removeEventListener("fullscreenchange", syncFullscreen)
+  }, [])
+
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {})
+      return
+    }
+    document.documentElement.requestFullscreen().catch(() => {})
+  }
+
   return (
     <section className="mx-auto flex min-h-[calc(100svh-3.5rem)] max-w-5xl flex-col justify-center px-4 py-10 md:px-8">
       <div className="max-w-2xl">
@@ -60,15 +82,15 @@ export function TeamTWelcome({ onIntroOpen }: TeamTWelcomeProps) {
       </div>
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <Button
-          onClick={() => {
-            // Fullscreen APIはユーザー操作起点でのみ許可されるため、このボタンが入口。
-            if (document.fullscreenElement) return
-            document.documentElement.requestFullscreen().catch(() => {})
-          }}
+          onClick={toggleFullscreen}
           className="border border-[color:var(--team-t-gold-line)] bg-primary text-white shadow-[0_0_0_1px_rgba(183,156,255,0.12),0_0_24px_rgba(139,92,246,0.4)] hover:bg-primary/85"
         >
-          <MaximizeIcon data-icon="inline-start" />
-          全画面で開始
+          {isFullscreen ? (
+            <MinimizeIcon data-icon="inline-start" />
+          ) : (
+            <MaximizeIcon data-icon="inline-start" />
+          )}
+          {isFullscreen ? "全画面を解除" : "全画面で開始"}
         </Button>
         <Button
           variant="outline"

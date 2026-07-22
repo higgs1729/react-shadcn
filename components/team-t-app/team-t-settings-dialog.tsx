@@ -8,6 +8,17 @@ import {
   UserRoundIcon,
 } from "lucide-react"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -156,7 +167,7 @@ function ThemePreview({
           className={`absolute top-3 left-1/2 h-1 w-14 -translate-x-1/2 rounded-full ${theme === "midnight" ? "bg-[#c7ab70]" : theme === "dark" ? "bg-zinc-500" : "bg-zinc-400"}`}
         />
         <span
-          className={`absolute inset-x-3 top-7 h-10 rounded-t-md ${theme === "midnight" ? "bg-[#1c1a20]" : theme === "dark" ? "bg-zinc-100" : "bg-white"}`}
+          className={`absolute inset-x-3 top-7 h-10 rounded-t-md ${theme === "midnight" ? "bg-[#1c1a20]" : theme === "dark" ? "bg-zinc-700" : "bg-white"}`}
         />
         <span
           className={`absolute top-9 left-5 h-1 w-9 rounded-full ${theme === "midnight" ? "bg-[#c7ab70]/70" : "bg-muted-foreground/35"}`}
@@ -176,6 +187,8 @@ function AppearanceSettings({
   preferences,
   onPreferencesChange,
 }: Pick<TeamTSettingsDialogProps, "preferences" | "onPreferencesChange">) {
+  const [reduceMotionWarningOpen, setReduceMotionWarningOpen] =
+    React.useState(false)
   const accentLocked = preferences.theme === "midnight"
   const activeAccent = getTeamTAccent(preferences.accent)
 
@@ -186,10 +199,10 @@ function AppearanceSettings({
           テーマ
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          既定はミッドナイトトロフィールームです。明るさを変えてもゴールドの意匠は残ります。
+          既定はミッドナイトです。ダークとライトは標準の配色で表示します。
         </p>
         <div
-          className="mt-4 grid max-w-2xl grid-cols-3 gap-3"
+          className="mt-4 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3"
           role="group"
           aria-label="テーマ"
         >
@@ -210,7 +223,7 @@ function AppearanceSettings({
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {accentLocked
-            ? "ミッドナイトトロフィールームは配色が固定のため、アクセントは変更できません。"
+            ? "このテーマはアクセントを変更できません。"
             : "選択状態、主要なアクション、フォーカス表示に使う色です。"}
         </p>
         <div
@@ -283,12 +296,44 @@ function AppearanceSettings({
           <Switch
             id="team-t-reduce-motion"
             checked={preferences.reduceMotion}
-            onCheckedChange={(reduceMotion) =>
-              onPreferencesChange({ reduceMotion })
-            }
+            onCheckedChange={(reduceMotion) => {
+              if (reduceMotion) {
+                setReduceMotionWarningOpen(true)
+                return
+              }
+              onPreferencesChange({ reduceMotion: false })
+            }}
           />
         </Label>
       </section>
+
+      <AlertDialog
+        open={reduceMotionWarningOpen}
+        onOpenChange={setReduceMotionWarningOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogMedia>
+              <AccessibilityIcon aria-hidden="true" />
+            </AlertDialogMedia>
+            <AlertDialogTitle>3Dマップの動きも軽減します</AlertDialogTitle>
+            <AlertDialogDescription>
+              有効にすると、APIアーケード内の待機アニメーション、カメラの揺れ、ゲートや筐体のパルス表現が軽減または停止します。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>キャンセル</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                onPreferencesChange({ reduceMotion: true })
+                setReduceMotionWarningOpen(false)
+              }}
+            >
+              動きを減らす
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

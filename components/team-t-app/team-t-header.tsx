@@ -59,34 +59,31 @@ export function TeamTHeader({
             <div
               key={window.id}
               data-active={active}
-              className="relative flex max-w-56 items-center justify-center gap-1.5 rounded-t-md bg-[linear-gradient(to_top,rgba(155,108,255,0.32),rgba(155,108,255,0.06)_62%,transparent)] px-4 text-sm data-[active=false]:bg-none data-[active=false]:text-muted-foreground data-[active=false]:hover:bg-accent/60"
+              className="relative flex max-w-56 items-center justify-center gap-1.5 rounded-t-md bg-[linear-gradient(to_top,rgba(155,108,255,0.32),rgba(155,108,255,0.06)_62%,transparent)] py-1 pr-1.5 pl-3 text-sm data-[active=false]:bg-none data-[active=false]:text-muted-foreground data-[active=false]:hover:bg-accent/60"
             >
-              <Icon
-                aria-hidden="true"
-                className={`size-4 shrink-0 ${active ? "text-[#b79cff]" : ""}`}
-              />
               <button
                 type="button"
                 role="tab"
+                aria-label={`${window.title}に切り替え`}
                 aria-selected={active}
-                className="min-w-0 truncate text-center font-medium outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+                className="absolute inset-0 rounded-t-md outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                 onClick={() => onWindowSwitch(window.id)}
-              >
+              />
+              <Icon
+                aria-hidden="true"
+                className={`pointer-events-none relative size-4 shrink-0 ${active ? "text-[#b79cff]" : ""}`}
+              />
+              <span className="pointer-events-none relative min-w-0 truncate text-center font-medium">
                 {window.title}
+              </span>
+              <button
+                type="button"
+                aria-label={`${window.title}を閉じる`}
+                className="relative z-10 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-hidden after:absolute after:-inset-1 hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={() => onWindowClose(window.id)}
+              >
+                <XIcon className="size-4" />
               </button>
-              {windows.length > 1 ? (
-                <button
-                  type="button"
-                  aria-label={`${window.title}を閉じる`}
-                  className="grid size-5 shrink-0 place-items-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={() => onWindowClose(window.id)}
-                >
-                  <XIcon className="size-3.5" />
-                </button>
-              ) : (
-                // ×非表示時も同じ幅を確保し、アイコンとの左右バランスを保つ
-                <span aria-hidden="true" className="size-5 shrink-0" />
-              )}
               {active ? (
                 <span
                   aria-hidden="true"

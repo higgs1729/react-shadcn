@@ -11,6 +11,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
+  SidebarRail,
 } from "@/components/ui/sidebar"
 import type { ApiCatalogItem } from "@/lib/team-t-app/catalog"
 
@@ -134,6 +135,7 @@ export function TeamTSidebar({
           設定
         </Button>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }
