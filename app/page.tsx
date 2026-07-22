@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation"
+import { LandingHub } from "@/components/landing-hub"
 
 export default function Page() {
-  redirect("/orientation")
+  return <LandingHub />
 }
