@@ -13,7 +13,7 @@
 - `tasks/` — 恒常化されたタスク：下位AI委任 brief
 - `examples/` — 現行 golden flow の成果物(最新のみ)
 - `provenance/` — provenance sidecar のスキーマと運用
-- `apps/` — app ごとの文書。studioApp の spec 正本と Example App 成果物
+- `apps/` — app ごとの文書。studioApp の spec 正本と Example App 成果物、portal(トップ LP)のデザイン方針
 - `case-study/` — ポートフォリオのケーススタディ文書
 - `rfcs/` — 意思決定の経緯記録
 - `block-role-candidates.json` — 新設 blockRole の active candidate(実装済みは `archive/` へ)
