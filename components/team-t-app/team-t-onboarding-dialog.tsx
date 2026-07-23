@@ -4,9 +4,7 @@ import * as React from "react"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  CoinsIcon,
   CompassIcon,
-  Gamepad2Icon,
   MaximizeIcon,
   SearchIcon,
   SparklesIcon,
@@ -32,7 +30,7 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 
-import { TeamTCoinImage } from "./team-t-coin-balance"
+import { TeamTRewardCard } from "./team-t-reward-card"
 
 const tutorialSteps = [
   {
@@ -384,25 +382,18 @@ function TutorialMiniAtlas({ compact = false }: { compact?: boolean }) {
 
 function RewardVisual() {
   return (
-    <div className="absolute inset-6 grid place-items-center" aria-hidden="true">
-      <div className="w-full max-w-64 rounded-2xl border border-[color:var(--team-t-gold-line)] bg-background/88 p-4 shadow-2xl backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <div className="grid size-14 place-items-center rounded-xl border border-[color:var(--team-t-gold-line)] bg-[color:var(--team-t-gold)]/10">
-            <TeamTCoinImage className="size-11 object-contain" />
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground">APIを試して獲得</p>
-            <p className="mt-1 flex items-center gap-1.5 font-semibold">
-              <CoinsIcon className="size-4 text-[color:var(--team-t-gold-strong)]" />
-              Reward coin
-            </p>
-          </div>
-        </div>
-        <div className="mt-4 flex items-center gap-3 rounded-xl bg-primary/15 p-3 text-primary">
-          <Gamepad2Icon className="size-5" />
-          <span className="text-sm font-semibold">APIアーケードへ</span>
-          <MaximizeIcon className="ml-auto size-4" />
-        </div>
+    <div className="absolute inset-5 grid place-items-center">
+      <div
+        inert
+        aria-hidden="true"
+        className="pointer-events-none w-full max-w-68 select-none"
+      >
+        <TeamTRewardCard
+          rewardAmount={5}
+          remaining={1}
+          total={5}
+          onEnter={() => {}}
+        />
       </div>
     </div>
   )
