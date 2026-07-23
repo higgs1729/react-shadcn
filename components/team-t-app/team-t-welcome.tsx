@@ -40,7 +40,7 @@ const categoryNodes = [
       "複数の分野を横断するAPIや、ひとつの分類に収まらない発見の入口。",
     tags: ["複数API", "横断検索", "新着"],
     position: { left: "70.57%", top: "78.32%" },
-    panelClassName: "right-full bottom-0 mr-5",
+    panelClassName: "right-full top-full mt-4 mr-5",
   },
   {
     id: "entertainment",
@@ -49,7 +49,7 @@ const categoryNodes = [
       "クイズ、ゲーム、ジョークや雑学など、体験を楽しくするAPI。",
     tags: ["クイズ・ゲーム", "ジョーク・雑学", "名言"],
     position: { left: "29.43%", top: "78.32%" },
-    panelClassName: "bottom-0 left-full ml-5",
+    panelClassName: "top-full left-full mt-4 ml-5",
   },
   {
     id: "data",
@@ -265,7 +265,7 @@ function DesktopCategoryAtlas({
     >
       <div
         aria-hidden="true"
-        className="absolute top-1/2 left-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-dashed border-[color:var(--team-t-gold)]/60 shadow-[0_0_32px_color-mix(in_oklab,var(--team-t-gold)_10%,transparent)]"
+        className="absolute top-[56%] left-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-dashed border-[color:var(--team-t-gold)]/60 shadow-[0_0_32px_color-mix(in_oklab,var(--team-t-gold)_10%,transparent)]"
       />
       <svg
         aria-hidden="true"
@@ -276,7 +276,7 @@ function DesktopCategoryAtlas({
           <line
             key={category.id}
             x1="50%"
-            y1="50%"
+            y1="56%"
             x2={category.position.left}
             y2={category.position.top}
             stroke="color-mix(in oklab, var(--team-t-gold) 28%, transparent)"
@@ -289,7 +289,7 @@ function DesktopCategoryAtlas({
       </svg>
       <div
         aria-hidden="true"
-        className="absolute top-1/2 left-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[color:var(--team-t-gold-line)] bg-background/75 text-[color:var(--team-t-gold)] shadow-[0_0_34px_color-mix(in_oklab,var(--team-t-gold)_18%,transparent)] backdrop-blur-sm"
+        className="absolute top-[56%] left-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[color:var(--team-t-gold-line)] bg-background/75 text-[color:var(--team-t-gold)] shadow-[0_0_34px_color-mix(in_oklab,var(--team-t-gold)_18%,transparent)] backdrop-blur-sm"
       >
         <SparklesIcon className="size-6" />
       </div>
@@ -458,11 +458,11 @@ export function TeamTWelcome({
           onSelect={toggleCategory}
         />
 
-        <div className="mt-auto flex flex-wrap items-center gap-4 pt-5 pb-4 md:pb-5">
+        <div className="mt-auto flex flex-wrap items-center gap-4 pt-5 pb-7 md:pb-8">
           <Button
             variant="outline"
             onClick={toggleFullscreen}
-            className="h-11 border-primary/55 bg-background/50 px-5 text-base text-foreground shadow-none backdrop-blur-sm hover:bg-primary/15 [&_svg]:size-5"
+            className="h-[3.025rem] -translate-y-0.5 border-primary/55 bg-background/50 px-[1.375rem] text-[1.1rem] text-foreground shadow-none backdrop-blur-sm hover:bg-primary/15 [&_svg]:size-[1.375rem]"
           >
             {isFullscreen ? (
               <MinimizeIcon data-icon="inline-start" />
@@ -474,7 +474,7 @@ export function TeamTWelcome({
           <Button
             variant="ghost"
             onClick={onIntroOpen}
-            className="h-11 px-5 text-base text-[color:var(--team-t-gold-strong)] hover:bg-primary/15 hover:text-foreground [&_svg]:size-5"
+            className="h-[3.025rem] -translate-y-0.5 px-[1.375rem] text-[1.1rem] text-[color:var(--team-t-gold-strong)] hover:bg-primary/15 hover:text-foreground [&_svg]:size-[1.375rem]"
           >
             <BookOpenIcon data-icon="inline-start" />
             このアプリの紹介を見る
