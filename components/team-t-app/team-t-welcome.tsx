@@ -254,6 +254,18 @@ function DesktopCategoryAtlas({
   onSelect: (id: CategoryNodeId) => void
   onDismiss: () => void
 }) {
+  React.useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Element)) return
+      if (target.closest("[data-team-t-category-trigger]")) return
+      onDismiss()
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown)
+    return () => document.removeEventListener("pointerdown", handlePointerDown)
+  }, [onDismiss])
+
   return (
     <div
       data-team-t-category-atlas
@@ -299,6 +311,7 @@ function DesktopCategoryAtlas({
         return (
           <div
             key={category.id}
+            data-team-t-category-trigger
             className={cn(
               "absolute z-10 -translate-x-1/2 -translate-y-1/2",
               selected && "z-30"
