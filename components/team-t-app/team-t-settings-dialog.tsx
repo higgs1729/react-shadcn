@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   AccessibilityIcon,
+  CircleHelpIcon,
   PaletteIcon,
   RotateCcwIcon,
   UserRoundIcon,
@@ -40,7 +41,7 @@ import {
   type TeamTTheme,
 } from "@/lib/team-t-app/preferences"
 
-type SettingsSection = "appearance" | "profile"
+type SettingsSection = "appearance" | "profile" | "guide"
 
 interface TeamTSettingsDialogProps {
   open: boolean
@@ -50,6 +51,7 @@ interface TeamTSettingsDialogProps {
   onPreferencesChange: (update: Partial<TeamTPreferences>) => void
   onProfileChange: (profile: TeamTProfile) => void
   onReset: () => void
+  onTutorialOpen: () => void
 }
 
 export function TeamTSettingsDialog({
@@ -60,6 +62,7 @@ export function TeamTSettingsDialog({
   onPreferencesChange,
   onProfileChange,
   onReset,
+  onTutorialOpen,
 }: TeamTSettingsDialogProps) {
   const [section, setSection] = React.useState<SettingsSection>("appearance")
 
@@ -69,7 +72,7 @@ export function TeamTSettingsDialog({
         <DialogHeader className="sr-only">
           <DialogTitle>設定</DialogTitle>
           <DialogDescription>
-            表示とプロフィールを変更します。
+            表示、プロフィール、使い方を確認・変更します。
           </DialogDescription>
         </DialogHeader>
         <div className="grid min-h-0 grid-cols-[9rem_minmax(0,1fr)]">
@@ -88,6 +91,12 @@ export function TeamTSettingsDialog({
                 label="プロフィール"
                 onClick={() => setSection("profile")}
               />
+              <SettingsNavButton
+                active={section === "guide"}
+                icon={CircleHelpIcon}
+                label="使い方"
+                onClick={() => setSection("guide")}
+              />
             </nav>
           </aside>
           <div className="min-h-0 scrollbar-gutter-stable overflow-y-auto p-5 sm:p-6">
@@ -96,11 +105,13 @@ export function TeamTSettingsDialog({
                 preferences={preferences}
                 onPreferencesChange={onPreferencesChange}
               />
-            ) : (
+            ) : section === "profile" ? (
               <ProfileSettings
                 profile={profile}
                 onProfileChange={onProfileChange}
               />
+            ) : (
+              <GuideSettings onTutorialOpen={onTutorialOpen} />
             )}
             <Button
               type="button"
@@ -116,6 +127,33 @@ export function TeamTSettingsDialog({
         </div>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function GuideSettings({ onTutorialOpen }: { onTutorialOpen: () => void }) {
+  return (
+    <section>
+      <h2 className="text-lg font-semibold">使い方</h2>
+      <p className="mt-1 text-sm leading-6 text-muted-foreground">
+        APIの探し方、コイン、APIアーケードまでの基本操作をもう一度確認できます。
+      </p>
+      <div className="mt-5 rounded-xl border bg-muted/25 p-4">
+        <div className="flex items-start gap-3">
+          <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
+            <CircleHelpIcon className="size-5" aria-hidden="true" />
+          </span>
+          <div className="min-w-0">
+            <p className="font-medium">チュートリアル</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              3つの短いステップで、探索の入口を確認します。完了すると全画面表示へ切り替わります。
+            </p>
+          </div>
+        </div>
+        <Button type="button" className="mt-4" onClick={onTutorialOpen}>
+          チュートリアルを見る
+        </Button>
+      </div>
+    </section>
   )
 }
 

@@ -4,6 +4,7 @@ export const teamTStorageKeys = {
   reward: "team-t:v1:reward",
   arcadeWorld: "team-t:v1:arcade-world",
   categoryFilterGuide: "team-t:v1:category-filter-guide",
+  onboarding: "team-t:v1:onboarding",
 } as const
 
 export const teamTThemes = ["midnight", "dark", "light"] as const
@@ -207,6 +208,22 @@ export function writeTeamTArcadeWorldSettings(
   }
 }
 
+export function readTeamTOnboardingCompleted(storage: StorageLike) {
+  try {
+    return storage.getItem(teamTStorageKeys.onboarding) === "completed"
+  } catch {
+    return false
+  }
+}
+
+export function writeTeamTOnboardingCompleted(storage: StorageLike) {
+  try {
+    storage.setItem(teamTStorageKeys.onboarding, "completed")
+  } catch {
+    // 保存不可の場合も、現在のセッションでは React state を正本にする。
+  }
+}
+
 export function resetTeamTPreferences(storage: StorageLike) {
   try {
     storage.removeItem(teamTStorageKeys.preferences)
@@ -214,6 +231,7 @@ export function resetTeamTPreferences(storage: StorageLike) {
     storage.removeItem(teamTStorageKeys.reward)
     storage.removeItem(teamTStorageKeys.arcadeWorld)
     storage.removeItem(teamTStorageKeys.categoryFilterGuide)
+    storage.removeItem(teamTStorageKeys.onboarding)
   } catch {
     // 保存不可の環境では削除も不要。呼び出し側が表示状態を既定値へ戻す。
   }

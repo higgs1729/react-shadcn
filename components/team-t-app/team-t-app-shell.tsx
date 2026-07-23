@@ -8,19 +8,20 @@ import {
   SidebarProvider,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { TooltipProvider } from "@/components/ui/tooltip"
 import { filterCatalog, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
 import {
   defaultTeamTPreferences,
   defaultTeamTProfile,
   readTeamTPreferences,
   readTeamTProfile,
+  readTeamTOnboardingCompleted,
   resetTeamTPreferences,
   teamTStorageKeys,
   type TeamTPreferences,
   type TeamTProfile,
   writeTeamTPreferences,
   writeTeamTProfile,
+  writeTeamTOnboardingCompleted,
 } from "@/lib/team-t-app/preferences"
 import { getRecommendedItems } from "@/lib/team-t-app/recommendations"
 import {
@@ -38,9 +39,9 @@ import { TeamTCoinBurst } from "./team-t-coin-burst"
 import { TeamTWorldOverlay } from "./team-t-world-overlay"
 import { TeamTHeader, type TeamTWindow } from "./team-t-header"
 import { TeamTIntro } from "./team-t-intro"
+import { TeamTOnboardingDialog } from "./team-t-onboarding-dialog"
 import { TeamTSettingsDialog } from "./team-t-settings-dialog"
 import { TeamTSidebar } from "./team-t-sidebar"
-import { teamTOverflowTooltipDelayMs } from "./team-t-overflow-label"
 import { TeamTWelcome } from "./team-t-welcome"
 import { useTeamTAppearance } from "./use-team-t-appearance"
 
@@ -94,6 +95,11 @@ function TeamTAppContent({
   onSpendCoins,
   onRefundCoins,
   onAwardCoins,
+  tutorialOpen,
+  tutorialFirstRun,
+  onTutorialOpenChange,
+  onTutorialComplete,
+  onTutorialSkip,
 }: TeamTAppShellProps & {
   preferences: TeamTPreferences
   profile: TeamTProfile
@@ -105,6 +111,11 @@ function TeamTAppContent({
   onSpendCoins: (cost: number) => boolean
   onRefundCoins: (cost: number) => void
   onAwardCoins: (coins: number) => void
+  tutorialOpen: boolean
+  tutorialFirstRun: boolean
+  onTutorialOpenChange: (open: boolean) => void
+  onTutorialComplete: () => void
+  onTutorialSkip: () => void
 }) {
   const { isMobile, setOpenMobile } = useSidebar()
   const [query, setQuery] = React.useState("")
@@ -422,7 +433,21 @@ function TeamTAppContent({
         onOpenChange={setSettingsOpen}
         onPreferencesChange={onPreferencesChange}
         onProfileChange={onProfileChange}
-        onReset={onReset}
+        onReset={() => {
+          setSettingsOpen(false)
+          onReset()
+        }}
+        onTutorialOpen={() => {
+          setSettingsOpen(false)
+          onTutorialOpenChange(true)
+        }}
+      />
+      <TeamTOnboardingDialog
+        open={tutorialOpen}
+        firstRun={tutorialFirstRun}
+        onOpenChange={onTutorialOpenChange}
+        onComplete={onTutorialComplete}
+        onSkip={onTutorialSkip}
       />
       <TeamTWorldOverlay
         open={gamesOpen}
@@ -449,6 +474,10 @@ export function TeamTAppShell({ catalog }: TeamTAppShellProps) {
   )
   const rewardRef = React.useRef<TeamTRewardState>(defaultTeamTRewardState)
   const [hasLoadedPreferences, setHasLoadedPreferences] = React.useState(false)
+  const [tutorialState, setTutorialState] = React.useState({
+    open: false,
+    firstRun: false,
+  })
 
   React.useEffect(() => {
     const storage = getLocalStorage()
@@ -458,6 +487,11 @@ export function TeamTAppShell({ catalog }: TeamTAppShellProps) {
       const storedReward = readTeamTReward(storage)
       rewardRef.current = storedReward
       setReward(storedReward)
+      if (!readTeamTOnboardingCompleted(storage)) {
+        setTutorialState({ open: true, firstRun: true })
+      }
+    } else {
+      setTutorialState({ open: true, firstRun: true })
     }
     setHasLoadedPreferences(true)
   }, [])
@@ -494,7 +528,41 @@ export function TeamTAppShell({ catalog }: TeamTAppShellProps) {
     setProfile(defaultTeamTProfile)
     rewardRef.current = defaultTeamTRewardState
     setReward(defaultTeamTRewardState)
+    setTutorialState({ open: true, firstRun: true })
   }, [])
+
+  const markTutorialCompleted = React.useCallback(() => {
+    const storage = getLocalStorage()
+    if (storage) writeTeamTOnboardingCompleted(storage)
+  }, [])
+
+  const completeTutorial = React.useCallback(async () => {
+    let fullscreenRequest: Promise<void> | undefined
+    try {
+      if (
+        !document.fullscreenElement &&
+        typeof document.documentElement.requestFullscreen === "function"
+      ) {
+        fullscreenRequest = document.documentElement.requestFullscreen()
+      }
+    } catch {
+      // 同期的に拒否するブラウザでも、通常表示で探索を続ける。
+    }
+
+    markTutorialCompleted()
+    setTutorialState({ open: false, firstRun: false })
+
+    try {
+      await fullscreenRequest
+    } catch {
+      // ブラウザが拒否した場合も、通常表示で探索を続けられる。
+    }
+  }, [markTutorialCompleted])
+
+  const skipTutorial = React.useCallback(() => {
+    markTutorialCompleted()
+    setTutorialState({ open: false, firstRun: false })
+  }, [markTutorialCompleted])
 
   const recordInteraction = React.useCallback(() => {
     const result = recordPreviewInteraction(rewardRef.current)
@@ -563,6 +631,13 @@ export function TeamTAppShell({ catalog }: TeamTAppShellProps) {
         onSpendCoins={spendCoins}
         onRefundCoins={refundCoins}
         onAwardCoins={awardCoins}
+        tutorialOpen={tutorialState.open}
+        tutorialFirstRun={tutorialState.firstRun}
+        onTutorialOpenChange={(open) =>
+          setTutorialState({ open, firstRun: false })
+        }
+        onTutorialComplete={() => void completeTutorial()}
+        onTutorialSkip={skipTutorial}
       />
     </SidebarProvider>
   )
