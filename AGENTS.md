@@ -20,17 +20,22 @@ npm workspaces。1リポジトリで複数アプリを持ち、GitHub Pages の�
 
 ## アプリと配信先
 
-| workspace | basePath | 配信 URL |
-| --- | --- | --- |
-| `apps/studio` | `/react-shadcn` | `/react-shadcn/`(ポータル LP と Studio) |
-| `apps/team-t` | `/react-shadcn/team-t` | `/react-shadcn/team-t/` |
+| workspace | basePath | 配信 URL | UI |
+| --- | --- | --- | --- |
+| `apps/portal` | `/react-shadcn` | `/react-shadcn/` | なし(自己完結 CSS) |
+| `apps/studio` | `/react-shadcn/studio` | `/react-shadcn/studio/` | shadcn |
+| `apps/team-t` | `/react-shadcn/team-t` | `/react-shadcn/team-t/` | shadcn |
+| `apps/python-test` | `/react-shadcn/python-test` | `/react-shadcn/python-test/` | shadcn |
 
-dev では各アプリを個別に起動する(`npm -w apps/studio run dev` / `npm -w apps/team-t run dev`)。
-別ポートになるため、ポータルからのアプリ間リンクは dev では解決しない。合成後の本番でのみ繋がる。
+Storybook は studio のみが持ち、`/react-shadcn/storybook/` に合成される。
+
+dev では各アプリを個別に起動する(`npm -w apps/<name> run dev`)。basePath は dev でも効くので
+`localhost:3000/studio/` のように本番と同じ route 形になるが、アプリごとに別ポートになるため
+ポータルからのアプリ間リンクは dev では解決しない。合成後の本番でのみ繋がる。
 
 ## 移行状況(2026-08-03 時点)
 
-- 完了: Phase 1(workspaces 化)・Phase 2(`apps/team-t` 分離)
-- 未着手: `apps/portal` / `apps/python-test` の分離、`packages/shadcn-kit` の抽出、GoldenFlow の CI ゲート解除
-- `apps/team-t` の `components/ui` `components/blocks` と `app/globals.css` は studio からの複製。
-  重複の解消は Phase 4 で行う
+- 完了: Phase 1(workspaces 化)・Phase 2(`apps/team-t`)・Phase 3(`apps/portal`・`apps/python-test`)
+- 未着手: `packages/shadcn-kit` の抽出(Phase 4)、GoldenFlow の CI ゲート解除(Phase 5)
+- `apps/team-t` と `apps/python-test` の `components/ui` `app/globals.css` は studio からの複製。
+  studio の globals.css にも他アプリ用トークンが残っている。重複の解消は Phase 4 で行う

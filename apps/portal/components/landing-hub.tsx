@@ -26,12 +26,12 @@ const apps: AppEntry[] = [
     title: "AI Design System Studio",
     description:
       "briefから実装までを分解し、採用したパターン、選定理由、検証結果をまとめた設計ポートフォリオです。",
-    href: `${basePath}/overview/`,
+    href: `${basePath}/studio/overview/`,
     action: "Studioを開く",
     facts: ["13画面タイプ", "33ブロック役割", "実装例と検証記録"],
     links: [
-      { label: "パターン一覧", href: `${basePath}/patterns/` },
-      { label: "品質レポート", href: `${basePath}/quality/` },
+      { label: "パターン一覧", href: `${basePath}/studio/patterns/` },
+      { label: "品質レポート", href: `${basePath}/studio/quality/` },
     ],
   },
   {

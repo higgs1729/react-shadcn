@@ -38,18 +38,18 @@ jobs:
       - run: npm -w apps/team-t run validate
       # Each app statically exports into its own out/. Their basePath already
       # encodes the subdirectory they will occupy, so composing is a plain copy.
-      - run: npm -w apps/studio run build
-      - run: npm -w apps/team-t run build
+      - run: npm run build --workspaces --if-present
       # Component lab co-located at /<repo>/storybook (relative-asset build).
       - run: npm -w apps/studio run build-storybook
-      # Compose the deployable tree. apps/studio still holds the portal and the
-      # remaining routes, so it lands at the site root; sibling apps go into the
-      # subdirectory matching their basePath.
+      # Compose the deployable tree: the portal takes the root, every other app
+      # goes into the subdirectory matching its basePath.
       - run: |
           mkdir -p dist
-          cp -r apps/studio/out/* dist/
-          mkdir -p dist/team-t
-          cp -r apps/team-t/out/* dist/team-t/
+          cp -r apps/portal/out/* dist/
+          for app in studio team-t python-test; do
+            mkdir -p "dist/$app"
+            cp -r "apps/$app/out/." "dist/$app/"
+          done
           mkdir -p dist/storybook
           cp -r apps/studio/storybook-static/* dist/storybook/
           # Bypass Jekyll so the _next/ directory is served verbatim.

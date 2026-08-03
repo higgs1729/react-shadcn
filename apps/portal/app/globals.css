@@ -1,0 +1,23 @@
+/* The portal deliberately ships no UI kit: landing-hub.tsx carries its own
+   scoped styles and uses no utility classes. All this file has to do is
+   neutralize the browser defaults that a CSS reset would otherwise handle. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}

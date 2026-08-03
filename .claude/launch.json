@@ -2,17 +2,18 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "storybook",
+      "name": "portal",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["-w", "apps/studio", "run", "storybook", "--", "--no-open", "--ci"],
-      "port": 6006
+      "runtimeArgs": ["-w", "apps/portal", "run", "dev", "--", "--port", "3000"],
+      "port": 3000,
+      "autoPort": false
     },
     {
-      "name": "next",
+      "name": "studio",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["-w", "apps/studio", "run", "dev"],
-      "port": 3000,
-      "autoPort": true
+      "runtimeArgs": ["-w", "apps/studio", "run", "dev", "--", "--port", "3002"],
+      "port": 3002,
+      "autoPort": false
     },
     {
       "name": "team-t",
@@ -20,6 +21,19 @@
       "runtimeArgs": ["-w", "apps/team-t", "run", "dev", "--", "--port", "3001"],
       "port": 3001,
       "autoPort": false
+    },
+    {
+      "name": "python-test",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["-w", "apps/python-test", "run", "dev", "--", "--port", "3003"],
+      "port": 3003,
+      "autoPort": false
+    },
+    {
+      "name": "storybook",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["-w", "apps/studio", "run", "storybook", "--", "--no-open", "--ci"],
+      "port": 6006
     }
   ]
 }

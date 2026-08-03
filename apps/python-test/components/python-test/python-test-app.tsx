@@ -37,7 +37,9 @@ import { cn } from "@/lib/utils"
 type View = "home" | "quiz" | "browse" | "result"
 type Notice = { title: string; description: string }
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+// This app owns a subtree ("/python-test"); the portal sits at the site root.
+// A link back to it has to use the site root, not this app's basePath.
+const siteBasePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? ""
 const ALL_CATS = Object.keys(CATEGORIES) as CategoryKey[]
 
 const INITIAL_SETTINGS: HomeSettings = {
@@ -239,7 +241,7 @@ export function PythonTestApp() {
               書き出し
             </Button>
             <a
-              href={`${basePath}/`}
+              href={`${siteBasePath}/`}
               className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
             >
               <ArrowLeftIcon />

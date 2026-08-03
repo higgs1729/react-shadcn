@@ -22,7 +22,7 @@ export default defineConfig({
   },
   webServer: {
     command: `npx next dev --port ${PORT}`,
-    url: BASE_URL,
+    url: `${BASE_URL}/studio/`,
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },

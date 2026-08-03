@@ -8,8 +8,7 @@ Next.js route。route group でシステムと作品を分離しており、URL 
 
 - `(system)/` — デザインシステム側。在庫 screen 実体(`*-01/`)・golden flow demo(`login/`・`dashboard/`・`flows/`)・`example-previews/`
 - `(studio)/` — 作品(studioApp)側。ポートフォリオの Page 群
-- `(python-test)/` — Python データ分析試験の学習アプリ。静的 export 上でブラウザ保存を使う
-- `page.tsx`・`orientation/` — `page.tsx` は全アプリのランディング(ハブ。`components/landing-hub.tsx`)で各アプリへ分岐。`orientation/` は作品(studioApp)のイントロ
+- `page.tsx`・`orientation/` — `page.tsx` は `/overview` へ送るだけの入口。`orientation/` は作品(studioApp)のイントロ
 - `layout.tsx`・`globals.css` — 全体共有
 
 ## このディレクトリだけの約束
