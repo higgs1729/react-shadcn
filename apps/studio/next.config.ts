@@ -25,11 +25,14 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
-  // Pin the workspace root to this project. A stray package-lock.json in the
-  // user's home directory otherwise makes Turbopack treat the entire home
-  // folder as the workspace, scanning/watching it until the heap OOMs.
+  // Pin the workspace root to the monorepo root (where package-lock.json and
+  // the hoisted node_modules live). Turbopack refuses to resolve files outside
+  // its root, so pointing this at the app directory makes the hoisted `next`
+  // package unresolvable. Pinning it explicitly also keeps auto-detection from
+  // walking past the repo to a stray package-lock.json in the user's home
+  // directory, which made Turbopack watch the entire home folder until it OOMed.
   turbopack: {
-    root: path.join(__dirname),
+    root: path.join(__dirname, "..", ".."),
   },
 }
 

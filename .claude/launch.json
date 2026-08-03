@@ -4,13 +4,13 @@
     {
       "name": "storybook",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "storybook", "--", "--no-open", "--ci"],
+      "runtimeArgs": ["-w", "apps/studio", "run", "storybook", "--", "--no-open", "--ci"],
       "port": 6006
     },
     {
       "name": "next",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": ["-w", "apps/studio", "run", "dev"],
       "port": 3000,
       "autoPort": true
     }

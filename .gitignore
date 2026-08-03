@@ -1,5 +1,8 @@
+# Patterns are intentionally unanchored: every app under apps/* produces its own
+# node_modules, .next, out and test-results.
+
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -9,16 +12,16 @@
 !.yarn/versions
 
 # testing
-/coverage
-/test-results
-/playwright-report
+coverage
+test-results
+playwright-report
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build
 
 # misc
 .DS_Store

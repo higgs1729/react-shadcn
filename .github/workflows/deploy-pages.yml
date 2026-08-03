@@ -34,19 +34,24 @@ jobs:
       # `checks` run still publishes (that is how the vendored three.min.js lint
       # failure went unnoticed from 6cbc202). The build and storybook checks are
       # omitted here because the two steps below already perform them.
-      - run: npm run checks -- --only contracts,lint,typecheck
-      # Static export -> out/
-      - run: npm run build
+      - run: npm -w apps/studio run checks -- --only contracts,lint,typecheck
+      # Static export -> apps/studio/out/
+      - run: npm -w apps/studio run build
       # Component lab co-located at /<repo>/storybook (relative-asset build).
-      - run: npm run build-storybook
+      - run: npm -w apps/studio run build-storybook
+      # Compose the deployable tree. Today apps/studio still holds every route,
+      # so it lands at the site root; later phases add sibling apps under their
+      # own subdirectories here.
       - run: |
-          mkdir -p out/storybook
-          cp -r storybook-static/* out/storybook/
+          mkdir -p dist
+          cp -r apps/studio/out/* dist/
+          mkdir -p dist/storybook
+          cp -r apps/studio/storybook-static/* dist/storybook/
           # Bypass Jekyll so the _next/ directory is served verbatim.
-          touch out/.nojekyll
+          touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: dist
 
   deploy:
     needs: build
