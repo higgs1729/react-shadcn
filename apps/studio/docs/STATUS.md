@@ -8,15 +8,17 @@
 
 ## 到達状態
 
+- モノレポ化 Phase 1-2 完了(2026-08-03)。本 app は `apps/studio` になり、Team T は `apps/team-t` へ分離。
+  リポジトリ全体の地図はルートの `AGENTS.md` を見る。本書は studio の現在地のみを扱う
 - 在庫: **13 ScreenTypes / 33 blockRoles**。全 role・type に experimental inventory あり(`npm run report:coverage` = gap 0)
 - golden flow `dryrun-saas-ops-01`(3画面)と flow `studio-portfolio-01`(16 step)はともに verified・unresolved 0
 - 旧 `app/flows/studio-portfolio-01/` の16 route は削除済み(在庫実体 `app/(system)/*-01/`・registry・story は不変)
-- システム/作品の分断済み(2026-07-16): 在庫実体は `app/(system)/`+`components/blocks/`、作品は `app/(studio)/`+`components/studio-portfolio/`+`lib/studio-portfolio/`+`docs/apps/studio/`。URL は route group のため不変。registry パス変更に伴い provenance sidecar は両フロー再生成済み
-- 文書の役割分担を整理済み: README=概要のみ / AGENTS.md=規範と地図 / 本書=現在地
+- システム/作品の分断済み(2026-07-16): 在庫実体は `app/(system)/`+`components/blocks/`、作品は `app/(studio)/`+`components/studio-portfolio/`+`lib/studio-portfolio/`+`docs/apps/studio/`。URL は route group のため不変
 
 ## 着手予定の作業
+- モノレポ化 Phase 3(`apps/portal` と `apps/python-test` の分離。studio の URL が `/studio/` 配下へ移る)
+- モノレポ化 Phase 4-5(`packages/shadcn-kit` 抽出・GoldenFlow の CI ゲート解除)
 - maturity 昇格(人間レビュー専用)と blockRole 実装品質の一覧化
-- 次の ScreenType 候補: `spatial-explorer` / `calendar-scheduler` / `operations-console`(いずれも新 role 必要性の評価から)
 
 ## 既知の課題
 
