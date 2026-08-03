@@ -8,10 +8,10 @@ import { CommentThread, type CommentThreadComment } from "@/components/blocks/co
 import { DocumentBodyEditor } from "@/components/blocks/document-body-editor-01"
 import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@react-shadcn/shadcn-kit/ui/empty"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import workspaceData from "./data.json"
 

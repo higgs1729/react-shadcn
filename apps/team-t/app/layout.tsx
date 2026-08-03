@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import { Geist_Mono, Inter } from "next/font/google"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { sidebarWidthPrePaintScript } from "@/lib/sidebar-width"
-import { cn } from "@/lib/utils"
+import { ThemeProvider } from "@react-shadcn/shadcn-kit/components/theme-provider"
+import { sidebarWidthPrePaintScript } from "@react-shadcn/shadcn-kit/lib/sidebar-width"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 // next.config.ts exposes the app's full basePath here, so asset URLs stay
 // correct whether the app is served from "/team-t" locally or from

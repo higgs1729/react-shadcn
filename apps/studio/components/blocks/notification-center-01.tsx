@@ -2,22 +2,22 @@
 
 import { BellIcon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Item,
   ItemContent,
   ItemDescription,
   ItemGroup,
   ItemTitle,
-} from "@/components/ui/item"
+} from "@react-shadcn/shadcn-kit/ui/item"
 import {
   Popover,
   PopoverContent,
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@react-shadcn/shadcn-kit/ui/popover"
 
 export interface NotificationCenterNotification {
   id: string

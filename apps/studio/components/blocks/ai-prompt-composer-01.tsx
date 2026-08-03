@@ -2,13 +2,13 @@
 
 import { PaperclipIcon, SendIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupTextarea,
-} from "@/components/ui/input-group"
+} from "@react-shadcn/shadcn-kit/ui/input-group"
 
 export interface AiPromptComposerProps {
   value: string

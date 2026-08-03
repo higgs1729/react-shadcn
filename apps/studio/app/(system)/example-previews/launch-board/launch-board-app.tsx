@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 
 import { BoardColumn, type BoardColumnCard } from "@/components/blocks/board-column-01"
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -21,9 +21,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 
 type Column = { title: string; status: string; cards: BoardColumnCard[] }
 

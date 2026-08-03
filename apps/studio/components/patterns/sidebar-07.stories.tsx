@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { AppSidebar } from '@/components/blocks/app-sidebar'
-import { SidebarProvider } from '@/components/ui/sidebar'
+import { SidebarProvider } from '@react-shadcn/shadcn-kit/ui/sidebar'
 
 const meta = {
   title: 'Blocks/app-shell-sidebar/Sidebar 07',

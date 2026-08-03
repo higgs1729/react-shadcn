@@ -13,17 +13,17 @@ import {
   SettingsSection,
   type SettingsSectionRow,
 } from "@/components/blocks/settings-section-01"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
-import { Switch } from "@/components/ui/switch"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
+import { Field, FieldContent, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Switch } from "@react-shadcn/shadcn-kit/ui/switch"
 
 type ThemeChoice = "system" | "dark" | "light"
 type SettingsSectionId = "appearance" | "behavior"

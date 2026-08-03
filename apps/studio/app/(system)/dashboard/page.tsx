@@ -6,13 +6,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@react-shadcn/shadcn-kit/ui/breadcrumb"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 export default function Page() {
   return (

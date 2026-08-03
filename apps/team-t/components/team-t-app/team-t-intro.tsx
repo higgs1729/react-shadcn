@@ -3,7 +3,7 @@
 import * as React from "react"
 import { ArrowLeftIcon, ArrowRightIcon, BookOpenIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import { findCatalogItem } from "@/lib/team-t-app/catalog"
 import { introPages, type IntroApiEntry } from "@/lib/team-t-app/intro-tour"
 

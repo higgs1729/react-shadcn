@@ -2,8 +2,8 @@
 
 import { BookOpenIcon, CompassIcon, PlusIcon, XIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { SidebarTrigger } from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import { ApiPageIcon } from "./category-icon"
 import { TeamTOverflowLabel } from "./team-t-overflow-label"

@@ -15,8 +15,8 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@react-shadcn/shadcn-kit/ui/dialog"
 
 type View = "overview" | "incidents" | "services"
 type Period = 7 | 30 | 90

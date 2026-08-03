@@ -2,15 +2,15 @@
 
 import { PlusIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Item,
   ItemContent,
   ItemDescription,
   ItemGroup,
   ItemTitle,
-} from "@/components/ui/item"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "@react-shadcn/shadcn-kit/ui/item"
+import { ScrollArea } from "@react-shadcn/shadcn-kit/ui/scroll-area"
 
 export interface AiConversationListItem {
   id: string

@@ -3,14 +3,14 @@
 import * as React from "react"
 import { CheckCircle2Icon, GalleryVerticalEndIcon, LockIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@react-shadcn/shadcn-kit/ui/card"
 import {
   Field,
   FieldDescription,
@@ -18,8 +18,8 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@react-shadcn/shadcn-kit/ui/field"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 
 const WORKSPACE = "Northstar"
 const STORAGE_KEY = "studio-example:member-gate"

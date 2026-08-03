@@ -3,8 +3,8 @@
 import Image from "next/image"
 import { Settings2Icon } from "lucide-react"
 
-import { ResizableSidebarRail } from "@/components/resizable-sidebar-rail"
-import { Button } from "@/components/ui/button"
+import { ResizableSidebarRail } from "@react-shadcn/shadcn-kit/components/resizable-sidebar-rail"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +13,7 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 import type { ApiCatalogItem } from "@/lib/team-t-app/catalog"
 import { interactionsPerCoin } from "@/lib/team-t-app/rewards"
 

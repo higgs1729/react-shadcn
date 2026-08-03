@@ -15,19 +15,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@react-shadcn/shadcn-kit/ui/alert-dialog"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Card, CardContent } from "@react-shadcn/shadcn-kit/ui/card"
+import { Checkbox } from "@react-shadcn/shadcn-kit/ui/checkbox"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+} from "@react-shadcn/shadcn-kit/ui/collapsible"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
+import { Label } from "@react-shadcn/shadcn-kit/ui/label"
+import { NativeSelect, NativeSelectOption } from "@react-shadcn/shadcn-kit/ui/native-select"
+import { ToggleGroup, ToggleGroupItem } from "@react-shadcn/shadcn-kit/ui/toggle-group"
 import {
   CATEGORIES,
   LEVEL_LABEL,
@@ -49,7 +49,7 @@ import {
   type NumFilter,
 } from "@/lib/python-test/quiz"
 import { MarkDot } from "@/components/python-test/mark-bar"
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 const CAT_KEYS = Object.keys(CATEGORIES) as CategoryKey[]
 

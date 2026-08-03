@@ -3,9 +3,9 @@
 import * as React from "react"
 import { BadgeDollarSignIcon, CheckCircle2Icon, ChevronRightIcon, CreditCardIcon, Grid2X2Icon, LayoutListIcon, ReceiptTextIcon, SearchIcon, UsersRoundIcon, type LucideIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@react-shadcn/shadcn-kit/ui/dialog"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 
 type View = "invoices" | "customers" | "collections"
 type InvoiceStatus = "Paid" | "Pending" | "Overdue"

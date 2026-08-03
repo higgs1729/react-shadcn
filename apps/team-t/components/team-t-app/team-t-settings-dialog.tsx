@@ -19,18 +19,18 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+} from "@react-shadcn/shadcn-kit/ui/alert-dialog"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
+import { Label } from "@react-shadcn/shadcn-kit/ui/label"
+import { Switch } from "@react-shadcn/shadcn-kit/ui/switch"
 import {
   getTeamTAccent,
   teamTAccents,

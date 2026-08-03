@@ -1,6 +1,6 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@react-shadcn/shadcn-kit/ui/avatar"
 import {
   Item,
   ItemContent,
@@ -9,7 +9,7 @@ import {
   ItemMedia,
   ItemSeparator,
   ItemTitle,
-} from "@/components/ui/item"
+} from "@react-shadcn/shadcn-kit/ui/item"
 
 export interface ActivityFeedEntry {
   id: string

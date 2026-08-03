@@ -7,7 +7,7 @@ import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
 import { CommentThread, type CommentThreadComment } from "@/components/blocks/comment-thread-01"
 import { DocumentBodyEditor } from "@/components/blocks/document-body-editor-01"
 import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 
 type SavedState = "saved" | "saving" | "unsaved"
 

@@ -3,7 +3,7 @@
 import * as React from "react"
 import { codeToHtml, createCssVariablesTheme } from "shiki"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 // shiki の css-variables テーマは色を var(--shiki-token-*) 参照で出力する。
 // 実際の色は app/globals.css の :root で design token に紐付けており、

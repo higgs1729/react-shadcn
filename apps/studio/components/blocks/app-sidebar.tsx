@@ -6,13 +6,13 @@ import { NavMain } from "@/components/blocks/nav-main"
 import { NavProjects } from "@/components/blocks/nav-projects"
 import { NavUser } from "@/components/blocks/nav-user"
 import { TeamSwitcher } from "@/components/blocks/team-switcher"
-import { ResizableSidebarRail } from "@/components/resizable-sidebar-rail"
+import { ResizableSidebarRail } from "@react-shadcn/shadcn-kit/components/resizable-sidebar-rail"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 import {
   GalleryVerticalEndIcon,
   AudioLinesIcon,

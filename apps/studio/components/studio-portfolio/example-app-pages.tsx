@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import { MemberGateForm } from "@/components/studio-portfolio/member-gate-form"
 
 export function OpsPulseExamplePage() {

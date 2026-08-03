@@ -37,9 +37,9 @@ import { FilterToolbar } from "@/components/blocks/filter-toolbar"
 import { PricingPlanCard } from "@/components/blocks/pricing-plan-card-01"
 import { SectionCards } from "@/components/blocks/section-cards"
 import { WizardStepper } from "@/components/blocks/wizard-stepper-01"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Card,
   CardContent,
@@ -47,7 +47,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@react-shadcn/shadcn-kit/ui/card"
 import {
   Drawer,
   DrawerClose,
@@ -56,7 +56,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer"
+} from "@react-shadcn/shadcn-kit/ui/drawer"
 import {
   Dialog,
   DialogClose,
@@ -65,7 +65,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
 import {
   Table,
   TableBody,
@@ -73,15 +73,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from "@react-shadcn/shadcn-kit/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@react-shadcn/shadcn-kit/ui/tabs"
 import { builtExampleApps } from "@/lib/studio-portfolio/app-spec"
 import { OrientationLanding } from "@/components/studio-portfolio/orientation-landing"
 import studioPortfolioData from "@/lib/studio-portfolio/studio-portfolio-data.json"
 import { studioContent } from "@/lib/studio-portfolio/studio-content"
 import { studioEvidence } from "@/lib/studio-portfolio/evidence"
 import { studioScenarios } from "@/lib/studio-portfolio/studio-scenarios"
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 const data = studioPortfolioData
 

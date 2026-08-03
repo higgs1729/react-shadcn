@@ -10,7 +10,7 @@ import {
   SparklesIcon,
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,15 +20,15 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@react-shadcn/shadcn-kit/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 import { TeamTRewardCard } from "./team-t-reward-card"
 

@@ -6,19 +6,19 @@ import { RotateCcwIcon } from "lucide-react"
 import { AppSidebar } from "@/components/blocks/app-sidebar"
 import { SiteHeader } from "@/components/blocks/site-header"
 import { FilterToolbar } from "@/components/blocks/filter-toolbar"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { Alert, AlertTitle, AlertDescription, AlertAction } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
+import { Alert, AlertTitle, AlertDescription, AlertAction } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@react-shadcn/shadcn-kit/ui/card"
+import { Checkbox } from "@react-shadcn/shadcn-kit/ui/checkbox"
 import {
   Empty,
   EmptyHeader,
   EmptyTitle,
   EmptyDescription,
   EmptyContent,
-} from "@/components/ui/empty"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@react-shadcn/shadcn-kit/ui/empty"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -26,7 +26,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@react-shadcn/shadcn-kit/ui/table"
 
 import invoiceData from "./data.json"
 

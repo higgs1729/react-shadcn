@@ -1,6 +1,6 @@
 "use client"
 
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 
 export interface LoadingSkeleton01Props {
   rows?: number

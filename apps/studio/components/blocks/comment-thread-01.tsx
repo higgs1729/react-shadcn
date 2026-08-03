@@ -1,9 +1,9 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
+import { Avatar, AvatarFallback, AvatarImage } from "@react-shadcn/shadcn-kit/ui/avatar"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Card, CardContent, CardFooter } from "@react-shadcn/shadcn-kit/ui/card"
+import { Textarea } from "@react-shadcn/shadcn-kit/ui/textarea"
 
 export interface CommentThreadComment {
   id: string

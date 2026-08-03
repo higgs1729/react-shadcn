@@ -7,10 +7,10 @@ import { ActivityFeed, type ActivityFeedEntry } from "@/components/blocks/activi
 import { AiConversationList, type AiConversationListItem } from "@/components/blocks/ai-conversation-list-01"
 import { AiExplainabilityLabel } from "@/components/blocks/ai-explainability-label-01"
 import { AiPromptComposer } from "@/components/blocks/ai-prompt-composer-01"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { ScrollArea } from "@react-shadcn/shadcn-kit/ui/scroll-area"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 
 import assistantData from "./data.json"
 

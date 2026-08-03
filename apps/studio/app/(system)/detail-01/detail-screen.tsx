@@ -9,17 +9,17 @@ import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
 import { CommentThread, type CommentThreadComment } from "@/components/blocks/comment-thread-01"
 import { DetailOverview, type DetailOverviewField } from "@/components/blocks/detail-overview-01"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-} from "@/components/ui/empty"
-import { Skeleton } from "@/components/ui/skeleton"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/empty"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
+import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import detailData from "./data.json"
 

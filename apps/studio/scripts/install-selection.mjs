@@ -80,7 +80,7 @@ for (const item of items) {
 const shadcnPresent = []
 const shadcnMissing = []
 for (const dep of shadcnDeps) {
-  const compPath = join(ROOT, 'components', 'ui', `${dep}.tsx`)
+  const compPath = join(ROOT, '..', '..', 'packages', 'shadcn-kit', 'components', 'ui', `${dep}.tsx`)
   if (existsSync(compPath)) shadcnPresent.push(dep)
   else shadcnMissing.push(dep)
 }

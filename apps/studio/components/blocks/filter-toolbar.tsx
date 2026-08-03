@@ -2,7 +2,7 @@
 
 import { SearchIcon, LayoutGridIcon, TableIcon } from "lucide-react"
 
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@react-shadcn/shadcn-kit/ui/input-group"
 import {
   Select,
   SelectContent,
@@ -10,8 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+} from "@react-shadcn/shadcn-kit/ui/select"
+import { ToggleGroup, ToggleGroupItem } from "@react-shadcn/shadcn-kit/ui/toggle-group"
 
 export interface FilterToolbarProps {
   search: string

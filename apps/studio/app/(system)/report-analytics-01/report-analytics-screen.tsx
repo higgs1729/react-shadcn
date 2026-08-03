@@ -8,17 +8,17 @@ import { DataTable } from "@/components/blocks/data-table"
 import { FilterToolbar } from "@/components/blocks/filter-toolbar"
 import { SectionCards } from "@/components/blocks/section-cards"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-} from "@/components/ui/empty"
-import { Skeleton } from "@/components/ui/skeleton"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/empty"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
+import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import tableData from "@/app/(system)/dashboard-01/data.json"
 import reportConfig from "./data.json"

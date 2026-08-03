@@ -2,13 +2,13 @@
 
 import { SparklesIcon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@react-shadcn/shadcn-kit/ui/tooltip"
 
 export interface AiExplainabilityLabelProps {
   label?: string

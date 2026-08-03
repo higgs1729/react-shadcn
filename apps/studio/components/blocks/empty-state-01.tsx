@@ -3,7 +3,7 @@
 import * as React from "react"
 import { InboxIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Empty,
   EmptyContent,
@@ -11,7 +11,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty"
+} from "@react-shadcn/shadcn-kit/ui/empty"
 
 export interface EmptyState01Props {
   title: string

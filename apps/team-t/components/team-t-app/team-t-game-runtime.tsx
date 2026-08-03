@@ -3,7 +3,7 @@
 import * as React from "react"
 import { ChevronLeftIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import { getTeamTGameUrl, type TeamTGame } from "@/lib/team-t-app/games"
 
 /**

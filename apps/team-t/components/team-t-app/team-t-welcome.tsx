@@ -9,8 +9,8 @@ import {
   SparklesIcon,
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 import { CategoryIcon } from "./category-icon"
 

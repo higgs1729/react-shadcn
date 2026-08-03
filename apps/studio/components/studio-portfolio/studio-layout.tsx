@@ -34,14 +34,14 @@ import {
   exampleNavigation,
   isPrimaryNavigationRoute,
 } from "@/lib/studio-portfolio/app-spec"
-import { cn } from "@/lib/utils"
-import { ResizableSidebarRail } from "@/components/resizable-sidebar-rail"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
+import { ResizableSidebarRail } from "@react-shadcn/shadcn-kit/components/resizable-sidebar-rail"
 import { SettingsDialog } from "@/components/studio-portfolio/settings-page"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@react-shadcn/shadcn-kit/ui/collapsible"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,7 +54,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@react-shadcn/shadcn-kit/ui/dropdown-menu"
 import {
   Command,
   CommandDialog,
@@ -63,8 +63,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
-import { Separator } from "@/components/ui/separator"
+} from "@react-shadcn/shadcn-kit/ui/command"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -79,7 +79,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 const ZOOM_STEP = 10
 const ZOOM_MIN = 50

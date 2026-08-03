@@ -7,7 +7,9 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, basename } from 'node:path'
 
-const UI_DIR = join(process.cwd(), 'components', 'ui')
+// The shadcn primitives live in the shared kit now; their stories stay
+// co-located with the components they document.
+const UI_DIR = join(process.cwd(), '..', '..', 'packages', 'shadcn-kit', 'components', 'ui')
 
 // filename (no ext) -> catalog category (drives the Storybook sidebar tree)
 const CATEGORY = {
@@ -38,138 +40,138 @@ const CATEGORY = {
 // is the JSX returned by the story. `layout` overrides the default 'centered'.
 const OVERRIDES = {
   badge: {
-    imports: `import { Badge } from '@/components/ui/badge'`,
+    imports: `import { Badge } from './badge'`,
     render: `<div className="flex flex-wrap gap-2"><Badge>Default</Badge><Badge variant="secondary">Secondary</Badge><Badge variant="destructive">Destructive</Badge><Badge variant="outline">Outline</Badge></div>`,
   },
   alert: {
-    imports: `import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'`,
+    imports: `import { Alert, AlertTitle, AlertDescription } from './alert'`,
     render: `<Alert className="max-w-md"><AlertTitle>Heads up!</AlertTitle><AlertDescription>You can add components to your app using the CLI.</AlertDescription></Alert>`,
   },
   avatar: {
-    imports: `import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'`,
+    imports: `import { Avatar, AvatarImage, AvatarFallback } from './avatar'`,
     render: `<Avatar><AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /><AvatarFallback>CN</AvatarFallback></Avatar>`,
   },
   card: {
-    imports: `import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'`,
+    imports: `import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card'`,
     render: `<Card className="w-80"><CardHeader><CardTitle>Card title</CardTitle><CardDescription>Card description</CardDescription></CardHeader><CardContent>Card content goes here.</CardContent><CardFooter>Footer</CardFooter></Card>`,
   },
   checkbox: {
-    imports: `import { Checkbox } from '@/components/ui/checkbox'\nimport { Label } from '@/components/ui/label'`,
+    imports: `import { Checkbox } from './checkbox'\nimport { Label } from './label'`,
     render: `<div className="flex items-center gap-2"><Checkbox id="terms" defaultChecked /><Label htmlFor="terms">Accept terms and conditions</Label></div>`,
   },
   switch: {
-    imports: `import { Switch } from '@/components/ui/switch'\nimport { Label } from '@/components/ui/label'`,
+    imports: `import { Switch } from './switch'\nimport { Label } from './label'`,
     render: `<div className="flex items-center gap-2"><Switch id="airplane" defaultChecked /><Label htmlFor="airplane">Airplane mode</Label></div>`,
   },
   input: {
-    imports: `import { Input } from '@/components/ui/input'`,
+    imports: `import { Input } from './input'`,
     render: `<Input className="w-64" placeholder="Email" />`,
   },
   textarea: {
-    imports: `import { Textarea } from '@/components/ui/textarea'`,
+    imports: `import { Textarea } from './textarea'`,
     render: `<Textarea className="w-64" placeholder="Type your message..." />`,
   },
   label: {
-    imports: `import { Label } from '@/components/ui/label'`,
+    imports: `import { Label } from './label'`,
     render: `<Label>Email address</Label>`,
   },
   slider: {
-    imports: `import { Slider } from '@/components/ui/slider'`,
+    imports: `import { Slider } from './slider'`,
     render: `<Slider className="w-64" defaultValue={[50]} max={100} step={1} />`,
   },
   progress: {
-    imports: `import { Progress } from '@/components/ui/progress'`,
+    imports: `import { Progress } from './progress'`,
     render: `<Progress className="w-64" value={60} />`,
   },
   skeleton: {
-    imports: `import { Skeleton } from '@/components/ui/skeleton'`,
+    imports: `import { Skeleton } from './skeleton'`,
     render: `<div className="flex flex-col gap-2"><Skeleton className="h-4 w-48" /><Skeleton className="h-4 w-40" /><Skeleton className="h-4 w-32" /></div>`,
   },
   spinner: {
-    imports: `import { Spinner } from '@/components/ui/spinner'`,
+    imports: `import { Spinner } from './spinner'`,
     render: `<Spinner />`,
   },
   kbd: {
-    imports: `import { Kbd, KbdGroup } from '@/components/ui/kbd'`,
+    imports: `import { Kbd, KbdGroup } from './kbd'`,
     render: `<KbdGroup><Kbd>⌘</Kbd><Kbd>K</Kbd></KbdGroup>`,
   },
   separator: {
-    imports: `import { Separator } from '@/components/ui/separator'`,
+    imports: `import { Separator } from './separator'`,
     render: `<div className="w-64 text-sm">Above<Separator className="my-2" />Below</div>`,
   },
   tabs: {
-    imports: `import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'`,
+    imports: `import { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs'`,
     render: `<Tabs defaultValue="account" className="w-80"><TabsList><TabsTrigger value="account">Account</TabsTrigger><TabsTrigger value="password">Password</TabsTrigger></TabsList><TabsContent value="account">Account settings.</TabsContent><TabsContent value="password">Password settings.</TabsContent></Tabs>`,
   },
   accordion: {
-    imports: `import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'`,
+    imports: `import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './accordion'`,
     render: `<Accordion className="w-80"><AccordionItem value="item-1"><AccordionTrigger>Is it accessible?</AccordionTrigger><AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent></AccordionItem></Accordion>`,
   },
   tooltip: {
-    imports: `import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'\nimport { Button } from '@/components/ui/button'`,
+    imports: `import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip'\nimport { Button } from './button'`,
     render: `<TooltipProvider><Tooltip><TooltipTrigger render={<Button variant="outline">Hover me</Button>} /><TooltipContent>Add to library</TooltipContent></Tooltip></TooltipProvider>`,
   },
   'radio-group': {
-    imports: `import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'\nimport { Label } from '@/components/ui/label'`,
+    imports: `import { RadioGroup, RadioGroupItem } from './radio-group'\nimport { Label } from './label'`,
     render: `<RadioGroup defaultValue="a"><div className="flex items-center gap-2"><RadioGroupItem value="a" id="ra" /><Label htmlFor="ra">Option A</Label></div><div className="flex items-center gap-2"><RadioGroupItem value="b" id="rb" /><Label htmlFor="rb">Option B</Label></div></RadioGroup>`,
   },
   toggle: {
-    imports: `import { Toggle } from '@/components/ui/toggle'`,
+    imports: `import { Toggle } from './toggle'`,
     render: `<Toggle>Bold</Toggle>`,
   },
   'toggle-group': {
-    imports: `import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'`,
+    imports: `import { ToggleGroup, ToggleGroupItem } from './toggle-group'`,
     render: `<ToggleGroup><ToggleGroupItem value="a">A</ToggleGroupItem><ToggleGroupItem value="b">B</ToggleGroupItem><ToggleGroupItem value="c">C</ToggleGroupItem></ToggleGroup>`,
   },
   breadcrumb: {
-    imports: `import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'`,
+    imports: `import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from './breadcrumb'`,
     render: `<Breadcrumb><BreadcrumbList><BreadcrumbItem><BreadcrumbLink href="#">Home</BreadcrumbLink></BreadcrumbItem><BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Current</BreadcrumbPage></BreadcrumbItem></BreadcrumbList></Breadcrumb>`,
   },
   pagination: {
-    imports: `import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'`,
+    imports: `import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './pagination'`,
     render: `<Pagination><PaginationContent><PaginationItem><PaginationPrevious href="#" /></PaginationItem><PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem><PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem><PaginationItem><PaginationNext href="#" /></PaginationItem></PaginationContent></Pagination>`,
   },
   item: {
-    imports: `import { Item, ItemContent, ItemTitle, ItemDescription } from '@/components/ui/item'`,
+    imports: `import { Item, ItemContent, ItemTitle, ItemDescription } from './item'`,
     render: `<Item className="w-80"><ItemContent><ItemTitle>Item title</ItemTitle><ItemDescription>Item description text.</ItemDescription></ItemContent></Item>`,
   },
   'input-otp': {
-    imports: `import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'`,
+    imports: `import { InputOTP, InputOTPGroup, InputOTPSlot } from './input-otp'`,
     render: `<InputOTP maxLength={4}><InputOTPGroup><InputOTPSlot index={0} /><InputOTPSlot index={1} /><InputOTPSlot index={2} /><InputOTPSlot index={3} /></InputOTPGroup></InputOTP>`,
   },
   calendar: {
-    imports: `import { Calendar } from '@/components/ui/calendar'`,
+    imports: `import { Calendar } from './calendar'`,
     render: `<Calendar mode="single" className="rounded-md border" />`,
   },
   empty: {
-    imports: `import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from '@/components/ui/empty'`,
+    imports: `import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from './empty'`,
     render: `<Empty className="w-80"><EmptyHeader><EmptyTitle>No results</EmptyTitle><EmptyDescription>Nothing here yet.</EmptyDescription></EmptyHeader></Empty>`,
   },
   popover: {
-    imports: `import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'\nimport { Button } from '@/components/ui/button'`,
+    imports: `import { Popover, PopoverTrigger, PopoverContent } from './popover'\nimport { Button } from './button'`,
     render: `<Popover><PopoverTrigger render={<Button variant="outline">Open</Button>} /><PopoverContent>Popover content.</PopoverContent></Popover>`,
   },
   'hover-card': {
-    imports: `import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'\nimport { Button } from '@/components/ui/button'`,
+    imports: `import { HoverCard, HoverCardTrigger, HoverCardContent } from './hover-card'\nimport { Button } from './button'`,
     render: `<HoverCard><HoverCardTrigger render={<Button variant="link">@shadcn</Button>} /><HoverCardContent>The React framework catalog.</HoverCardContent></HoverCard>`,
   },
   'aspect-ratio': {
-    imports: `import { AspectRatio } from '@/components/ui/aspect-ratio'`,
+    imports: `import { AspectRatio } from './aspect-ratio'`,
     render: `<div className="w-80"><AspectRatio ratio={16 / 9} className="flex items-center justify-center rounded-md bg-muted text-sm">16 : 9</AspectRatio></div>`,
   },
   'button-group': {
-    imports: `import { ButtonGroup } from '@/components/ui/button-group'\nimport { Button } from '@/components/ui/button'`,
+    imports: `import { ButtonGroup } from './button-group'\nimport { Button } from './button'`,
     render: `<ButtonGroup><Button variant="outline">Left</Button><Button variant="outline">Center</Button><Button variant="outline">Right</Button></ButtonGroup>`,
   },
   // Context-requiring roots: use namespace import so a name mismatch degrades to
   // an empty render instead of a build break, and wrap in the required provider.
   sidebar: {
     layout: 'fullscreen',
-    imports: `import * as UI from '@/components/ui/sidebar'`,
+    imports: `import * as UI from './sidebar'`,
     render: `<UI.SidebarProvider><UI.Sidebar><UI.SidebarHeader className="p-2">Header</UI.SidebarHeader><UI.SidebarContent><UI.SidebarGroup>Navigation</UI.SidebarGroup></UI.SidebarContent><UI.SidebarFooter className="p-2">Footer</UI.SidebarFooter></UI.Sidebar><main className="p-4"><UI.SidebarTrigger /> Content</main></UI.SidebarProvider>`,
   },
   chart: {
-    imports: `import * as UI from '@/components/ui/chart'`,
+    imports: `import * as UI from './chart'`,
     render: `<UI.ChartContainer config={{ value: { label: 'Value', color: 'var(--chart-1)' } }} className="h-40 w-80"><div /></UI.ChartContainer>`,
   },
 }
@@ -239,7 +241,7 @@ for (const f of files) {
       skipped++
       continue
     }
-    imports = `import * as UI from '@/components/ui/${name}'`
+    imports = `import * as UI from './${name}'`
     render = `<UI.${primary} />`
   }
   const displayName = (override ? name : extractPrimary(src, f))

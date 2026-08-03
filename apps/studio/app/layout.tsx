@@ -1,9 +1,9 @@
 import { Geist, Geist_Mono, Inter } from "next/font/google"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { sidebarWidthPrePaintScript } from "@/lib/sidebar-width"
-import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@react-shadcn/shadcn-kit/components/theme-provider"
+import { sidebarWidthPrePaintScript } from "@react-shadcn/shadcn-kit/lib/sidebar-width"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'})
 

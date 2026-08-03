@@ -1,14 +1,14 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
-import { Separator } from "@/components/ui/separator"
+} from "@react-shadcn/shadcn-kit/ui/card"
+import { Field, FieldContent, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
 
 export interface DetailOverviewField {
   id: string

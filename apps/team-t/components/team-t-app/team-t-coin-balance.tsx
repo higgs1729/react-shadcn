@@ -1,7 +1,7 @@
 import Image from "next/image"
 import type { CSSProperties } from "react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 const teamTCoinSrc = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/assets/reward-card-coin.png`
 

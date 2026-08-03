@@ -1,14 +1,14 @@
 import * as React from "react"
 import { ChevronLeftIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import { CATEGORIES, QUESTIONS } from "@/lib/python-test/data"
 import {
   ChoiceList,
@@ -16,7 +16,7 @@ import {
   QuestionText,
 } from "@/components/python-test/question-parts"
 import type { Session } from "@/lib/python-test/quiz"
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 type HistoryDialogProps = {
   open: boolean

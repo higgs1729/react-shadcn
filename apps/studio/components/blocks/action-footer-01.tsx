@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { ButtonGroup } from "@/components/ui/button-group"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { ButtonGroup } from "@react-shadcn/shadcn-kit/ui/button-group"
 
 export interface ActionFooterProps {
   primaryLabel: string

@@ -8,18 +8,18 @@ import { AppSidebar } from "@/components/blocks/app-sidebar"
 import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
 import { SettingsSection, type SettingsSectionRow } from "@/components/blocks/settings-section-01"
 import { TabsViewSwitcher01 } from "@/components/blocks/tabs-view-switcher-01"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@react-shadcn/shadcn-kit/ui/card"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import settingsData from "./data.json"
 

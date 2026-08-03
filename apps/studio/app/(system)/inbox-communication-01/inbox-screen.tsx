@@ -15,11 +15,11 @@ import {
   ConversationTriageList,
 } from "@/components/blocks/conversation-triage-list-01"
 import { FilterToolbar } from "@/components/blocks/filter-toolbar"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@react-shadcn/shadcn-kit/ui/empty"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 import {
   Sidebar,
   SidebarContent,
@@ -32,7 +32,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import inboxData from "./data.json"
 

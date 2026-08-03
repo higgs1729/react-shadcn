@@ -4,19 +4,19 @@ import * as React from "react"
 import Image from "next/image"
 import { ChevronRightIcon, Maximize2Icon, PlayIcon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@react-shadcn/shadcn-kit/ui/collapsible"
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
 import {
   getApiPageUrl,
   getApiPreviewImageUrl,

@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Card, CardContent } from "@react-shadcn/shadcn-kit/ui/card"
 import {
   Table,
   TableBody,
@@ -9,10 +9,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@react-shadcn/shadcn-kit/ui/table"
 import { CATEGORIES, type CategoryKey } from "@/lib/python-test/data"
 import type { Session } from "@/lib/python-test/quiz"
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 const PASS_LINE = 70
 

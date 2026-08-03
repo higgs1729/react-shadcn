@@ -8,6 +8,9 @@ import path from "node:path"
 const basePath = `${process.env.PAGES_BASE_PATH ?? ""}/python-test`
 
 const nextConfig: NextConfig = {
+  // The shared UI kit ships TypeScript sources, so Next has to compile it
+  // instead of treating it as a prebuilt dependency.
+  transpilePackages: ["@react-shadcn/shadcn-kit"],
   // Playwright smoke tests use the loopback IP while `next dev` defaults to
   // localhost. Next 16 blocks that dev-only cross-origin asset request unless
   // the additional origin is declared explicitly.

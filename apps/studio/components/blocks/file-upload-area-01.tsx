@@ -9,8 +9,8 @@ import {
   AttachmentGroup,
   AttachmentMedia,
   AttachmentTitle,
-} from "@/components/ui/attachment"
-import { buttonVariants } from "@/components/ui/button"
+} from "@react-shadcn/shadcn-kit/ui/attachment"
+import { buttonVariants } from "@react-shadcn/shadcn-kit/ui/button"
 
 export interface FileUploadAreaFile {
   id: string

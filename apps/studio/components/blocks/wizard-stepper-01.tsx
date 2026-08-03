@@ -2,9 +2,9 @@
 
 import { CheckIcon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 export interface WizardStep {
   id: string

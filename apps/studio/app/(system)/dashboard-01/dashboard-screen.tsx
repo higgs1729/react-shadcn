@@ -7,11 +7,11 @@ import { ChartAreaInteractive } from "@/components/blocks/chart-area-interactive
 import { DataTable } from "@/components/blocks/data-table"
 import { SectionCards, type SummaryMetric } from "@/components/blocks/section-cards"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
-import { Skeleton } from "@/components/ui/skeleton"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@react-shadcn/shadcn-kit/ui/empty"
+import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
+import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import data from "./data.json"
 

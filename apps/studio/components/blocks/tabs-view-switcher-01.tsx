@@ -7,7 +7,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs"
+} from "@react-shadcn/shadcn-kit/ui/tabs"
 
 export interface TabsViewSwitcherView {
   value: string

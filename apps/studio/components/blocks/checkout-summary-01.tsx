@@ -1,14 +1,14 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+} from "@react-shadcn/shadcn-kit/ui/card"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
 
 export interface CheckoutSummaryLineItem {
   id: string

@@ -168,7 +168,7 @@ for (const screen of spec.screens ?? []) {
     const imports = [`import { ${primary} } from '${importPath}'`]
     let render
     if (config.wrapSidebar) {
-      imports.push(`import { SidebarProvider } from '@/components/ui/sidebar'`)
+      imports.push(`import { SidebarProvider } from '@react-shadcn/shadcn-kit/ui/sidebar'`)
       render = `<SidebarProvider><${primary} /></SidebarProvider>`
     } else if (config.needsData) {
       imports.push(`import data from '@/app/(system)/dashboard-01/data.json'`)

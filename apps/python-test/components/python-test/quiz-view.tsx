@@ -10,11 +10,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+} from "@react-shadcn/shadcn-kit/ui/alert-dialog"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Card, CardContent } from "@react-shadcn/shadcn-kit/ui/card"
+import { Progress } from "@react-shadcn/shadcn-kit/ui/progress"
 import { CATEGORIES } from "@/lib/python-test/data"
 import { MarkBar } from "@/components/python-test/mark-bar"
 import { HistoryDialog } from "@/components/python-test/history-dialog"

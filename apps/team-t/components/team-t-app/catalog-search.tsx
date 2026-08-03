@@ -2,13 +2,13 @@
 
 import { SearchIcon, XIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/components/ui/input-group"
+} from "@react-shadcn/shadcn-kit/ui/input-group"
 
 interface CatalogSearchProps {
   value: string

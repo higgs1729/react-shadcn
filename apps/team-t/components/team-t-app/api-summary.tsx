@@ -1,14 +1,14 @@
 import { ExternalLinkIcon, Layers3Icon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Card,
   CardAction,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@react-shadcn/shadcn-kit/ui/card"
 import type { ApiCatalogItem } from "@/lib/team-t-app/catalog"
 
 interface ApiSummaryProps {

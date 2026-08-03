@@ -9,7 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@react-shadcn/shadcn-kit/ui/breadcrumb"
 
 export interface BreadcrumbContextItem {
   id: string

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Button } from '@/components/ui/button'
+import { Button } from '@react-shadcn/shadcn-kit/ui/button'
 import { ModalDialog01 } from '@/components/blocks/modal-dialog-01'
 
 function ModalDialog01Demo() {

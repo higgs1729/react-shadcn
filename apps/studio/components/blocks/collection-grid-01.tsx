@@ -1,13 +1,13 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@react-shadcn/shadcn-kit/ui/card"
 
 export interface CollectionGridItem {
   id: string

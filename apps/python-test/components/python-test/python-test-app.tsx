@@ -11,8 +11,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Button, buttonVariants } from "@/components/ui/button"
+} from "@react-shadcn/shadcn-kit/ui/alert-dialog"
+import { Button, buttonVariants } from "@react-shadcn/shadcn-kit/ui/button"
 import { BrowseView } from "@/components/python-test/browse-view"
 import { HomeView, type HomeSettings } from "@/components/python-test/home-view"
 import { QuizView } from "@/components/python-test/quiz-view"
@@ -32,7 +32,7 @@ import {
   shuffled,
   type Session,
 } from "@/lib/python-test/quiz"
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 type View = "home" | "quiz" | "browse" | "result"
 type Notice = { title: string; description: string }

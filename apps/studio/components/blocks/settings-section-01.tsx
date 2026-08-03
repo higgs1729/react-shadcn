@@ -8,9 +8,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
-import { Switch } from "@/components/ui/switch"
+} from "@react-shadcn/shadcn-kit/ui/card"
+import { Field, FieldContent, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Switch } from "@react-shadcn/shadcn-kit/ui/switch"
 
 export interface SettingsSectionRow {
   id: string

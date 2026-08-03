@@ -6,8 +6,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+} from "@react-shadcn/shadcn-kit/ui/tooltip"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 export const teamTOverflowTooltipDelayMs = 600
 

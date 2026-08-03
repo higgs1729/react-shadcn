@@ -3,16 +3,16 @@
 import type { ReactNode } from "react"
 import { CheckIcon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+} from "@react-shadcn/shadcn-kit/ui/card"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
 
 export interface PricingPlan {
   id: string

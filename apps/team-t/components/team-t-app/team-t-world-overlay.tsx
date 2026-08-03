@@ -23,8 +23,8 @@ import {
   XIcon,
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { useIsMobile } from "@/hooks/use-mobile"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { useIsMobile } from "@react-shadcn/shadcn-kit/hooks/use-mobile"
 import { getTeamTGamePreviewUrl } from "@/lib/team-t-app/games"
 import {
   defaultTeamTArcadeWorldSettings,

@@ -9,13 +9,13 @@ import {
   AttachmentGroup,
   AttachmentMedia,
   AttachmentTitle,
-} from "@/components/ui/attachment"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Textarea } from "@/components/ui/textarea"
+} from "@react-shadcn/shadcn-kit/ui/attachment"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Card, CardContent, CardHeader } from "@react-shadcn/shadcn-kit/ui/card"
+import { Field, FieldContent, FieldError, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
+import { ScrollArea } from "@react-shadcn/shadcn-kit/ui/scroll-area"
+import { Textarea } from "@react-shadcn/shadcn-kit/ui/textarea"
 
 export type DocumentBodyEditorSavedState = "saved" | "saving" | "unsaved"
 

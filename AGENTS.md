@@ -8,7 +8,7 @@ npm workspaces。1リポジトリで複数アプリを持ち、GitHub Pages の�
 ## Map(深さ1のみ。下位は各ノードの AGENTS.md を読む)
 
 - `apps/*` — アプリ本体。各々が自分の package.json・next.config.ts・依存を持つ
-- `packages/*` — アプリ間で共有するパッケージ。UI キットはキット名で分ける(`shadcn-kit` 等)
+- `packages/shadcn-kit` — shadcn 系アプリが共有する primitive とテーマトークン。`shadcn add` はここで実行する
 - `.github/workflows/` — checks(全 workspace)と deploy-pages(各 out/ を1つの dist/ に合成)
 
 ## このディレクトリだけの約束
@@ -35,7 +35,9 @@ dev では各アプリを個別に起動する(`npm -w apps/<name> run dev`)。b
 
 ## 移行状況(2026-08-03 時点)
 
-- 完了: Phase 1(workspaces 化)・Phase 2(`apps/team-t`)・Phase 3(`apps/portal`・`apps/python-test`)
-- 未着手: `packages/shadcn-kit` の抽出(Phase 4)、GoldenFlow の CI ゲート解除(Phase 5)
-- `apps/team-t` と `apps/python-test` の `components/ui` `app/globals.css` は studio からの複製。
-  studio の globals.css にも他アプリ用トークンが残っている。重複の解消は Phase 4 で行う
+- 完了: Phase 1(workspaces 化)・Phase 2(`apps/team-t`)・Phase 3(`apps/portal`・`apps/python-test`)・
+  Phase 4(`packages/shadcn-kit` 抽出)
+- 未着手: GoldenFlow の CI ゲート解除(Phase 5)
+- 残る複製は `apps/team-t/components/blocks/` の3ファイルのみ。studio の registry が
+  `files[].path` で在庫 block を追跡しているため、パッケージ化すると契約が壊れる。
+  GoldenFlow の凍結(Phase 5)とあわせて再検討する

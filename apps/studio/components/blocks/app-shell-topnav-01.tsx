@@ -1,12 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+} from "@react-shadcn/shadcn-kit/ui/navigation-menu"
 
 export interface AppShellTopnavItem {
   id: string

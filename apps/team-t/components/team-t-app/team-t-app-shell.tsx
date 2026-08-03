@@ -7,7 +7,7 @@ import {
   SidebarInset,
   SidebarProvider,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 import { filterCatalog, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
 import {
   defaultTeamTPreferences,

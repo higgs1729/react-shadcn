@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Button } from '@/components/ui/button'
+import { Button } from '@react-shadcn/shadcn-kit/ui/button'
 import { CommandSearch01 } from '@/components/blocks/command-search-01'
 
 function CommandSearch01Demo() {

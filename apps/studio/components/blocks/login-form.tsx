@@ -1,20 +1,20 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@react-shadcn/shadcn-kit/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@react-shadcn/shadcn-kit/ui/field"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 
 export function LoginForm({
   className,

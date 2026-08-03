@@ -4,11 +4,11 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Button } from "@/components/ui/button"
+} from "@react-shadcn/shadcn-kit/ui/collapsible"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import type { Question } from "@/lib/python-test/data"
 import { choiceLabel } from "@/lib/python-test/quiz"
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 /** 選択肢1件の見た目。正誤の色は success / destructive トークンに寄せる。 */
 const CHOICE_BASE =

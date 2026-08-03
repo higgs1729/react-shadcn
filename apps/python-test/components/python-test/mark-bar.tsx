@@ -1,7 +1,7 @@
 import { Undo2Icon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   flagCount,
   flagList,
@@ -10,7 +10,7 @@ import {
   type Flags,
   type MarkColor,
 } from "@/lib/python-test/progress"
-import { cn } from "@/lib/utils"
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 // Tailwind にクラス名を検出させるため、動的合成ではなく静的な対応表にする。
 export const MARK_DOT: Record<MarkColor, string> = {

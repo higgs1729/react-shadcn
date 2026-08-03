@@ -1,5 +1,5 @@
-import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
+import { SidebarTrigger } from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 export function SiteHeader({ title = "Documents" }: { title?: string }) {
   return (

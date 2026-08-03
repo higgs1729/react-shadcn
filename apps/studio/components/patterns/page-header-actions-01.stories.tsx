@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { SiteHeader } from '@/components/blocks/site-header'
-import { SidebarProvider } from '@/components/ui/sidebar'
+import { SidebarProvider } from '@react-shadcn/shadcn-kit/ui/sidebar'
 
 const meta = {
   title: 'Blocks/page-header-actions/Page Header Actions 01',

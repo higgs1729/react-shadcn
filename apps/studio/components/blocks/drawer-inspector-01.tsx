@@ -1,8 +1,8 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Field, FieldContent, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import {
   Sheet,
   SheetContent,
@@ -10,7 +10,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet"
+} from "@react-shadcn/shadcn-kit/ui/sheet"
 
 export interface DrawerInspectorField {
   id: string

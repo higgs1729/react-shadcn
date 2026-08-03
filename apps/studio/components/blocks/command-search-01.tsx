@@ -11,7 +11,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command"
+} from "@react-shadcn/shadcn-kit/ui/command"
 
 export interface CommandSearchItem {
   id: string

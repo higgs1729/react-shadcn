@@ -7,14 +7,14 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@react-shadcn/shadcn-kit/ui/collapsible"
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 import { groupCatalog, type ApiCatalogItem } from "@/lib/team-t-app/catalog"
 
 import { ApiPageIcon, CategoryIcon } from "./category-icon"

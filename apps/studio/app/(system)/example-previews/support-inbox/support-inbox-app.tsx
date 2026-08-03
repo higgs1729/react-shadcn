@@ -17,8 +17,8 @@ import {
   type ConversationTriageStatus,
 } from "@/components/blocks/conversation-triage-list-01"
 import { FilterToolbar } from "@/components/blocks/filter-toolbar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -26,10 +26,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+} from "@react-shadcn/shadcn-kit/ui/dialog"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import { Input } from "@react-shadcn/shadcn-kit/ui/input"
+import { Textarea } from "@react-shadcn/shadcn-kit/ui/textarea"
 
 type Message = { id: string; author: string; body: string; timestamp: string }
 type Conversation = ConversationTriageItem & { messages: Message[] }

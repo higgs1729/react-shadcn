@@ -2,9 +2,9 @@
 
 import { PlusIcon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@react-shadcn/shadcn-kit/ui/card"
 
 export interface BoardColumnCard {
   id: string
