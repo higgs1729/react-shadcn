@@ -1,436 +1,410 @@
-// Editorial "digital studio" portal. No client hooks — pure CSS interactions,
-// so this stays a server component. Cross-app links use plain <a> with the
-// GitHub Pages basePath prefixed, so a click boots the target app fresh.
+// The portal is intentionally a server component with no shared app state.
+// Plain anchors preserve GitHub Pages basePath behavior and keep every app
+// independently bootable while the repository structure is being reorganized.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
-const BRAND = "higgs1729"
+type AppLink = {
+  label: string
+  href: string
+}
 
 type AppEntry = {
-  no: string
-  category: string
+  id: string
+  purpose: string
   title: string
-  subtitle: string
+  description: string
   href: string
-  motif: "nodes" | "grid" | "rings"
+  action: string
+  facts: string[]
+  links?: AppLink[]
 }
 
 const apps: AppEntry[] = [
   {
-    no: "01",
-    category: "AI DESIGN SYSTEM",
-    title: "Studio",
-    subtitle: "brief から実装まで、UI 設計を契約で固定する。",
+    id: "01",
+    purpose: "UI設計の過程を見る",
+    title: "AI Design System Studio",
+    description:
+      "briefから実装までを分解し、採用したパターン、選定理由、検証結果をまとめた設計ポートフォリオです。",
     href: `${basePath}/overview/`,
-    motif: "nodes",
+    action: "Studioを開く",
+    facts: ["13画面タイプ", "33ブロック役割", "実装例と検証記録"],
+    links: [
+      { label: "パターン一覧", href: `${basePath}/patterns/` },
+      { label: "品質レポート", href: `${basePath}/quality/` },
+    ],
   },
   {
-    no: "02",
-    category: "WEB API CATALOG",
+    id: "02",
+    purpose: "公開APIを探して試す",
     title: "Team T",
-    subtitle: "177 の公開 API を、その場で叩いて確かめる。",
+    description:
+      "目的やカテゴリから公開APIを探し、その場で仕様とレスポンスを確かめられる開発者向けカタログです。",
     href: `${basePath}/team-t-app/`,
-    motif: "grid",
+    action: "Team Tを開く",
+    facts: ["177紹介ページ", "200 API", "検索・実行・おすすめ"],
+    links: [
+      {
+        label: "Neon Tunnelで遊ぶ",
+        href: `${basePath}/team-t-app/games/neon-tunnel.html`,
+      },
+    ],
   },
   {
-    no: "03",
-    category: "3D ARCADE",
-    title: "Neon Tunnel",
-    subtitle: "被弾ゼロでコイン 3 枚、完全走行を狙う。",
-    href: `${basePath}/team-t-app/games/neon-tunnel.html`,
-    motif: "rings",
+    id: "03",
+    purpose: "Python試験を練習する",
+    title: "データ分析試験 模擬問題集",
+    description:
+      "Python3エンジニア認定データ分析試験に向けて、分野や難易度を選び、誤答を繰り返し復習できます。",
+    href: `${basePath}/python-test/`,
+    action: "問題集を開く",
+    facts: ["学習用181問", "誤答・マーク絞り込み", "端末内に自動保存"],
   },
 ]
 
-function Motif({ kind }: { kind: AppEntry["motif"] }) {
-  if (kind === "nodes") {
-    return (
-      <svg viewBox="0 0 160 96" className="lp-motif" fill="none" aria-hidden="true">
-        <polyline points="18,74 54,44 96,58 142,24" className="lp-hair" />
-        <line x1="54" y1="44" x2="60" y2="80" className="lp-hair" />
-        {[
-          [18, 74],
-          [54, 44],
-          [142, 24],
-          [60, 80],
-        ].map(([cx, cy]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="3.4" className="lp-node" />
-        ))}
-        <circle cx="96" cy="58" r="5" className="lp-node-accent" />
-      </svg>
-    )
-  }
-  if (kind === "grid") {
-    return (
-      <svg viewBox="0 0 160 96" className="lp-motif" fill="none" aria-hidden="true">
-        {[0, 1, 2].map((r) =>
-          [0, 1, 2, 3].map((c) => {
-            const accent = r === 1 && c === 1
-            return (
-              <rect
-                key={`${r}-${c}`}
-                x={18 + c * 34}
-                y={16 + r * 24}
-                width="24"
-                height="14"
-                rx="3"
-                className={accent ? "lp-node-accent-fill" : "lp-hair"}
-              />
-            )
-          })
-        )}
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox="0 0 160 96" className="lp-motif" fill="none" aria-hidden="true">
-      {[62, 48, 34, 20].map((rx, i) => (
-        <ellipse
-          key={rx}
-          cx="80"
-          cy="48"
-          rx={rx}
-          ry={rx * 0.58}
-          className="lp-hair"
-          style={{ opacity: 0.3 + i * 0.18 }}
-        />
-      ))}
-      <circle cx="80" cy="48" r="3.6" className="lp-node-accent" />
-    </svg>
-  )
-}
-
-function HeroArt() {
-  return (
-    <div className="lp-art" aria-hidden="true">
-      <svg viewBox="0 0 520 520" className="lp-art-svg" fill="none">
-        {/* orbital hairlines */}
-        <g transform="rotate(-18 260 260)">
-          <ellipse cx="260" cy="260" rx="230" ry="150" className="lp-hair" />
-          <ellipse cx="260" cy="260" rx="170" ry="230" className="lp-hair-faint" />
-        </g>
-        <path
-          d="M60 300 C 160 120, 360 120, 470 250"
-          className="lp-hair-accent"
-        />
-        {/* orbit nodes */}
-        <circle cx="470" cy="250" r="4.5" className="lp-dot-accent" />
-        <circle cx="60" cy="300" r="3.5" className="lp-dot" />
-        <circle cx="300" cy="86" r="3" className="lp-dot" />
-      </svg>
-
-      <div className="lp-frame lp-frame-c">
-        <svg viewBox="0 0 96 96" fill="none" className="lp-diamond">
-          <rect
-            x="10"
-            y="10"
-            width="76"
-            height="76"
-            className="lp-hair"
-          />
-          <rect
-            x="48"
-            y="14"
-            width="48"
-            height="48"
-            transform="rotate(45 48 48)"
-            className="lp-hair-accent"
-          />
-          <circle cx="48" cy="48" r="4" className="lp-dot-accent" />
-        </svg>
-      </div>
-    </div>
-  )
-}
-
 export function LandingHub() {
   return (
-    <div className="lp">
+    <div className="portal">
       <style>{styles}</style>
 
-      <header className="lp-nav">
-        <a href="#top" className="lp-brand">
-          <span className="lp-brand-name">{BRAND}</span>
+      <header className="portal-header">
+        <a
+          className="portal-brand"
+          href={`${basePath}/`}
+          aria-label="アプリ一覧の先頭へ"
+        >
+          <span className="portal-brand-name">higgs1729</span>
+          <span className="portal-brand-separator" aria-hidden="true">
+            /
+          </span>
+          <span className="portal-brand-section">apps</span>
         </a>
-        <nav className="lp-nav-links">
-          <a href="#apps">Apps</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
+        <span className="portal-count">3 apps</span>
       </header>
 
-      <main id="top">
-        <section className="lp-hero">
-          <div className="lp-hero-copy">
-            <h1 className="lp-title">
-              <span className="lp-line">
-                <span className="lp-solid">Ideas,</span>
-              </span>
-              <span className="lp-line">
-                <span className="lp-outline">built into</span>{" "}
-                <span className="lp-solid">tools.</span>
-              </span>
-            </h1>
-            <div className="lp-cta">
-              <a href="#apps" className="lp-btn">
-                Explore Apps
-                <span className="lp-btn-arrow">↗</span>
-              </a>
-              <a href="#about" className="lp-link">
-                About this studio
-              </a>
-            </div>
+      <main className="portal-main">
+        <section className="portal-intro" aria-labelledby="portal-title">
+          <p className="portal-kicker">個人制作のアプリ</p>
+          <h1 id="portal-title">使いたいものを、ここから選ぶ。</h1>
+          <p className="portal-lead">
+            UI設計の記録、公開APIの探索、Python試験の学習。
+            それぞれ独立したアプリとしてブラウザで利用できます。
+          </p>
+        </section>
+
+        <section className="portal-directory" aria-labelledby="directory-title">
+          <div className="portal-section-heading">
+            <h2 id="directory-title">アプリ一覧</h2>
+            <p>目的と機能を確認して開いてください。</p>
           </div>
-          <HeroArt />
+
+          <ol className="portal-list">
+            {apps.map((app) => (
+              <li key={app.id} className="portal-item">
+                <article className="portal-app">
+                  <div className="portal-index" aria-hidden="true">
+                    {app.id}
+                  </div>
+
+                  <div className="portal-app-body">
+                    <p className="portal-purpose">{app.purpose}</p>
+                    <h3>{app.title}</h3>
+                    <p className="portal-description">{app.description}</p>
+
+                    <ul
+                      className="portal-facts"
+                      aria-label={`${app.title}の主な内容`}
+                    >
+                      {app.facts.map((fact) => (
+                        <li key={fact}>{fact}</li>
+                      ))}
+                    </ul>
+
+                    {app.links ? (
+                      <nav
+                        className="portal-sub-links"
+                        aria-label={`${app.title}の関連ページ`}
+                      >
+                        {app.links.map((link) => (
+                          <a key={link.href} href={link.href}>
+                            {link.label}
+                          </a>
+                        ))}
+                      </nav>
+                    ) : null}
+                  </div>
+
+                  <div className="portal-action-wrap">
+                    <a className="portal-action" href={app.href}>
+                      {app.action}
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ol>
         </section>
 
-        <div className="lp-meta-row">
-          <span>SELECTED APPS</span>
-          <span className="lp-meta-right">
-            <span>03 PROJECTS</span>
-          </span>
-        </div>
-
-        <section id="apps" className="lp-apps">
-          {apps.map((app) => (
-            <a key={app.no} href={app.href} className="lp-card" aria-label={`${app.title} を開く`}>
-              <div className="lp-card-art">
-                <Motif kind={app.motif} />
-              </div>
-              <div className="lp-card-meta">
-                <span className="lp-card-cat">
-                  {app.no} / {app.category}
-                </span>
-                <span className="lp-card-arrow">↗</span>
-              </div>
-              <h2 className="lp-card-title">{app.title}</h2>
-              <p className="lp-card-sub">{app.subtitle}</p>
-            </a>
-          ))}
-        </section>
-
-        <section id="about" className="lp-about">
-          <div className="lp-about-grid">
-            <h2 className="lp-about-title">
-              Useful things,
-              <br />
-              beautifully made.
-            </h2>
-            <p className="lp-about-body">
-              技術とデザインのあいだを行き来しながら、
-              触れて気持ちのいい道具をつくっています。
-              この入り口から、いま動いている作品へ入れます。
-            </p>
-          </div>
-        </section>
+        <aside className="portal-note" aria-label="このページについて">
+          <p className="portal-note-title">このページについて</p>
+          <p>
+            ここは各アプリへの入口だけを担当します。設定や学習データなどの状態は、
+            それぞれのアプリ内で個別に管理されます。
+          </p>
+        </aside>
       </main>
 
-      <footer id="contact" className="lp-footer">
-        <div className="lp-footer-brand">
-          <span>© 2026 {BRAND}</span>
-        </div>
-        <nav className="lp-footer-links">
-          <a href="#apps">Apps</a>
-          <a href="#about">About</a>
-          <a href="#top">Top</a>
-        </nav>
+      <footer className="portal-footer">
+        <span>© 2026 higgs1729</span>
+        <a href="#portal-title">ページ上部へ</a>
       </footer>
     </div>
   )
 }
 
 const styles = `
-.lp {
-  --bg: #0a0d15;
-  --panel: #0e1220;
-  --fg: #edeff5;
-  --muted: #7c8497;
-  --faint: #545c70;
-  --line: rgba(255,255,255,0.08);
-  --line-strong: rgba(255,255,255,0.16);
-  --accent: #6b76ff;
-  --accent-2: #34d6e8;
-  position: relative;
+.portal {
+  --portal-bg: #f3f2ee;
+  --portal-panel: #fbfaf7;
+  --portal-fg: #1d1d1b;
+  --portal-muted: #65635e;
+  --portal-line: #d5d2ca;
+  --portal-accent: #2159d6;
+  --portal-accent-soft: #e7ecf8;
   min-height: 100svh;
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--portal-bg);
+  color: var(--portal-fg);
   font-family: var(--font-sans, system-ui, sans-serif);
-  overflow-x: clip;
-}
-/* keep the whole page dark even where content is short / on overscroll */
-.lp::before {
-  content: "";
-  position: fixed; inset: 0; z-index: -1;
-  background:
-    radial-gradient(90rem 60rem at 78% -10%, rgba(72,86,180,0.16), transparent 60%),
-    radial-gradient(60rem 50rem at 12% 8%, rgba(52,120,150,0.10), transparent 55%),
-    var(--bg);
-}
-.lp a { color: inherit; text-decoration: none; }
-
-.lp-mono, .lp-nav-links, .lp-brand-name,
-.lp-card-cat, .lp-meta-row, .lp-footer-links {
-  font-family: var(--font-mono, ui-monospace, monospace);
 }
 
-/* NAV */
-.lp-nav {
-  position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.15rem clamp(1.25rem, 4vw, 3.5rem);
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in oklab, var(--bg) 82%, transparent);
-  backdrop-filter: blur(10px);
-}
-.lp-brand { display: flex; align-items: center; gap: 0.6rem; }
-.lp-brand-name { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.24em; }
-.lp-nav-links { display: none; gap: 2rem; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-.lp-nav-links a { transition: color 0.2s ease; }
-.lp-nav-links a:hover { color: var(--fg); }
-@media (min-width: 780px) { .lp-nav-links { display: flex; } }
+.portal *, .portal *::before, .portal *::after { box-sizing: border-box; }
+.portal a { color: inherit; text-decoration: none; }
 
-/* HERO */
-.lp-hero {
-  display: grid; grid-template-columns: 1fr;
-  gap: 2.5rem;
+.portal-header,
+.portal-main,
+.portal-footer {
+  width: min(100% - 2rem, 72rem);
+  margin-inline: auto;
+}
+
+.portal-header {
+  min-height: 4.5rem;
+  display: flex;
   align-items: center;
-  padding: clamp(3rem, 8vw, 6.5rem) clamp(1.25rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3rem);
-  max-width: 90rem; margin: 0 auto;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--portal-line);
 }
-@media (min-width: 960px) {
-  .lp-hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 3rem; }
+
+.portal-brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 650;
 }
-.lp-hero-copy { min-width: 0; }
-.lp-title {
+.portal-brand-name { letter-spacing: -0.01em; }
+.portal-brand-separator,
+.portal-brand-section,
+.portal-count { color: var(--portal-muted); }
+.portal-brand-section,
+.portal-count {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+}
+
+.portal-main { padding-block: clamp(3rem, 7vw, 6rem) 5rem; }
+
+.portal-intro { max-width: 50rem; }
+.portal-kicker,
+.portal-purpose,
+.portal-note-title {
   margin: 0;
-  font-size: clamp(3rem, 10.5vw, 8rem);
-  line-height: 0.9; letter-spacing: -0.045em; font-weight: 800;
+  color: var(--portal-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-.lp-line { display: block; }
-.lp-solid { color: var(--fg); }
-.lp-outline {
-  color: transparent;
-  -webkit-text-stroke: 1.6px color-mix(in oklab, var(--fg) 60%, transparent);
+.portal-intro h1 {
+  max-width: 48rem;
+  margin: 0.75rem 0 0;
+  font-size: clamp(2.5rem, 7vw, 5.2rem);
+  line-height: 1.03;
+  letter-spacing: -0.055em;
+  font-weight: 720;
+  text-wrap: balance;
 }
-.lp-cta { margin-top: 2.6rem; display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
-.lp-btn {
-  display: inline-flex; align-items: center; gap: 0.7rem;
-  padding: 0.95rem 1.6rem; border-radius: 12px;
-  background: linear-gradient(120deg, var(--accent), var(--accent-2));
-  color: #05060c; font-weight: 600; font-size: 0.95rem;
-  box-shadow: 0 18px 40px -20px var(--accent);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.portal-lead {
+  max-width: 42rem;
+  margin: 1.5rem 0 0;
+  color: var(--portal-muted);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  line-height: 1.9;
 }
-.lp-btn:hover { transform: translateY(-2px); box-shadow: 0 24px 50px -20px var(--accent); }
-.lp-btn-arrow { transition: transform 0.2s ease; }
-.lp-btn:hover .lp-btn-arrow { transform: translate(2px, -2px); }
-.lp-link {
-  position: relative; font-size: 0.9rem; color: var(--fg); padding-bottom: 3px;
-}
-.lp-link::after {
-  content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
-  background: var(--line-strong); transition: background 0.2s ease;
-}
-.lp-link:hover::after { background: var(--accent-2); }
 
-/* HERO ART */
-.lp-art { display: none; position: relative; aspect-ratio: 1; }
-@media (min-width: 960px) { .lp-art { display: block; } }
-.lp-art-svg { width: 100%; height: 100%; }
-.lp-hair { stroke: var(--line-strong); stroke-width: 1; }
-.lp-hair-faint { stroke: var(--line); stroke-width: 1; }
-.lp-hair-accent { stroke: color-mix(in oklab, var(--accent) 70%, transparent); stroke-width: 1.2; }
-.lp-dot { fill: var(--faint); }
-.lp-dot-accent { fill: var(--accent-2); }
-.lp-frame {
-  position: absolute; display: flex; flex-direction: column; gap: 0.25rem;
-  border: 1px solid var(--line); background: color-mix(in oklab, var(--panel) 70%, transparent);
-  backdrop-filter: blur(3px);
-}
-.lp-frame-c { bottom: 12%; right: 16%; padding: 0.5rem; }
-.lp-diamond { width: 5.5rem; height: 5.5rem; }
-
-/* META ROW */
-.lp-meta-row {
-  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-  padding: 1.1rem clamp(1.25rem, 4vw, 3.5rem);
-  max-width: 90rem; margin: 0 auto;
-  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  font-size: 0.66rem; letter-spacing: 0.2em; color: var(--faint);
-}
-.lp-meta-right { display: flex; gap: 1.5rem; }
-
-/* APPS */
-.lp-apps {
-  display: grid; grid-template-columns: 1fr; gap: 1px;
-  background: var(--line);
-  max-width: 90rem; margin: 0 auto;
-  border-bottom: 1px solid var(--line);
-}
-@media (min-width: 720px) { .lp-apps { grid-template-columns: repeat(3, 1fr); } }
-.lp-card {
-  display: flex; flex-direction: column;
-  padding: clamp(1.5rem, 3vw, 2.4rem);
-  background: var(--bg);
-  min-height: 22rem;
-  transition: background 0.25s ease;
-}
-.lp-card:hover { background: var(--panel); }
-.lp-card-art {
-  height: 7rem; display: flex; align-items: center; justify-content: center;
-  margin-bottom: 1.6rem;
-}
-.lp-motif { width: 70%; height: 100%; }
-.lp-motif .lp-hair { stroke: var(--faint); stroke-width: 1.5; transition: stroke 0.25s ease; }
-.lp-card:hover .lp-motif .lp-hair { stroke: var(--muted); }
-.lp-node { fill: var(--muted); }
-.lp-node-accent { fill: var(--accent-2); }
-.lp-node-accent-fill { fill: color-mix(in oklab, var(--accent) 55%, transparent); stroke: var(--accent-2); stroke-width: 1.5; }
-.lp-card-meta { display: flex; justify-content: space-between; align-items: center; }
-.lp-card-cat { font-size: 0.64rem; letter-spacing: 0.16em; color: var(--faint); }
-.lp-card-arrow {
-  font-size: 1.05rem; color: var(--faint);
-  transition: transform 0.25s ease, color 0.25s ease;
-}
-.lp-card:hover .lp-card-arrow { transform: translate(3px, -3px); color: var(--accent-2); }
-.lp-card-title {
-  margin: 0.9rem 0 0; font-size: clamp(1.6rem, 3vw, 2.1rem);
-  font-weight: 700; letter-spacing: -0.02em;
-}
-.lp-card-sub { margin: 0.7rem 0 0; font-size: 0.9rem; line-height: 1.7; color: var(--muted); max-width: 22rem; }
-
-/* ABOUT */
-.lp-about {
-  padding: clamp(4rem, 9vw, 7rem) clamp(1.25rem, 4vw, 3.5rem);
-  max-width: 90rem; margin: 0 auto;
-}
-.lp-about-grid {
-  display: grid; grid-template-columns: 1fr; gap: 2rem;
+.portal-directory { margin-top: clamp(4rem, 9vw, 7rem); }
+.portal-section-heading {
+  display: flex;
   align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--portal-fg);
 }
-@media (min-width: 860px) {
-  .lp-about-grid { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 4rem; }
+.portal-section-heading h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
 }
-.lp-about-title {
-  margin: 0; font-size: clamp(2.4rem, 6vw, 4.6rem);
-  line-height: 1.02; letter-spacing: -0.04em; font-weight: 800;
+.portal-section-heading p {
+  margin: 0;
+  color: var(--portal-muted);
+  font-size: 0.85rem;
 }
-.lp-about-body { font-size: clamp(0.95rem, 2vw, 1.1rem); line-height: 1.95; color: var(--muted); }
 
-/* FOOTER */
-.lp-footer {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem;
-  padding: 2rem clamp(1.25rem, 4vw, 3.5rem);
-  max-width: 90rem; margin: 0 auto;
-  border-top: 1px solid var(--line);
-  font-size: 0.72rem; letter-spacing: 0.08em; color: var(--faint);
+.portal-list { margin: 0; padding: 0; list-style: none; }
+.portal-item { border-bottom: 1px solid var(--portal-line); }
+.portal-app {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) minmax(10rem, 14rem);
+  gap: clamp(1rem, 3vw, 2rem);
+  padding-block: clamp(1.75rem, 4vw, 2.6rem);
 }
-.lp-footer-brand { display: flex; align-items: center; gap: 0.7rem; }
-.lp-footer-links { display: flex; gap: 1.6rem; text-transform: uppercase; letter-spacing: 0.16em; }
-.lp-footer-links a { transition: color 0.2s ease; }
-.lp-footer-links a:hover { color: var(--fg); }
+.portal-index {
+  padding-top: 0.2rem;
+  color: var(--portal-muted);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.78rem;
+}
+.portal-app-body { max-width: 42rem; }
+.portal-purpose { color: var(--portal-muted); }
+.portal-app h3 {
+  margin: 0.55rem 0 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.portal-description {
+  max-width: 39rem;
+  margin: 0.8rem 0 0;
+  color: var(--portal-muted);
+  line-height: 1.75;
+}
+.portal-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--portal-fg);
+  font-size: 0.82rem;
+}
+.portal-facts li::before {
+  content: "";
+  display: inline-block;
+  width: 0.35rem;
+  height: 0.35rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--portal-accent);
+  vertical-align: 0.08rem;
+}
+.portal-sub-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 1.15rem;
+}
+.portal-sub-links a {
+  color: var(--portal-accent);
+  font-size: 0.83rem;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--portal-accent) 35%, transparent);
+  text-underline-offset: 0.25rem;
+}
+.portal-action-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.portal-action {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--portal-fg);
+  border-radius: 0.5rem;
+  background: var(--portal-fg);
+  color: var(--portal-panel) !important;
+  font-size: 0.88rem;
+  font-weight: 650;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.portal-action:hover {
+  background: transparent;
+  color: var(--portal-fg) !important;
+}
+
+.portal-note {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  margin-top: 4rem;
+  padding: 1.4rem;
+  border: 1px solid var(--portal-line);
+  border-radius: 0.65rem;
+  background: var(--portal-panel);
+}
+.portal-note-title { color: var(--portal-fg); }
+.portal-note > p:last-child {
+  max-width: 43rem;
+  margin: 0;
+  color: var(--portal-muted);
+  font-size: 0.88rem;
+  line-height: 1.75;
+}
+
+.portal-footer {
+  min-height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid var(--portal-line);
+  color: var(--portal-muted);
+  font-size: 0.78rem;
+}
+.portal-footer a { text-decoration: underline; text-underline-offset: 0.25rem; }
+
+.portal a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--portal-accent) 45%, transparent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 760px) {
+  .portal-section-heading { align-items: start; flex-direction: column; gap: 0.35rem; }
+  .portal-app { grid-template-columns: 2rem minmax(0, 1fr); }
+  .portal-action-wrap { grid-column: 2; justify-content: start; }
+  .portal-action { width: min(100%, 18rem); }
+  .portal-note { grid-template-columns: 1fr; gap: 0.65rem; }
+}
+
+@media (max-width: 480px) {
+  .portal-header, .portal-main, .portal-footer { width: min(100% - 1.25rem, 72rem); }
+  .portal-main { padding-top: 2.5rem; }
+  .portal-intro h1 { font-size: clamp(2.35rem, 13vw, 3.5rem); }
+  .portal-app { grid-template-columns: 1fr; gap: 0.8rem; }
+  .portal-index { padding: 0; }
+  .portal-action-wrap { grid-column: 1; }
+  .portal-footer { align-items: flex-start; flex-direction: column; justify-content: center; }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .lp * { transition: none !important; }
+  .portal * { transition: none !important; }
 }
 `

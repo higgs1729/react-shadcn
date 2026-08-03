@@ -7,6 +7,10 @@ import path from "node:path"
 const basePath = process.env.PAGES_BASE_PATH ?? ""
 
 const nextConfig: NextConfig = {
+  // Playwright smoke tests use the loopback IP while `next dev` defaults to
+  // localhost. Next 16 blocks that dev-only cross-origin asset request unless
+  // the additional origin is declared explicitly.
+  allowedDevOrigins: ["127.0.0.1"],
   // Static export: `next build` emits a fully static `out/` (no Node server),
   // hostable on GitHub Pages. Registry/coverage are read at build time.
   output: "export",

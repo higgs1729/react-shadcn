@@ -11,6 +11,7 @@ UI 実体。所属が一目で分かるよう、直下にはディレクトリ�
 - `patterns/` — `gen-pattern-stories.mjs` が生成する story(検証記録)
 - `studio-portfolio/` — 作品(studioApp)専用 UI
 - `team-t-app/` — Team T アプリ専用 UI
+- `python-test/` — Python データ分析試験アプリ専用 UI
 - `a11y-fixtures/` — a11y ゲートの既知違反 fixture
 - `theme-provider.tsx`・`resizable-sidebar-rail.tsx`・`landing-hub.tsx` — 共有基盤の単発ファイル(`landing-hub.tsx` は `/` の全アプリランディング)
 
