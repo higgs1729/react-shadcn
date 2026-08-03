@@ -3,8 +3,8 @@ import path from "node:path"
 
 const projectRoot = process.cwd()
 const catalogPath = path.join(projectRoot, "lib/team-t-app/catalog.json")
-const assetRoot = path.join(projectRoot, "public/team-t-app/api-pages")
-const gameAssetRoot = path.join(projectRoot, "public/team-t-app/games")
+const assetRoot = path.join(projectRoot, "public/api-pages")
+const gameAssetRoot = path.join(projectRoot, "public/games")
 const gamesSourcePath = path.join(projectRoot, "lib/team-t-app/games.ts")
 const recommendationPath = path.join(
   projectRoot,

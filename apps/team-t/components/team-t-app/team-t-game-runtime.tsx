@@ -13,7 +13,7 @@ import { getTeamTGameUrl, type TeamTGame } from "@/lib/team-t-app/games"
  * (activeGame state → game prop、setState → onSettle コールバック)への
  * 差し替えのみ。移設元の差分は git 履歴で確認できる。
  *
- * 契約の正本: `app/(team-t)/team-t-app/docs/game-selection.md`
+ * 契約の正本: `docs/game-selection.md`
  */
 
 export type TeamTGameResult =

@@ -18,7 +18,19 @@ npm workspaces。1リポジトリで複数アプリを持ち、GitHub Pages の�
 - 共有パッケージは特定の UI キットに依存する。`packages/ui` のような中立名を使わず、依存するキット名で命名して他キットのアプリが誤って使わないようにする
 - 全 workspace 横断の実行はルートの `npm run validate` / `npm run checks` / `npm run build`。単一アプリは `npm -w apps/<name> run <script>`
 
+## アプリと配信先
+
+| workspace | basePath | 配信 URL |
+| --- | --- | --- |
+| `apps/studio` | `/react-shadcn` | `/react-shadcn/`(ポータル LP と Studio) |
+| `apps/team-t` | `/react-shadcn/team-t` | `/react-shadcn/team-t/` |
+
+dev では各アプリを個別に起動する(`npm -w apps/studio run dev` / `npm -w apps/team-t run dev`)。
+別ポートになるため、ポータルからのアプリ間リンクは dev では解決しない。合成後の本番でのみ繋がる。
+
 ## 移行状況(2026-08-03 時点)
 
-モノレポ化は進行中。現在 `apps/studio` が LP・Studio・Team T・Python Test の全 route を保持している。
-`apps/team-t` / `apps/portal` / `apps/python-test` への分割と `packages/shadcn-kit` の抽出は未着手。
+- 完了: Phase 1(workspaces 化)・Phase 2(`apps/team-t` 分離)
+- 未着手: `apps/portal` / `apps/python-test` の分離、`packages/shadcn-kit` の抽出、GoldenFlow の CI ゲート解除
+- `apps/team-t` の `components/ui` `components/blocks` と `app/globals.css` は studio からの複製。
+  重複の解消は Phase 4 で行う

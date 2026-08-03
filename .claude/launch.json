@@ -13,6 +13,13 @@
       "runtimeArgs": ["-w", "apps/studio", "run", "dev"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "team-t",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["-w", "apps/team-t", "run", "dev", "--", "--port", "3001"],
+      "port": 3001,
+      "autoPort": false
     }
   ]
 }

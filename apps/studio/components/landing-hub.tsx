@@ -40,13 +40,13 @@ const apps: AppEntry[] = [
     title: "Team T",
     description:
       "目的やカテゴリから公開APIを探し、その場で仕様とレスポンスを確かめられる開発者向けカタログです。",
-    href: `${basePath}/team-t-app/`,
+    href: `${basePath}/team-t/`,
     action: "Team Tを開く",
     facts: ["177紹介ページ", "200 API", "検索・実行・おすすめ"],
     links: [
       {
         label: "Neon Tunnelで遊ぶ",
-        href: `${basePath}/team-t-app/games/neon-tunnel.html`,
+        href: `${basePath}/team-t/games/neon-tunnel.html`,
       },
     ],
   },

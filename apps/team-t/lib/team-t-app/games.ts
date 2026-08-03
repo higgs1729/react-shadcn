@@ -95,10 +95,10 @@ export type TeamTGame = (typeof teamTGames)[number]
 
 export function getTeamTGameUrl(game: TeamTGame) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-  return `${basePath}/team-t-app/games/${encodeURIComponent(game.fileName)}`
+  return `${basePath}/games/${encodeURIComponent(game.fileName)}`
 }
 
 export function getTeamTGamePreviewUrl(game: TeamTGame) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-  return `${basePath}/team-t-app/game-previews/${encodeURIComponent(game.previewFileName)}`
+  return `${basePath}/game-previews/${encodeURIComponent(game.previewFileName)}`
 }

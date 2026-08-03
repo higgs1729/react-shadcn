@@ -84,11 +84,11 @@ export function getApiPageUrl(item: ApiCatalogItem) {
     .map((segment) => encodeURIComponent(segment))
     .join("/")
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-  return `${basePath}/team-t-app/api-pages/${safePath}`
+  return `${basePath}/api-pages/${safePath}`
 }
 
 export function getApiPreviewImageUrl(item: ApiCatalogItem) {
   if (!item.previewFileName) return undefined
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-  return `${basePath}/team-t-app/api-page-previews/${encodeURIComponent(item.previewFileName)}`
+  return `${basePath}/api-page-previews/${encodeURIComponent(item.previewFileName)}`
 }

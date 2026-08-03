@@ -23,7 +23,7 @@ import { RecommendationTree } from "./recommendation-tree"
 import { TeamTRewardCard } from "./team-t-reward-card"
 import { TeamTOverflowLabel } from "./team-t-overflow-label"
 
-const teamTLabMarkSrc = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/team-t-app/assets/team-t-lab-mark.png`
+const teamTLabMarkSrc = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/assets/team-t-lab-mark.png`
 
 interface TeamTSidebarProps {
   items: readonly ApiCatalogItem[]

@@ -155,7 +155,7 @@ export const WORLD_ASSET_FILES = [
 
 export function getTeamTWorldAssetUrl(fileName: string) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-  return `${basePath}/team-t-app/world/models/${fileName}`
+  return `${basePath}/world/models/${fileName}`
 }
 
 export interface TeamTWorldKiosk {

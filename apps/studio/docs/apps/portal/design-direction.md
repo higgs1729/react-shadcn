@@ -19,7 +19,7 @@
 | #   | アプリ                    | 目的                 | 一次導線        |
 | --- | ------------------------- | -------------------- | --------------- |
 | 01  | AI Design System Studio   | UI設計の過程を見る   | `/overview/`    |
-| 02  | Team T                    | 公開APIを探して試す  | `/team-t-app/`  |
+| 02  | Team T                    | 公開APIを探して試す  | `/team-t/`  |
 | 03  | データ分析試験 模擬問題集 | Python試験を練習する | `/python-test/` |
 
 `Neon Tunnel` は Team T 内の機能なので、Team T 行の関連リンクとして扱う。
