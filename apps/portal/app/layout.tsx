@@ -7,9 +7,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
 
 export const metadata: Metadata = {
-  title: "higgs1729 / apps",
+  title: "WEB APPS | higgs1729",
   description:
-    "UI設計の記録、公開APIの探索、Python試験の学習。個人制作のアプリ一覧。",
+    "制作物のうちウェブ上で利用できるアプリをまとめています。すべてブラウザから直接開けます。",
 }
 
 export default function RootLayout({
