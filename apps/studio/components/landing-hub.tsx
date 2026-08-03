@@ -214,7 +214,7 @@ const styles = `
   font-size: 0.75rem;
 }
 
-.portal-main { padding-block: clamp(3rem, 7vw, 6rem) 5rem; }
+.portal-main { padding-block: clamp(2.5rem, 5vw, 4rem) 4rem; }
 
 .portal-intro { max-width: 50rem; }
 .portal-kicker,
@@ -230,7 +230,7 @@ const styles = `
 .portal-intro h1 {
   max-width: 48rem;
   margin: 0.75rem 0 0;
-  font-size: clamp(2.5rem, 7vw, 5.2rem);
+  font-size: clamp(2.35rem, 5.6vw, 4.2rem);
   line-height: 1.03;
   letter-spacing: -0.055em;
   font-weight: 720;
@@ -244,7 +244,7 @@ const styles = `
   line-height: 1.9;
 }
 
-.portal-directory { margin-top: clamp(4rem, 9vw, 7rem); }
+.portal-directory { margin-top: clamp(3rem, 6vw, 4.5rem); }
 .portal-section-heading {
   display: flex;
   align-items: end;
@@ -396,8 +396,8 @@ const styles = `
 
 @media (max-width: 480px) {
   .portal-header, .portal-main, .portal-footer { width: min(100% - 1.25rem, 72rem); }
-  .portal-main { padding-top: 2.5rem; }
-  .portal-intro h1 { font-size: clamp(2.35rem, 13vw, 3.5rem); }
+  .portal-main { padding-top: 2rem; }
+  .portal-intro h1 { font-size: clamp(2.15rem, 10.5vw, 2.8rem); }
   .portal-app { grid-template-columns: 1fr; gap: 0.8rem; }
   .portal-index { padding: 0; }
   .portal-action-wrap { grid-column: 1; }
