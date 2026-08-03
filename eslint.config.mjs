@@ -20,6 +20,9 @@ const eslintConfig = defineConfig([
     // Third-party bundles served verbatim to the game iframes. Minified vendor
     // code is not ours to fix, and linting it only produces noise.
     "public/**/vendor/**",
+    // Local-only reference copies (gitignored). CI never checks these out, so
+    // linting them makes the local run red where CI is green.
+    "sampleforYou/**",
   ]),
   ...storybook.configs["flat/recommended"],
   {
