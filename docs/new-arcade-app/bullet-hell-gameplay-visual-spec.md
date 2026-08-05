@@ -20,7 +20,7 @@ Neon Tunnelと並ぶ初期ゲームとして収録する。アプリ全体の境
 
 ## ビジュアルターゲット
 
-![確定したゲームプレイ画面](assets/bullet-hell-gameplay-target.png)
+![確定したゲームプレイ画面](assets/bullet-hell-gameplay-target.webp)
 
 この画像は完成品の一枚絵ではなく、構図、色、情報量、HUDの位置、弾の視認性を判断する正本とする。
 実装時に画像全体を背景として貼らない。以降のレイヤー構成へ分解して再現する。

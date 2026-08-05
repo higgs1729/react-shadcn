@@ -6,6 +6,27 @@
   "trailingComma": "es5",
   "printWidth": 80,
   "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindStylesheet": "app/globals.css",
-  "tailwindFunctions": ["cn", "cva"]
+  "tailwindFunctions": ["cn", "cva"],
+  "overrides": [
+    {
+      "files": "apps/portal/**",
+      "options": { "tailwindStylesheet": "apps/portal/app/globals.css" }
+    },
+    {
+      "files": "apps/python-test/**",
+      "options": { "tailwindStylesheet": "apps/python-test/app/globals.css" }
+    },
+    {
+      "files": "apps/studio/**",
+      "options": { "tailwindStylesheet": "apps/studio/app/globals.css" }
+    },
+    {
+      "files": "apps/team-t/**",
+      "options": { "tailwindStylesheet": "apps/team-t/app/globals.css" }
+    },
+    {
+      "files": "packages/shadcn-kit/**",
+      "options": { "tailwindStylesheet": "packages/shadcn-kit/styles/base.css" }
+    }
+  ]
 }

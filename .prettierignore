@@ -5,3 +5,15 @@ node_modules/
 coverage/
 pnpm-lock.yaml
 .pnpm-store/
+out/
+storybook-static/
+sampleforYou/
+
+# AGENTS.md marks the shadcn primitives themselves edit-forbidden (stories are
+# not). `npm run format` had been failing outright since the monorepo move, so
+# nothing enforced that; now that it runs again it would rewrite all of them.
+# Written as a file glob, not a directory. Prettier uses gitignore semantics,
+# where a negation cannot re-include anything under an excluded DIRECTORY —
+# `ui/` followed by `!ui/*.stories.tsx` silently protects the stories too.
+packages/shadcn-kit/components/ui/*.tsx
+!packages/shadcn-kit/components/ui/*.stories.tsx

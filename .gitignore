@@ -29,6 +29,11 @@ build
 /sampleforYou/
 /.artifacts/
 
+# Ad-hoc design-QA screenshots agents drop next to the app they were checking.
+# They are throwaway evidence for one review, not assets; five of them had been
+# sitting untracked in apps/portal/. Commit real assets under public/ instead.
+design-qa-*.png
+
 # debug
 npm-debug.log*
 yarn-debug.log*
