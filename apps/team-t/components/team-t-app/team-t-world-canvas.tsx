@@ -23,7 +23,7 @@ import { TeamTWorldExitGate } from "./team-t-world-exit-gate"
 import { TeamTWorldKioskMesh } from "./team-t-world-kiosk"
 import { TeamTWorldRoom } from "./team-t-world-room"
 
-const CAMERA_OFFSET = new THREE.Vector3(0, 7.5, 10.5)
+const CAMERA_OFFSET = new THREE.Vector3(0, 9, 12)
 
 /** アバターを追うカメラ。reduceMotion 時はラグ(lerp)とスウェイを切る。 */
 function CameraRig({
@@ -151,7 +151,7 @@ export function TeamTWorldCanvas({
     <Canvas
       frameloop={paused ? "never" : "always"}
       dpr={[1, 1.75]}
-      camera={{ position: [0, 7.5, 18.5], fov: 50, near: 0.1, far: 80 }}
+      camera={{ position: [0, 9, 25], fov: 52, near: 0.1, far: 90 }}
       gl={{ antialias: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
         gl.toneMappingExposure = 1.12

@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 
 import type { TeamTWorldSkinId } from "@/lib/team-t-app/preferences"
-import { teamTWorldKiosks, WORLD_LAYOUT } from "@/lib/team-t-app/world"
+import { teamTWorldColliders, WORLD_LAYOUT } from "@/lib/team-t-app/world"
 
 import {
   pickTeamTWorldCharacterClip,
@@ -158,8 +158,8 @@ export function TeamTWorldAvatar({
       // 店内の矩形境界から外へ出ないようにする。
       candidate.x = THREE.MathUtils.clamp(
         candidate.x,
-        -WORLD_LAYOUT.roomHalfWidth + WORLD_LAYOUT.collisionRadius,
-        WORLD_LAYOUT.roomHalfWidth - WORLD_LAYOUT.collisionRadius
+        WORLD_LAYOUT.roomMinX + WORLD_LAYOUT.collisionRadius,
+        WORLD_LAYOUT.roomMaxX - WORLD_LAYOUT.collisionRadius
       )
       candidate.z = THREE.MathUtils.clamp(
         candidate.z,
@@ -167,17 +167,15 @@ export function TeamTWorldAvatar({
         WORLD_LAYOUT.roomHalfDepth - WORLD_LAYOUT.collisionRadius
       )
 
-      // 各筐体の占有円から押し出す。
-      for (const kiosk of teamTWorldKiosks) {
-        const kx = kiosk.position[0]
-        const kz = kiosk.position[2]
-        const dx = candidate.x - kx
-        const dz = candidate.z - kz
+      // 筐体・什器の占有円から押し出す。
+      for (const collider of teamTWorldColliders) {
+        const dx = candidate.x - collider.x
+        const dz = candidate.z - collider.z
         const dist = Math.hypot(dx, dz)
-        const minDist = kiosk.collisionRadius + WORLD_LAYOUT.collisionRadius
+        const minDist = collider.radius + WORLD_LAYOUT.collisionRadius
         if (dist > 0 && dist < minDist) {
-          candidate.x = kx + (dx / dist) * minDist
-          candidate.z = kz + (dz / dist) * minDist
+          candidate.x = collider.x + (dx / dist) * minDist
+          candidate.z = collider.z + (dz / dist) * minDist
         }
       }
 
