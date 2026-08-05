@@ -1,4 +1,4 @@
-import { ResultReportPage } from "@/components/studio-portfolio/studio-pages"
+import { ResultReportPage } from "@/components/studio-portfolio/result-report-page"
 
 export default function Page() {
   return <ResultReportPage />

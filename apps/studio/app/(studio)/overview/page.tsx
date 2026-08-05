@@ -1,4 +1,4 @@
-import { OverviewPage } from "@/components/studio-portfolio/studio-pages"
+import { OverviewPage } from "@/components/studio-portfolio/overview-page"
 
 export default function Page() {
   return <OverviewPage />

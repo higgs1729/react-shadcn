@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { CaseStudyPage } from "@/components/studio-portfolio/studio-pages"
+import { CaseStudyPage } from "@/components/studio-portfolio/case-study-page"
 
 export default function Page() {
   const markdown = readFileSync(

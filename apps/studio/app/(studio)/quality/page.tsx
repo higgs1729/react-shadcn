@@ -1,4 +1,4 @@
-import { QualityPage } from "@/components/studio-portfolio/studio-pages"
+import { QualityPage } from "@/components/studio-portfolio/quality-page"
 
 export default function Page() {
   return <QualityPage />

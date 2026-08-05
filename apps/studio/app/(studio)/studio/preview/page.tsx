@@ -1,4 +1,4 @@
-import { GeneratedPreviewPage } from "@/components/studio-portfolio/studio-pages"
+import { GeneratedPreviewPage } from "@/components/studio-portfolio/generated-preview-page"
 
 export default function Page() {
   return <GeneratedPreviewPage />
