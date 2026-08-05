@@ -31,7 +31,8 @@ shadcn/ui 上で、AI がアプリを brief→JTBD→flow→選定→実装 に�
 
 ## Do
 
-- Stop hook が `npm run validate`を実行するので実行は不要
+- Stop hook が `npm run validate` を実行するので実行は不要。本体は `scripts/stop-validate.mjs` で、
+  Claude Code(`.claude/settings.json`)と Codex(`.codex/hooks.json`)の両方に登録済み
 - `npm run checks` は BuildReport 検証時に手動実行
 - コンポーネント API に迷ったら `packages/shadcn-kit/components/ui/` のソースを読む(base-ui。合成は `render={<.../>}`)。primitive の import は `@react-shadcn/shadcn-kit/ui/*`
 - 契約・生成・検証・複数階層などを横断して別executorへ渡す実行単位だけをtaskとし、`docs/task/template.md` から自己完結briefを生成する。現在のチャットで連続して設計・実装する工程や単一領域の逐次作業にはtaskを作らない。反復利用が実証済みの手順だけを `docs/tasks/` のplaybookとして参照し、具体値をactive taskへ展開する
@@ -43,7 +44,7 @@ shadcn/ui 上で、AI がアプリを brief→JTBD→flow→選定→実装 に�
 
 - `docs/archive/` を読まない・参照しない(明示指示があるときのみ)
 - 編集禁止: `packages/shadcn-kit/components/ui/*` 本体(stories は可)・`docs/contracts/*`・`docs/layers/20-selection/*`・既存 registry の facet 値
-  - 例外1(語彙拡張): screenType / blockRole の enum・canonical profiles の追加は、`docs/tasks/task-16-add-one-screen-type.md` の brief を握った**最上位 AI の自己判断で可**(下位AIは保護ファイルに read-only)。既存値の変更・削除は不可。人間は事前承認せず定期監査する。
+  - 例外1(語彙拡張): screenType / blockRole の enum・canonical profiles の**追加**は、そのtaskを実行しているexecutorの自己判断で可。既存値の変更・削除は不可。人間は事前承認せず定期監査する。
   - 例外2(生成物): `gen-pattern-stories.mjs` による registry の `verification.storybookStories` 書き戻し。これは生成された検証記録であり facet 手編集ではない。
 - Radix API を書かない(`asChild` / `type="single"` は存在しない — base-ui)
 - maturity を experimental→canonical に昇格しない(人間レビュー専用)

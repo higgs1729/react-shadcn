@@ -9,6 +9,7 @@ npm workspaces。1リポジトリで複数アプリを持ち、GitHub Pages の�
 
 - `apps/*` — アプリ本体。各々が自分の package.json・next.config.ts・依存を持つ
 - `packages/shadcn-kit` — shadcn 系アプリが共有する primitive とテーマトークン。`shadcn add` はここで実行する
+- `scripts/` — 全エージェント共通のフック本体。登録は各エージェントの設定側
 - `.github/workflows/` — checks(全 workspace)と deploy-pages(各 out/ を1つの dist/ に合成)
 
 ## このディレクトリだけの約束

@@ -16,6 +16,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Runs the same five-check suite used locally:
-      # contracts (ajv) -> lint -> typecheck -> next build -> storybook build
+      # Fans out to every workspace's own `checks` script (npm run checks
+      # --workspaces --if-present). For apps/studio that is scripts/run-checks.mjs:
+      # contracts (ajv) -> lint -> typecheck -> next build -> storybook build.
       - run: npm run checks

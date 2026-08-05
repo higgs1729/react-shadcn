@@ -1,12 +1,11 @@
-import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs'
+// Owns ONE rule: the depth-1 Map/索引 convention inside this app's AGENTS.md
+// nodes. The AGENTS.md <-> CLAUDE.md pairing and the shim's exact bytes are
+// checked repo-wide by scripts/check-agent-instructions.mjs — deliberately not
+// duplicated here, so there is a single owner per rule.
+import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '..')
-
-const EXPECTED_CLAUDE = `<!-- Canonical source: AGENTS.md. Keep this file as a deterministic shim for Claude-compatible tools. -->
-
-@AGENTS.md
-`
 
 const EXCLUDED_DIRS = new Set([
   'node_modules',
@@ -79,29 +78,16 @@ const uniqueNodes = [...new Set(nodes)]
 
 for (const dir of uniqueNodes) {
   const agentsPath = join(dir, 'AGENTS.md')
-  const claudePath = join(dir, 'CLAUDE.md')
 
-  if (!existsSync(agentsPath)) {
-    errors.push(`${displayPath(claudePath)} exists without a sibling AGENTS.md`)
-    continue
-  }
-  if (!existsSync(claudePath)) {
-    errors.push(`${displayPath(agentsPath)} exists without a sibling CLAUDE.md shim`)
-    continue
-  }
+  if (!existsSync(agentsPath)) continue
 
   const agents = readFileSync(agentsPath, 'utf8').replace(/\r\n/g, '\n')
-  const claude = readFileSync(claudePath, 'utf8').replace(/\r\n/g, '\n')
 
   if (dir === ROOT && !agents.includes('# AI Design System')) {
     errors.push(`${displayPath(agentsPath)} does not look like the canonical root agent instruction file`)
   }
 
   checkMapDepth(agentsPath, agents)
-
-  if (claude !== EXPECTED_CLAUDE) {
-    errors.push(`${displayPath(claudePath)} must stay as the fixed shim that imports ${displayPath(agentsPath)}`)
-  }
 }
 
 if (errors.length > 0) {
@@ -110,4 +96,4 @@ if (errors.length > 0) {
   process.exit(1)
 }
 
-console.log(`Docs structure validated: ${uniqueNodes.length} AGENTS.md/CLAUDE.md node(s) in sync.`)
+console.log(`Docs structure validated: depth-1 Map rule over ${uniqueNodes.length} node(s).`)
