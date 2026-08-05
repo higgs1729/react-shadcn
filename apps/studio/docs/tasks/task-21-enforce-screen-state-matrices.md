@@ -26,8 +26,8 @@ is the sole authority for the states needed in a particular product flow.
   must be removed.
 - Existing screen-pattern inventory covers all 12 canonical ScreenTypes. It is experimental;
   this task must not promote maturity.
-- `task-20-run-selection-and-implementation.md` must derive its resolved/unresolved result
-  from the target FlowSpec's `requiredStates`, not from a generic ScreenType policy.
+- Any selection+implementation run must derive its resolved/unresolved result from the target
+  FlowSpec's `requiredStates`, not from a generic ScreenType policy.
 
 ## State-inventory model
 

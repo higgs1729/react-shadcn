@@ -38,10 +38,10 @@ convention and be idempotent.
 3. Add `scripts/gen-flow-routes.test.mjs` asserting generation is idempotent, that a route is
    produced for every resolved step, and none for any `unresolved` step. `npm run
    test:flow-routes` exits 0.
-4. Adopt it: update `.claude/agents/pipeline-implementation.md` so WP-B runs `gen:flow-routes`
-   for resolved steps instead of hand-writing each `page.tsx` (it still generates stories and
-   runs checks). Add a note there that whole-repo `build`/`build-storybook` is run once by the
-   coordinator, not per-subagent, to avoid concurrent `next build` lock contention.
+4. Adopt it: the executor running the implementation layer runs `gen:flow-routes` for resolved
+   steps instead of hand-writing each `page.tsx` (it still generates stories and runs checks).
+   Whole-repo `build`/`build-storybook` runs once at the end, not once per screen, to avoid
+   concurrent `next build` lock contention.
 5. The regenerated studio routes keep `run-planned-checks` at `passed: true` and
    `npm run checks` exit 0.
 
@@ -56,7 +56,7 @@ convention and be idempotent.
 - [ ] `npm run gen:flow-routes -- studio-portfolio-01` regenerates its routes idempotently,
       functionally identical to the current set.
 - [ ] `npm run test:flow-routes` exits 0.
-- [ ] `.claude/agents/pipeline-implementation.md` instructs using the generator + the
+- [ ] The implementation-layer procedure instructs using the generator + the
       centralized-checks note.
 - [ ] `npm run checks`, `npm run validate`, `npm run validate:pipeline` exit 0;
       `run-planned-checks` reports `passed: true`.

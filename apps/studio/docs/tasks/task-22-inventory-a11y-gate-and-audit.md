@@ -22,9 +22,7 @@ every existing pattern story so the whole registry passes a11y today.
 - Already fixed today (do NOT redo): `app/detail-01/detail-screen.tsx`,
   `app/conversation-assistant-01/conversation-assistant-screen.tsx`,
   `components/ai-conversation-list-01.tsx`, `components/activity-feed-01.tsx`. Audit the rest.
-- Inventory briefs: `docs/tasks/task-16-add-one-screen-type.md`,
-  `docs/tasks/task-18-stock-one-existing-block-role.md`,
-  `docs/tasks/task-19-add-one-new-block-role.md`. Implementation regs (editable):
+- Implementation regs (editable):
   `docs/layers/30-implementation/ai-implementation-instructions.md`. Layer 20 is protected.
 
 ## Requirements

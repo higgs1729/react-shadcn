@@ -6,8 +6,8 @@
 playbookは対象値のプレースホルダーと共通手順を持てるが、それ自体を直接実行しない。
 実行時は必要な内容を `docs/task/task-{taskId}.md` へ展開し、具体化済みactive task 1枚を
 実行者へ渡す。個々の実行完了時にplaybookをarchiveしない。
-既存playbookに残るcoordinator/WP分割は旧運用として扱い、新しいactive taskではexecutor
-一人が直接実行・自己検証・報告する形へ展開する。下位executorへの再委任は行わない。
+executor一人が直接実行・自己検証・報告する。下位executorへの再委任は行わない
+(coordinator/WP分割を前提とした旧playbookは `docs/archive/tasks/` へ退避済み)。
 
 ## Shared ground rules for every executor
 
@@ -58,7 +58,7 @@ Use this decision sequence:
 3. If the elevated rerun passes, report the initial failure as a sandbox restriction and the
    elevated result as the authoritative check result.
 4. If the denied path is a source file, a protected file, or an unexpected location, stop and
-   escalate to the coordinator/user instead of assuming write permission. Likewise, a real
+   escalate to the user instead of assuming write permission. Likewise, a real
    test, type, lint, build, or a11y failure remains a product failure even when an earlier
    sandbox failure also occurred.
 5. If elevated execution is unavailable, report the command, exact error, and blocked output

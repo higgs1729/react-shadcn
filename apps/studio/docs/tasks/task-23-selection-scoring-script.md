@@ -45,10 +45,10 @@ tie-breaking.
    recorded in BOTH golden SelectionSpecs (within the doc's rounding). Document any deviation
    the doc leaves genuinely underspecified rather than hard-coding to pass. `npm run
    test:select-candidates` exits 0.
-4. Adopt it: update `.claude/agents/pipeline-selection.md` so WP-A runs `select:candidates`
-   first and uses its scores, reserving the model for judgment (screenType resolution,
-   tie-break, assumptions, self-review). Do not change what the selection layer DECIDES —
-   only how scores are obtained.
+4. Adopt it: the executor running the selection layer runs `select:candidates` first and uses
+   its scores, reserving the model for judgment (screenType resolution, tie-break,
+   assumptions, self-review). Do not change what the selection layer DECIDES — only how
+   scores are obtained.
 5. `npm run validate`, `npm run validate:pipeline`, `npm run checks` stay exit 0.
 
 ## Constraints
@@ -61,7 +61,7 @@ tie-breaking.
 
 - [ ] `npm run select:candidates -- <flowspec>` emits per-step scored candidates; exit 0.
 - [ ] `npm run test:select-candidates` reproduces both golden SelectionSpecs' scores; exit 0.
-- [ ] `.claude/agents/pipeline-selection.md` instructs running the script.
+- [ ] The selection-layer procedure instructs running the script.
 - [ ] `npm run validate`, `npm run validate:pipeline`, `npm run checks` exit 0.
 
 ## Out of scope
