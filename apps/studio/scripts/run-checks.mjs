@@ -1,4 +1,4 @@
-// Pure reporter: runs the fixed five-check verification suite and emits results
+// Pure reporter: runs the fixed six-check verification suite and emits results
 // in the exact shape of the BuildReport `checks[]` array. Never fixes anything
 // itself — fixing under the fix-loop policy is the executor's job.
 //
@@ -10,6 +10,10 @@ const CHECKS = [
   { name: 'contracts', script: 'validate' },
   { name: 'lint', script: 'lint' },
   { name: 'typecheck', script: 'typecheck' },
+  // Deliberately NOT skipped when typecheck fails: the test:* scripts are plain
+  // node programs that do not go through tsc, so a type error says nothing about
+  // whether they still pass.
+  { name: 'tests', script: 'test:all' },
   { name: 'build', script: 'build' },
   { name: 'storybook', script: 'build-storybook' },
 ]

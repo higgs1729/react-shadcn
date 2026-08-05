@@ -6,8 +6,14 @@
 //      appears in `screens`, exercising the exclusion filter);
 //   3. regeneration is byte-for-byte idempotent (a second run changes nothing and
 //      `--check` exits 0).
-// The fixture SelectionSpec and its generated app/flows/<tmpId>/ tree are removed
-// on exit, pass or fail, so the test leaves the repo untouched.
+// The fixture SelectionSpec and its generated app/(system)/flows/<tmpId>/ tree are
+// removed on exit, pass or fail, so the test leaves the repo untouched.
+//
+// `flowDir` below MUST track gen-flow-routes.mjs's output path. When the route
+// group was introduced the generator moved to app/(system)/flows/ and this file
+// did not follow, which silently disabled cleanup (leaving real page.tsx routes
+// in the repo for `next build` to publish) and turned the unresolved-step
+// assertion into a check against a directory nothing ever wrote to.
 import { spawnSync } from 'node:child_process'
 import { readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
@@ -18,7 +24,7 @@ const TMP_ID = `zztest-flow-routes-${process.pid}`
 const specName = `selectionspec-${TMP_ID}.json`
 // Write the fixture next to the real examples so readDoc resolves it by basename.
 const specOut = join(ROOT, 'docs', 'examples', specName)
-const flowDir = join(ROOT, 'app', 'flows', TMP_ID)
+const flowDir = join(ROOT, 'app', '(system)', 'flows', TMP_ID)
 
 const failures = []
 function check(label, cond) {
