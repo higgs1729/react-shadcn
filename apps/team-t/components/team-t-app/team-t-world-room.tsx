@@ -16,9 +16,18 @@ import {
 import { cloneTinted } from "./team-t-world-materials"
 
 // ゾーン別の床。中央=紫の市松、受付(左)=クールなタイル、ラウンジ(右)=暖色の木目。
-const FLOOR_CENTER = [new THREE.Color("#75667f"), new THREE.Color("#3e3854")] as const
-const FLOOR_RECEPTION = [new THREE.Color("#42606a"), new THREE.Color("#2f4750")] as const
-const FLOOR_LOUNGE = [new THREE.Color("#7c5c3f"), new THREE.Color("#5b4330")] as const
+const FLOOR_CENTER = [
+  new THREE.Color("#75667f"),
+  new THREE.Color("#3e3854"),
+] as const
+const FLOOR_RECEPTION = [
+  new THREE.Color("#42606a"),
+  new THREE.Color("#2f4750"),
+] as const
+const FLOOR_LOUNGE = [
+  new THREE.Color("#7c5c3f"),
+  new THREE.Color("#5b4330"),
+] as const
 // 各ゾーンの床の境界(左右非対称)。受付=この値以左、ラウンジ=この値以右。
 const RECEPTION_EDGE_X = -16
 const LOUNGE_EDGE_X = 12
@@ -55,11 +64,11 @@ function ArcadeFloor({ source }: { source: SceneAsset }) {
               : FLOOR_CENTER
         return {
           object: cloneTinted(source, palette[(column + row) % 2]),
-          position: [
-            x,
-            -0.03,
-            (row - (FLOOR_ROWS - 1) / 2) * FLOOR_SIZE,
-          ] as [number, number, number],
+          position: [x, -0.03, (row - (FLOOR_ROWS - 1) / 2) * FLOOR_SIZE] as [
+            number,
+            number,
+            number,
+          ],
         }
       }),
     [source]
@@ -197,7 +206,9 @@ function Furnishings() {
       const source = sceneByFile.get(prop.file)
       return {
         object: source ? cloneTinted(source, new THREE.Color(prop.tint)) : null,
-        offset: offsetByFile.get(prop.file) ?? ([0, 0, 0] as [number, number, number]),
+        offset:
+          offsetByFile.get(prop.file) ??
+          ([0, 0, 0] as [number, number, number]),
         position: prop.position as [number, number, number],
         rotationY: prop.rotationY,
         scale: prop.scale,

@@ -18,7 +18,7 @@ export default function Page() {
 
   return (
     <main className="flex min-h-svh items-center justify-center p-6">
-      <p className="text-muted-foreground text-sm">
+      <p className="text-sm text-muted-foreground">
         <Link href="/overview" className="underline underline-offset-4">
           Overview へ移動
         </Link>

@@ -13,7 +13,7 @@ export default function RootLayout({
     <html
       lang="ja"
       suppressHydrationWarning
-      className={`antialiased font-sans ${inter.variable} ${fontMono.variable}`}
+      className={`font-sans antialiased ${inter.variable} ${fontMono.variable}`}
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>

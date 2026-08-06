@@ -1,9 +1,13 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { BreadcrumbContext01 } from '@/components/blocks/breadcrumb-context-01'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
 
 function BreadcrumbContext01Demo() {
-  const [path, setPath] = React.useState(['Home', 'Projects', 'Website Redesign'])
+  const [path, setPath] = React.useState([
+    "Home",
+    "Projects",
+    "Website Redesign",
+  ])
 
   return (
     <BreadcrumbContext01
@@ -18,9 +22,9 @@ function BreadcrumbContext01Demo() {
 }
 
 const meta = {
-  title: 'Blocks/breadcrumb-context/Breadcrumb Context 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/breadcrumb-context/Breadcrumb Context 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <BreadcrumbContext01Demo />,
 } satisfies Meta
 

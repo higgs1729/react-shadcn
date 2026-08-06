@@ -4,9 +4,15 @@ import * as React from "react"
 import { FileTextIcon, FolderIcon, Trash2Icon, UndoIcon } from "lucide-react"
 
 import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
-import { CommentThread, type CommentThreadComment } from "@/components/blocks/comment-thread-01"
+import {
+  CommentThread,
+  type CommentThreadComment,
+} from "@/components/blocks/comment-thread-01"
 import { DocumentBodyEditor } from "@/components/blocks/document-body-editor-01"
-import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
+import {
+  FileUploadArea,
+  type FileUploadAreaFile,
+} from "@/components/blocks/file-upload-area-01"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 
 type SavedState = "saved" | "saving" | "unsaved"
@@ -31,8 +37,18 @@ Staged rollout begins Monday behind the release flag, expanding to all workspace
 const SEED_BREADCRUMB = ["Workspace", "Launches", "3.0 Release"]
 
 const SEED_COMMENTS: CommentThreadComment[] = [
-  { id: "comment-1", author: "Maya Chen", body: "Can we add the rollback trigger to the rollout section?", timestamp: "2 hours ago" },
-  { id: "comment-2", author: "Jordan Lee", body: "Load test is scheduled for Friday — I'll update the risk once it passes.", timestamp: "1 hour ago" },
+  {
+    id: "comment-1",
+    author: "Maya Chen",
+    body: "Can we add the rollback trigger to the rollout section?",
+    timestamp: "2 hours ago",
+  },
+  {
+    id: "comment-2",
+    author: "Jordan Lee",
+    body: "Load test is scheduled for Friday — I'll update the risk once it passes.",
+    timestamp: "1 hour ago",
+  },
 ]
 
 const SEED_ATTACHMENTS = [
@@ -135,14 +151,25 @@ export function ReviewDocsApp() {
     if (!reply.trim()) return
     setDoc((current) => ({
       ...current,
-      comments: [...current.comments, { id: `comment-${Date.now()}`, author: "You", body: reply, timestamp: "Just now" }],
+      comments: [
+        ...current.comments,
+        {
+          id: `comment-${Date.now()}`,
+          author: "You",
+          body: reply,
+          timestamp: "Just now",
+        },
+      ],
     }))
     setReply("")
     setSavedState("unsaved")
   }
 
   function deleteComment(id: string) {
-    setDoc((current) => ({ ...current, comments: current.comments.filter((comment) => comment.id !== id) }))
+    setDoc((current) => ({
+      ...current,
+      comments: current.comments.filter((comment) => comment.id !== id),
+    }))
     setSavedState("unsaved")
   }
 
@@ -158,12 +185,19 @@ export function ReviewDocsApp() {
   }
 
   function removeFile(id: string) {
-    setDoc((current) => ({ ...current, files: current.files.filter((file) => file.id !== id) }))
+    setDoc((current) => ({
+      ...current,
+      files: current.files.filter((file) => file.id !== id),
+    }))
     setSavedState("unsaved")
   }
 
   // Attachments shown inside the editor mirror the local file list.
-  const editorAttachments = files.map((file) => ({ id: file.id, name: file.name, meta: file.size }))
+  const editorAttachments = files.map((file) => ({
+    id: file.id,
+    name: file.name,
+    meta: file.size,
+  }))
 
   return (
     <div className="min-h-dvh bg-muted/30 text-foreground">
@@ -201,7 +235,8 @@ export function ReviewDocsApp() {
               items={breadcrumbPath.map((label, index) => ({
                 id: label,
                 label,
-                onSelect: () => setBreadcrumbPath(breadcrumbPath.slice(0, index + 1)),
+                onSelect: () =>
+                  setBreadcrumbPath(breadcrumbPath.slice(0, index + 1)),
               }))}
               currentLabel={title || "Untitled document"}
             />
@@ -212,7 +247,12 @@ export function ReviewDocsApp() {
                   Discard changes
                 </Button>
               )}
-              <Button size="sm" variant="outline" onClick={save} disabled={savedState === "saved"}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={save}
+                disabled={savedState === "saved"}
+              >
                 {savedState === "saved" ? "Saved" : "Save"}
               </Button>
               <Button size="sm">Share</Button>
@@ -229,7 +269,9 @@ export function ReviewDocsApp() {
                 onContentChange={editContent}
                 attachments={editorAttachments}
                 savedState={savedState}
-                titleError={title.trim() ? undefined : "Enter a document title."}
+                titleError={
+                  title.trim() ? undefined : "Enter a document title."
+                }
               />
               <div className="flex min-w-0 flex-col gap-4">
                 <CommentThread
@@ -240,12 +282,20 @@ export function ReviewDocsApp() {
                 />
                 {comments.length > 0 && (
                   <div className="rounded-lg border p-3">
-                    <h2 className="mb-2 text-xs font-medium text-muted-foreground">Manage comments</h2>
+                    <h2 className="mb-2 text-xs font-medium text-muted-foreground">
+                      Manage comments
+                    </h2>
                     <div className="divide-y">
                       {comments.map((comment) => (
-                        <div key={comment.id} className="flex items-center gap-2 py-1.5 text-xs">
+                        <div
+                          key={comment.id}
+                          className="flex items-center gap-2 py-1.5 text-xs"
+                        >
                           <span className="min-w-0 flex-1 truncate">
-                            <span className="font-medium">{comment.author}:</span> {comment.body}
+                            <span className="font-medium">
+                              {comment.author}:
+                            </span>{" "}
+                            {comment.body}
                           </span>
                           <Button
                             aria-label={`Delete comment from ${comment.author}`}

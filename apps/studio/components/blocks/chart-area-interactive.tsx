@@ -175,9 +175,7 @@ export function ChartAreaInteractive({
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>
-          <span className="hidden @[540px]/card:block">
-            {description}
-          </span>
+          <span className="hidden @[540px]/card:block">{description}</span>
           <span className="@[540px]/card:hidden">Last 3 months</span>
         </CardDescription>
         <CardAction>

@@ -1,11 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { WizardStepper, type WizardStep } from '@/components/blocks/wizard-stepper-01'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import {
+  WizardStepper,
+  type WizardStep,
+} from "@/components/blocks/wizard-stepper-01"
 
 const steps: WizardStep[] = [
-  { id: 'account', label: 'Account' },
-  { id: 'profile', label: 'Profile' },
-  { id: 'billing', label: 'Billing' },
-  { id: 'review', label: 'Review' },
+  { id: "account", label: "Account" },
+  { id: "profile", label: "Profile" },
+  { id: "billing", label: "Billing" },
+  { id: "review", label: "Review" },
 ]
 
 function WizardStepperDemo() {
@@ -13,15 +16,15 @@ function WizardStepperDemo() {
     <WizardStepper
       steps={steps}
       currentStepId="profile"
-      completedStepIds={['account']}
+      completedStepIds={["account"]}
     />
   )
 }
 
 const meta = {
-  title: 'Blocks/wizard-stepper/Wizard Stepper 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/wizard-stepper/Wizard Stepper 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <WizardStepperDemo />,
 } satisfies Meta
 

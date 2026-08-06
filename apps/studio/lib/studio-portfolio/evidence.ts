@@ -26,7 +26,11 @@ export const studioEvidence = {
     score: screen.screenPattern.score,
     screenTypeScore: screen.screenTypeScore,
     blocks: screen.blocks.map((block) => block.registryItem),
-    blockScores: screen.blocks.map((block) => ({ role: block.blockRole, registryItem: block.registryItem, score: block.score })),
+    blockScores: screen.blocks.map((block) => ({
+      role: block.blockRole,
+      registryItem: block.registryItem,
+      score: block.score,
+    })),
     rejected: (screen.screenPattern.rejected ?? []) as RejectedCandidate[],
     assumptions: screen.assumptions,
     risks: screen.risks,

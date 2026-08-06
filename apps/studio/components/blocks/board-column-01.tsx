@@ -4,7 +4,12 @@ import { PlusIcon } from "lucide-react"
 
 import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@react-shadcn/shadcn-kit/ui/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@react-shadcn/shadcn-kit/ui/card"
 
 export interface BoardColumnCard {
   id: string
@@ -74,15 +79,27 @@ export function BoardColumn({
               role="listitem"
               size="sm"
               className="cursor-grab active:cursor-grabbing"
-              onDragStart={(event) => event.dataTransfer.setData("text/plain", card.id)}
+              onDragStart={(event) =>
+                event.dataTransfer.setData("text/plain", card.id)
+              }
             >
               <CardHeader className="gap-2">
                 <CardTitle>{card.title}</CardTitle>
-                {card.priority && <Badge variant="outline">{card.priority}</Badge>}
+                {card.priority && (
+                  <Badge variant="outline">{card.priority}</Badge>
+                )}
               </CardHeader>
               <CardContent className="space-y-3">
-                {card.description && <p className="text-sm text-muted-foreground">{card.description}</p>}
-                <Button size="xs" variant="ghost" onClick={() => moveCard(card.id)}>
+                {card.description && (
+                  <p className="text-sm text-muted-foreground">
+                    {card.description}
+                  </p>
+                )}
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  onClick={() => moveCard(card.id)}
+                >
                   Move to {title}
                 </Button>
               </CardContent>

@@ -1,13 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { AppSidebar } from '@/components/blocks/app-sidebar'
-import { SidebarProvider } from '@react-shadcn/shadcn-kit/ui/sidebar'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { AppSidebar } from "@/components/blocks/app-sidebar"
+import { SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 const meta = {
-  title: 'Blocks/app-shell-sidebar/Sidebar 07',
-  parameters: { layout: 'fullscreen' },
-  tags: ['autodocs'],
+  title: "Blocks/app-shell-sidebar/Sidebar 07",
+  parameters: { layout: "fullscreen" },
+  tags: ["autodocs"],
   render: () => (
-    <SidebarProvider><AppSidebar /></SidebarProvider>
+    <SidebarProvider>
+      <AppSidebar />
+    </SidebarProvider>
   ),
 } satisfies Meta
 

@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { DocumentWorkspaceScreen } from '@/app/(system)/document-workspace-01/document-workspace-screen'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { DocumentWorkspaceScreen } from "@/app/(system)/document-workspace-01/document-workspace-screen"
 
 const meta = {
-  title: 'Patterns/document-workspace/Document Workspace 01',
+  title: "Patterns/document-workspace/Document Workspace 01",
   component: DocumentWorkspaceScreen,
-  parameters: { layout: 'fullscreen' },
-  tags: ['autodocs'],
+  parameters: { layout: "fullscreen" },
+  tags: ["autodocs"],
 } satisfies Meta<typeof DocumentWorkspaceScreen>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = { args: { state: 'default' } }
-export const Loading: Story = { args: { state: 'loading' } }
-export const Empty: Story = { args: { state: 'empty' } }
-export const Error: Story = { args: { state: 'error' } }
-export const ValidationError: Story = { args: { state: 'validation-error' } }
+export const Default: Story = { args: { state: "default" } }
+export const Loading: Story = { args: { state: "loading" } }
+export const Empty: Story = { args: { state: "empty" } }
+export const Error: Story = { args: { state: "error" } }
+export const ValidationError: Story = { args: { state: "validation-error" } }

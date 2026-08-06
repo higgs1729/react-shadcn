@@ -1,13 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import * as UI from '@/components/ui/message-scroller'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import * as UI from "@/components/ui/message-scroller"
 
 const meta = {
-  title: 'Components/AI & Conversation/Message Scroller',
-  parameters: { layout: 'centered' },
-  tags: ['autodocs'],
-  render: () => (
-    <UI.MessageScroller />
-  ),
+  title: "Components/AI & Conversation/Message Scroller",
+  parameters: { layout: "centered" },
+  tags: ["autodocs"],
+  render: () => <UI.MessageScroller />,
 } satisfies Meta
 
 export default meta

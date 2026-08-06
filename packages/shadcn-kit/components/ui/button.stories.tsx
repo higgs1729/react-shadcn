@@ -1,29 +1,36 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 
 // Catalog taxonomy lives in the story `title`, which drives Storybook's sidebar tree.
 const meta = {
-  title: 'Components/Actions & Controls/Button',
+  title: "Components/Actions & Controls/Button",
   component: Button,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      control: "select",
+      options: [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+      ],
     },
     size: {
-      control: 'select',
-      options: ['default', 'sm', 'lg', 'icon'],
+      control: "select",
+      options: ["default", "sm", "lg", "icon"],
     },
   },
   args: {
-    children: 'Button',
-    variant: 'default',
-    size: 'default',
+    children: "Button",
+    variant: "default",
+    size: "default",
   },
 } satisfies Meta<typeof Button>
 
@@ -33,17 +40,17 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 
 export const Secondary: Story = {
-  args: { variant: 'secondary', children: 'Secondary' },
+  args: { variant: "secondary", children: "Secondary" },
 }
 
 export const Destructive: Story = {
-  args: { variant: 'destructive', children: 'Delete' },
+  args: { variant: "destructive", children: "Delete" },
 }
 
 export const Outline: Story = {
-  args: { variant: 'outline', children: 'Outline' },
+  args: { variant: "outline", children: "Outline" },
 }
 
 export const Disabled: Story = {
-  args: { disabled: true, children: 'Disabled' },
+  args: { disabled: true, children: "Disabled" },
 }

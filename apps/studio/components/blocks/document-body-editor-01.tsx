@@ -12,7 +12,12 @@ import {
 } from "@react-shadcn/shadcn-kit/ui/attachment"
 import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import { Card, CardContent, CardHeader } from "@react-shadcn/shadcn-kit/ui/card"
-import { Field, FieldContent, FieldError, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import { ScrollArea } from "@react-shadcn/shadcn-kit/ui/scroll-area"
 import { Textarea } from "@react-shadcn/shadcn-kit/ui/textarea"
@@ -65,13 +70,21 @@ export function DocumentBodyEditor({
     <Card className="w-full max-w-2xl">
       <CardHeader className="gap-3">
         <div className="flex items-center gap-2">
-          <Field className="flex-1" data-invalid={Boolean(titleError) || undefined}>
-            <FieldLabel htmlFor="document-body-editor-title" className="sr-only">
+          <Field
+            className="flex-1"
+            data-invalid={Boolean(titleError) || undefined}
+          >
+            <FieldLabel
+              htmlFor="document-body-editor-title"
+              className="sr-only"
+            >
               Document title
             </FieldLabel>
             <Input
               id="document-body-editor-title"
-              aria-describedby={titleError ? "document-body-editor-title-error" : undefined}
+              aria-describedby={
+                titleError ? "document-body-editor-title-error" : undefined
+              }
               aria-invalid={Boolean(titleError) || undefined}
               value={title}
               placeholder="Untitled document"
@@ -79,7 +92,9 @@ export function DocumentBodyEditor({
               className="border-none px-0 text-lg font-medium shadow-none focus-visible:ring-0"
             />
             {titleError && (
-              <FieldError id="document-body-editor-title-error">{titleError}</FieldError>
+              <FieldError id="document-body-editor-title-error">
+                {titleError}
+              </FieldError>
             )}
           </Field>
           <Badge variant={savedStateVariant[savedState]}>

@@ -26,8 +26,14 @@ import {
 } from "@react-shadcn/shadcn-kit/ui/collapsible"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import { Label } from "@react-shadcn/shadcn-kit/ui/label"
-import { NativeSelect, NativeSelectOption } from "@react-shadcn/shadcn-kit/ui/native-select"
-import { ToggleGroup, ToggleGroupItem } from "@react-shadcn/shadcn-kit/ui/toggle-group"
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@react-shadcn/shadcn-kit/ui/native-select"
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@react-shadcn/shadcn-kit/ui/toggle-group"
 import {
   CATEGORIES,
   LEVEL_LABEL,

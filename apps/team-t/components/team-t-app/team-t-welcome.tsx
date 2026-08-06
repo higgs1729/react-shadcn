@@ -45,8 +45,7 @@ const categoryNodes = [
   {
     id: "entertainment",
     label: "エンタメ・おもしろ系",
-    description:
-      "クイズ、ゲーム、ジョークや雑学など、体験を楽しくするAPI。",
+    description: "クイズ、ゲーム、ジョークや雑学など、体験を楽しくするAPI。",
     tags: ["クイズ・ゲーム", "ジョーク・雑学", "名言"],
     position: { left: "29.43%", top: "78.32%" },
     panelClassName: "top-full left-full mt-4 ml-5",
@@ -174,7 +173,7 @@ function CategoryNodeButton({
       aria-label={`${category.label}を選択`}
       aria-pressed={selected}
       className={cn(
-        "group relative grid size-16 place-items-center rounded-full border bg-card/92 text-primary outline-none transition-[border-color,background-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-primary/65 hover:bg-primary/15 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "group relative grid size-16 place-items-center rounded-full border bg-card/92 text-primary transition-[border-color,background-color,box-shadow,transform] outline-none hover:-translate-y-0.5 hover:border-primary/65 hover:bg-primary/15 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         selected
           ? "border-[color:var(--team-t-gold)] bg-primary/18 text-[color:var(--team-t-gold-strong)] shadow-[0_0_0_5px_color-mix(in_oklab,var(--team-t-gold)_12%,transparent),0_0_34px_color-mix(in_oklab,var(--team-t-gold)_48%,transparent)]"
           : "border-primary/50 text-[color:var(--ring)] shadow-[0_10px_28px_rgba(0,0,0,0.24),inset_0_0_20px_color-mix(in_oklab,var(--primary)_18%,transparent)]"
@@ -213,7 +212,7 @@ function CompactCategoryButton({
       aria-label={`${category.label}を選択`}
       aria-pressed={selected}
       className={cn(
-        "group flex min-h-16 w-full items-center gap-3 rounded-xl border bg-card/88 px-3 py-2.5 text-left outline-none transition-[border-color,background-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-primary/65 hover:bg-primary/12 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "group flex min-h-16 w-full items-center gap-3 rounded-xl border bg-card/88 px-3 py-2.5 text-left transition-[border-color,background-color,box-shadow,transform] outline-none hover:-translate-y-0.5 hover:border-primary/65 hover:bg-primary/12 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         selected
           ? "border-[color:var(--team-t-gold)] bg-primary/18 shadow-[0_0_0_3px_color-mix(in_oklab,var(--team-t-gold)_10%,transparent),0_10px_26px_rgba(0,0,0,0.2)]"
           : "border-primary/35 shadow-[0_8px_24px_rgba(0,0,0,0.14)]"

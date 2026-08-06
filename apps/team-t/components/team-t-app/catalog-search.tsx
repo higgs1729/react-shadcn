@@ -68,7 +68,12 @@ export function CatalogSearch({
             検索欄の×を押すと、すべてのジャンルに戻せます。
           </p>
           <div className="mt-3 flex items-center justify-end gap-2">
-            <Button type="button" variant="ghost" size="sm" onClick={clearFilter}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={clearFilter}
+            >
               絞り込みを解除
             </Button>
             <Button type="button" size="sm" onClick={onGuideDismiss}>

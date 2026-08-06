@@ -62,14 +62,14 @@ export function TeamTHeader({
                 key={window.id}
                 data-active={active}
                 data-team-t-overflow-root
-                className="relative flex min-w-32 max-w-56 shrink-0 items-center justify-center gap-1.5 rounded-t-md bg-[linear-gradient(to_top,color-mix(in_oklab,var(--primary)_32%,transparent),color-mix(in_oklab,var(--primary)_6%,transparent)_62%,transparent)] py-1 pr-1.5 pl-3 text-sm data-[active=false]:bg-none data-[active=false]:text-muted-foreground data-[active=false]:hover:bg-accent/60"
+                className="relative flex max-w-56 min-w-32 shrink-0 items-center justify-center gap-1.5 rounded-t-md bg-[linear-gradient(to_top,color-mix(in_oklab,var(--primary)_32%,transparent),color-mix(in_oklab,var(--primary)_6%,transparent)_62%,transparent)] py-1 pr-1.5 pl-3 text-sm data-[active=false]:bg-none data-[active=false]:text-muted-foreground data-[active=false]:hover:bg-accent/60"
               >
                 <button
                   type="button"
                   role="tab"
                   aria-label={`${window.title}に切り替え`}
                   aria-selected={active}
-                  className="absolute inset-0 rounded-t-md outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  className="absolute inset-0 rounded-t-md outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                   onClick={() => onWindowSwitch(window.id)}
                 />
                 <Icon

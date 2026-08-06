@@ -1,13 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import * as UI from '@/components/ui/drawer'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import * as UI from "@/components/ui/drawer"
 
 const meta = {
-  title: 'Components/Layout & Navigation/Drawer',
-  parameters: { layout: 'centered' },
-  tags: ['autodocs'],
-  render: () => (
-    <UI.Drawer />
-  ),
+  title: "Components/Layout & Navigation/Drawer",
+  parameters: { layout: "centered" },
+  tags: ["autodocs"],
+  render: () => <UI.Drawer />,
 } satisfies Meta
 
 export default meta

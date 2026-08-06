@@ -7,7 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@react-shadcn/shadcn-kit/ui/card"
-import { Field, FieldContent, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
 
 export interface DetailOverviewField {

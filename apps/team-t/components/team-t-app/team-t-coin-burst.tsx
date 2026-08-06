@@ -36,7 +36,10 @@ export function TeamTCoinBurst({ visible }: { visible: boolean }) {
         ))}
       </div>
       <div className="team-t-coin-burst__label flex items-center gap-2.5 rounded-2xl border border-[color:var(--team-t-gold-line)] bg-card/95 py-2.5 pr-4 pl-2.5 text-foreground shadow-[0_14px_36px_rgba(0,0,0,0.32),0_0_0_1px_rgba(199,171,112,0.12)] backdrop-blur-md">
-        <span className="team-t-coin-burst__coin relative grid size-10 place-items-center" aria-hidden="true">
+        <span
+          className="team-t-coin-burst__coin relative grid size-10 place-items-center"
+          aria-hidden="true"
+        >
           <span className="team-t-coin-burst__ring absolute inset-0 rounded-full border border-[color:var(--team-t-gold)]/70" />
           <TeamTCoinImage className="size-9" />
         </span>

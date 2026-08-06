@@ -13,11 +13,7 @@ import { useTeamTAppearance } from "./use-team-t-appearance"
  * <html> のテーマ変数を種を与えて成立させる(team-t-app-shell.stories.tsx の
  * localStorage 手法と異なり、shell 自身を経由しないための代替)。
  */
-function AppearanceDecorator({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+function AppearanceDecorator({ children }: { children: React.ReactNode }) {
   useTeamTAppearance(defaultTeamTPreferences)
   return <>{children}</>
 }

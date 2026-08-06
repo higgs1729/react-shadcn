@@ -4,13 +4,36 @@ import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
 import { ActionFooter } from "@/components/blocks/action-footer-01"
-import { CheckoutSummary, type CheckoutSummaryLineItem } from "@/components/blocks/checkout-summary-01"
-import { PricingPlanCard, type PricingPlan } from "@/components/blocks/pricing-plan-card-01"
-import { WizardStepper, type WizardStep } from "@/components/blocks/wizard-stepper-01"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  CheckoutSummary,
+  type CheckoutSummaryLineItem,
+} from "@/components/blocks/checkout-summary-01"
+import {
+  PricingPlanCard,
+  type PricingPlan,
+} from "@/components/blocks/pricing-plan-card-01"
+import {
+  WizardStepper,
+  type WizardStep,
+} from "@/components/blocks/wizard-stepper-01"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@react-shadcn/shadcn-kit/ui/card"
-import { Field, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@react-shadcn/shadcn-kit/ui/card"
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 
@@ -104,7 +127,9 @@ export function WorkflowScreen({
                       />
                     </Field>
                     <Field>
-                      <FieldLabel htmlFor="billing-po">PO number (optional)</FieldLabel>
+                      <FieldLabel htmlFor="billing-po">
+                        PO number (optional)
+                      </FieldLabel>
                       <Input
                         id="billing-po"
                         value={poNumber}

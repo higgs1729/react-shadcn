@@ -3,18 +3,30 @@
 import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
-import { ActivityFeed, type ActivityFeedEntry } from "@/components/blocks/activity-feed-01"
-import { AiConversationList, type AiConversationListItem } from "@/components/blocks/ai-conversation-list-01"
+import {
+  ActivityFeed,
+  type ActivityFeedEntry,
+} from "@/components/blocks/activity-feed-01"
+import {
+  AiConversationList,
+  type AiConversationListItem,
+} from "@/components/blocks/ai-conversation-list-01"
 import { AiExplainabilityLabel } from "@/components/blocks/ai-explainability-label-01"
 import { AiPromptComposer } from "@/components/blocks/ai-prompt-composer-01"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import { ScrollArea } from "@react-shadcn/shadcn-kit/ui/scroll-area"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 
 import assistantData from "./data.json"
 
-export type ConversationAssistantState = "default" | "loading" | "empty" | "error"
+export type ConversationAssistantState =
+  "default" | "loading" | "empty" | "error"
 
 interface ChatMessage {
   id: string
@@ -99,7 +111,9 @@ export function ConversationAssistantScreen({
 
               {state !== "loading" && messages.length === 0 && (
                 <div className="flex h-40 flex-col items-center justify-center gap-1 text-center">
-                  <p className="text-sm font-medium">Start a new conversation</p>
+                  <p className="text-sm font-medium">
+                    Start a new conversation
+                  </p>
                   <p className="text-sm text-muted-foreground">
                     Ask a question to get going.
                   </p>

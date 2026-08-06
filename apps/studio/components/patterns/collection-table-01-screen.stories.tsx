@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CollectionTableScreen } from '@/app/(system)/collection-01/collection-screen'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { CollectionTableScreen } from "@/app/(system)/collection-01/collection-screen"
 
 const meta = {
-  title: 'Patterns/collection/Collection Table 01',
-  parameters: { layout: 'fullscreen' },
-  tags: ['autodocs'],
+  title: "Patterns/collection/Collection Table 01",
+  parameters: { layout: "fullscreen" },
+  tags: ["autodocs"],
 } satisfies Meta<typeof CollectionTableScreen>
 
 export default meta

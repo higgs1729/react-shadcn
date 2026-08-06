@@ -3,7 +3,10 @@ import { ChartAreaInteractive } from "@/components/blocks/chart-area-interactive
 import { DataTable } from "@/components/blocks/data-table"
 import { SectionCards } from "@/components/blocks/section-cards"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import data from "@/app/(system)/dashboard-01/data.json"
 

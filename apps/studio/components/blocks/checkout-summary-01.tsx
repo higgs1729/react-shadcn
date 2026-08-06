@@ -39,7 +39,10 @@ export function CheckoutSummary({
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         {items.map((item) => (
-          <div key={item.id} className="flex items-center justify-between text-sm">
+          <div
+            key={item.id}
+            className="flex items-center justify-between text-sm"
+          >
             <span>
               {item.label}
               <span className="text-muted-foreground"> x{item.quantity}</span>

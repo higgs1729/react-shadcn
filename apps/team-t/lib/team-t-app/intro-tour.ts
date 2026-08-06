@@ -152,7 +152,8 @@ const countrysearch: IntroApiEntry = {
 const useless: IntroApiEntry = {
   id: "useless",
   javaMethodNames: ["getUselessFactRandom", "translateMyMemory"],
-  javaCode: String.raw`
+  javaCode:
+    String.raw`
     /** templates/fun/ohuzake.html, templates/fun/Useless.html, templates/other/itiran2.html から利用。雑学を中継する。 */
     @GetMapping(value = "/api/webapi/entertainment/getUselessFactRandom", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getUselessFactRandom(@RequestParam(value = "language", required = false) String language) {
@@ -290,7 +291,8 @@ const applemusic: IntroApiEntry = {
 const joke: IntroApiEntry = {
   id: "joke",
   javaMethodNames: ["getOfficialJokeRandomJoke", "translateMyMemory"],
-  javaCode: String.raw`
+  javaCode:
+    String.raw`
     /** templates/fun/zyouku.html から利用。ランダムなジョークを中継する（別エンドポイント）。 */
     @GetMapping(value = "/api/webapi/entertainment/getOfficialJokeRandomJoke", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getOfficialJokeRandomJoke() {
@@ -306,7 +308,8 @@ const joke: IntroApiEntry = {
 const opentrivia: IntroApiEntry = {
   id: "opentrivia",
   javaMethodNames: ["getOpenTriviaQuestion", "translateMyMemory"],
-  javaCode: String.raw`
+  javaCode:
+    String.raw`
     /** templates/fun/OpenTrivia.html から利用。クイズ問題を中継する。 */
     @GetMapping(value = "/api/webapi/entertainment/getOpenTriviaQuestion", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getOpenTriviaQuestion(@RequestParam("category") String category) {

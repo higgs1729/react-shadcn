@@ -158,7 +158,7 @@ export function ResizableSidebarRail({
         }
       }}
       className={cn(
-        "absolute inset-y-0 z-20 hidden w-4 cursor-col-resize touch-none select-none outline-hidden transition-colors after:absolute after:inset-y-0 after:left-1/2 after:w-0.5 after:-translate-x-1/2 after:bg-transparent hover:after:bg-primary/70 focus-visible:ring-2 focus-visible:ring-ring focus-visible:after:bg-primary md:flex",
+        "absolute inset-y-0 z-20 hidden w-4 cursor-col-resize touch-none outline-hidden transition-colors select-none after:absolute after:inset-y-0 after:left-1/2 after:w-0.5 after:-translate-x-1/2 after:bg-transparent hover:after:bg-primary/70 focus-visible:ring-2 focus-visible:ring-ring focus-visible:after:bg-primary md:flex",
         // 折りたたみ中は幅を変える対象が無いので、掴めないようにする。
         "group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:opacity-0",
         "group-data-[collapsible=offcanvas]:pointer-events-none group-data-[collapsible=offcanvas]:opacity-0",

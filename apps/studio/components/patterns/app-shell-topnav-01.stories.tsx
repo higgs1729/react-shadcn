@@ -1,19 +1,19 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 import {
   AppShellTopnav,
   type AppShellTopnavItem,
-} from '@/components/blocks/app-shell-topnav-01'
+} from "@/components/blocks/app-shell-topnav-01"
 
 const items: AppShellTopnavItem[] = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'reports', label: 'Reports' },
-  { id: 'settings', label: 'Settings' },
+  { id: "overview", label: "Overview" },
+  { id: "projects", label: "Projects" },
+  { id: "reports", label: "Reports" },
+  { id: "settings", label: "Settings" },
 ]
 
 function AppShellTopnavDemo() {
-  const [activeItemId, setActiveItemId] = React.useState('overview')
+  const [activeItemId, setActiveItemId] = React.useState("overview")
 
   return (
     <AppShellTopnav
@@ -27,9 +27,9 @@ function AppShellTopnavDemo() {
 }
 
 const meta = {
-  title: 'Blocks/app-shell-topnav/App Shell Topnav 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/app-shell-topnav/App Shell Topnav 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <AppShellTopnavDemo />,
 } satisfies Meta
 

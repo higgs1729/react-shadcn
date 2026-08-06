@@ -55,13 +55,14 @@ function ExampleAppsSection() {
               data-open-window
               aria-hidden={index >= builtExampleApps.length}
               tabIndex={index >= builtExampleApps.length ? -1 : undefined}
-              className="group/card mr-6 flex w-72 shrink-0 flex-col overflow-hidden rounded-lg transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group/card mr-6 flex w-72 shrink-0 flex-col overflow-hidden rounded-lg transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-muted/20">
                 {app.previewRoute && basePath !== null ? (
                   (() => {
                     const viewportWidth =
-                      EXAMPLE_APPS_VIEWPORT[app.id] ?? EXAMPLE_APPS_VIEWPORT_DEFAULT
+                      EXAMPLE_APPS_VIEWPORT[app.id] ??
+                      EXAMPLE_APPS_VIEWPORT_DEFAULT
                     const viewportHeight = Math.round((viewportWidth * 10) / 16)
                     return (
                       <iframe
@@ -111,7 +112,9 @@ const systemFlowUsedBlocks = [
 
 function SystemFlow() {
   const basePath = useStudioBasePath()
-  const scenario = studioScenarios.find((item) => item.id === "operations-overview")!
+  const scenario = studioScenarios.find(
+    (item) => item.id === "operations-overview"
+  )!
   const dashboardApp = builtExampleApps.find(
     (app) => app.selectedPattern === "dashboard-01"
   )
@@ -148,7 +151,11 @@ function SystemFlow() {
             </span>
             <div className="flex flex-wrap gap-1.5">
               {systemFlowUsedBlocks.map((name) => (
-                <Badge key={name} variant="outline" className="font-mono text-[11px]">
+                <Badge
+                  key={name}
+                  variant="outline"
+                  className="font-mono text-[11px]"
+                >
                   {name}
                 </Badge>
               ))}
@@ -168,7 +175,10 @@ function SystemFlow() {
               3. コードとして実装
             </span>
             <span className="inline-flex items-center gap-1.5 text-sm">
-              <CheckCircle2Icon className="size-4 text-primary" aria-hidden="true" />
+              <CheckCircle2Icon
+                className="size-4 text-primary"
+                aria-hidden="true"
+              />
               Dashboard 01
             </span>
           </div>
@@ -201,7 +211,10 @@ function SystemFlow() {
         </div>
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
-        <Button nativeButton={false} render={<Link href="/studio" data-open-window />}>
+        <Button
+          nativeButton={false}
+          render={<Link href="/studio" data-open-window />}
+        >
           Studioで見る <ArrowRightIcon />
         </Button>
       </CardFooter>
@@ -294,7 +307,10 @@ export function OverviewPage() {
                     <div className="h-3 w-2/5 rounded bg-muted" />
                     <div className="mt-2 space-y-1.5">
                       {["one", "two", "three", "four"].map((row) => (
-                        <div key={row} className="grid grid-cols-[1fr_1.5fr_1fr] gap-1.5">
+                        <div
+                          key={row}
+                          className="grid grid-cols-[1fr_1.5fr_1fr] gap-1.5"
+                        >
                           <div className="h-3 rounded bg-muted" />
                           <div className="h-3 rounded bg-muted" />
                           <div className="h-3 rounded bg-primary/20" />

@@ -62,7 +62,11 @@ export function FileUploadArea({
       {files.length > 0 && (
         <AttachmentGroup className="flex-wrap">
           {files.map((file) => (
-            <Attachment key={file.id} state={file.state} orientation="horizontal">
+            <Attachment
+              key={file.id}
+              state={file.state}
+              orientation="horizontal"
+            >
               <AttachmentMedia>
                 <FileIcon />
               </AttachmentMedia>

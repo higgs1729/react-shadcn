@@ -22,7 +22,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@react-shadcn/shadcn-kit/ui/dialog"
-import { Field, FieldContent, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Switch } from "@react-shadcn/shadcn-kit/ui/switch"
 
 type ThemeChoice = "system" | "dark" | "light"
@@ -430,9 +434,7 @@ export function SettingsDialog({
                 variant="ghost"
                 className="relative w-full justify-start overflow-hidden before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-primary before:opacity-0 before:content-[''] data-[active=true]:bg-[color-mix(in_oklab,var(--primary)_22%,transparent)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[active=true]:before:opacity-100"
                 data-active={activeSection === "behavior"}
-                aria-current={
-                  activeSection === "behavior" ? "page" : undefined
-                }
+                aria-current={activeSection === "behavior" ? "page" : undefined}
                 onClick={() => setActiveSection("behavior")}
               >
                 <AccessibilityIcon /> 操作

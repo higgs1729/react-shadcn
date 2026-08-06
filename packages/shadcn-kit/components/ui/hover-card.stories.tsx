@@ -1,13 +1,20 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'
-import { Button } from '@/components/ui/button'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@/components/ui/hover-card"
+import { Button } from "@/components/ui/button"
 
 const meta = {
-  title: 'Components/Actions & Controls/Hover Card',
-  parameters: { layout: 'centered' },
-  tags: ['autodocs'],
+  title: "Components/Actions & Controls/Hover Card",
+  parameters: { layout: "centered" },
+  tags: ["autodocs"],
   render: () => (
-    <HoverCard><HoverCardTrigger render={<Button variant="link">@shadcn</Button>} /><HoverCardContent>The React framework catalog.</HoverCardContent></HoverCard>
+    <HoverCard>
+      <HoverCardTrigger render={<Button variant="link">@shadcn</Button>} />
+      <HoverCardContent>The React framework catalog.</HoverCardContent>
+    </HoverCard>
   ),
 } satisfies Meta
 

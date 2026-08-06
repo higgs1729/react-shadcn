@@ -27,7 +27,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@react-shadcn/shadcn-kit/ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import { Textarea } from "@react-shadcn/shadcn-kit/ui/textarea"
 
@@ -282,7 +287,12 @@ export function SupportInboxApp() {
       assignee: "Unassigned",
       updated: "now",
       messages: [
-        { id: `${id}-m1`, author: sender, body: messageBody, timestamp: "Just now" },
+        {
+          id: `${id}-m1`,
+          author: sender,
+          body: messageBody,
+          timestamp: "Just now",
+        },
       ],
     }
     applyConversations([conversation, ...conversations])
@@ -299,7 +309,9 @@ export function SupportInboxApp() {
     setReply("")
   }
 
-  const openCount = conversations.filter((item) => item.status === "open").length
+  const openCount = conversations.filter(
+    (item) => item.status === "open"
+  ).length
   const mineCount = conversations.filter(
     (item) => item.assignee === OPERATOR && item.status !== "closed"
   ).length
@@ -511,7 +523,10 @@ export function SupportInboxApp() {
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            setConversationStatus(activeConversation.id, "closed")
+                            setConversationStatus(
+                              activeConversation.id,
+                              "closed"
+                            )
                           }
                         >
                           Close
@@ -554,10 +569,7 @@ export function SupportInboxApp() {
         </div>
       </div>
 
-      <Dialog
-        open={dialogOpen}
-        onOpenChange={(open) => setDialogOpen(open)}
-      >
+      <Dialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>New conversation</DialogTitle>

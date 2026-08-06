@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { AiExplainabilityLabel } from '@/components/blocks/ai-explainability-label-01'
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { AiExplainabilityLabel } from "@/components/blocks/ai-explainability-label-01"
 
 function AiExplainabilityLabelDemo() {
   return (
@@ -11,9 +11,9 @@ function AiExplainabilityLabelDemo() {
 }
 
 const meta = {
-  title: 'Blocks/ai-explainability-label/AI Explainability Label 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/ai-explainability-label/AI Explainability Label 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <AiExplainabilityLabelDemo />,
 } satisfies Meta
 

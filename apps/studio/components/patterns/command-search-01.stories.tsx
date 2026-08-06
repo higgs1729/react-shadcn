@@ -1,7 +1,7 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Button } from '@react-shadcn/shadcn-kit/ui/button'
-import { CommandSearch01 } from '@/components/blocks/command-search-01'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { CommandSearch01 } from "@/components/blocks/command-search-01"
 
 function CommandSearch01Demo() {
   const [open, setOpen] = React.useState(true)
@@ -13,26 +13,46 @@ function CommandSearch01Demo() {
         Open command search
       </Button>
       {lastSelected && (
-        <p className="text-sm text-muted-foreground">Last selected: {lastSelected}</p>
+        <p className="text-sm text-muted-foreground">
+          Last selected: {lastSelected}
+        </p>
       )}
       <CommandSearch01
         open={open}
         onOpenChange={setOpen}
         groups={[
           {
-            id: 'pages',
-            heading: 'Pages',
+            id: "pages",
+            heading: "Pages",
             items: [
-              { id: 'dashboard', label: 'Dashboard', shortcut: '⌘D', onSelect: () => setLastSelected('Dashboard') },
-              { id: 'settings', label: 'Settings', shortcut: '⌘S', onSelect: () => setLastSelected('Settings') },
+              {
+                id: "dashboard",
+                label: "Dashboard",
+                shortcut: "⌘D",
+                onSelect: () => setLastSelected("Dashboard"),
+              },
+              {
+                id: "settings",
+                label: "Settings",
+                shortcut: "⌘S",
+                onSelect: () => setLastSelected("Settings"),
+              },
             ],
           },
           {
-            id: 'actions',
-            heading: 'Actions',
+            id: "actions",
+            heading: "Actions",
             items: [
-              { id: 'new-project', label: 'New project', onSelect: () => setLastSelected('New project') },
-              { id: 'invite', label: 'Invite teammate', onSelect: () => setLastSelected('Invite teammate') },
+              {
+                id: "new-project",
+                label: "New project",
+                onSelect: () => setLastSelected("New project"),
+              },
+              {
+                id: "invite",
+                label: "Invite teammate",
+                onSelect: () => setLastSelected("Invite teammate"),
+              },
             ],
           },
         ]}
@@ -42,9 +62,9 @@ function CommandSearch01Demo() {
 }
 
 const meta = {
-  title: 'Blocks/command-search/Command Search 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/command-search/Command Search 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <CommandSearch01Demo />,
 } satisfies Meta
 

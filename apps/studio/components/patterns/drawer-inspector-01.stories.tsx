@@ -1,12 +1,12 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Button } from '@react-shadcn/shadcn-kit/ui/button'
-import { DrawerInspector01 } from '@/components/blocks/drawer-inspector-01'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { DrawerInspector01 } from "@/components/blocks/drawer-inspector-01"
 
 function DrawerInspector01Demo() {
   const [open, setOpen] = React.useState(true)
-  const [name, setName] = React.useState('Ada Lovelace')
-  const [email, setEmail] = React.useState('ada@example.com')
+  const [name, setName] = React.useState("Ada Lovelace")
+  const [email, setEmail] = React.useState("ada@example.com")
 
   return (
     <div className="flex flex-col items-start gap-2">
@@ -19,8 +19,13 @@ function DrawerInspector01Demo() {
         title="Contact details"
         description="Review and edit this contact without leaving the list."
         fields={[
-          { id: 'name', label: 'Name', value: name, onValueChange: setName },
-          { id: 'email', label: 'Email', value: email, onValueChange: setEmail },
+          { id: "name", label: "Name", value: name, onValueChange: setName },
+          {
+            id: "email",
+            label: "Email",
+            value: email,
+            onValueChange: setEmail,
+          },
         ]}
         onSave={() => setOpen(false)}
       />
@@ -29,9 +34,9 @@ function DrawerInspector01Demo() {
 }
 
 const meta = {
-  title: 'Blocks/drawer-inspector/Drawer Inspector 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/drawer-inspector/Drawer Inspector 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <DrawerInspector01Demo />,
 } satisfies Meta
 

@@ -125,15 +125,43 @@ const WORLD_MACHINE_ASSIGNMENTS: Record<
   TeamTGame["id"],
   { file: MachineFile; scale: number; collisionRadius: number }
 > = {
-  "triple-tile": { file: "arcade/claw-machine.glb", scale: 3, collisionRadius: 1.6 },
-  target: { file: "arcade/basketball-game.glb", scale: 2.8, collisionRadius: 1.8 },
-  "slide-puzzle": { file: "arcade/ticket-machine.glb", scale: 3, collisionRadius: 1.4 },
-  picross: { file: "arcade/gambling-machine.glb", scale: 3.4, collisionRadius: 1.5 },
+  "triple-tile": {
+    file: "arcade/claw-machine.glb",
+    scale: 3,
+    collisionRadius: 1.6,
+  },
+  target: {
+    file: "arcade/basketball-game.glb",
+    scale: 2.8,
+    collisionRadius: 1.8,
+  },
+  "slide-puzzle": {
+    file: "arcade/ticket-machine.glb",
+    scale: 3,
+    collisionRadius: 1.4,
+  },
+  picross: {
+    file: "arcade/gambling-machine.glb",
+    scale: 3.4,
+    collisionRadius: 1.5,
+  },
   survival: { file: "arcade/air-hockey.glb", scale: 2.8, collisionRadius: 1.8 },
-  "block-breaker": { file: "arcade/pinball.glb", scale: 3.2, collisionRadius: 1.6 },
+  "block-breaker": {
+    file: "arcade/pinball.glb",
+    scale: 3.2,
+    collisionRadius: 1.6,
+  },
   rpg: { file: "arcade/arcade-machine.glb", scale: 3.6, collisionRadius: 1.5 },
-  shooting: { file: "arcade/arcade-machine.glb", scale: 3.6, collisionRadius: 1.5 },
-  "neon-tunnel": { file: "arcade/dance-machine.glb", scale: 2.8, collisionRadius: 1.8 },
+  shooting: {
+    file: "arcade/arcade-machine.glb",
+    scale: 3.6,
+    collisionRadius: 1.5,
+  },
+  "neon-tunnel": {
+    file: "arcade/dance-machine.glb",
+    scale: 2.8,
+    collisionRadius: 1.8,
+  },
 }
 
 /** 単独プレイヤー。移動ロジックは維持し、見た目だけ Arcade Pack へ差し替える。 */
@@ -219,7 +247,9 @@ const DIFFICULTY_ORDER: Record<TeamTGame["difficulty"], number> = {
 }
 
 export const teamTWorldKiosks: readonly TeamTWorldKiosk[] = [...teamTGames]
-  .sort((a, b) => DIFFICULTY_ORDER[a.difficulty] - DIFFICULTY_ORDER[b.difficulty])
+  .sort(
+    (a, b) => DIFFICULTY_ORDER[a.difficulty] - DIFFICULTY_ORDER[b.difficulty]
+  )
   .map((game, index) => {
     const machine = WORLD_MACHINE_ASSIGNMENTS[game.id]
     const slot = MACHINE_SLOTS[index]
@@ -262,10 +292,37 @@ const SOFA_TINT = "#c85a4a"
 const LOUNGE_ROW_Z = [-10.5, -3.5, 3.5, 10.5] as const
 const loungeSeating: TeamTWorldProp[] = LOUNGE_ROW_Z.flatMap((z) => [
   // rug は長辺 X(1.57)なので回転なし。table は長辺 X なので 90° 回して長辺を Z に。
-  { file: WORLD_FURNITURE_FILES.rug, position: [20, 0.02, z], rotationY: 0, scale: 5.6, tint: "#c98f7a" },
-  { file: WORLD_FURNITURE_FILES.sofa, position: [16, 0, z], rotationY: FACE_POS_X, scale: 2.6, tint: SOFA_TINT, collisionRadius: 1.3 },
-  { file: WORLD_FURNITURE_FILES.tableCoffee, position: [20, 0, z], rotationY: Math.PI / 2, scale: 2.4, tint: WARM, collisionRadius: 0.9 },
-  { file: WORLD_FURNITURE_FILES.sofa, position: [24, 0, z], rotationY: FACE_NEG_X, scale: 2.6, tint: SOFA_TINT, collisionRadius: 1.3 },
+  {
+    file: WORLD_FURNITURE_FILES.rug,
+    position: [20, 0.02, z],
+    rotationY: 0,
+    scale: 5.6,
+    tint: "#c98f7a",
+  },
+  {
+    file: WORLD_FURNITURE_FILES.sofa,
+    position: [16, 0, z],
+    rotationY: FACE_POS_X,
+    scale: 2.6,
+    tint: SOFA_TINT,
+    collisionRadius: 1.3,
+  },
+  {
+    file: WORLD_FURNITURE_FILES.tableCoffee,
+    position: [20, 0, z],
+    rotationY: Math.PI / 2,
+    scale: 2.4,
+    tint: WARM,
+    collisionRadius: 0.9,
+  },
+  {
+    file: WORLD_FURNITURE_FILES.sofa,
+    position: [24, 0, z],
+    rotationY: FACE_NEG_X,
+    scale: 2.6,
+    tint: SOFA_TINT,
+    collisionRadius: 1.3,
+  },
 ])
 
 export const teamTWorldProps: readonly TeamTWorldProp[] = [
@@ -273,12 +330,53 @@ export const teamTWorldProps: readonly TeamTWorldProp[] = [
   ...loungeSeating,
 
   // ── 景品カウンター(左 -X)──
-  { file: WORLD_MARKET_FILES.shelfBoxes, position: [-20.5, 0, 0], rotationY: FACE_POS_X, scale: 3, tint: COOL, collisionRadius: 1.4 },
-  { file: WORLD_MARKET_FILES.shelfBags, position: [-20.5, 0, 4], rotationY: FACE_POS_X, scale: 3, tint: COOL, collisionRadius: 1.4 },
-  { file: WORLD_MARKET_FILES.shelfBoxes, position: [-20.5, 0, -4], rotationY: FACE_POS_X, scale: 3, tint: COOL, collisionRadius: 1.4 },
-  { file: WORLD_MARKET_FILES.displayBread, position: [-17, 0, 7], rotationY: FACE_POS_X, scale: 3, tint: WARM, collisionRadius: 1 },
-  { file: WORLD_MARKET_FILES.freezer, position: [-20.5, 0, 8], rotationY: FACE_POS_X, scale: 3, tint: COOL, collisionRadius: 1.2 },
-  { file: WORLD_MARKET_FILES.basket, position: [-16, 0, 3], rotationY: 0.6, scale: 3, tint: WARM },
+  {
+    file: WORLD_MARKET_FILES.shelfBoxes,
+    position: [-20.5, 0, 0],
+    rotationY: FACE_POS_X,
+    scale: 3,
+    tint: COOL,
+    collisionRadius: 1.4,
+  },
+  {
+    file: WORLD_MARKET_FILES.shelfBags,
+    position: [-20.5, 0, 4],
+    rotationY: FACE_POS_X,
+    scale: 3,
+    tint: COOL,
+    collisionRadius: 1.4,
+  },
+  {
+    file: WORLD_MARKET_FILES.shelfBoxes,
+    position: [-20.5, 0, -4],
+    rotationY: FACE_POS_X,
+    scale: 3,
+    tint: COOL,
+    collisionRadius: 1.4,
+  },
+  {
+    file: WORLD_MARKET_FILES.displayBread,
+    position: [-17, 0, 7],
+    rotationY: FACE_POS_X,
+    scale: 3,
+    tint: WARM,
+    collisionRadius: 1,
+  },
+  {
+    file: WORLD_MARKET_FILES.freezer,
+    position: [-20.5, 0, 8],
+    rotationY: FACE_POS_X,
+    scale: 3,
+    tint: COOL,
+    collisionRadius: 1.2,
+  },
+  {
+    file: WORLD_MARKET_FILES.basket,
+    position: [-16, 0, 3],
+    rotationY: 0.6,
+    scale: 3,
+    tint: WARM,
+  },
 ]
 
 /**

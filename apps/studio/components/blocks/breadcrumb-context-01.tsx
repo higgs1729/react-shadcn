@@ -32,7 +32,9 @@ export function BreadcrumbContext01({
         {items.map((item) => (
           <React.Fragment key={item.id}>
             <BreadcrumbItem>
-              <BreadcrumbLink render={<button type="button" onClick={item.onSelect} />}>
+              <BreadcrumbLink
+                render={<button type="button" onClick={item.onSelect} />}
+              >
                 {item.label}
               </BreadcrumbLink>
             </BreadcrumbItem>

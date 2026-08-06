@@ -34,7 +34,9 @@ export function TeamTWorldKioskMesh({
   useFrame((state) => {
     const ring = ringMatRef.current
     if (!ring) return
-    const pulse = reduceMotion ? 1 : 0.88 + Math.sin(state.clock.elapsedTime * 2.2) * 0.12
+    const pulse = reduceMotion
+      ? 1
+      : 0.88 + Math.sin(state.clock.elapsedTime * 2.2) * 0.12
     ring.color.copy(active ? WORLD_COLORS.goldBright : WORLD_COLORS.amethyst)
     ring.opacity = (active ? 0.72 : 0.24) * pulse
   })
@@ -89,4 +91,6 @@ export function TeamTWorldKioskMesh({
 }
 
 // 9台をワールドを開いた直後に並行取得する。
-WORLD_MACHINE_FILES.forEach((file) => useGLTF.preload(getTeamTWorldAssetUrl(file)))
+WORLD_MACHINE_FILES.forEach((file) =>
+  useGLTF.preload(getTeamTWorldAssetUrl(file))
+)

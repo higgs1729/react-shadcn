@@ -3,7 +3,10 @@
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
 
-import { CollectionTableScreen, type CollectionState } from "./collection-screen"
+import {
+  CollectionTableScreen,
+  type CollectionState,
+} from "./collection-screen"
 
 function CollectionTableStateReader() {
   const searchParams = useSearchParams()

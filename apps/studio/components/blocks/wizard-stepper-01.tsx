@@ -28,10 +28,7 @@ export function WizardStepper({
         const isCompleted = completedStepIds.includes(step.id)
         const isCurrent = step.id === currentStepId
         return (
-          <li
-            key={step.id}
-            className="flex flex-1 items-center last:flex-none"
-          >
+          <li key={step.id} className="flex flex-1 items-center last:flex-none">
             <div className="flex items-center gap-2">
               <Badge
                 variant={isCompleted || isCurrent ? "default" : "outline"}
@@ -51,9 +48,7 @@ export function WizardStepper({
                 {step.label}
               </span>
             </div>
-            {index < steps.length - 1 && (
-              <Separator className="mx-3 flex-1" />
-            )}
+            {index < steps.length - 1 && <Separator className="mx-3 flex-1" />}
           </li>
         )
       })}

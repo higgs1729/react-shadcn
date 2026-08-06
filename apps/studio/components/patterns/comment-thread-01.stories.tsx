@@ -1,26 +1,26 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 import {
   CommentThread,
   type CommentThreadComment,
-} from '@/components/blocks/comment-thread-01'
+} from "@/components/blocks/comment-thread-01"
 
 function CommentThreadDemo() {
   const [comments, setComments] = React.useState<CommentThreadComment[]>([
     {
-      id: '1',
-      author: 'Ava Chen',
-      body: 'Can we push the deadline by a day?',
-      timestamp: '3h ago',
+      id: "1",
+      author: "Ava Chen",
+      body: "Can we push the deadline by a day?",
+      timestamp: "3h ago",
     },
     {
-      id: '2',
-      author: 'Marcus Lee',
-      body: 'Works for me, updating the schedule now.',
-      timestamp: '1h ago',
+      id: "2",
+      author: "Marcus Lee",
+      body: "Works for me, updating the schedule now.",
+      timestamp: "1h ago",
     },
   ])
-  const [replyValue, setReplyValue] = React.useState('')
+  const [replyValue, setReplyValue] = React.useState("")
 
   return (
     <CommentThread
@@ -33,21 +33,21 @@ function CommentThreadDemo() {
           ...prev,
           {
             id: String(prev.length + 1),
-            author: 'You',
+            author: "You",
             body: replyValue,
-            timestamp: 'just now',
+            timestamp: "just now",
           },
         ])
-        setReplyValue('')
+        setReplyValue("")
       }}
     />
   )
 }
 
 const meta = {
-  title: 'Blocks/comment-thread/Comment Thread 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/comment-thread/Comment Thread 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <CommentThreadDemo />,
 } satisfies Meta
 

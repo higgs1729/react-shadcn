@@ -6,10 +6,24 @@ import { RotateCcwIcon } from "lucide-react"
 import { AppSidebar } from "@/components/blocks/app-sidebar"
 import { SiteHeader } from "@/components/blocks/site-header"
 import { FilterToolbar } from "@/components/blocks/filter-toolbar"
-import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
-import { Alert, AlertTitle, AlertDescription, AlertAction } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  AlertAction,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@react-shadcn/shadcn-kit/ui/card"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@react-shadcn/shadcn-kit/ui/card"
 import { Checkbox } from "@react-shadcn/shadcn-kit/ui/checkbox"
 import {
   Empty,
@@ -169,7 +183,8 @@ export function CollectionTableScreen({
               <Alert variant="destructive">
                 <AlertTitle>Couldn&apos;t load invoices</AlertTitle>
                 <AlertDescription>
-                  Something went wrong while fetching the collection. Please try again.
+                  Something went wrong while fetching the collection. Please try
+                  again.
                 </AlertDescription>
                 <AlertAction>
                   <Button variant="outline" size="sm">
@@ -226,9 +241,13 @@ export function CollectionTableScreen({
                             }
                           />
                         </TableCell>
-                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell className="font-medium">
+                          {invoice.id}
+                        </TableCell>
                         <TableCell>{invoice.customer}</TableCell>
-                        <TableCell className="capitalize">{invoice.status}</TableCell>
+                        <TableCell className="capitalize">
+                          {invoice.status}
+                        </TableCell>
                         <TableCell>{invoice.date}</TableCell>
                         <TableCell className="text-right">
                           {currency(invoice.amount)}
@@ -249,10 +268,12 @@ export function CollectionTableScreen({
                       <CardDescription>{invoice.customer}</CardDescription>
                     </CardHeader>
                     <CardContent className="flex items-center justify-between text-sm">
-                      <span className="capitalize text-muted-foreground">
+                      <span className="text-muted-foreground capitalize">
                         {invoice.status}
                       </span>
-                      <span className="font-medium">{currency(invoice.amount)}</span>
+                      <span className="font-medium">
+                        {currency(invoice.amount)}
+                      </span>
                     </CardContent>
                   </Card>
                 ))}

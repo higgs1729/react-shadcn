@@ -4,12 +4,26 @@ import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
 import { ActionFooter } from "@/components/blocks/action-footer-01"
-import { ActivityFeed, type ActivityFeedEntry } from "@/components/blocks/activity-feed-01"
+import {
+  ActivityFeed,
+  type ActivityFeedEntry,
+} from "@/components/blocks/activity-feed-01"
 import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
-import { CommentThread, type CommentThreadComment } from "@/components/blocks/comment-thread-01"
-import { DetailOverview, type DetailOverviewField } from "@/components/blocks/detail-overview-01"
+import {
+  CommentThread,
+  type CommentThreadComment,
+} from "@/components/blocks/comment-thread-01"
+import {
+  DetailOverview,
+  type DetailOverviewField,
+} from "@/components/blocks/detail-overview-01"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Empty,
@@ -19,7 +33,10 @@ import {
   EmptyTitle,
 } from "@react-shadcn/shadcn-kit/ui/empty"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
-import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import detailData from "./data.json"
 
@@ -37,11 +54,7 @@ const BREADCRUMB_PATH = detailData.breadcrumbPath as string[]
 const ACTIVITY = detailData.activity as ActivityFeedEntry[]
 const INITIAL_COMMENTS = detailData.comments as CommentThreadComment[]
 
-export function DetailScreen({
-  state = "default",
-}: {
-  state?: DetailState
-}) {
+export function DetailScreen({ state = "default" }: { state?: DetailState }) {
   const [breadcrumbPath, setBreadcrumbPath] = React.useState(BREADCRUMB_PATH)
   const [comments, setComments] = React.useState(INITIAL_COMMENTS)
   const [reply, setReply] = React.useState("")
@@ -70,7 +83,8 @@ export function DetailScreen({
               items={breadcrumbPath.map((label, index) => ({
                 id: label,
                 label,
-                onSelect: () => setBreadcrumbPath(BREADCRUMB_PATH.slice(0, index + 1)),
+                onSelect: () =>
+                  setBreadcrumbPath(BREADCRUMB_PATH.slice(0, index + 1)),
               }))}
               currentLabel={RECORD.title}
             />

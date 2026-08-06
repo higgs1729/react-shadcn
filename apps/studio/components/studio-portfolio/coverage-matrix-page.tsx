@@ -89,7 +89,11 @@ export function CoverageMatrixPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button variant="outline" nativeButton={false} render={<Link href="/patterns" />}>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href="/patterns" />}
+          >
             Patternsを開く <ArrowRightIcon />
           </Button>
         </CardFooter>

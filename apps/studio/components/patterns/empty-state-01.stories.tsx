@@ -1,6 +1,6 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { EmptyState01 } from '@/components/blocks/empty-state-01'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { EmptyState01 } from "@/components/blocks/empty-state-01"
 
 function EmptyState01Demo() {
   const [createdCount, setCreatedCount] = React.useState(0)
@@ -19,9 +19,9 @@ function EmptyState01Demo() {
 }
 
 const meta = {
-  title: 'Blocks/empty-state/Empty State 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/empty-state/Empty State 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <EmptyState01Demo />,
 } satisfies Meta
 

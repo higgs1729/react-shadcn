@@ -90,10 +90,7 @@ export function MemberGateExamplePage() {
         </div>
       </div>
 
-      <section
-        aria-labelledby="member-gate-form-title"
-        className="min-w-0"
-      >
+      <section aria-labelledby="member-gate-form-title" className="min-w-0">
         <h2 id="member-gate-form-title" className="sr-only">
           Member Gate sign-in form
         </h2>
@@ -194,7 +191,10 @@ export function SupportInboxExamplePage() {
         </div>
       </div>
 
-      <section aria-labelledby="support-inbox-preview-title" className="min-w-0">
+      <section
+        aria-labelledby="support-inbox-preview-title"
+        className="min-w-0"
+      >
         <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
           <div className="flex items-center justify-between border-b px-3 py-2 text-sm">
             <h2 id="support-inbox-preview-title" className="font-medium">

@@ -118,115 +118,115 @@ export function TeamTOnboardingDialog({
           initialFocus={primaryActionRef}
           className="max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] gap-0 overflow-y-auto p-0 sm:max-w-2xl"
         >
-        <div className="border-b border-border/70 px-5 py-4 sm:px-6">
-          <DialogHeader className="gap-1 pr-10">
-            <div className="flex items-center justify-between gap-4">
-              <DialogTitle className="text-base font-semibold">
-                Team T API Lab チュートリアル
-              </DialogTitle>
-              <span className="text-xs text-muted-foreground tabular-nums">
-                {stepIndex + 1} / {tutorialSteps.length}
-              </span>
-            </div>
-            <DialogDescription>
-              API探索の基本を3ステップで紹介します。
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-3 grid grid-cols-3 gap-1.5" aria-hidden="true">
-            {tutorialSteps.map((item, index) => (
-              <span
-                key={item.id}
-                className={cn(
-                  "h-1 rounded-full transition-colors",
-                  index <= stepIndex ? "bg-primary" : "bg-muted"
-                )}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="grid min-h-80 md:grid-cols-[0.9fr_1.1fr]">
-          <TutorialVisual stepIndex={stepIndex} />
-          <div className="flex flex-col justify-center px-5 py-7 sm:px-8 sm:py-9">
-            <p className="text-xs font-semibold tracking-[0.16em] text-primary uppercase">
-              {step.kicker}
-            </p>
-            <h2 className="mt-3 text-2xl leading-tight font-semibold tracking-tight text-balance sm:text-3xl">
-              {step.title}
-            </h2>
-            <p className="mt-4 leading-7 text-muted-foreground">
-              {step.description}
-            </p>
-            <ul className="mt-5 space-y-3 text-sm leading-6">
-              {step.points.map((point) => (
-                <li key={point} className="flex gap-2.5">
-                  <SparklesIcon
-                    aria-hidden="true"
-                    className="mt-1 size-4 shrink-0 text-[color:var(--team-t-gold-strong)]"
-                  />
-                  <span>{point}</span>
-                </li>
+          <div className="border-b border-border/70 px-5 py-4 sm:px-6">
+            <DialogHeader className="gap-1 pr-10">
+              <div className="flex items-center justify-between gap-4">
+                <DialogTitle className="text-base font-semibold">
+                  Team T API Lab チュートリアル
+                </DialogTitle>
+                <span className="text-xs text-muted-foreground tabular-nums">
+                  {stepIndex + 1} / {tutorialSteps.length}
+                </span>
+              </div>
+              <DialogDescription>
+                API探索の基本を3ステップで紹介します。
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-3 grid grid-cols-3 gap-1.5" aria-hidden="true">
+              {tutorialSteps.map((item, index) => (
+                <span
+                  key={item.id}
+                  className={cn(
+                    "h-1 rounded-full transition-colors",
+                    index <= stepIndex ? "bg-primary" : "bg-muted"
+                  )}
+                />
               ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="grid gap-3 border-t border-border/70 bg-muted/20 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:px-6">
-          <div className="order-2 min-h-8 sm:order-1">
-            {firstRun ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-xs text-muted-foreground"
-                onClick={() => setSkipDialogOpen(true)}
-              >
-                今はスキップ
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => onOpenChange(false)}
-              >
-                閉じる
-              </Button>
-            )}
+            </div>
           </div>
 
-          <div className="order-1 flex justify-end gap-2 sm:order-2">
-            {stepIndex > 0 ? (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setStepIndex((current) => current - 1)}
-              >
-                <ArrowLeftIcon data-icon="inline-start" />
-                戻る
-              </Button>
-            ) : null}
-            {isLastStep ? (
-              <Button
-                ref={primaryActionRef}
-                type="button"
-                onClick={onComplete}
-              >
-                <MaximizeIcon data-icon="inline-start" />
-                探索を始める
-              </Button>
-            ) : (
-              <Button
-                ref={primaryActionRef}
-                type="button"
-                onClick={() => setStepIndex((current) => current + 1)}
-              >
-                次へ
-                <ArrowRightIcon data-icon="inline-end" />
-              </Button>
-            )}
+          <div className="grid min-h-80 md:grid-cols-[0.9fr_1.1fr]">
+            <TutorialVisual stepIndex={stepIndex} />
+            <div className="flex flex-col justify-center px-5 py-7 sm:px-8 sm:py-9">
+              <p className="text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                {step.kicker}
+              </p>
+              <h2 className="mt-3 text-2xl leading-tight font-semibold tracking-tight text-balance sm:text-3xl">
+                {step.title}
+              </h2>
+              <p className="mt-4 leading-7 text-muted-foreground">
+                {step.description}
+              </p>
+              <ul className="mt-5 space-y-3 text-sm leading-6">
+                {step.points.map((point) => (
+                  <li key={point} className="flex gap-2.5">
+                    <SparklesIcon
+                      aria-hidden="true"
+                      className="mt-1 size-4 shrink-0 text-[color:var(--team-t-gold-strong)]"
+                    />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
+
+          <div className="grid gap-3 border-t border-border/70 bg-muted/20 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:px-6">
+            <div className="order-2 min-h-8 sm:order-1">
+              {firstRun ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-muted-foreground"
+                  onClick={() => setSkipDialogOpen(true)}
+                >
+                  今はスキップ
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onOpenChange(false)}
+                >
+                  閉じる
+                </Button>
+              )}
+            </div>
+
+            <div className="order-1 flex justify-end gap-2 sm:order-2">
+              {stepIndex > 0 ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStepIndex((current) => current - 1)}
+                >
+                  <ArrowLeftIcon data-icon="inline-start" />
+                  戻る
+                </Button>
+              ) : null}
+              {isLastStep ? (
+                <Button
+                  ref={primaryActionRef}
+                  type="button"
+                  onClick={onComplete}
+                >
+                  <MaximizeIcon data-icon="inline-start" />
+                  探索を始める
+                </Button>
+              ) : (
+                <Button
+                  ref={primaryActionRef}
+                  type="button"
+                  onClick={() => setStepIndex((current) => current + 1)}
+                >
+                  次へ
+                  <ArrowRightIcon data-icon="inline-end" />
+                </Button>
+              )}
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -237,7 +237,8 @@ export function TeamTOnboardingDialog({
               チュートリアルをスキップしますか？
             </AlertDialogTitle>
             <AlertDialogDescription>
-              スキップしても、あとから「設定 → 使い方」の「チュートリアルを見る」でいつでも確認できます。
+              スキップしても、あとから「設定 →
+              使い方」の「チュートリアルを見る」でいつでも確認できます。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -265,7 +266,7 @@ function TutorialVisual({ stepIndex }: { stepIndex: number }) {
     <div className="relative min-h-56 overflow-hidden border-b border-border/70 bg-[radial-gradient(circle_at_72%_24%,color-mix(in_oklab,var(--primary)_25%,transparent),transparent_42%),linear-gradient(145deg,color-mix(in_oklab,var(--background)_92%,var(--primary)),var(--background))] md:min-h-0 md:border-r md:border-b-0">
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-50 [background-image:linear-gradient(to_right,color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px)] [background-size:2.75rem_2.75rem]"
+        className="absolute inset-0 [background-image:linear-gradient(to_right,color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-50"
       />
       {stepIndex === 0 ? <DiscoveryVisual /> : null}
       {stepIndex === 1 ? <NavigationVisual /> : null}
@@ -297,7 +298,9 @@ function NavigationVisual() {
           {["w-[82%]", "w-[68%]", "w-[76%]", "w-[56%]"].map((width) => (
             <div key={width} className="flex items-center gap-2">
               <span className="size-3 rounded-sm border border-primary/45" />
-              <span className={cn("h-1.5 rounded-full bg-foreground/25", width)} />
+              <span
+                className={cn("h-1.5 rounded-full bg-foreground/25", width)}
+              />
             </div>
           ))}
         </div>

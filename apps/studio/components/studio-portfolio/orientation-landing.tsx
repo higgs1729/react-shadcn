@@ -34,14 +34,17 @@ function ShowcaseBlock({
       )}
     >
       {title ? (
-        <p className="mb-3 text-xs font-medium text-muted-foreground">{title}</p>
+        <p className="mb-3 text-xs font-medium text-muted-foreground">
+          {title}
+        </p>
       ) : null}
       {children}
     </div>
   )
 }
 
-const ORIENTATION_TITLE_ACCENT_CHARS = Array.from("再利用可能で説明可能なデザイン")
+const ORIENTATION_TITLE_ACCENT_CHARS =
+  Array.from("再利用可能で説明可能なデザイン")
 
 const orbitItems = [
   {
@@ -206,14 +209,14 @@ export function OrientationLanding() {
             </span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground text-balance md:text-lg md:leading-8">
+          <p className="mt-6 max-w-2xl text-base leading-7 text-balance text-muted-foreground md:text-lg md:leading-8">
             {screen.intro}
           </p>
 
           <div className="relative mt-10">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 left-1/2 -z-10 h-11 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full animate-[orientation-cta-orbit-pulse_3s_ease-in-out_infinite] motion-reduce:animate-none"
+              className="pointer-events-none absolute top-1/2 left-1/2 -z-10 h-11 w-32 -translate-x-1/2 -translate-y-1/2 animate-[orientation-cta-orbit-pulse_3s_ease-in-out_infinite] rounded-full motion-reduce:animate-none"
               style={{
                 boxShadow:
                   "0 0 0 1px color-mix(in oklch, var(--primary) 35%, transparent), 0 0 0 14px color-mix(in oklch, var(--primary) 10%, transparent), 0 0 0 28px color-mix(in oklch, var(--primary) 4%, transparent)",
@@ -242,7 +245,8 @@ export function OrientationLanding() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 text-muted-foreground/40"
             style={{
-              backgroundImage: "radial-gradient(currentColor 1px, transparent 1px)",
+              backgroundImage:
+                "radial-gradient(currentColor 1px, transparent 1px)",
               backgroundSize: "28px 28px",
             }}
           />
@@ -262,7 +266,10 @@ export function OrientationLanding() {
 
             <div
               className="absolute inset-0"
-              style={{ transformStyle: "preserve-3d", transform: "rotateX(10deg)" }}
+              style={{
+                transformStyle: "preserve-3d",
+                transform: "rotateX(10deg)",
+              }}
             >
               <div
                 className="absolute inset-0 flex items-center justify-center"

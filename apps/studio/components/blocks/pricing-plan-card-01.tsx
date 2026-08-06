@@ -69,16 +69,17 @@ export function PricingPlanCard({
             </CardHeader>
             <Separator />
             <CardContent className="flex flex-col gap-2">
-              {plan.preview ? (
-                plan.preview
-              ) : (
-                plan.features.map((feature) => (
-                  <div key={feature} className="flex items-center gap-2 text-sm">
-                    <CheckIcon className="size-4 text-primary" />
-                    {feature}
-                  </div>
-                ))
-              )}
+              {plan.preview
+                ? plan.preview
+                : plan.features.map((feature) => (
+                    <div
+                      key={feature}
+                      className="flex items-center gap-2 text-sm"
+                    >
+                      <CheckIcon className="size-4 text-primary" />
+                      {feature}
+                    </div>
+                  ))}
             </CardContent>
             {showAction ? (
               <CardFooter>

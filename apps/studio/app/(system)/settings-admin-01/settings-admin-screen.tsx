@@ -6,12 +6,30 @@ import { RotateCcwIcon } from "lucide-react"
 import { ActionFooter } from "@/components/blocks/action-footer-01"
 import { AppSidebar } from "@/components/blocks/app-sidebar"
 import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
-import { SettingsSection, type SettingsSectionRow } from "@/components/blocks/settings-section-01"
+import {
+  SettingsSection,
+  type SettingsSectionRow,
+} from "@/components/blocks/settings-section-01"
 import { TabsViewSwitcher01 } from "@/components/blocks/tabs-view-switcher-01"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@react-shadcn/shadcn-kit/ui/card"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@react-shadcn/shadcn-kit/ui/card"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import { Separator } from "@react-shadcn/shadcn-kit/ui/separator"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
@@ -26,7 +44,11 @@ import settingsData from "./data.json"
 export type SettingsAdminState = "default" | "loading" | "empty" | "error"
 
 const BREADCRUMB_PATH = settingsData.breadcrumbPath as string[]
-const PROFILE = settingsData.profile as { name: string; email: string; role: string }
+const PROFILE = settingsData.profile as {
+  name: string
+  email: string
+  role: string
+}
 
 export function SettingsAdminScreen({
   state = "default",
@@ -82,7 +104,9 @@ export function SettingsAdminScreen({
                 setEmail(e.target.value)
               }}
             />
-            <FieldDescription>Used for sign-in and notifications.</FieldDescription>
+            <FieldDescription>
+              Used for sign-in and notifications.
+            </FieldDescription>
           </Field>
           <Field>
             <FieldLabel>Role</FieldLabel>
@@ -106,7 +130,10 @@ export function SettingsAdminScreen({
       <SidebarInset>
         <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b px-4 lg:px-6">
           <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mx-2 h-4 data-vertical:self-auto" />
+          <Separator
+            orientation="vertical"
+            className="mx-2 h-4 data-vertical:self-auto"
+          />
           <BreadcrumbContext01
             items={BREADCRUMB_PATH.map((label) => ({
               id: label,
@@ -157,7 +184,8 @@ export function SettingsAdminScreen({
 
           {state === "empty" && (
             <div className="rounded-lg border p-8 text-center text-sm text-muted-foreground">
-              You don&apos;t have permission to manage any settings in this workspace.
+              You don&apos;t have permission to manage any settings in this
+              workspace.
             </div>
           )}
 
@@ -167,7 +195,11 @@ export function SettingsAdminScreen({
                 value={activeTab}
                 onValueChange={setActiveTab}
                 views={[
-                  { value: "general", label: "General", content: generalContent },
+                  {
+                    value: "general",
+                    label: "General",
+                    content: generalContent,
+                  },
                   {
                     value: "notifications",
                     label: "Notifications",

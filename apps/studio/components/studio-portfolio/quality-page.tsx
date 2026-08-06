@@ -32,11 +32,13 @@ export function QualityPage() {
         <p>
           brief から画面ができるまでの各段階(FlowSpec → SelectionSpec →
           BuildReport)は、それぞれ「契約」として内容が固定されています。契約は
-          JSON Schemaで書かれ、ajvという検証ツールが次の段階へ進む前に機械的に形式を確認するため、ルールから外れた内容が途中で紛れ込むことはありません。
+          JSON
+          Schemaで書かれ、ajvという検証ツールが次の段階へ進む前に機械的に形式を確認するため、ルールから外れた内容が途中で紛れ込むことはありません。
         </p>
         <p>
           さらに生成物には provenance
-          sidecarという記録が添えられます。これは入力ファイルの digest(内容から計算した指紋のようなもの)を保存する仕組みで、後から入力が書き換えられていないかを機械的に照合できます。「この画面はこのbriefと選定結果から作られた」という対応関係を、見た目ではなく検証可能な形で示します。
+          sidecarという記録が添えられます。これは入力ファイルの
+          digest(内容から計算した指紋のようなもの)を保存する仕組みで、後から入力が書き換えられていないかを機械的に照合できます。「この画面はこのbriefと選定結果から作られた」という対応関係を、見た目ではなく検証可能な形で示します。
         </p>
       </div>
       <Card className="max-w-2xl">
@@ -85,9 +87,7 @@ export function QualityPage() {
             <TabsTrigger value="contract-explorer">
               Contract explorer
             </TabsTrigger>
-            <TabsTrigger value="provenance-trail">
-              Provenance trail
-            </TabsTrigger>
+            <TabsTrigger value="provenance-trail">Provenance trail</TabsTrigger>
           </TabsList>
           <TabsContent value="contract-explorer" className="space-y-3 pt-4">
             <p className="text-sm text-muted-foreground">

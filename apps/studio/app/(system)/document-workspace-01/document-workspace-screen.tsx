@@ -4,13 +4,30 @@ import * as React from "react"
 import { FileTextIcon, FolderIcon, RotateCcwIcon } from "lucide-react"
 
 import { BreadcrumbContext01 } from "@/components/blocks/breadcrumb-context-01"
-import { CommentThread, type CommentThreadComment } from "@/components/blocks/comment-thread-01"
+import {
+  CommentThread,
+  type CommentThreadComment,
+} from "@/components/blocks/comment-thread-01"
 import { DocumentBodyEditor } from "@/components/blocks/document-body-editor-01"
-import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
+import {
+  FileUploadArea,
+  type FileUploadAreaFile,
+} from "@/components/blocks/file-upload-area-01"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@react-shadcn/shadcn-kit/ui/empty"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@react-shadcn/shadcn-kit/ui/empty"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 import {
   Sidebar,
@@ -27,7 +44,8 @@ import {
 
 import workspaceData from "./data.json"
 
-export type DocumentWorkspaceState = "default" | "loading" | "empty" | "error" | "validation-error"
+export type DocumentWorkspaceState =
+  "default" | "loading" | "empty" | "error" | "validation-error"
 
 interface WorkspaceDocument {
   id: string
@@ -94,7 +112,8 @@ export function DocumentWorkspaceScreen({
     setReply("")
   }
 
-  const isEmptyDocument = state === "empty" || (state === "default" && content.trim().length === 0)
+  const isEmptyDocument =
+    state === "empty" || (state === "default" && content.trim().length === 0)
 
   return (
     <SidebarProvider>
@@ -105,7 +124,10 @@ export function DocumentWorkspaceScreen({
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton isActive tooltip="Q3 Platform Migration Plan">
+                  <SidebarMenuButton
+                    isActive
+                    tooltip="Q3 Platform Migration Plan"
+                  >
                     <FileTextIcon />
                     <span>Q3 Platform Migration Plan</span>
                   </SidebarMenuButton>
@@ -130,7 +152,8 @@ export function DocumentWorkspaceScreen({
               items={breadcrumbPath.map((label, index) => ({
                 id: label,
                 label,
-                onSelect: () => setBreadcrumbPath(breadcrumbPath.slice(0, index + 1)),
+                onSelect: () =>
+                  setBreadcrumbPath(breadcrumbPath.slice(0, index + 1)),
               }))}
               currentLabel={title || "Untitled document"}
             />
@@ -188,36 +211,41 @@ export function DocumentWorkspaceScreen({
             </Empty>
           )}
 
-          {(state === "default" || state === "validation-error") && !isEmptyDocument && (
-            <div className="grid min-h-0 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,1fr)]">
-              <DocumentBodyEditor
-                title={state === "validation-error" ? "" : title}
-                onTitleChange={setTitle}
-                content={content}
-                onContentChange={setContent}
-                attachments={INITIAL_ATTACHMENTS}
-                savedState={INITIAL_DOCUMENT.savedState}
-                titleError={state === "validation-error" ? "Enter a document title." : undefined}
-              />
-              <div className="flex min-w-0 flex-col gap-4">
-                <CommentThread
-                  comments={comments}
-                  replyValue={reply}
-                  onReplyChange={setReply}
-                  onSubmitReply={submitReply}
+          {(state === "default" || state === "validation-error") &&
+            !isEmptyDocument && (
+              <div className="grid min-h-0 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,1fr)]">
+                <DocumentBodyEditor
+                  title={state === "validation-error" ? "" : title}
+                  onTitleChange={setTitle}
+                  content={content}
+                  onContentChange={setContent}
+                  attachments={INITIAL_ATTACHMENTS}
+                  savedState={INITIAL_DOCUMENT.savedState}
+                  titleError={
+                    state === "validation-error"
+                      ? "Enter a document title."
+                      : undefined
+                  }
                 />
-                <div className="rounded-lg border p-4">
-                  <h2 className="mb-3 text-sm font-medium">Attachments</h2>
-                  <FileUploadArea
-                    files={files}
-                    onFilesSelected={addFiles}
-                    onRemoveFile={removeFile}
-                    onDrop={(event) => addFiles(event.dataTransfer.files)}
+                <div className="flex min-w-0 flex-col gap-4">
+                  <CommentThread
+                    comments={comments}
+                    replyValue={reply}
+                    onReplyChange={setReply}
+                    onSubmitReply={submitReply}
                   />
+                  <div className="rounded-lg border p-4">
+                    <h2 className="mb-3 text-sm font-medium">Attachments</h2>
+                    <FileUploadArea
+                      files={files}
+                      onFilesSelected={addFiles}
+                      onRemoveFile={removeFile}
+                      onDrop={(event) => addFiles(event.dataTransfer.files)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </SidebarInset>
     </SidebarProvider>

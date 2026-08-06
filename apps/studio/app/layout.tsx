@@ -3,9 +3,9 @@ import { Geist, Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@react-shadcn/shadcn-kit/components/theme-provider"
 import { sidebarWidthPrePaintScript } from "@react-shadcn/shadcn-kit/lib/sidebar-width"
-import { cn } from "@react-shadcn/shadcn-kit/lib/utils";
+import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'})
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -21,12 +21,19 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "antialiased",
+        fontMono.variable,
+        "font-sans",
+        inter.variable
+      )}
     >
       <head>
         {/* 保存済みのサイドバー幅を hydration 前に当てる。next-themes と同じく、
             描画後に直すと既定幅から一瞬跳ねるため同期スクリプトで先に入れる。 */}
-        <script dangerouslySetInnerHTML={{ __html: sidebarWidthPrePaintScript }} />
+        <script
+          dangerouslySetInnerHTML={{ __html: sidebarWidthPrePaintScript }}
+        />
       </head>
       <body>
         <ThemeProvider>{children}</ThemeProvider>

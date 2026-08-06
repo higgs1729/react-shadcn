@@ -18,11 +18,7 @@ import { studioScenarios } from "@/lib/studio-portfolio/studio-scenarios"
 import { PageFrame, QualityFieldsCard } from "./studio-page-shell"
 
 type StudioStepId =
-  | "brief"
-  | "flow-spec"
-  | "selection-spec"
-  | "build-report"
-  | "ui-preview"
+  "brief" | "flow-spec" | "selection-spec" | "build-report" | "ui-preview"
 
 const studioSteps: { id: StudioStepId; label: string }[] = [
   { id: "brief", label: "Brief" },
@@ -74,7 +70,7 @@ export function StudioPage() {
                   type="button"
                   aria-pressed={isSelected}
                   onClick={() => setSelectedStepId(step.id)}
-                  className={`flex shrink-0 items-center gap-3 rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full ${isSelected ? "border-primary bg-primary/8" : "bg-card hover:bg-muted/50"}`}
+                  className={`flex shrink-0 items-center gap-3 rounded-lg border p-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none lg:w-full ${isSelected ? "border-primary bg-primary/8" : "bg-card hover:bg-muted/50"}`}
                 >
                   <span
                     className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
@@ -159,7 +155,8 @@ export function StudioPage() {
                   {
                     id: "checks",
                     label: "Checks passed",
-                    value: selectedScenario.buildReport.checksPassed.join(" / "),
+                    value:
+                      selectedScenario.buildReport.checksPassed.join(" / "),
                   },
                 ]}
               />

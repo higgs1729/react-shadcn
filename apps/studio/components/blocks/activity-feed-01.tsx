@@ -1,6 +1,10 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@react-shadcn/shadcn-kit/ui/avatar"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@react-shadcn/shadcn-kit/ui/avatar"
 import {
   Item,
   ItemContent,

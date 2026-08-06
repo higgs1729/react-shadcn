@@ -16,7 +16,10 @@ function splitCaseStudySections(markdown: string) {
     const match = /^# (.+)$/.exec(line)
     if (match) {
       if (current) {
-        sections.push({ heading: current.heading, body: current.body.join("\n") })
+        sections.push({
+          heading: current.heading,
+          body: current.body.join("\n"),
+        })
       }
       current = { heading: match[1], body: [line] }
     } else if (current) {
@@ -41,8 +44,8 @@ const caseStudySectionBaseClass = cn(
   "[&_li]:relative [&_li]:pl-5",
   "[&_li]:before:absolute [&_li]:before:top-[0.8em] [&_li]:before:left-0 [&_li]:before:h-1.5 [&_li]:before:w-1.5 [&_li]:before:rounded-full [&_li]:before:bg-muted-foreground/50 [&_li]:before:content-['']",
   "[&_ol]:space-y-2 [&_ul]:space-y-2",
-  "[&_ul]:rounded-lg [&_ul]:border [&_ul]:bg-muted/20 dark:[&_ul]:bg-card [&_ul]:p-4 [&_ul]:pl-5",
-  "[&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 dark:[&_pre]:bg-card [&_pre]:p-4"
+  "[&_ul]:rounded-lg [&_ul]:border [&_ul]:bg-muted/20 [&_ul]:p-4 [&_ul]:pl-5 dark:[&_ul]:bg-card",
+  "[&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:bg-muted/40 [&_pre]:p-4 dark:[&_pre]:bg-card"
 )
 
 export function CaseStudyPage({ markdown }: { markdown: string }) {

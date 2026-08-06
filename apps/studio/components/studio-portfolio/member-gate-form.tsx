@@ -1,7 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { CheckCircle2Icon, GalleryVerticalEndIcon, LockIcon } from "lucide-react"
+import {
+  CheckCircle2Icon,
+  GalleryVerticalEndIcon,
+  LockIcon,
+} from "lucide-react"
 
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
@@ -220,7 +224,8 @@ export function MemberGateForm() {
               <div>
                 <p className="font-medium">Too many failed attempts</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Try again in {lockoutSeconds} second{lockoutSeconds === 1 ? "" : "s"}.
+                  Try again in {lockoutSeconds} second
+                  {lockoutSeconds === 1 ? "" : "s"}.
                 </p>
               </div>
             </div>
@@ -278,11 +283,15 @@ export function MemberGateForm() {
                       }
                     }}
                   />
-                  {errors.email ? <FieldError>{errors.email}</FieldError> : null}
+                  {errors.email ? (
+                    <FieldError>{errors.email}</FieldError>
+                  ) : null}
                 </Field>
                 <Field data-invalid={errors.password ? true : undefined}>
                   <div className="flex items-center">
-                    <FieldLabel htmlFor="member-gate-password">Password</FieldLabel>
+                    <FieldLabel htmlFor="member-gate-password">
+                      Password
+                    </FieldLabel>
                     <a
                       href="#"
                       className="ml-auto text-sm underline-offset-4 hover:underline"

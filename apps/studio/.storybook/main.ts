@@ -1,20 +1,18 @@
-import type { StorybookConfig } from '@storybook/nextjs-vite';
+import type { StorybookConfig } from "@storybook/nextjs-vite"
 
 const config: StorybookConfig = {
-  "stories": [
+  stories: [
     "../components/**/*.mdx",
     "../../../packages/shadcn-kit/components/**/*.mdx",
     "../components/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-    "../../../packages/shadcn-kit/components/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+    "../../../packages/shadcn-kit/components/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
-  "addons": [
+  addons: [
     "@storybook/addon-a11y",
     "@storybook/addon-docs",
-    "@storybook/addon-themes"
+    "@storybook/addon-themes",
   ],
-  "framework": "@storybook/nextjs-vite",
-  "staticDirs": [
-    "../public"
-  ]
-};
-export default config;
+  framework: "@storybook/nextjs-vite",
+  staticDirs: ["../public"],
+}
+export default config

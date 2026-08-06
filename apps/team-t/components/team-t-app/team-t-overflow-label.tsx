@@ -115,9 +115,7 @@ export function TeamTOverflowLabel({
             ref={labelRef}
             className={cn(
               "min-w-0",
-              lines === 1
-                ? "block truncate"
-                : "line-clamp-2 whitespace-normal",
+              lines === 1 ? "block truncate" : "line-clamp-2 whitespace-normal",
               className
             )}
           >
@@ -128,7 +126,7 @@ export function TeamTOverflowLabel({
       <TooltipContent
         side={side}
         align={align}
-        className="max-w-72 break-words text-pretty"
+        className="max-w-72 text-pretty break-words"
       >
         {text}
       </TooltipContent>

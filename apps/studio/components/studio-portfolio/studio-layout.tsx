@@ -91,8 +91,9 @@ function SidebarMenuBar() {
 
   const applyZoom = useCallback((next: number) => {
     zoomRef.current = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next))
-    ;(document.documentElement.style as CSSStyleDeclaration & { zoom?: string }).zoom =
-      `${zoomRef.current}%`
+    ;(
+      document.documentElement.style as CSSStyleDeclaration & { zoom?: string }
+    ).zoom = `${zoomRef.current}%`
   }, [])
 
   const handleUndo = useCallback(() => {
@@ -144,7 +145,9 @@ function SidebarMenuBar() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger render={<SidebarMenuButton tooltip="メニュー" />}>
+          <DropdownMenuTrigger
+            render={<SidebarMenuButton tooltip="メニュー" />}
+          >
             <MenuIcon />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
@@ -409,11 +412,7 @@ function useWindowManager() {
   }
 }
 
-function AddWindowMenu({
-  onSelect,
-}: {
-  onSelect: (route: string) => void
-}) {
+function AddWindowMenu({ onSelect }: { onSelect: (route: string) => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -510,7 +509,8 @@ function AppHeader({
       <div
         className={cn(
           "flex min-w-0 flex-1 items-end gap-1 rounded-t-md",
-          isDragOver && "bg-primary/5 outline-2 outline-dashed outline-primary/40"
+          isDragOver &&
+            "bg-primary/5 outline-2 outline-primary/40 outline-dashed"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -661,7 +661,8 @@ export function StudioLayout({ children }: { children: ReactNode }) {
         {
           // 実値は <html> の --app-sidebar-width(lib/sidebar-width.ts)。
           // ResizableSidebarRail がそこを書き換えるので provider は無改造で済む。
-          "--sidebar-width": "var(--app-sidebar-width, calc(var(--spacing) * 64))",
+          "--sidebar-width":
+            "var(--app-sidebar-width, calc(var(--spacing) * 64))",
         } as CSSProperties
       }
     >

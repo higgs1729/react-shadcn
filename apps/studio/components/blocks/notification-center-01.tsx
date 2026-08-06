@@ -94,10 +94,15 @@ export function NotificationCenter({
                     <ItemTitle>
                       {notification.title}
                       {notification.unread && (
-                        <Badge variant="default" className="h-1.5 w-1.5 rounded-full p-0" />
+                        <Badge
+                          variant="default"
+                          className="h-1.5 w-1.5 rounded-full p-0"
+                        />
                       )}
                     </ItemTitle>
-                    <ItemDescription>{notification.description}</ItemDescription>
+                    <ItemDescription>
+                      {notification.description}
+                    </ItemDescription>
                     <ItemDescription className="text-xs">
                       {notification.timestamp}
                     </ItemDescription>

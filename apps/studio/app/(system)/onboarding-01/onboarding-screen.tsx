@@ -5,12 +5,33 @@ import { RotateCcwIcon, UsersIcon } from "lucide-react"
 
 import { ActionFooter } from "@/components/blocks/action-footer-01"
 import { EmptyState01 } from "@/components/blocks/empty-state-01"
-import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
-import { WizardStepper, type WizardStep } from "@/components/blocks/wizard-stepper-01"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  FileUploadArea,
+  type FileUploadAreaFile,
+} from "@/components/blocks/file-upload-area-01"
+import {
+  WizardStepper,
+  type WizardStep,
+} from "@/components/blocks/wizard-stepper-01"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@react-shadcn/shadcn-kit/ui/card"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@react-shadcn/shadcn-kit/ui/card"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 
@@ -21,7 +42,10 @@ export type OnboardingState = "default" | "loading" | "empty" | "error"
 const STEPS = onboardingData.steps as WizardStep[]
 const CURRENT_STEP_ID = onboardingData.currentStepId as string
 const COMPLETED_STEP_IDS = onboardingData.completedStepIds as string[]
-const WORKSPACE = onboardingData.workspace as { name: string; subdomain: string }
+const WORKSPACE = onboardingData.workspace as {
+  name: string
+  subdomain: string
+}
 
 export function OnboardingScreen({
   state = "default",
@@ -65,7 +89,8 @@ export function OnboardingScreen({
         <Alert variant="destructive">
           <AlertTitle>Couldn&apos;t save your progress</AlertTitle>
           <AlertDescription>
-            We couldn&apos;t reach the server. Your answers are safe — try again.
+            We couldn&apos;t reach the server. Your answers are safe — try
+            again.
           </AlertDescription>
           <AlertAction>
             <Button variant="outline" size="sm">
@@ -103,7 +128,9 @@ export function OnboardingScreen({
             <CardContent>
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="workspace-name">Workspace name</FieldLabel>
+                  <FieldLabel htmlFor="workspace-name">
+                    Workspace name
+                  </FieldLabel>
                   <Input
                     id="workspace-name"
                     value={name}
@@ -111,7 +138,9 @@ export function OnboardingScreen({
                   />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="workspace-subdomain">Subdomain</FieldLabel>
+                  <FieldLabel htmlFor="workspace-subdomain">
+                    Subdomain
+                  </FieldLabel>
                   <Input
                     id="workspace-subdomain"
                     value={subdomain}

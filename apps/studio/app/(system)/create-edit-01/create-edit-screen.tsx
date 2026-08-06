@@ -4,16 +4,37 @@ import * as React from "react"
 import { RotateCcwIcon } from "lucide-react"
 
 import { ActionFooter } from "@/components/blocks/action-footer-01"
-import { FileUploadArea, type FileUploadAreaFile } from "@/components/blocks/file-upload-area-01"
+import {
+  FileUploadArea,
+  type FileUploadAreaFile,
+} from "@/components/blocks/file-upload-area-01"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@react-shadcn/shadcn-kit/ui/card"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@react-shadcn/shadcn-kit/ui/card"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 import { Textarea } from "@react-shadcn/shadcn-kit/ui/textarea"
-import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import recordData from "./data.json"
 

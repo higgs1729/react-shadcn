@@ -1,6 +1,6 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { ErrorRecovery01 } from '@/components/blocks/error-recovery-01'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { ErrorRecovery01 } from "@/components/blocks/error-recovery-01"
 
 function ErrorRecovery01Demo() {
   const [retryCount, setRetryCount] = React.useState(0)
@@ -19,9 +19,9 @@ function ErrorRecovery01Demo() {
 }
 
 const meta = {
-  title: 'Blocks/error-recovery/Error Recovery 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/error-recovery/Error Recovery 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <ErrorRecovery01Demo />,
 } satisfies Meta
 

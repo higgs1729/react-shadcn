@@ -1,3 +1,5 @@
 import { ReviewDocsExamplePage } from "@/components/studio-portfolio/example-app-pages"
 
-export default function Page() { return <ReviewDocsExamplePage /> }
+export default function Page() {
+  return <ReviewDocsExamplePage />
+}

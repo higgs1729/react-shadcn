@@ -1,11 +1,11 @@
-import * as React from 'react'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Button } from '@react-shadcn/shadcn-kit/ui/button'
-import { ModalDialog01 } from '@/components/blocks/modal-dialog-01'
+import * as React from "react"
+import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
+import { ModalDialog01 } from "@/components/blocks/modal-dialog-01"
 
 function ModalDialog01Demo() {
   const [open, setOpen] = React.useState(true)
-  const [name, setName] = React.useState('Website Redesign')
+  const [name, setName] = React.useState("Website Redesign")
 
   return (
     <div className="flex flex-col items-start gap-2">
@@ -27,9 +27,9 @@ function ModalDialog01Demo() {
 }
 
 const meta = {
-  title: 'Blocks/modal-dialog/Modal Dialog 01',
-  parameters: { layout: 'padded' },
-  tags: ['autodocs'],
+  title: "Blocks/modal-dialog/Modal Dialog 01",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
   render: () => <ModalDialog01Demo />,
 } satisfies Meta
 

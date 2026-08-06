@@ -72,7 +72,7 @@ export function TeamTIntro({
           <div className="flex items-center gap-3">
             <p aria-live="polite" className="text-sm text-muted-foreground">
               Page{" "}
-              <span className="font-semibold tabular-nums text-[color:var(--team-t-gold-strong)]">
+              <span className="font-semibold text-[color:var(--team-t-gold-strong)] tabular-nums">
                 {pageNumber}
               </span>{" "}
               / {total}

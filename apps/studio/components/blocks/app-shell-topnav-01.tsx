@@ -38,10 +38,7 @@ export function AppShellTopnav({
               <NavigationMenuLink
                 active={item.id === activeItemId}
                 render={
-                  <button
-                    type="button"
-                    onClick={() => onItemSelect(item.id)}
-                  />
+                  <button type="button" onClick={() => onItemSelect(item.id)} />
                 }
               >
                 {item.label}

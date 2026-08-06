@@ -13,11 +13,7 @@ import { useTeamTAppearance } from "./use-team-t-appearance"
  * IntroApiCard は shell の外で単独描画されるため、外観適用の decorator で
  * <html> のテーマ変数を種を与えて成立させる。
  */
-function AppearanceDecorator({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+function AppearanceDecorator({ children }: { children: React.ReactNode }) {
   useTeamTAppearance(defaultTeamTPreferences)
   return <>{children}</>
 }

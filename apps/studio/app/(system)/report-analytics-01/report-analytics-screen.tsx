@@ -8,7 +8,12 @@ import { DataTable } from "@/components/blocks/data-table"
 import { FilterToolbar } from "@/components/blocks/filter-toolbar"
 import { SectionCards } from "@/components/blocks/section-cards"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Empty,
@@ -18,14 +23,20 @@ import {
   EmptyTitle,
 } from "@react-shadcn/shadcn-kit/ui/empty"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
-import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import tableData from "@/app/(system)/dashboard-01/data.json"
 import reportConfig from "./data.json"
 
 export type ReportAnalyticsState = "default" | "loading" | "empty" | "error"
 
-const PERIOD_OPTIONS = reportConfig.periodOptions as { value: string; label: string }[]
+const PERIOD_OPTIONS = reportConfig.periodOptions as {
+  value: string
+  label: string
+}[]
 
 export function ReportAnalyticsScreen({
   state = "default",
@@ -33,7 +44,9 @@ export function ReportAnalyticsScreen({
   state?: ReportAnalyticsState
 }) {
   const [search, setSearch] = React.useState("")
-  const [period, setPeriod] = React.useState(reportConfig.selectedPeriod as string)
+  const [period, setPeriod] = React.useState(
+    reportConfig.selectedPeriod as string
+  )
   const [view, setView] = React.useState<"table" | "grid">("table")
 
   return (

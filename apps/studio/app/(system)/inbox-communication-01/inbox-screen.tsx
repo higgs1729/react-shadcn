@@ -15,10 +15,21 @@ import {
   ConversationTriageList,
 } from "@/components/blocks/conversation-triage-list-01"
 import { FilterToolbar } from "@/components/blocks/filter-toolbar"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@react-shadcn/shadcn-kit/ui/empty"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@react-shadcn/shadcn-kit/ui/empty"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
 import {
   Sidebar,
@@ -62,17 +73,29 @@ const COMMENTS = [
   },
 ]
 
-export function InboxCommunicationScreen({ state = "default" }: { state?: InboxState }) {
+export function InboxCommunicationScreen({
+  state = "default",
+}: {
+  state?: InboxState
+}) {
   const [search, setSearch] = React.useState("")
   const [status, setStatus] = React.useState("all")
-  const [conversations, setConversations] = React.useState(INITIAL_CONVERSATIONS)
+  const [conversations, setConversations] = React.useState(
+    INITIAL_CONVERSATIONS
+  )
   const [activeConversationId, setActiveConversationId] = React.useState(
     INITIAL_CONVERSATIONS[0]?.id
   )
   const [reply, setReply] = React.useState("")
   const filtered = conversations.filter((item) => {
     const query = search.toLowerCase()
-    return (status === "all" || item.status === status) && (!query || `${item.sender} ${item.subject} ${item.preview}`.toLowerCase().includes(query))
+    return (
+      (status === "all" || item.status === status) &&
+      (!query ||
+        `${item.sender} ${item.subject} ${item.preview}`
+          .toLowerCase()
+          .includes(query))
+    )
   })
   const activeConversation = conversations.find(
     (conversation) => conversation.id === activeConversationId
@@ -97,11 +120,24 @@ export function InboxCommunicationScreen({ state = "default" }: { state?: InboxS
             <SidebarGroupLabel>Team inbox</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {[["Open", InboxIcon, "12"], ["Mine", MessageSquareTextIcon, "5"], ["Snoozed", ArchiveIcon, "3"], ["Sent", SendIcon, ""]].map(([label, Icon, count]) => (
+                {[
+                  ["Open", InboxIcon, "12"],
+                  ["Mine", MessageSquareTextIcon, "5"],
+                  ["Snoozed", ArchiveIcon, "3"],
+                  ["Sent", SendIcon, ""],
+                ].map(([label, Icon, count]) => (
                   <SidebarMenuItem key={label as string}>
-                    <SidebarMenuButton isActive={label === "Open"} tooltip={label as string}>
-                      <Icon /><span>{label as string}</span>
-                      {count && <Badge className="ml-auto" variant="secondary">{count as string}</Badge>}
+                    <SidebarMenuButton
+                      isActive={label === "Open"}
+                      tooltip={label as string}
+                    >
+                      <Icon />
+                      <span>{label as string}</span>
+                      {count && (
+                        <Badge className="ml-auto" variant="secondary">
+                          {count as string}
+                        </Badge>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -113,14 +149,64 @@ export function InboxCommunicationScreen({ state = "default" }: { state?: InboxS
       <SidebarInset>
         <header className="flex h-12 items-center gap-3 border-b px-4">
           <SidebarTrigger />
-          <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">Support inbox</h1>
+          <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">
+            Support inbox
+          </h1>
           <Button size="sm">New message</Button>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
-          <FilterToolbar search={search} onSearchChange={setSearch} status={status} onStatusChange={setStatus} statusOptions={STATUS_OPTIONS} view="table" onViewChange={() => undefined} />
-          {state === "error" && <Alert variant="destructive"><AlertTitle>Couldn&apos;t load conversations</AlertTitle><AlertDescription>Check your connection and try again.</AlertDescription><AlertAction><Button variant="outline" size="sm"><RotateCcwIcon />Retry</Button></AlertAction></Alert>}
-          {(state === "empty" || (state === "default" && filtered.length === 0)) && <Empty className="rounded-lg border"><EmptyHeader><EmptyTitle>Inbox clear</EmptyTitle><EmptyDescription>No conversations match this view.</EmptyDescription></EmptyHeader><EmptyContent><Button variant="outline" onClick={() => { setSearch(""); setStatus("all") }}>Clear filters</Button></EmptyContent></Empty>}
-          {state === "loading" && <div className="space-y-3 rounded-lg border p-4">{Array.from({ length: 5 }).map((_, index) => <Skeleton className="h-12 w-full" key={index} />)}</div>}
+          <FilterToolbar
+            search={search}
+            onSearchChange={setSearch}
+            status={status}
+            onStatusChange={setStatus}
+            statusOptions={STATUS_OPTIONS}
+            view="table"
+            onViewChange={() => undefined}
+          />
+          {state === "error" && (
+            <Alert variant="destructive">
+              <AlertTitle>Couldn&apos;t load conversations</AlertTitle>
+              <AlertDescription>
+                Check your connection and try again.
+              </AlertDescription>
+              <AlertAction>
+                <Button variant="outline" size="sm">
+                  <RotateCcwIcon />
+                  Retry
+                </Button>
+              </AlertAction>
+            </Alert>
+          )}
+          {(state === "empty" ||
+            (state === "default" && filtered.length === 0)) && (
+            <Empty className="rounded-lg border">
+              <EmptyHeader>
+                <EmptyTitle>Inbox clear</EmptyTitle>
+                <EmptyDescription>
+                  No conversations match this view.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearch("")
+                    setStatus("all")
+                  }}
+                >
+                  Clear filters
+                </Button>
+              </EmptyContent>
+            </Empty>
+          )}
+          {state === "loading" && (
+            <div className="space-y-3 rounded-lg border p-4">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Skeleton className="h-12 w-full" key={index} />
+              ))}
+            </div>
+          )}
           {state === "default" && filtered.length > 0 && (
             <div className="grid min-h-0 gap-4 lg:grid-cols-[minmax(20rem,0.9fr)_minmax(0,1.1fr)]">
               <ConversationTriageList
@@ -130,8 +216,9 @@ export function InboxCommunicationScreen({ state = "default" }: { state?: InboxS
                 onAssignConversation={(id) =>
                   updateConversation(id, {
                     assignee:
-                      conversations.find((conversation) => conversation.id === id)
-                        ?.assignee === "Ari"
+                      conversations.find(
+                        (conversation) => conversation.id === id
+                      )?.assignee === "Ari"
                         ? "Unassigned"
                         : "Ari",
                   })
@@ -158,7 +245,8 @@ export function InboxCommunicationScreen({ state = "default" }: { state?: InboxS
                       )}
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {activeConversation.sender} · Assigned to {activeConversation.assignee}
+                      {activeConversation.sender} · Assigned to{" "}
+                      {activeConversation.assignee}
                     </p>
                   </div>
                   <CommentThread

@@ -5,13 +5,30 @@ import { RotateCcwIcon } from "lucide-react"
 import { AppSidebar } from "@/components/blocks/dashboard-01/app-sidebar"
 import { ChartAreaInteractive } from "@/components/blocks/chart-area-interactive"
 import { DataTable } from "@/components/blocks/data-table"
-import { SectionCards, type SummaryMetric } from "@/components/blocks/section-cards"
+import {
+  SectionCards,
+  type SummaryMetric,
+} from "@/components/blocks/section-cards"
 import { SiteHeader } from "@/components/blocks/site-header"
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@react-shadcn/shadcn-kit/ui/alert"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@react-shadcn/shadcn-kit/ui/alert"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@react-shadcn/shadcn-kit/ui/empty"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@react-shadcn/shadcn-kit/ui/empty"
 import { Skeleton } from "@react-shadcn/shadcn-kit/ui/skeleton"
-import { SidebarInset, SidebarProvider } from "@react-shadcn/shadcn-kit/ui/sidebar"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@react-shadcn/shadcn-kit/ui/sidebar"
 
 import data from "./data.json"
 
@@ -61,7 +78,8 @@ export function DashboardScreen({
               <EmptyHeader>
                 <EmptyTitle>No dashboard data yet</EmptyTitle>
                 <EmptyDescription>
-                  Connect a source or refresh the workspace to populate the dashboard.
+                  Connect a source or refresh the workspace to populate the
+                  dashboard.
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>

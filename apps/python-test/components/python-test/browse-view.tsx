@@ -4,7 +4,10 @@ import { ChevronLeftIcon, SquareIcon } from "lucide-react"
 import { Badge } from "@react-shadcn/shadcn-kit/ui/badge"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import { Card, CardContent } from "@react-shadcn/shadcn-kit/ui/card"
-import { NativeSelect, NativeSelectOption } from "@react-shadcn/shadcn-kit/ui/native-select"
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@react-shadcn/shadcn-kit/ui/native-select"
 import {
   CATEGORIES,
   LEVEL_LABEL,

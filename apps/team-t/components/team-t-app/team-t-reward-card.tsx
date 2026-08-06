@@ -73,61 +73,59 @@ export function TeamTRewardCard({
         className="team-t-reward-card grid min-h-32 grid-cols-[3.75rem_minmax(0,1fr)] overflow-hidden rounded-2xl border-[3px] border-[var(--reward-card-border)] bg-[var(--reward-card-bg)] text-[var(--reward-card-text)] shadow-[inset_0_0_0_1px_var(--reward-card-inset)]"
         aria-label="APIアーケードへの報酬カード"
       >
-      <div className="flex flex-col items-center justify-center gap-1.5 border-r-2 border-[var(--reward-rail-border)] bg-[var(--reward-rail-bg)] px-2 py-3 shadow-[inset_0_0_0_3px_var(--reward-rail-inset),inset_0_0_0_4px_var(--reward-rail-highlight)]">
-        <TeamTCoinImage
-          className="size-10 object-contain drop-shadow-[0_3px_3px_rgba(0,0,0,0.48)]"
-        />
-        <strong
-          className="max-w-full truncate text-2xl leading-none font-bold text-[var(--reward-amount)] tabular-nums"
-          style={{ textShadow: "0 2px 0 var(--reward-amount-shadow)" }}
-          aria-label={`報酬 ${rewardAmount}`}
-        >
-          {rewardAmount}
-        </strong>
-      </div>
-
-      <div className="flex min-w-0 flex-col px-2.5 py-3">
-        <div className="flex items-center gap-2">
-          <h2 className="min-w-0 flex-1 text-sm leading-tight font-extrabold tracking-[-0.03em] text-[var(--reward-heading)]">
-            APIアーケードへ
-          </h2>
-          <button
-            type="button"
-            onClick={onEnter}
-            aria-label="APIアーケードへ進む"
-            className="grid size-9 shrink-0 place-items-center rounded-full border-2 border-[#d4aa54] bg-[#4b236f] text-white outline-none ring-[#18121f] transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-[#61308d] focus-visible:ring-3 active:translate-y-px active:scale-95"
+        <div className="flex flex-col items-center justify-center gap-1.5 border-r-2 border-[var(--reward-rail-border)] bg-[var(--reward-rail-bg)] px-2 py-3 shadow-[inset_0_0_0_3px_var(--reward-rail-inset),inset_0_0_0_4px_var(--reward-rail-highlight)]">
+          <TeamTCoinImage className="size-10 object-contain drop-shadow-[0_3px_3px_rgba(0,0,0,0.48)]" />
+          <strong
+            className="max-w-full truncate text-2xl leading-none font-bold text-[var(--reward-amount)] tabular-nums"
+            style={{ textShadow: "0 2px 0 var(--reward-amount-shadow)" }}
+            aria-label={`報酬 ${rewardAmount}`}
           >
-            <ArrowRightIcon className="size-4" strokeWidth={3} />
-          </button>
-        </div>
-
-        <div className="mt-auto flex items-center gap-1 border-t border-[var(--reward-divider)] pt-2 text-[0.58rem] font-semibold text-[var(--reward-status)]">
-          <TeamTCoinImage className="size-3.5 shrink-0 object-contain" />
-          <span className="whitespace-nowrap">次のコインまで</span>
-          <strong className="ml-auto text-sm leading-none text-[var(--reward-count)] tabular-nums">
-            {safeRemaining}
-          </strong>
-          <span className="text-xs text-[var(--reward-separator)]">/</span>
-          <strong className="text-xs leading-none text-[var(--reward-goal)] tabular-nums">
-            {safeTotal}
+            {rewardAmount}
           </strong>
         </div>
 
-        <div
-          className="relative mt-2 h-2 overflow-hidden rounded-full border border-[var(--reward-track-border)] bg-[var(--reward-track)] shadow-[inset_0_2px_3px_rgba(0,0,0,0.28)]"
-          role="progressbar"
-          aria-label="次のコインまでの進捗"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={completionPercent}
-          aria-valuetext={`${completionPercent}%完了、残り${safeRemaining}/${safeTotal}`}
-        >
-          <span
-            className="block h-full rounded-[inherit] border-r border-[#ffe39a] bg-[#d7a43a] transition-[width] duration-300"
-            style={{ width: `${completionPercent}%` }}
-          />
+        <div className="flex min-w-0 flex-col px-2.5 py-3">
+          <div className="flex items-center gap-2">
+            <h2 className="min-w-0 flex-1 text-sm leading-tight font-extrabold tracking-[-0.03em] text-[var(--reward-heading)]">
+              APIアーケードへ
+            </h2>
+            <button
+              type="button"
+              onClick={onEnter}
+              aria-label="APIアーケードへ進む"
+              className="grid size-9 shrink-0 place-items-center rounded-full border-2 border-[#d4aa54] bg-[#4b236f] text-white ring-[#18121f] transition-[transform,background-color] outline-none hover:-translate-y-0.5 hover:bg-[#61308d] focus-visible:ring-3 active:translate-y-px active:scale-95"
+            >
+              <ArrowRightIcon className="size-4" strokeWidth={3} />
+            </button>
+          </div>
+
+          <div className="mt-auto flex items-center gap-1 border-t border-[var(--reward-divider)] pt-2 text-[0.58rem] font-semibold text-[var(--reward-status)]">
+            <TeamTCoinImage className="size-3.5 shrink-0 object-contain" />
+            <span className="whitespace-nowrap">次のコインまで</span>
+            <strong className="ml-auto text-sm leading-none text-[var(--reward-count)] tabular-nums">
+              {safeRemaining}
+            </strong>
+            <span className="text-xs text-[var(--reward-separator)]">/</span>
+            <strong className="text-xs leading-none text-[var(--reward-goal)] tabular-nums">
+              {safeTotal}
+            </strong>
+          </div>
+
+          <div
+            className="relative mt-2 h-2 overflow-hidden rounded-full border border-[var(--reward-track-border)] bg-[var(--reward-track)] shadow-[inset_0_2px_3px_rgba(0,0,0,0.28)]"
+            role="progressbar"
+            aria-label="次のコインまでの進捗"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={completionPercent}
+            aria-valuetext={`${completionPercent}%完了、残り${safeRemaining}/${safeTotal}`}
+          >
+            <span
+              className="block h-full rounded-[inherit] border-r border-[#ffe39a] bg-[#d7a43a] transition-[width] duration-300"
+              style={{ width: `${completionPercent}%` }}
+            />
+          </div>
         </div>
-      </div>
       </article>
     </>
   )

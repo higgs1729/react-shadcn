@@ -12,7 +12,10 @@ import {
   Trash2Icon,
 } from "lucide-react"
 
-import { BoardColumn, type BoardColumnCard } from "@/components/blocks/board-column-01"
+import {
+  BoardColumn,
+  type BoardColumnCard,
+} from "@/components/blocks/board-column-01"
 import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import {
   Dialog,
@@ -22,7 +25,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@react-shadcn/shadcn-kit/ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "@react-shadcn/shadcn-kit/ui/field"
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@react-shadcn/shadcn-kit/ui/field"
 import { Input } from "@react-shadcn/shadcn-kit/ui/input"
 
 type Column = { title: string; status: string; cards: BoardColumnCard[] }
@@ -36,37 +44,68 @@ const seedColumns: Column[] = [
     title: "Backlog",
     status: "backlog",
     cards: [
-      { id: "REL-118", title: "Finalize 3.0 release scope", description: "Lock the feature list with product and eng leads.", priority: "High" },
-      { id: "REL-121", title: "Draft customer changelog", description: "Summarize user-facing changes for the release note.", priority: "Medium" },
+      {
+        id: "REL-118",
+        title: "Finalize 3.0 release scope",
+        description: "Lock the feature list with product and eng leads.",
+        priority: "High",
+      },
+      {
+        id: "REL-121",
+        title: "Draft customer changelog",
+        description: "Summarize user-facing changes for the release note.",
+        priority: "Medium",
+      },
     ],
   },
   {
     title: "In progress",
     status: "in-progress",
     cards: [
-      { id: "REL-109", title: "Migrate billing service", description: "Cut over to the new metering pipeline behind a flag.", priority: "High" },
-      { id: "REL-114", title: "Localize onboarding", description: "Ship the first three locales for the setup flow.", priority: "Medium" },
+      {
+        id: "REL-109",
+        title: "Migrate billing service",
+        description: "Cut over to the new metering pipeline behind a flag.",
+        priority: "High",
+      },
+      {
+        id: "REL-114",
+        title: "Localize onboarding",
+        description: "Ship the first three locales for the setup flow.",
+        priority: "Medium",
+      },
     ],
   },
   {
     title: "In review",
     status: "in-review",
     cards: [
-      { id: "REL-104", title: "Harden auth rate limits", description: "Security review of the new login throttling.", priority: "High" },
+      {
+        id: "REL-104",
+        title: "Harden auth rate limits",
+        description: "Security review of the new login throttling.",
+        priority: "High",
+      },
     ],
   },
   {
     title: "Ready to ship",
     status: "ready",
     cards: [
-      { id: "REL-097", title: "Status page redesign", description: "Approved and staged for the release train.", priority: "Low" },
+      {
+        id: "REL-097",
+        title: "Status page redesign",
+        description: "Approved and staged for the release train.",
+        priority: "Low",
+      },
     ],
   },
 ]
 
 function matchesQuery(card: BoardColumnCard, query: string) {
   if (!query) return true
-  const haystack = `${card.id} ${card.title} ${card.description ?? ""}`.toLowerCase()
+  const haystack =
+    `${card.id} ${card.title} ${card.description ?? ""}`.toLowerCase()
   return haystack.includes(query.toLowerCase())
 }
 
@@ -122,10 +161,14 @@ export function LaunchBoardApp() {
   // A card moves by changing which column owns it. The moved card is appended
   // to the target column and removed from every other column.
   function moveCard(cardId: string, targetStatus: string) {
-    const card = columns.flatMap((column) => column.cards).find((item) => item.id === cardId)
+    const card = columns
+      .flatMap((column) => column.cards)
+      .find((item) => item.id === cardId)
     if (!card) return
     const alreadyThere = columns.some(
-      (column) => column.status === targetStatus && column.cards.some((item) => item.id === cardId)
+      (column) =>
+        column.status === targetStatus &&
+        column.cards.some((item) => item.id === cardId)
     )
     if (alreadyThere) return
     applyColumns(
@@ -140,7 +183,12 @@ export function LaunchBoardApp() {
   }
 
   function deleteCard(cardId: string) {
-    applyColumns(columns.map((column) => ({ ...column, cards: column.cards.filter((item) => item.id !== cardId) })))
+    applyColumns(
+      columns.map((column) => ({
+        ...column,
+        cards: column.cards.filter((item) => item.id !== cardId),
+      }))
+    )
   }
 
   function resetBoard() {
@@ -186,7 +234,12 @@ export function LaunchBoardApp() {
             ? {
                 ...column,
                 cards: [
-                  { id, title: trimmedTitle, description: formDescription.trim() || undefined, priority: formPriority },
+                  {
+                    id,
+                    title: trimmedTitle,
+                    description: formDescription.trim() || undefined,
+                    priority: formPriority,
+                  },
                   ...column.cards,
                 ],
               }
@@ -195,7 +248,9 @@ export function LaunchBoardApp() {
       )
     } else {
       const { cardId } = dialogMode
-      const existingCard = columns.flatMap((column) => column.cards).find((item) => item.id === cardId)
+      const existingCard = columns
+        .flatMap((column) => column.cards)
+        .find((item) => item.id === cardId)
       if (existingCard) {
         const updatedCard: BoardColumnCard = {
           ...existingCard,
@@ -210,7 +265,10 @@ export function LaunchBoardApp() {
             ...column,
             cards:
               column.status === formStatus
-                ? [...column.cards.filter((item) => item.id !== cardId), updatedCard]
+                ? [
+                    ...column.cards.filter((item) => item.id !== cardId),
+                    updatedCard,
+                  ]
                 : column.cards.filter((item) => item.id !== cardId),
           }))
         )
@@ -220,16 +278,31 @@ export function LaunchBoardApp() {
     setDialogMode(null)
   }
 
-  const totalCards = columns.reduce((sum, column) => sum + column.cards.length, 0)
+  const totalCards = columns.reduce(
+    (sum, column) => sum + column.cards.length,
+    0
+  )
 
   const visibleColumns = columns
-    .filter((column) => statusFilter === "all" || column.status === statusFilter)
-    .map((column) => ({ ...column, cards: column.cards.filter((card) => matchesQuery(card, query)) }))
+    .filter(
+      (column) => statusFilter === "all" || column.status === statusFilter
+    )
+    .map((column) => ({
+      ...column,
+      cards: column.cards.filter((card) => matchesQuery(card, query)),
+    }))
 
-  const visibleCount = visibleColumns.reduce((sum, column) => sum + column.cards.length, 0)
+  const visibleCount = visibleColumns.reduce(
+    (sum, column) => sum + column.cards.length,
+    0
+  )
 
   const allCardsWithStatus = columns.flatMap((column) =>
-    column.cards.map((card) => ({ card, status: column.status, columnTitle: column.title }))
+    column.cards.map((card) => ({
+      card,
+      status: column.status,
+      columnTitle: column.title,
+    }))
   )
 
   return (
@@ -322,7 +395,9 @@ export function LaunchBoardApp() {
               <div className="grid min-h-56 place-items-center rounded-xl border border-dashed p-6 text-center">
                 <div>
                   <RocketIcon className="mx-auto size-7 text-muted-foreground" />
-                  <h2 className="mt-3 text-sm font-semibold">No work items match your filters</h2>
+                  <h2 className="mt-3 text-sm font-semibold">
+                    No work items match your filters
+                  </h2>
                   <p className="mt-1 text-xs text-muted-foreground">
                     Clear the search or show every column to see the full board.
                   </p>
@@ -363,11 +438,16 @@ export function LaunchBoardApp() {
                 </p>
               </div>
               {allCardsWithStatus.length === 0 ? (
-                <p className="p-4 text-sm text-muted-foreground">No work items yet.</p>
+                <p className="p-4 text-sm text-muted-foreground">
+                  No work items yet.
+                </p>
               ) : (
                 <div className="divide-y">
                   {allCardsWithStatus.map(({ card, status, columnTitle }) => (
-                    <div key={card.id} className="flex items-center gap-3 px-4 py-3 text-sm">
+                    <div
+                      key={card.id}
+                      className="flex items-center gap-3 px-4 py-3 text-sm"
+                    >
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-medium">{card.title}</p>
                         <p className="text-xs text-muted-foreground">
@@ -400,10 +480,15 @@ export function LaunchBoardApp() {
         </div>
       </div>
 
-      <Dialog open={dialogMode !== null} onOpenChange={(open) => !open && setDialogMode(null)}>
+      <Dialog
+        open={dialogMode !== null}
+        onOpenChange={(open) => !open && setDialogMode(null)}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{dialogMode?.kind === "edit" ? "Edit work item" : "New work item"}</DialogTitle>
+            <DialogTitle>
+              {dialogMode?.kind === "edit" ? "Edit work item" : "New work item"}
+            </DialogTitle>
             <DialogDescription>
               Changes are saved to this browser only.
             </DialogDescription>
@@ -425,7 +510,9 @@ export function LaunchBoardApp() {
                 {titleError ? <FieldError>{titleError}</FieldError> : null}
               </Field>
               <Field>
-                <FieldLabel htmlFor="launch-board-description">Description</FieldLabel>
+                <FieldLabel htmlFor="launch-board-description">
+                  Description
+                </FieldLabel>
                 <Input
                   id="launch-board-description"
                   value={formDescription}
@@ -434,7 +521,9 @@ export function LaunchBoardApp() {
               </Field>
               <div className="grid grid-cols-2 gap-3">
                 <Field>
-                  <FieldLabel htmlFor="launch-board-priority">Priority</FieldLabel>
+                  <FieldLabel htmlFor="launch-board-priority">
+                    Priority
+                  </FieldLabel>
                   <select
                     id="launch-board-priority"
                     value={formPriority}
@@ -464,7 +553,11 @@ export function LaunchBoardApp() {
               </div>
             </FieldGroup>
             <DialogFooter className="mt-5">
-              <Button type="button" variant="outline" onClick={() => setDialogMode(null)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDialogMode(null)}
+              >
                 Cancel
               </Button>
               <Button type="submit">

@@ -232,10 +232,7 @@ export function IntroApiCard({
                 <DialogTitle className="sr-only">
                   {item.title} の実装コード
                 </DialogTitle>
-                <JavaCodeBlock
-                  code={entry.javaCode}
-                  className="max-h-[65vh]"
-                />
+                <JavaCodeBlock code={entry.javaCode} className="max-h-[65vh]" />
               </DialogContent>
             </Dialog>
           </div>

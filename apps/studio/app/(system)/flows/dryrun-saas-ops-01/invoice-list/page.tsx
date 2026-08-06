@@ -8,10 +8,17 @@ import {
   type CollectionState,
 } from "@/app/(system)/collection-01/collection-screen"
 
-const STATES: readonly CollectionState[] = ["default", "loading", "empty", "error"]
+const STATES: readonly CollectionState[] = [
+  "default",
+  "loading",
+  "empty",
+  "error",
+]
 
 function resolveState(raw: string | null): CollectionState {
-  return STATES.includes(raw as CollectionState) ? (raw as CollectionState) : "default"
+  return STATES.includes(raw as CollectionState)
+    ? (raw as CollectionState)
+    : "default"
 }
 
 // The invoice-list step's stateCoveragePlan (default/loading/empty/error) is
