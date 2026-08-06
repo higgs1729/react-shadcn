@@ -173,10 +173,16 @@ if (!fs.existsSync(manifestPath)) {
     }
   }
 
-  if (objects.size !== expectedPreviews.length) {
-    console.log(
-      `R2 manifest contains ${objects.size} objects, but ${expectedPreviews.length} previews are expected`
-    )
+  // Orphans are reported, not failed on: an object nobody references costs
+  // storage and usually means a rename left the old file behind, but deciding
+  // when to delete it from the bucket is not this validator's call. Compared as
+  // sets rather than counts so the message can name them, and so two catalog
+  // items sharing one preview file cannot be mistaken for a missing object.
+  const referenced = new Set(expectedPreviews)
+  const orphans = [...objects].filter((key) => !referenced.has(key))
+  if (orphans.length > 0) {
+    console.log(`R2 manifest has ${orphans.length} object(s) nobody references:`)
+    for (const key of orphans) console.log(`  ${key}`)
   }
 }
 
