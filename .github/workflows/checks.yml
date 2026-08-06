@@ -16,7 +16,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # The `a11y` check renders stories in a REAL browser (vitest browser mode
+      # -> Playwright), so `npm ci` alone is not enough: without a browser
+      # test:a11y-known-violation fails for a reason that has nothing to do with
+      # accessibility. `--with-deps` also installs the OS libraries chromium
+      # needs, which the runner image does not guarantee.
+      - run: npx playwright install --with-deps chromium
       # Fans out to every workspace's own `checks` script (npm run checks
       # --workspaces --if-present). For apps/studio that is scripts/run-checks.mjs:
-      # contracts (ajv) -> lint -> typecheck -> next build -> storybook build.
+      # contracts (ajv) -> lint -> typecheck -> tests -> next build -> storybook build.
       - run: npm run checks
