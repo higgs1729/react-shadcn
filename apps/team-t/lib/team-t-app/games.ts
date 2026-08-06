@@ -1,3 +1,5 @@
+import { ASSET_BASE_URL } from "./asset-base"
+
 export const teamTGames = [
   {
     id: "triple-tile",
@@ -98,7 +100,9 @@ export function getTeamTGameUrl(game: TeamTGame) {
   return `${basePath}/games/${encodeURIComponent(game.fileName)}`
 }
 
+// Previews are the one asset group that does NOT follow the basePath rule: they
+// are served from R2, keyed by the same `<directory>/<file>` shape they had
+// under public/. See asset-base.ts.
 export function getTeamTGamePreviewUrl(game: TeamTGame) {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-  return `${basePath}/game-previews/${encodeURIComponent(game.previewFileName)}`
+  return `${ASSET_BASE_URL}/game-previews/${encodeURIComponent(game.previewFileName)}`
 }

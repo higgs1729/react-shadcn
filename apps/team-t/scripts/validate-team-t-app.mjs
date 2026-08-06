@@ -135,11 +135,56 @@ for (const fileName of expectedGameAssets) {
   }
 }
 
+// Preview images are served from Cloudflare R2, so fs.existsSync can no longer
+// answer whether they are there. scripts/asset-manifest.json is the tracked
+// record of what the bucket held when upload-assets.mjs last ran; checking
+// against it keeps this validator offline and deterministic. Whether those URLs
+// actually answer over the network is a separate question, deliberately not
+// asked here. Note this closes a hole that predates the move: previews were
+// never checked at all, so a deleted image left every check green.
+let previewCount = 0
+const manifestPath = path.join(projectRoot, "scripts/asset-manifest.json")
+if (!fs.existsSync(manifestPath)) {
+  errors.push(
+    "scripts/asset-manifest.json is missing; run `npm -w apps/team-t run upload:assets`"
+  )
+} else {
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"))
+  const objects = new Set(Object.keys(manifest.objects ?? {}))
+  const expectedPreviews = [
+    ...[...gamesSource.matchAll(/previewFileName:\s*"([^"]+)"/g)].map(
+      ([, fileName]) => `game-previews/${fileName}`
+    ),
+    ...catalog
+      .filter((item) => item.previewFileName)
+      .map((item) => `api-page-previews/${item.previewFileName}`),
+  ]
+  previewCount = expectedPreviews.length
+
+  // Without this, deleting every previewFileName would make the loop below
+  // iterate zero times and report success for having checked nothing.
+  if (expectedPreviews.length === 0) {
+    errors.push("no previewFileName is referenced anywhere; the manifest check would pass vacuously")
+  }
+
+  for (const key of expectedPreviews) {
+    if (!objects.has(key)) {
+      errors.push(`preview is not in the R2 manifest: ${key}`)
+    }
+  }
+
+  if (objects.size !== expectedPreviews.length) {
+    console.log(
+      `R2 manifest contains ${objects.size} objects, but ${expectedPreviews.length} previews are expected`
+    )
+  }
+}
+
 if (errors.length > 0) {
   console.error(`Team T validation failed:\n- ${errors.join("\n- ")}`)
   process.exitCode = 1
 } else {
   console.log(
-    `Team T catalog validated: ${catalog.length} pages / ${logicalApiCount} APIs / ${htmlAssets.length} API assets / ${expectedGameAssets.length} game assets / recommendations verified.`
+    `Team T catalog validated: ${catalog.length} pages / ${logicalApiCount} APIs / ${htmlAssets.length} API assets / ${expectedGameAssets.length} game assets / ${previewCount} R2 previews / recommendations verified.`
   )
 }

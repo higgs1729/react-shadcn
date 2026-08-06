@@ -11,6 +11,8 @@
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build",
     "validate": "node scripts/validate-team-t-app.mjs",
+    "upload:assets": "node scripts/upload-assets.mjs",
+    "upload:assets:check": "node scripts/upload-assets.mjs --check",
     "checks": "npm run validate && npm run lint && npm run typecheck && npm run build && npm run build-storybook"
   },
   "dependencies": {
@@ -35,6 +37,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.185.1",
+    "aws4fetch": "^1.0.20",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "eslint-plugin-storybook": "10.5.0",

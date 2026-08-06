@@ -1,4 +1,5 @@
 import catalogData from "./catalog.json"
+import { ASSET_BASE_URL } from "./asset-base"
 
 export interface ApiCatalogItem {
   id: string
@@ -87,8 +88,9 @@ export function getApiPageUrl(item: ApiCatalogItem) {
   return `${basePath}/api-pages/${safePath}`
 }
 
+// Served from R2 rather than under basePath, unlike every other asset here.
+// See asset-base.ts.
 export function getApiPreviewImageUrl(item: ApiCatalogItem) {
   if (!item.previewFileName) return undefined
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-  return `${basePath}/api-page-previews/${encodeURIComponent(item.previewFileName)}`
+  return `${ASSET_BASE_URL}/api-page-previews/${encodeURIComponent(item.previewFileName)}`
 }

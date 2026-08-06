@@ -12,6 +12,7 @@
 | --- | --- | --- | --- |
 | API catalog | Team Tの型付きcatalog data | build output | repository |
 | API紹介コンテンツ | 移行した既存HTML assets | iframe | repository |
+| Preview画像 | Cloudflare R2 bucket `react-shadcn-assets` | 閲覧者のブラウザが直接取得 | R2(在庫記録は `scripts/asset-manifest.json`) |
 | Recommendations | catalog item IDの明示リスト | build output | repository |
 | Selected API | URL hash `#apiId` | browser | URL |
 | Search/category expansion | React UI state | browser | session only |
@@ -99,6 +100,15 @@ V1には認証・認可されたユーザーを存在させない。全ユーザ
 - rate limit、CORS、サービス停止をアプリ本体の障害と分離する
 - responseに含まれる外部HTMLを未検証のまま`innerHTML`へ渡さない
 
+### Asset hosting
+
+preview画像だけは repository を離れ、Cloudflare R2 から配信する。repositoryが運ぶのはコードであり、増え続ける画像ライブラリではないため。
+
+- bucketは公開読み取り。書き込み credentialは `.env.local`(git管理外)にのみ置き、client bundle・CI・repositoryへは入れない
+- 配信は `r2.dev` の development URL。Cloudflare自身が本番用途に推奨しておらず帯域制限があるため、規模が問題になればカスタムドメインへ移す
+- 画像は公開情報であり、URLも公開情報として扱う。したがって公開URLは環境変数ではなく `lib/team-t-app/asset-base.ts` の定数に置く
+- `public/games/api-cards/` は移さない。ゲームHTML内の素のJSが相対パスでWebGL textureへ渡しており、別originにするとCORS設定なしでは黒く落ちる
+
 ### Official links
 
 - 外部公式URLであることを示し、同じタブのアプリ状態を不意に失わせない
@@ -164,6 +174,7 @@ game iframeのload errorまたは開始タイムアウトでは、消費した�
 - logical API total 200
 - recommendation ID existence
 - game file existence
+- preview manifest membership(`previewFileName` ⊆ `scripts/asset-manifest.json`。実URLが200を返すかはネットワーク依存のため含めない)
 - localStorage key allowlist
 
 ### Browser verification

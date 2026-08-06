@@ -34,6 +34,15 @@ build
 # sitting untracked in apps/portal/. Commit real assets under public/ instead.
 design-qa-*.png
 
+# Team T preview images live in Cloudflare R2, not here — they are the heaviest
+# thing the repo carried and they grow with every new game. These directories
+# are now a staging area: drop a new preview in, run `npm -w apps/team-t run
+# upload:assets`, and scripts/asset-manifest.json records what the bucket holds.
+# Ignoring them is what stops the images from drifting back into git one commit
+# at a time; `npm run validate` fails if a page names a preview the bucket lacks.
+apps/team-t/public/game-previews/
+apps/team-t/public/api-page-previews/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

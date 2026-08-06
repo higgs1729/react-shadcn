@@ -8,6 +8,7 @@ Team T アプリ専用のデータ、型、fixture、純粋な業務ロジック
 
 - `catalog.json` — 177紹介ページ・200 API の正本データ
 - `catalog.ts` — カタログ型、統計、検索、グループ化、公開asset URL helper
+- `asset-base.ts` — R2 で配信する preview 画像の公開URL基点。ここだけ `NEXT_PUBLIC_BASE_PATH` の規則の外にある
 - `preferences.ts` — Team Tだけが所有する端末内設定・プロフィールの型と保存境界
 
 ## このディレクトリだけの約束

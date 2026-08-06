@@ -1,0 +1,49 @@
+{
+  "bucket": "react-shadcn-assets",
+  "objects": {
+    "api-page-previews/countrysearch.png": {
+      "bytes": 559250,
+      "md5": "eeb5c5a55d4a2c2963d79bbd9bb21de3"
+    },
+    "api-page-previews/weather.png": {
+      "bytes": 1499721,
+      "md5": "db61ed35e617d09b1d320f8591266a2f"
+    },
+    "game-previews/block-breaker.png": {
+      "bytes": 26065,
+      "md5": "21790091266159aff921dc3158bd5c86"
+    },
+    "game-previews/neon-tunnel.png": {
+      "bytes": 1591294,
+      "md5": "dfafdc562827fd95425262e545fe5fe0"
+    },
+    "game-previews/picross.png": {
+      "bytes": 28311,
+      "md5": "2a371fd8d3dba802420dfc398432dd9e"
+    },
+    "game-previews/rpg.png": {
+      "bytes": 145093,
+      "md5": "9fa1190ddd7414a402cbce8c921b6073"
+    },
+    "game-previews/shooting.png": {
+      "bytes": 72130,
+      "md5": "e30d6724463de4e76f2d48ec7d3282cc"
+    },
+    "game-previews/slide-puzzle.png": {
+      "bytes": 26760,
+      "md5": "a555a6a766c6242ba6cc3dda1066ecf6"
+    },
+    "game-previews/survival.png": {
+      "bytes": 22236,
+      "md5": "ffcecc15fe2f5f8536dfc6ec058f5d2f"
+    },
+    "game-previews/target.png": {
+      "bytes": 42940,
+      "md5": "5ad539ab32e53ee119e8e678d3ac621c"
+    },
+    "game-previews/triple-tile.png": {
+      "bytes": 377076,
+      "md5": "e4fc596b89d308734f8e220682403c8c"
+    }
+  }
+}
