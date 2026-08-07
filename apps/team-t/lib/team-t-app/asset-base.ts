@@ -13,4 +13,5 @@
 // Only the two preview directories moved. public/games/api-cards/ is loaded by
 // relative path from raw JS inside the game HTML and fed to a WebGL texture
 // loader, which would need CORS to survive a cross-origin move.
-export const ASSET_BASE_URL = "https://pub-eb8ed106e9974865a058ea8541c5ff30.r2.dev"
+export const ASSET_BASE_URL =
+  "https://pub-eb8ed106e9974865a058ea8541c5ff30.r2.dev"

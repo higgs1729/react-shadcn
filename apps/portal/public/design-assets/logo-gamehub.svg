@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title">
+  <title id="title">GAMEHUB</title>
+  <rect width="100" height="100" fill="#070707"/>
+  <path d="M12 15h76v70H12z" fill="none" stroke="#ea4b17" stroke-width="3"/>
+  <path d="M23 32h23M23 42h15M23 52h23M23 62h15M61 32h16M61 42h8M61 52h16M61 62h8" stroke="#f8f4f3" stroke-width="4" stroke-linecap="square"/>
+  <circle cx="78" cy="72" r="5" fill="#ea4b17"/>
+</svg>

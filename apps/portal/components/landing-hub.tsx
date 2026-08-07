@@ -4,6 +4,17 @@
 // bootable inside the monorepo.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
+// GAMEHUB is a Cloudflare Workers app (vinext + SSR) developed in
+// tmp/AI_game_contest, so it cannot join the static Pages composition the way
+// the sibling apps do. In dev, point at its own dev server so the card is
+// actually clickable; the built site keeps linking to the source. Set
+// NEXT_PUBLIC_GAMEHUB_URL to override once it has a real deployment.
+const gamehubHref =
+  process.env.NEXT_PUBLIC_GAMEHUB_URL ??
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3001/"
+    : "https://github.com/higgs1729/react-shadcn/tree/master/tmp/AI_game_contest")
+
 type AppEntry = {
   id: string
   purpose: string
@@ -45,6 +56,16 @@ const apps: AppEntry[] = [
     action: "問題集を開く",
     logo: "logo-python-test.png",
   },
+  {
+    id: "gamehub",
+    purpose: "ブラウザゲームで遊ぶ",
+    title: "GAMEHUB",
+    description:
+      "ブラウザですぐ遊べるゲームを集めた個人ゲームハブです。注目タイトルやゲーム一覧から、遊びたいゲームを探せます。",
+    href: gamehubHref,
+    action: "GAMEHUBを見る",
+    logo: "logo-gamehub.svg",
+  },
 ]
 
 function assetPath(fileName: string) {
@@ -72,6 +93,11 @@ export function LandingHub() {
         <a className="portal-brand" href={`${basePath}/`}>
           higgs1729
         </a>
+        <nav className="portal-nav" aria-label="サイト内ナビゲーション">
+          <a href={`${basePath}/works/`}>作品紹介</a>
+          <a href={`${basePath}/projects/`}>進行中のプロジェクト</a>
+          <a href={`${basePath}/activities/`}>継続的な活動</a>
+        </nav>
       </header>
 
       <figure className="portal-coordinate-system" aria-hidden="true">
@@ -239,6 +265,23 @@ const styles = `
   font-size: 1.15rem;
   font-weight: 720;
   letter-spacing: -0.02em;
+}
+.portal-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.85rem, 2.5vw, 2.5rem);
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 620;
+}
+.portal-nav a {
+  color: #d6d6d6;
+  transition: color 140ms ease;
+}
+.portal-nav a:hover { color: #fff; }
+.portal-nav a:focus-visible {
+  outline: 2px solid var(--portal-accent);
+  outline-offset: 5px;
 }
 
 .portal-coordinate-system {
@@ -567,6 +610,10 @@ const styles = `
     --portal-curve-opacity: 0.28;
   }
   .portal-header { padding-inline: 1.1rem; }
+  .portal-nav {
+    gap: 0.45rem;
+    font-size: 0.6rem;
+  }
   .portal-axis-y-head,
   .portal-axis-y-tail { opacity: 0.72; }
   .portal-hero-copy {
