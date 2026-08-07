@@ -35,8 +35,8 @@ Vercel Composition Patterns、Web Design Guidelinesを工程別に採用する�
 
 | 工程 | 採用機能 | 責務 |
 | --- | --- | --- |
-| 要件・画面構成 | 通常のCodex、Product Design | 要件整理、画面構成、UX検討 |
-| デザイン連携 | Product Design、Figma | デザイン探索、Design to Code、Code Connect |
+| 要件・画面構成 | 通常のCodex、Product Design | 要件整理、画面構成、UX検討 | -> Codexでない、該当スキルが使えないなら代替手段を探して提案すること。
+| デザイン連携 | Product Design、Figma | デザイン探索、Design to Code、Code Connect | -> この地点でdesign.mdに相当するものを完成させておきたい。もし作るアプリが業務用でデザインが既存のshadcnならそのまま進む。そうでなくオリジナリティがあるなら固有の配色、固有のコンポーネントの設計も行う。
 | React設計 | Vercel Composition Patterns | Compound Components、状態配置、Provider責務、明示的Variant |
 | shadcn実装 | 公式shadcn Skill | プロジェクト認識、Base別API、CLI、コンポジション、テーマ |
 | Registry操作 | shadcn MCP | 検索、閲覧、依存確認、追加、外部・Private Registry利用 |
