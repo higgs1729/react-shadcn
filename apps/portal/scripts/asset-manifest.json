@@ -1,0 +1,21 @@
+{
+  "bucket": "react-shadcn-assets",
+  "objects": {
+    "app-previews/gamehub.png": {
+      "bytes": 441633,
+      "md5": "46f319846449d06b4e44557bb5350da9"
+    },
+    "app-previews/python-test.png": {
+      "bytes": 56232,
+      "md5": "edb2cdf4bb21feab093d2f93c64526eb"
+    },
+    "app-previews/studio.png": {
+      "bytes": 137362,
+      "md5": "b5ec1fba50b505cd9948002ca5ad5148"
+    },
+    "app-previews/team-t.png": {
+      "bytes": 415734,
+      "md5": "2a278fc876b8c09daf31bdddb0f89259"
+    }
+  }
+}

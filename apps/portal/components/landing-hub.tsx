@@ -2,6 +2,9 @@
 // The portal stays a server component with no shared app state. Plain anchors
 // preserve GitHub Pages basePath behavior while every app remains independently
 // bootable inside the monorepo.
+import { ASSET_BASE_URL } from "../lib/asset-base"
+import { JsonList, type JsonListNode } from "./json-list"
+
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
 // GAMEHUB is a Cloudflare Workers app (vinext + SSR) developed in
@@ -17,59 +20,64 @@ const gamehubHref =
 
 type AppEntry = {
   id: string
-  purpose: string
   title: string
   description: string
   href: string
   action: string
   logo: string
+  /** apps/portal/public/app-previews/ の staging ファイル名。R2 配信 */
+  preview: string
 }
 
 const apps: AppEntry[] = [
   {
+    id: "team-t",
+    title: "Team T API Lab",
+    description:
+      "目的やカテゴリから公開APIを探し、その場で仕様とレスポンスを確かめられる開発者向けカタログです。",
+    href: `${basePath}/team-t/`,
+    action: "Team T API Labを開く",
+    logo: "logo-team-t.png",
+    preview: "team-t.png",
+  },
+  {
     id: "studio",
-    purpose: "UI設計の過程を見る",
     title: "AI Design System Studio",
     description:
       "briefから実装までを分解し、採用したパターン、選定理由、検証結果をまとめた設計ポートフォリオです。",
     href: `${basePath}/studio/overview/`,
     action: "Studioを開く",
     logo: "logo-studio.png",
-  },
-  {
-    id: "team-t",
-    purpose: "公開APIを探して試す",
-    title: "Team T",
-    description:
-      "目的やカテゴリから公開APIを探し、その場で仕様とレスポンスを確かめられる開発者向けカタログです。",
-    href: `${basePath}/team-t/`,
-    action: "Team Tを開く",
-    logo: "logo-team-t.png",
+    preview: "studio.png",
   },
   {
     id: "python-test",
-    purpose: "Python試験を練習する",
     title: "データ分析試験 模擬問題集",
     description:
       "Python3エンジニア認定データ分析試験に向けて、分野や難易度を選び、誤答を繰り返し復習できます。",
     href: `${basePath}/python-test/`,
     action: "問題集を開く",
     logo: "logo-python-test.png",
+    preview: "python-test.png",
   },
   {
     id: "gamehub",
-    purpose: "ブラウザゲームで遊ぶ",
     title: "GAMEHUB",
     description:
       "ブラウザですぐ遊べるゲームを集めた個人ゲームハブです。注目タイトルやゲーム一覧から、遊びたいゲームを探せます。",
     href: gamehubHref,
     action: "GAMEHUBを見る",
     logo: "logo-gamehub.svg",
+    preview: "gamehub.png",
   },
 ]
 
 function assetPath(fileName: string) {
   return `${basePath}/design-assets/${fileName}`
+}
+
+function previewPath(fileName: string) {
+  return `${ASSET_BASE_URL}/app-previews/${fileName}`
 }
 
 function BreakableCopy({ children }: { children: string }) {
@@ -82,6 +90,51 @@ function BreakableCopy({ children }: { children: string }) {
       {index < segments.length - 1 ? <wbr /> : null}
     </span>
   ))
+}
+
+// JsonList は枠(波括弧・区切り線・入れ子・detail レイアウトでの選択)だけを
+// 持つ。左ツリーの行(title)と右ペインの中身(detail)はここが渡す ReactNode。
+// title は detail を持つノードでは <button> の中に入るため、CTA のような
+// interactive な要素は必ず detail 側へ置く(json-list.tsx の警告コメント参照)。
+function toListNode(app: AppEntry): JsonListNode {
+  return {
+    id: app.id,
+    title: (
+      <span className="portal-app-name">
+        <img
+          className="portal-app-logo"
+          src={assetPath(app.logo)}
+          alt=""
+          width="100"
+          height="100"
+        />
+        <span>{app.title}</span>
+      </span>
+    ),
+    detail: (
+      <article className="portal-app-detail">
+        <img
+          className="portal-preview"
+          src={previewPath(app.preview)}
+          alt=""
+          width="1280"
+          height="800"
+        />
+        <p className="portal-description">
+          <BreakableCopy>{app.description}</BreakableCopy>
+        </p>
+        <a className="portal-action" href={app.href}>
+          <span>{app.action}</span>
+          <img
+            src={assetPath("arrow-right.png")}
+            alt=""
+            width="33"
+            height="33"
+          />
+        </a>
+      </article>
+    ),
+  }
 }
 
 export function LandingHub() {
@@ -149,64 +202,13 @@ export function LandingHub() {
           </div>
         </section>
 
-        <section className="portal-directory" aria-labelledby="directory-title">
-          <div className="portal-directory-heading">
-            <h2 id="directory-title">
-              アプリ一覧 <span aria-hidden="true">= [</span>
-            </h2>
-          </div>
-
-          <ol className="portal-list">
-            {apps.map((app) => (
-              <li key={app.id} className="portal-item">
-                <article className="portal-app">
-                  <span
-                    className="portal-brace portal-brace-open"
-                    aria-hidden="true"
-                  >
-                    {"{"}
-                  </span>
-
-                  <img
-                    className="portal-app-logo"
-                    src={assetPath(app.logo)}
-                    alt=""
-                    width="100"
-                    height="100"
-                  />
-
-                  <div className="portal-app-body">
-                    <p className="portal-purpose">{app.purpose}</p>
-                    <h3>{app.title}</h3>
-                    <p className="portal-description">
-                      <BreakableCopy>{app.description}</BreakableCopy>
-                    </p>
-                  </div>
-
-                  <a className="portal-action" href={app.href}>
-                    <span>{app.action}</span>
-                    <img
-                      src={assetPath("arrow-right.png")}
-                      alt=""
-                      width="33"
-                      height="33"
-                    />
-                  </a>
-
-                  <span
-                    className="portal-brace portal-brace-close"
-                    aria-hidden="true"
-                  >
-                    {"},"}
-                  </span>
-                </article>
-              </li>
-            ))}
-          </ol>
-
-          <div className="portal-list-end" aria-hidden="true">
-            ]
-          </div>
+        <section className="portal-directory" aria-label="アプリ一覧">
+          <JsonList
+            label="アプリ一覧"
+            layout="detail"
+            defaultSelectedId="team-t"
+            nodes={apps.map(toListNode)}
+          />
         </section>
       </main>
 
@@ -413,14 +415,11 @@ const styles = `
   padding-top: 5.45rem;
   margin-left: var(--portal-content-left);
 }
-.portal-kicker,
-.portal-purpose {
+.portal-kicker {
   margin: 0;
   color: var(--portal-accent);
   font-size: 0.78rem;
   font-weight: 760;
-}
-.portal-kicker {
   position: relative;
   padding-bottom: 1.1rem;
   letter-spacing: 0.055em;
@@ -456,73 +455,43 @@ const styles = `
 .portal-directory {
   margin-inline: var(--portal-content-left) var(--portal-content-right);
 }
-.portal-directory-heading {
-  height: 4rem;
-  display: flex;
+/* 枠(見出し・区切り線・波括弧)は JsonList が持つ。ここはカードの中身だけ。 */
+.portal .jlist {
+  --jlist-line: var(--portal-line);
+  --jlist-accent: var(--portal-accent);
+  --jlist-mono: var(--font-mono, ui-monospace, monospace);
+}
+.portal-app-name {
+  display: inline-flex;
   align-items: center;
-  border-bottom: 1px solid var(--portal-line);
+  gap: 0.5rem;
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  font-weight: 560;
+  letter-spacing: -0.02em;
 }
-.portal-directory-heading h2 {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1;
-  letter-spacing: -0.025em;
-}
-.portal-directory-heading h2 span {
-  margin-left: 0.45rem;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 0.95rem;
-  font-weight: 450;
-  letter-spacing: 0;
-}
-
-.portal-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.portal-item { border-bottom: 1px solid var(--portal-line); }
-.portal-app {
-  min-height: 7.3rem;
-  display: grid;
-  grid-template-columns: 2.8rem 9rem minmax(0, 1fr) 11.15rem 2.2rem;
-  align-items: center;
-  gap: 0.75rem;
-}
-.portal-brace {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 1.1rem;
-  font-weight: 430;
-}
-.portal-brace-open { align-self: start; padding-top: 1.15rem; }
-.portal-brace-close { justify-self: end; }
 .portal-app-logo {
-  width: 5.6rem;
-  height: 5.6rem;
-  margin-left: 0.45rem;
+  width: 1em;
+  height: 1em;
   object-fit: contain;
 }
-.portal-app-body { min-width: 0; }
-.portal-purpose {
-  font-size: 0.72rem;
-  letter-spacing: 0.01em;
-}
-.portal-app h3 {
-  margin: 0.7rem 0 0;
-  font-size: clamp(1.25rem, 1.55vw, 1.55rem);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  font-weight: 560;
-  white-space: nowrap;
+.portal-app-detail { min-width: 0; }
+.portal-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
 }
 .portal-description {
-  margin: 0.55rem 0 0;
-  font-size: clamp(0.72rem, 0.88vw, 0.84rem);
-  line-height: 1.5;
+  margin: 1rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.6;
 }
 .portal-copy-segment { white-space: nowrap; }
 .portal-action {
+  width: fit-content;
   min-height: 3.15rem;
+  margin-top: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -543,14 +512,6 @@ const styles = `
 .portal-action:hover {
   background: var(--portal-accent);
 }
-.portal-list-end {
-  height: 2.7rem;
-  display: flex;
-  align-items: center;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 1rem;
-}
-
 .portal-footer {
   min-height: 5.5625rem;
   display: flex;
@@ -584,17 +545,6 @@ const styles = `
     min-height: 100svh;
   }
   .portal-hero-copy { width: min(38rem, calc(100vw - 7rem)); }
-  .portal-app {
-    grid-template-columns: 2rem 5.5rem minmax(0, 1fr) 2rem;
-    padding-block: 1rem;
-  }
-  .portal-app-logo { width: 4.75rem; height: 4.75rem; }
-  .portal-action {
-    grid-column: 3;
-    width: min(100%, 12rem);
-    margin-top: 0.85rem;
-  }
-  .portal-brace-close { grid-column: 4; grid-row: 1 / span 2; }
 }
 
 @media (max-width: 680px) {
@@ -628,24 +578,6 @@ const styles = `
     font-size: clamp(0.68rem, 2.8vw, 0.84rem);
     line-height: 1.65;
   }
-  .portal-directory-heading { height: 3.6rem; }
-  .portal-app {
-    grid-template-columns: 1.55rem minmax(0, 1fr) 1.7rem;
-    gap: 0.45rem 0.65rem;
-  }
-  .portal-brace-open { grid-column: 1; grid-row: 1; }
-  .portal-app-logo {
-    grid-column: 2;
-    grid-row: 1;
-    width: 4.5rem;
-    height: 4.5rem;
-    margin-left: 0;
-  }
-  .portal-app-body { grid-column: 2; grid-row: 2; }
-  .portal-action { grid-column: 2; grid-row: 3; }
-  .portal-brace-close { grid-column: 3; grid-row: 1 / span 3; }
-  .portal-app h3 { font-size: 1.22rem; }
-  .portal-description { font-size: clamp(0.64rem, 2.65vw, 0.78rem); }
   .portal-footer {
     min-height: 6.5rem;
     align-items: flex-start;

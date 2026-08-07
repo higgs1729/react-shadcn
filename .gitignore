@@ -42,6 +42,7 @@ design-qa-*.png
 # at a time; `npm run validate` fails if a page names a preview the bucket lacks.
 apps/team-t/public/game-previews/
 apps/team-t/public/api-page-previews/
+apps/portal/public/app-previews/
 
 # debug
 npm-debug.log*
