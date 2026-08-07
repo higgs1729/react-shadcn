@@ -243,7 +243,11 @@ export function JsonList({
       data-drilled={drilledIn ? "true" : "false"}
     >
       <style>{styles}</style>
-      <span className="jlist-viewport-probe" ref={probeRef} aria-hidden="true" />
+      <span
+        className="jlist-viewport-probe"
+        ref={probeRef}
+        aria-hidden="true"
+      />
 
       <div className="jlist-heading">
         <h2>

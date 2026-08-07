@@ -7,8 +7,8 @@ import { JsonList, type JsonListNode } from "./json-list"
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
-// GAMEHUB is a Cloudflare Workers app (vinext + SSR) developed in
-// tmp/AI_game_contest, so it cannot join the static Pages composition the way
+// GAMEHUB is a Cloudflare Workers app (vinext + SSR) in
+// apps/gamehub, so it cannot join the static Pages composition the way
 // the sibling apps do. In dev, point at its own dev server so the card is
 // actually clickable; the built site keeps linking to the source. Set
 // NEXT_PUBLIC_GAMEHUB_URL to override once it has a real deployment.
@@ -16,7 +16,7 @@ const gamehubHref =
   process.env.NEXT_PUBLIC_GAMEHUB_URL ??
   (process.env.NODE_ENV === "development"
     ? "http://localhost:3001/"
-    : "https://github.com/higgs1729/react-shadcn/tree/master/tmp/AI_game_contest")
+    : "https://github.com/higgs1729/react-shadcn/tree/master/apps/gamehub")
 
 type AppEntry = {
   id: string
