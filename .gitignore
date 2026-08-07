@@ -59,3 +59,6 @@ next-env.d.ts
 *storybook.log
 storybook-static
 docs/examples/checks-latest.json
+
+# temporary working space
+tmp/
