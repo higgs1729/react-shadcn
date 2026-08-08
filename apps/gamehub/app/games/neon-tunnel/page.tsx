@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 import type { Metadata } from "next"
+import { withBasePath } from "../../lib/base-path"
 
 export const metadata: Metadata = {
   title: "NEON TUNNEL",
@@ -10,13 +10,13 @@ export default function NeonTunnelPage() {
   return (
     <main className="hub-game-frame-page">
       <header className="hub-game-frame-header">
-        <a href="/">← GAMEHUB</a>
+        <a href={withBasePath("/")}>← GAMEHUB</a>
         <strong>NEON TUNNEL</strong>
-        <a href="/games">ALL GAMES</a>
+        <a href={withBasePath("/games")}>ALL GAMES</a>
       </header>
       <iframe
         className="hub-game-frame"
-        src="/game-runtime/neon-tunnel.html"
+        src={withBasePath("/game-runtime/neon-tunnel.html")}
         title="NEON TUNNEL"
         allow="fullscreen"
       />

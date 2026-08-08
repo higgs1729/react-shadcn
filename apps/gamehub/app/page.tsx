@@ -2,6 +2,7 @@
 import { GameCard } from "./components/GameCard"
 import { HubHeader } from "./components/HubHeader"
 import { hubGames, playableGames } from "./game-data"
+import { withBasePath } from "./lib/base-path"
 
 const echoShift = playableGames[0]
 const neonTunnel = playableGames[1]
@@ -38,7 +39,7 @@ export default function DiscoverPage() {
               <span className="hub-kicker">WHAT PLAYERS OPEN FIRST</span>
               <h2 id="popular-title">POPULAR GAMES</h2>
             </div>
-            <a href="/games">VIEW ALL</a>
+            <a href={withBasePath("/games")}>VIEW ALL</a>
           </div>
           <div className="hub-game-grid">
             <GameCard game={echoShift} compact />
@@ -58,7 +59,7 @@ export default function DiscoverPage() {
               <span className="hub-kicker">RECENTLY ADDED</span>
               <h2 id="new-title">NEW GAMES</h2>
             </div>
-            <a href="/games">BROWSE CATALOG</a>
+            <a href={withBasePath("/games")}>BROWSE CATALOG</a>
           </div>
           <div className="hub-game-grid">
             <GameCard game={neonTunnel} compact />

@@ -1,3 +1,5 @@
+import { withBasePath } from "./lib/base-path"
+
 export type HubGame = {
   id: string
   title: string
@@ -15,8 +17,8 @@ export const hubGames: readonly HubGame[] = [
     title: "ECHO//SHIFT",
     genre: "MEMORY SURVIVAL",
     description: "6秒前の自分から逃げ切る、60秒の記憶サバイバル。",
-    href: "/games/echo-shift",
-    image: "/game-previews/echo-shift-wide.png",
+    href: withBasePath("/games/echo-shift"),
+    image: withBasePath("/game-previews/echo-shift-wide.png"),
     imageAlt: "ECHO//SHIFTのゲームバナー",
   },
   {
@@ -24,8 +26,8 @@ export const hubGames: readonly HubGame[] = [
     title: "NEON TUNNEL",
     genre: "ARCADE RUNNER",
     description: "ネオンのトンネルを旋回し、障害物を避けて走破する。",
-    href: "/games/neon-tunnel",
-    image: "/game-previews/neon-tunnel.png",
+    href: withBasePath("/games/neon-tunnel"),
+    image: withBasePath("/game-previews/neon-tunnel.png"),
     imageAlt: "NEON TUNNELのゲーム画面",
   },
   ...Array.from({ length: 4 }, (_, index) => ({

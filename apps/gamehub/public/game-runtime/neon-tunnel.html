@@ -295,11 +295,11 @@ const rootStyle= document.documentElement.style;
 /* =========================================================================
    背景: 電脳世界の外殻
    トンネル(半径7.2)の外側を、内→外の順に層で埋めて「回線の中を走っている」空間にする。
-     API card(9.5〜12) → コードレイン(13.5〜23) → データノード(14〜24) → 回路導管(27)
+     コードレイン(13.5〜23) → データノード(14〜24) → 回路導管(27)
    共通の作り:
      - すべて AdditiveBlending + depthWrite:false。黒が加算で消えるので抜き画像が不要で、
        かつ前景(障害物・自機)を一切覆い隠さない。
-     - テクスチャは canvas で手続き生成する。api-cards 以外に外部画像を増やさない。
+     - テクスチャは canvas で手続き生成し、外部画像に依存しない。
      - フォグが約130単位で溶かすため「遠くの巨大な背景」は成立しない。既存のリングと同じく
        中距離に置いて z 循環させ、手前は視界を塞ぐので必ずフェードアウトさせる。
    ========================================================================= */
@@ -614,39 +614,6 @@ for (let i = 0; i < DASH_COUNT; i++){
   m.userData.gold = gold;
   scene.add(m);
   dashes.push(m);
-}
-
-/* --- 外殻の API 紹介 billboard(背景。透明筒の外側にカードを浮かべて流す) ---
-   実アプリ(localhost)の各デモを Playwright で撮影し、sharp で金枠・減光・走査線を
-   焼き込んだカード画像を並べる。生成物: public/team-t-app/games/api-cards/*.png
-   (scratchpad の capture-cards.mjs → compose-cards.mjs)。差し替えは画像を置換するだけ。
-   ライブ iframe 描画は重いので画像 texture 化: GPU へ一度上げれば板ポリは激安。 */
-const CARD_IDS = ['cars','waifu','yesno','3d','utyu','useless','opentrivia','countrysearch','anime','sindan'];
-const texLoader = new THREE.TextureLoader();
-const cardTextures = CARD_IDS.map((id) => {
-  const t = texLoader.load('./api-cards/' + id + '.png');
-  if ('SRGBColorSpace' in THREE) t.colorSpace = THREE.SRGBColorSpace;  // 写真は sRGB として扱う
-  return t;
-});
-const BILL_COUNT = 12;
-const BILL_SPAN  = 46;                      // billboard 同士の z 間隔
-const billGeo    = new THREE.PlaneGeometry(7.2, 4.5);
-const billboards = [];
-for (let i = 0; i < BILL_COUNT; i++){
-  const mat = new THREE.MeshBasicMaterial({
-    map: cardTextures[i % cardTextures.length],
-    transparent:true, opacity:0, depthWrite:false, side:THREE.DoubleSide
-  });
-  const m = new THREE.Mesh(billGeo, mat);
-  m.userData = {
-    s: 120 + i * BILL_SPAN + Math.random() * 20,
-    a: Math.random() * Math.PI * 2,
-    r: 9.5 + Math.random() * 2.5,           // 外殻半径(少し散らして奥行きを出す)
-    ti: i % cardTextures.length,
-    phase: Math.random() * Math.PI * 2,
-  };
-  scene.add(m);
-  billboards.push(m);
 }
 
 /* --- 障害物: トンネル円周の一部を塞ぐアーチ(脅威色のオレンジは循環させず固定) --- */
@@ -1039,28 +1006,6 @@ function loop(now){
     if (!m.userData.gold) m.material.color.copy(hueCol);   // 紫ダッシュだけ色相循環
     // 手前のダッシュは巨大な棒として視界を横切るので、遠方だけを見せる
     m.material.opacity = 0.6 * Math.min(1, Math.max(0, z - 8) / 26);
-  }
-
-  // 外殻の API billboard: カメラを向いたまま外側を流れ、明滅で hologram 感を出す
-  const billSpanTotal = BILL_COUNT * BILL_SPAN;
-  for (const m of billboards){
-    let z = m.userData.s - progress;
-    if (z < -RECYCLE){
-      m.userData.s += billSpanTotal;
-      m.userData.a  = Math.random() * Math.PI * 2;
-      m.userData.r  = 9.5 + Math.random() * 2.5;
-      m.userData.ti = (m.userData.ti + 7) % cardTextures.length;  // 7 は 12 と互いに素→全カードを巡回
-      m.material.map = cardTextures[m.userData.ti];
-      m.material.needsUpdate = true;
-      z += billSpanTotal;
-    }
-    m.position.set(Math.cos(m.userData.a) * m.userData.r, Math.sin(m.userData.a) * m.userData.r, -z);
-    m.up.copy(camera.up);
-    m.lookAt(camera.position);
-    // 手前は視界を塞ぐので遠〜中距離だけ見せ、明滅させる
-    const vis = Math.min(1, Math.max(0, z - 3) / 9);
-    const flick = 0.82 + 0.18 * Math.sin(now * 0.006 + m.userData.phase);
-    m.material.opacity = 0.8 * vis * flick;
   }
 
   // 障害物と当たり判定(掃引方式)

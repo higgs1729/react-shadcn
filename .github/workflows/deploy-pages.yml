@@ -46,7 +46,7 @@ jobs:
       - run: |
           mkdir -p dist
           cp -r apps/portal/out/* dist/
-          for app in studio team-t python-test; do
+          for app in studio team-t python-test gamehub; do
             mkdir -p "dist/$app"
             cp -r "apps/$app/out/." "dist/$app/"
           done
