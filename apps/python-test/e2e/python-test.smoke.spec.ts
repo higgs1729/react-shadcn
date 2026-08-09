@@ -49,3 +49,26 @@ test("imports a legacy progress.json", async ({ page }) => {
     flags: { 1: ["red"] },
   })
 })
+
+test("shows a manual close message when the browser refuses to close the tab", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "close", {
+      configurable: true,
+      value: () => undefined,
+    })
+  })
+  await page.goto("/python-test/")
+
+  await page.getByRole("button", { name: "終了" }).click()
+
+  await expect(
+    page.getByRole("heading", { name: "タブを閉じられません" })
+  ).toBeVisible()
+  await expect(
+    page.getByText(
+      "このタブは自動で閉じられません。ブラウザのタブを手動で閉じてください。"
+    )
+  ).toBeVisible()
+})

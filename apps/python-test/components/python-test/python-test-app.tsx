@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ArrowLeftIcon, DownloadIcon, UploadIcon } from "lucide-react"
+import { DownloadIcon, UploadIcon, XIcon } from "lucide-react"
 
 import {
   AlertDialog,
@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@react-shadcn/shadcn-kit/ui/alert-dialog"
-import { Button, buttonVariants } from "@react-shadcn/shadcn-kit/ui/button"
+import { Button } from "@react-shadcn/shadcn-kit/ui/button"
 import { BrowseView } from "@/components/python-test/browse-view"
 import { HomeView, type HomeSettings } from "@/components/python-test/home-view"
 import { QuizView } from "@/components/python-test/quiz-view"
@@ -32,14 +32,10 @@ import {
   shuffled,
   type Session,
 } from "@/lib/python-test/quiz"
-import { cn } from "@react-shadcn/shadcn-kit/lib/utils"
 
 type View = "home" | "quiz" | "browse" | "result"
 type Notice = { title: string; description: string }
 
-// This app owns a subtree ("/python-test"); the portal sits at the site root.
-// A link back to it has to use the site root, not this app's basePath.
-const siteBasePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? ""
 const ALL_CATS = Object.keys(CATEGORIES) as CategoryKey[]
 
 const INITIAL_SETTINGS: HomeSettings = {
@@ -176,6 +172,19 @@ export function PythonTestApp() {
     setView("home")
   }
 
+  const closeApp = () => {
+    window.close()
+    window.setTimeout(() => {
+      if (!window.closed) {
+        setNotice({
+          title: "タブを閉じられません",
+          description:
+            "このタブは自動で閉じられません。ブラウザのタブを手動で閉じてください。",
+        })
+      }
+    }, 100)
+  }
+
   const importProgress = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     event.target.value = ""
@@ -240,13 +249,10 @@ export function PythonTestApp() {
               <DownloadIcon />
               書き出し
             </Button>
-            <a
-              href={`${siteBasePath}/`}
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-            >
-              <ArrowLeftIcon />
-              Appsへ
-            </a>
+            <Button onClick={closeApp} size="sm" variant="ghost">
+              <XIcon />
+              終了
+            </Button>
           </div>
         </header>
 

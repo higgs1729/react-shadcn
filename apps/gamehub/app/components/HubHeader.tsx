@@ -7,7 +7,11 @@ type HubHeaderProps = {
 export function HubHeader({ active }: HubHeaderProps) {
   return (
     <header className="hub-header">
-      <a className="hub-brand" href={withBasePath("/")} aria-label="GAMEHUB トップへ">
+      <a
+        className="hub-brand"
+        href={withBasePath("/")}
+        aria-label="GAMEHUB トップへ"
+      >
         GAMEHUB
       </a>
       <nav className="hub-nav" aria-label="メインナビゲーション">

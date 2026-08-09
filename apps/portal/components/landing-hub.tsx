@@ -138,7 +138,12 @@ function toListNode(app: AppEntry): JsonListNode {
           <p className="portal-description">
             <BreakableCopy>{app.description}</BreakableCopy>
           </p>
-          <a className="portal-action" href={app.href}>
+          <a
+            className="portal-action"
+            href={app.href}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             <span>{app.action}</span>
             <img
               src={assetPath("arrow-right.png")}
