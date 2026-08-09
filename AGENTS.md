@@ -27,6 +27,7 @@ npm workspaces。1リポジトリで複数アプリを持ち、GitHub Pages の�
 | `apps/studio` | `/react-shadcn/studio` | `/react-shadcn/studio/` | shadcn |
 | `apps/team-t` | `/react-shadcn/team-t` | `/react-shadcn/team-t/` | shadcn |
 | `apps/python-test` | `/react-shadcn/python-test` | `/react-shadcn/python-test/` | shadcn |
+| `apps/gamehub` | `/react-shadcn/gamehub` | `/react-shadcn/gamehub/` | Tailwind CSS |
 
 Storybook は studio のみが持ち、`/react-shadcn/storybook/` に合成される。
 
@@ -41,6 +42,7 @@ npm -w apps/portal run dev        # → http://localhost:3000/
 npm -w apps/studio run dev        # → http://localhost:3000/studio/
 npm -w apps/team-t run dev        # → http://localhost:3000/team-t/
 npm -w apps/python-test run dev   # → http://localhost:3000/python-test/
+npm -w apps/gamehub run dev       # → http://localhost:3001/gamehub/
 ```
 
 **dev の URL は本番と同じ route 形になるが、`portal` だけ例外**:
@@ -51,47 +53,38 @@ npm -w apps/python-test run dev   # → http://localhost:3000/python-test/
 | `apps/studio` | `/studio` | `localhost:3000/studio/` |
 | `apps/team-t` | `/team-t` | `localhost:3000/team-t/` |
 | `apps/python-test` | `/python-test` | `localhost:3000/python-test/` |
+| `apps/gamehub` | `/gamehub` | `localhost:3001/gamehub/` |
 
 `portal` はサイトのルートを所有するため `basePath = PAGES_BASE_PATH ?? ""` となり、
 dev では空になる(他アプリは `${PAGES_BASE_PATH ?? ""}/<name>`)。
 **`localhost:3000/portal/` は存在しない。**
 
-- 全アプリの `dev` は `next dev` で **既定ポートは 3000**。同時に複数起動すると
-  2つ目以降は 3001, 3002... へ自動でずれる。起動時のログで実ポートを確認する
+- portal・studio・team-t・python-test の `dev` は `next dev` で既定ポートは 3000。
+  GAMEHUBだけはポータルと同時に確認できるよう `next dev -p 3001` に固定している。
+  その他を同時に起動すると空きポートへずれるため、起動時のログで実ポートを確認する
 - **ポータルからのアプリ間リンクは dev では解決しない。** ポート違いになるため。
-  合成後の本番でのみ繋がる
+  ただしGAMEHUBだけはdev時に `http://localhost:3001/gamehub/` を指す。
+  全アプリの導線が同一originで繋がるのは合成後の本番だけ
 
-### GAMEHUB(`tmp/AI_game_contest`)だけ別枠
+### GAMEHUB
 
-**workspace ではない。** `vinext`(Cloudflare Workers + SSR)で動く別リポジトリ
-(独立した `.git` を持つ)で、静的エクスポートできないため Pages の合成に載らない。
-`tmp/` は `.gitignore` 対象。
+`apps/gamehub` は他アプリと同じnpm workspaceで、Next.jsの静的exportを
+`/react-shadcn/gamehub/` に合成してGitHub Pagesへ公開する。
 
 ポータルのカードのリンクは環境で切り替わる(`apps/portal/components/landing-hub.tsx`):
 
 | 環境 | リンク先 |
 | --- | --- |
-| dev | `http://localhost:3001/` |
-| 本番ビルド | リポジトリのソース URL |
+| dev | `http://localhost:3001/gamehub/` |
+| 本番ビルド | `${PAGES_BASE_PATH}/gamehub/` |
 
-`NEXT_PUBLIC_GAMEHUB_URL` を設定すれば上書きできる(実デプロイ先ができたらそれを使う)。
+`NEXT_PUBLIC_GAMEHUB_URL` を設定した場合だけ、明示した別URLで上書きする。
 
 起動:
 
 ```powershell
-cd tmp\AI_game_contest
-$env:WRANGLER_LOG_PATH=".wrangler/wrangler.log"; npx vinext dev -p 3001
+npm -w apps/gamehub run dev
 ```
-
-⚠️ **`npm run dev` は Windows では動かない。** スクリプトが
-`WRANGLER_LOG_PATH=... vinext dev` という POSIX の環境変数前置き記法で書かれており、
-npm が Windows では `cmd.exe` を使うため
-`'WRANGLER_LOG_PATH' は…認識されていません` で落ちる。
-上のように環境変数を先に立てて `npx vinext dev` を直接呼ぶ。
-
-⚠️ **`-p 3001` を必ず付ける。** vinext の既定は 3000 で portal と衝突し、
-空きポートへ自動でずれる。ポータル側のリンクは 3001 を前提にしているため、
-固定しないと導線が切れる。
 
 ### 本番(GitHub Pages)の見え方を手元で確認する
 
@@ -116,11 +109,35 @@ npx serve /tmp/pages    # → http://localhost:3000/react-shadcn/
 
 ⚠️ **`PAGES_BASE_PATH` を付け忘れてビルドすると dev と同じ形になり、本番の確認にならない。**
 
+### GitHub Pagesへ公開する
+
+正規の公開経路は `.github/workflows/deploy-pages.yml` だけ。`master` へのpushで起動し、
+次の順に検査・ビルド・合成・公開を行う。
+
+1. `npm ci`
+2. `npm -w apps/studio run checks -- --only contracts,lint,typecheck`
+3. `npm -w apps/team-t run validate`
+4. `PAGES_BASE_PATH=/react-shadcn` を設定した状態で `npm run build --workspaces --if-present`
+5. `npm -w apps/studio run build-storybook`
+6. portalを配信ルート、studio・team-t・python-test・gamehubを同名サブディレクトリ、
+   Storybookを `storybook/` に合成
+7. GitHub Pagesへデプロイ
+
+公開操作はリポジトリルートから行う。
+
+```powershell
+git status --short
+git push origin master
+```
+
+push後はActionsの `deploy-pages` で `build` と `deploy` の成功を確認し、
+`https://higgs1729.github.io/react-shadcn/` と変更対象アプリの実URLを確認する。
+各アプリの `out/` や手作業で作った `dist/` を直接Pagesへアップロードしない。
+
 ### どこで実行するか
 
-**ホスト(Windows)で実行する。** Hermes コンテナにも依存は入っているが、
-**dev サーバーのポートを公開していない**ためブラウザから到達できない。
-コンテナ側はビルド・型チェックの検証用と割り切る。
+ローカル操作はWindowsホストの `C:\dev\react-shadcn` で実行する。
+GitHub Actionsのビルド・デプロイ環境はUbuntuで、Node.js 22を使用する。
 
 ## 移行状況(2026-08-03 時点)
 
