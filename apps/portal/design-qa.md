@@ -1,96 +1,101 @@
-# Portal design QA
+# Portal app directory design QA
 
-## Comparison target
+## Evidence
 
-- Source visual truth: `C:\Users\tomoy\.codex\generated_images\019fc68e-a12b-7571-8571-98a665103a0e\exec-e44b6958-696c-4a5a-bd38-66d91409cec9.png`
-- Implementation screenshot: `C:\Users\tomoy\Desktop\react-shadcn\apps\portal\design-qa-implementation-final.png`
-- Full-view comparison: `C:\Users\tomoy\Desktop\react-shadcn\apps\portal\design-qa-comparison-final.png`
-- Focused hero comparison: `C:\Users\tomoy\Desktop\react-shadcn\apps\portal\design-qa-focus-hero.png`
-- Focused list comparison: `C:\Users\tomoy\Desktop\react-shadcn\apps\portal\design-qa-focus-list.png`
-- Responsive evidence: `C:\Users\tomoy\Desktop\react-shadcn\apps\portal\design-qa-mobile-viewport.png`
-- Wide-screen regression evidence: `C:\Users\tomoy\.codex\visualizations\2026\08\03\019fc68e-a12b-7571-8571-98a665103a0e\portal-wide-audit\02-wide-after.jpg`
-- Current 1536 px evidence: `C:\Users\tomoy\.codex\visualizations\2026\08\03\019fc68e-a12b-7571-8571-98a665103a0e\portal-wide-audit\07-standard-final.jpg`
-- Current mobile evidence: `C:\Users\tomoy\.codex\visualizations\2026\08\03\019fc68e-a12b-7571-8571-98a665103a0e\portal-wide-audit\06-mobile-final.jpg`
-- Reference pixels: 1536 × 1024.
-- Implementation pixels: 1536 × 1024.
-- CSS viewport: 1536 × 1024 at device scale factor 1.
-- Density normalization: none required; source and implementation use equal pixel dimensions.
-- State: default light appearance, page top, no hover or focus state.
+- Original selected visual direction: `C:\Users\tomoy\.codex\generated_images\019fe26c-28d9-7be0-b661-24e54710db93\exec-a7b69601-54cd-4411-bbd9-91abf473e317.png`
+- User-reported desktop source state: `C:\Users\tomoy\AppData\Local\Temp\codex-clipboard-107db077-c656-486e-b835-d677c7952481.png`
+- User-reported stacked source state: `C:\Users\tomoy\AppData\Local\Temp\codex-clipboard-10e77f52-7a99-4520-8943-58da85178c08.png`
+- User-reported narrow-preview source state: `C:\Users\tomoy\AppData\Local\Temp\codex-clipboard-82da4db0-f7d3-4255-98d3-75dc71eb5162.png`
+- User-reported long-name overlap source state: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\audit-current-name-preview.png`
+- Revised desktop implementation: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\adjustment-1330x636.png`
+- Revised stacked implementation: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\adjustment-890x548.png`
+- Revised mobile implementation: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\adjustment-390x844.png`
+- Combined desktop comparison: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\comparison-adjustment.png`
+- Combined responsive-preview comparison: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\comparison-responsive-preview-final.png`
+- Combined long-name/preview-stage comparison: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\comparison-name-preview-implementation.png`
+- Browser measurements: `C:\Users\tomoy\Desktop\python-test\.codex\audits\portal-implementation\verification-adjustment.json`
+- Desktop source and implementation pixels: 1330 x 636 at device scale factor 1; no density normalization.
+- Stacked source and implementation pixels: 890 x 548 at device scale factor 1; no density normalization.
+- Mobile implementation viewport: 390 x 844 at device scale factor 1.
+- State: `AI Design System Studio` selected; desktop two-column, narrow-pane single-column, stacked, and mobile drill-down layouts.
 
 ## Findings
 
-No actionable P0, P1, or P2 differences remain.
+No actionable P0, P1, or P2 issues remain.
 
-- Fonts and typography: hierarchy, weights, line heights, and the two-line headline structure match the selected direction. The approved copy changes (`WEB APPS`, the new headline, and the scope-aware lead) are intentional content changes rather than fidelity drift. Japanese rendering uses the existing project font fallback.
-- Spacing and layout rhythm: the sticky 54 px header, 420 px hero, coordinate-axis boundary, JSON list columns, three row dividers, closing bracket, and footer all align to the 1536 × 1024 composition. The coordinate plane is page-wide while its origin and content gutter use separate edge-relative tokens; this preserves the approved 1536 px composition and prevents the y-axis from entering the content column on wider screens. The x-axis, both y-axis sections, and the curve baseline resolve from one shared origin.
-- Colors and visual tokens: warm off-white, black header and CTAs, vermilion decorative accent, and semantic blue page-top link match the approved palette.
-- Image quality and asset fidelity: the curve, integration hatching, axes, mathematical labels, logos, and CTA arrow remain the approved source-derived raster assets rather than code-drawn approximations. The x-axis source is displayed through separate fixed crops for its stroke, arrow, `O`, and `x`, which removes the duplicated curve pixels while preserving the original artwork.
-- Copy and content: the page scope is web-usable apps; facts, numeric indices, related links, the `A` callout, and the bottom-left about link are absent. Every app row ends in `},`, the divider is above `]`, and intentional copy breaks occur only after `、`.
-- Responsiveness: 3440, 2560, 1920, 1536, 1024, 681, 680, and 390 px widths were checked. At 1536 px and above the origin stays at 124 px, the content gutter stays at 188 px, and their 64 px separation is invariant. The `O` and `x` crops remain exactly 13 × 13 px and 10 × 10 px; the y-axis source remains 45 × 434 px at every width. The curve remains 374 px high across all checked widths, and its internal baseline meets the x-axis within 0.002 px. At 390 × 844 there is no horizontal content overflow; rows stack legibly and all CTAs remain visible.
-- Interaction and accessibility: at 390 px the header remains at `top: 0` after scrolling to 600 px; the page-top link returns scroll position to 0; all five anchors expose the intended hrefs; all decorative images have empty alternative text. Browser logs contain only React DevTools and HMR informational messages, with no errors.
+## Full-view comparison
+
+- The user-reported issue placed the y-axis between the line-number gutter and JSON content. The revised directory begins at x=163 while the rendered y-axis image ends at x=124 in the 1330 px viewport, so the entire list, including line numbers, now sits structurally inside the coordinate frame.
+- At 890 px, the y-axis ends at x=88 and the directory begins at x=109. At 390 px, the respective values are x=51 and x=52. No list or detail content crosses the frame edge.
+- The existing coordinate artwork, hero, navigation, footer, typography, app data, and selection behavior remain unchanged outside the requested directory alignment and preview treatment.
+
+## Focused comparison
+
+- The 1330 x 636 combined comparison shows the line numbers and JSON rows moving together to the right of the y-axis rather than using it as an internal separator.
+- The selected-app summary and preview switch to a single column whenever the detail pane becomes 43rem or narrower. Across the checked desktop widths of 1181, 1240, 1330, 1400, 1472, and 1761 px, the preview widths are 469, 517, 589, 639, 670, and 640 px respectively.
+- The selected app name is now a key/value grid. At the 1761 px desktop and 390 px mobile viewports it wraps to two lines; all eight checked widths report no overflow and no overlap with the preview.
+- The preview uses a borderless tonal stage with 12 px padding and `#f0ece9` background. Border and box shadow remain disabled, and the image remains an unmodified production screenshot.
+- All four app names remain on one line with zero truncation at every checked viewport.
+
+## Required fidelity surfaces
+
+- Fonts and typography: existing portal font families, weights, and sizes are preserved. Directory rows remain one line; the selected full app name may wrap naturally without clipping, truncation, or overlap.
+- Spacing and layout rhythm: the directory uses the established content gutter so the y-axis functions as the outer frame. A detail-pane container query prevents the preview from shrinking continuously inside the two-column layout.
+- Colors and visual tokens: the preview stage uses a solid warm-neutral `#f0ece9` surface with no border or shadow. The page background and vermilion selection accent are unchanged.
+- Image quality and asset fidelity: existing R2-hosted logos and app screenshots remain intact, uncropped, and aspect-ratio preserving. No placeholder or code-drawn asset was introduced.
+- Copy and content: `"name"` keys, all app names, descriptions, CTA labels, punctuation, and the removed preview label remain correct.
+
+## Interaction and accessibility
+
+- Selecting `GAMEHUB` updates the summary, description, CTA, preview, and alternative text.
+- Existing native row buttons, `aria-current`, live-region behavior, focus styles, mobile drill-down, and back navigation remain unchanged.
+- No horizontal document overflow was detected at 1330, 890, or 390 px.
+- The only browser console message was a missing `/favicon.ico`; no application, hydration, layout, or interaction error was reported.
 
 ## Comparison history
 
 ### Iteration 1
 
-- [P2] App columns were too far left: the first logo started around x=239 and body around x=356 instead of the reference x=252 and x=402. Fixed by widening the syntax/logo columns and aligning the logo within its column.
-- [P2] The x-axis had a short discontinuity at the start of the integration region and the origin was visually doubled. Fixed by correcting image stacking, separating axis assets, and removing the duplicated curve baseline.
-- [P2] The first implementation was denser vertically and footer content ended early. Fixed by matching the hero/list dimensions and aligning the footer within a 1024 px document.
-
-Post-fix evidence: `design-qa-implementation-final.png`, `design-qa-comparison-final.png`, and both focused comparisons show the corrected positions and continuous axis.
+- [P2] The initial selection run used a numeric loopback host and encountered a development-origin hydration issue. Verification moved to `localhost`, where the interface rendered normally.
 
 ### Iteration 2
 
-- [P2] On mobile, stretching one full-height y-axis image enlarged the cleared origin region and stopped the visible line before page end. Fixed by splitting the y-axis into a fixed head and stretchable tail, joined at the x-axis.
-
-Post-fix evidence: `design-qa-mobile-viewport.png`; measured y-axis tail reaches document coordinate 1486 of the 1502 px page, leaving only the intended bottom margin.
+- [P2] The selected title wrapped and description could collide with the preview at narrower desktop widths. The right-pane grid and title sizing were corrected.
 
 ### Iteration 3
 
-- [P2] The x-axis, y-axis head, y-axis tail, and integration curve still used separately tuned positions and sizes. Their transparent image padding caused a roughly 2 px desktop origin mismatch and a larger mismatch at the mobile breakpoint; the curve baseline could also separate from the x-axis when width changed.
-- Fixed by replacing per-image breakpoint coordinates with one `portal-coordinate-system`, one shared origin, and intrinsic anchor ratios measured from the visible strokes inside each approved asset. Only coordinate-system variables change for mobile art direction; individual elements no longer receive unrelated offsets.
-- Added edge-safe mobile dimensions so neither the positive x arrow nor the curve plateau is clipped.
-
-Post-fix evidence: `design-qa-implementation-final.png`, `design-qa-comparison-final.png`, `design-qa-focus-hero.png`, and `design-qa-mobile-viewport.png`. Measurements at 1280 / 1024 / 768 / 681 / 680 / 390 px show the axes and curve meeting within 0.004 px and no horizontal document overflow.
+- [P2] The initial directory gutter compressed the preview at standard desktop widths. The responsive grid and preview maximum were corrected while keeping the requested 670 x 530 px cap.
 
 ### Iteration 4
 
-- [P2] The original `axis-x.png` still contained a shallow portion of the integration curve and hatching. Rendering it underneath `integral-curve.png` produced the doubled, downward-looking start reported in the focused screenshot.
-- [P2] `O`, `x`, and `y` were embedded in axis images whose dimensions changed with viewport width, so the labels were unintentionally resampled.
-- [P2] The mobile breakpoint reduced the curve from 374 px to 150 px high, creating an abrupt height change between 681 px and 680 px.
-- Fixed by showing only the two-pixel source stroke from `axis-x.png`, then displaying its original arrow, `O`, and `x` as fixed-size source crops. The y-axis source now stays at its native 45 × 434 px. The curve's internal baseline at row 367 is aligned to the shared x-axis, and its 374 px height is retained at every width.
-
-Post-fix evidence: the refreshed `design-qa-implementation-final.png`, `design-qa-comparison-final.png`, `design-qa-focus-hero.png`, and `design-qa-mobile-viewport.png`. Measurements at 1536 / 1024 / 768 / 681 / 680 / 390 px confirm invariant label dimensions, invariant curve height, baseline alignment within 0.002 px, and no horizontal overflow.
+- [P2] User evidence showed the y-axis visually separating line numbers from row content. The whole directory was moved to the established content gutter, placing line numbers, rows, detail, and preview inside the axis frame.
+- [P2] The selected-app JSON and preview were too close, and the preview lacked a clear container. The desktop gap was increased to 53 px, stacked gap to 44 px, and a bordered matte frame with restrained offset shadow was added.
+- [P2] Narrowing the list to recover preview width briefly truncated the longest app name. The list track was adjusted to 26.75rem; final browser measurements report zero truncated names.
 
 ### Iteration 5
 
-- [P1] At viewports wider than 1536 px, the coordinate plane remained centered inside a 1536 px max-width container while the hero and directory gutters were calculated from the viewport edge. At 1920 px this moved the y-axis to approximately 317 px even though the heading still began at 188 px, causing the axis to cross the heading and app logos.
-- Fixed by making the coordinate plane page-wide and introducing shared edge-relative layout tokens. The origin is capped at 124 px, the content gutter is capped at 188 px, and their minimum wide-screen separation is therefore 64 px. The x-axis now uses direct left/right insets instead of a width-dependent translated start point.
-- The approved 1536 px and mobile compositions were preserved; no typography, color, copy, asset, or interaction changes were made.
+- [P2] At an intermediate screen ratio, the preview stayed in the summary's two-column grid and collapsed to roughly 200 px wide. A 43rem detail-pane container query now switches only the right-pane content to a single column; the smallest checked desktop preview is 469 px wide.
+- [P2] Expanding the responsive list track initially truncated longer app names at larger widths. The track now uses `clamp(26.75rem, 31vw, 31rem)`; all eight checked viewports report zero truncated names and no horizontal overflow.
+- The first frame treatment was deliberately removed after the latest user direction. Computed browser styles confirm `border: none`, `padding: 0`, `box-shadow: none`, and a transparent wrapper background.
 
-Post-fix evidence: `02-wide-after.jpg`, `07-standard-final.jpg`, and `06-mobile-final.jpg`. Measurements at 3440 / 2560 / 1920 / 1536 / 1024 / 681 / 680 / 390 px confirm that the axis/content separation remains positive, label dimensions and curve height remain invariant, and the curve baseline remains aligned with the x-axis.
+### Iteration 6
 
-## Open questions
+- [P2] A long selected app name remained on one line and painted into the preview area. The selected property now uses `max-content minmax(0, 1fr)` tracks, allows natural wrapping, and keeps the complete quoted value visible.
+- [P2] After removing the frame, the preview felt visually unanchored. A borderless warm-neutral stage with 12 px padding now groups the screenshot without restoring a frame line or shadow.
+- The summary minimum was raised to 15rem, the preview minimum to 26rem, and the detail-pane stacking threshold to 46rem. Eight checked viewports report zero name overflow, zero preview overlap, zero directory-name truncation, and no horizontal page overflow.
 
-None. Cross-app CTA destinations were verified as href contracts; their sibling applications are not served by the portal-only development process.
+Post-fix evidence is the revised screenshots and combined comparison listed above.
 
 ## Follow-up polish
 
-- [P3] The extracted curve’s faint stipple varies by a few pixels at responsive widths because the approved raster source is resampled as one coherent plot layer. No change is required for the current implementation baseline.
+- [P3] The sticky header is visible in the browser-captured comparison state while it is outside the crop in the user-supplied desktop screenshot. This does not affect the directory alignment or spacing fix.
 
-## Implementation checklist
+## Verification
 
-- [x] Approved desktop composition implemented.
-- [x] Final copy and line-break rule implemented.
-- [x] Sticky header and semantic link colors implemented.
-- [x] JSON list punctuation and divider structure implemented.
-- [x] Desktop and mobile layouts visually verified.
-- [x] Intermediate widths and both sides of the 680 px breakpoint verified.
-- [x] Axis and curve anchors numerically verified against one shared origin.
-- [x] `O` / `x` / `y` source dimensions verified as invariant across all tested widths.
-- [x] Curve height verified as 374 px at 681 px, 680 px, and mobile widths.
-- [x] Duplicated small-x curve pixels removed from the rendered x-axis layer.
-- [x] Wide-screen coordinate plane verified without heading or logo overlap through 3440 px.
-- [x] Scroll-to-top interaction and console state verified.
+- `npm -w apps/portal run lint`: passed.
+- `npm -w apps/portal run typecheck`: passed.
+- `npm -w apps/portal run build`: passed.
+- Desktop, stacked, and mobile layouts were rendered and measured in the browser.
+- Axis containment, selected-name wrapping, selected-name/preview collision, directory-name truncation, responsive preview sizing, tonal-stage styling, and horizontal overflow were checked numerically and visually.
 
 final result: passed

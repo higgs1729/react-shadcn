@@ -105,66 +105,77 @@ function JsonListRows({
         const showBody = layout === "inline" && node.body !== undefined
 
         return (
-          <li className="jlist-item" key={node.id}>
-            <span className="jlist-brace jlist-brace-open" aria-hidden="true">
-              {"{"}
-            </span>
+          <li
+            className="jlist-item"
+            data-selected={isSelected ? "true" : undefined}
+            key={node.id}
+          >
+            <div className="jlist-row">
+              <span className="jlist-brace jlist-brace-open" aria-hidden="true">
+                {"{"}
+              </span>
 
-            <div className="jlist-slot">
-              <div className="jlist-titlerow">
-                {/* 開閉は常に caret が持つ。title は選択に専念する */}
-                {hasChildren ? (
-                  <button
-                    type="button"
-                    className="jlist-caret"
-                    aria-expanded={isOpen}
-                    aria-label={`${isOpen ? "閉じる" : "開く"}`}
-                    onClick={() => onToggle(node, isOpen)}
-                  >
-                    <span aria-hidden="true">{isOpen ? "▾" : "▸"}</span>
-                  </button>
+              <div className="jlist-slot">
+                <div className="jlist-titlerow">
+                  {/* 開閉は常に caret が持つ。title は選択に専念する */}
+                  {hasChildren ? (
+                    <button
+                      type="button"
+                      className="jlist-caret"
+                      aria-expanded={isOpen}
+                      aria-label={`${isOpen ? "閉じる" : "開く"}`}
+                      onClick={() => onToggle(node, isOpen)}
+                    >
+                      <span aria-hidden="true">{isOpen ? "▾" : "▸"}</span>
+                    </button>
+                  ) : null}
+
+                  {interactive ? (
+                    <button
+                      type="button"
+                      className="jlist-title jlist-title-button"
+                      aria-current={isSelected ? "true" : undefined}
+                      onClick={() => onActivate(node, isOpen)}
+                    >
+                      {node.title}
+                    </button>
+                  ) : (
+                    <div className="jlist-title">{node.title}</div>
+                  )}
+                </div>
+
+                {showBody ? (
+                  <div className="jlist-body">{node.body}</div>
                 ) : null}
 
-                {interactive ? (
-                  <button
-                    type="button"
-                    className="jlist-title jlist-title-button"
-                    aria-current={isSelected ? "true" : undefined}
-                    onClick={() => onActivate(node, isOpen)}
-                  >
-                    {node.title}
-                  </button>
-                ) : (
-                  <div className="jlist-title">{node.title}</div>
-                )}
+                {hasChildren && isOpen ? (
+                  <div className="jlist-children">
+                    <span className="jlist-brace" aria-hidden="true">
+                      {"["}
+                    </span>
+                    <JsonListRows
+                      nodes={children}
+                      layout={layout}
+                      depth={depth + 1}
+                      expanded={expanded}
+                      selectedId={selectedId}
+                      onActivate={onActivate}
+                      onToggle={onToggle}
+                    />
+                    <span className="jlist-brace" aria-hidden="true">
+                      {"]"}
+                    </span>
+                  </div>
+                ) : null}
               </div>
 
-              {showBody ? <div className="jlist-body">{node.body}</div> : null}
-
-              {hasChildren && isOpen ? (
-                <div className="jlist-children">
-                  <span className="jlist-brace" aria-hidden="true">
-                    {"["}
-                  </span>
-                  <JsonListRows
-                    nodes={children}
-                    layout={layout}
-                    depth={depth + 1}
-                    expanded={expanded}
-                    selectedId={selectedId}
-                    onActivate={onActivate}
-                    onToggle={onToggle}
-                  />
-                  <span className="jlist-brace" aria-hidden="true">
-                    {"]"}
-                  </span>
-                </div>
-              ) : null}
+              <span
+                className="jlist-brace jlist-brace-close"
+                aria-hidden="true"
+              >
+                {index === nodes.length - 1 ? "}" : "},"}
+              </span>
             </div>
-
-            <span className="jlist-brace jlist-brace-close" aria-hidden="true">
-              {index === nodes.length - 1 ? "}" : "},"}
-            </span>
           </li>
         )
       })}
@@ -249,15 +260,19 @@ export function JsonList({
         aria-hidden="true"
       />
 
-      <div className="jlist-heading">
-        <h2>
-          {label} <span aria-hidden="true">= [</span>
-        </h2>
-      </div>
-
       {layout === "detail" ? (
         <div className="jlist-split">
-          <div className="jlist-tree">{tree}</div>
+          <div className="jlist-tree">
+            <div className="jlist-heading">
+              <h2>
+                {label} <span aria-hidden="true">= [</span>
+              </h2>
+            </div>
+            {tree}
+            <div className="jlist-end" aria-hidden="true">
+              <span>]</span>
+            </div>
+          </div>
           <div className="jlist-detail" aria-live="polite" ref={detailRef}>
             <button
               type="button"
@@ -270,12 +285,18 @@ export function JsonList({
           </div>
         </div>
       ) : (
-        tree
+        <>
+          <div className="jlist-heading">
+            <h2>
+              {label} <span aria-hidden="true">= [</span>
+            </h2>
+          </div>
+          {tree}
+          <div className="jlist-end" aria-hidden="true">
+            <span>]</span>
+          </div>
+        </>
       )}
-
-      <div className="jlist-end" aria-hidden="true">
-        ]
-      </div>
     </div>
   )
 }
@@ -284,18 +305,41 @@ const styles = `
 .jlist {
   --jlist-line: #d8d2ce;
   --jlist-accent: #ea4b17;
-  --jlist-brace-column: 2.8rem;
+  --jlist-gutter: 2.7rem;
+  --jlist-row-height: 4.75rem;
   --jlist-mono: var(--font-mono, ui-monospace, monospace);
 }
 .jlist *, .jlist *::before, .jlist *::after { box-sizing: border-box; }
+.jlist-tree,
+.jlist-layout-inline {
+  counter-reset: jlist-line;
+}
+
+.jlist-heading,
+.jlist-item,
+.jlist-end {
+  display: grid;
+  grid-template-columns: var(--jlist-gutter) minmax(0, 1fr);
+}
+.jlist-heading::before,
+.jlist-item::before,
+.jlist-end::before {
+  counter-increment: jlist-line;
+  content: counter(jlist-line);
+  align-self: center;
+  justify-self: center;
+  color: #77716d;
+  font-family: var(--jlist-mono);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
 
 .jlist-heading {
-  height: 4rem;
-  display: flex;
+  min-height: var(--jlist-row-height);
   align-items: center;
-  border-bottom: 1px solid var(--jlist-line);
 }
 .jlist-heading h2 {
+  grid-column: 2;
   margin: 0;
   font-size: 1.25rem;
   line-height: 1;
@@ -315,26 +359,40 @@ const styles = `
   list-style: none;
 }
 .jlist-item {
+  min-height: var(--jlist-row-height);
+  align-items: stretch;
+}
+.jlist-row {
+  grid-column: 2;
   display: grid;
-  grid-template-columns: var(--jlist-brace-column) minmax(0, 1fr) 2.2rem;
-  align-items: start;
-  border-bottom: 1px solid var(--jlist-line);
+  grid-template-columns: 1.6rem minmax(0, 1fr) 2rem;
+  align-items: center;
+  min-width: 0;
+  min-height: var(--jlist-row-height);
+  padding-inline: 0.85rem 0.65rem;
+  border-left: 3px solid transparent;
+}
+.jlist-item[data-selected="true"] .jlist-row {
+  border-left-color: var(--jlist-accent);
+  background: color-mix(in srgb, var(--jlist-accent) 7%, transparent);
 }
 .jlist-brace {
   font-family: var(--jlist-mono);
   font-size: 1.1rem;
   font-weight: 430;
 }
-.jlist-brace-open { padding-top: 1.15rem; }
 .jlist-brace-close {
   justify-self: end;
   align-self: center;
+}
+.jlist-item[data-selected="true"] > .jlist-row > .jlist-brace {
+  color: var(--jlist-accent);
 }
 .jlist-slot { min-width: 0; }
 
 .jlist-titlerow {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.4rem;
 }
 .jlist-title {
@@ -346,11 +404,14 @@ const styles = `
   text-align: left;
 }
 .jlist-title-button {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
   background: none;
   border: 0;
   cursor: pointer;
 }
-.jlist-title-button[aria-current="true"] { color: var(--jlist-accent); }
+.jlist-title-button[aria-current="true"] { color: inherit; }
 .jlist-caret {
   flex: none;
   padding: 0.25rem;
@@ -382,15 +443,17 @@ const styles = `
 
 .jlist-split {
   display: grid;
-  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: clamp(26.75rem, 31vw, 31rem) minmax(0, 1fr);
+  gap: 1.25rem;
   align-items: start;
 }
 .jlist-detail {
   position: sticky;
-  top: 1rem;
+  top: 4.375rem;
   min-height: 8rem;
-  padding-left: 1.5rem;
+  min-width: 0;
+  padding-top: 4.25rem;
+  padding-left: 2rem;
   border-left: 1px solid var(--jlist-line);
 }
 
@@ -416,16 +479,17 @@ const styles = `
 }
 
 .jlist-end {
-  height: 2.7rem;
-  display: flex;
+  min-height: var(--jlist-row-height);
   align-items: center;
   font-family: var(--jlist-mono);
   font-size: 1rem;
 }
+.jlist-end > span {
+  grid-column: 2;
+}
 
-@media (max-width: 980px) {
-  .jlist { --jlist-brace-column: 2rem; }
-  .jlist-item { padding-block: 1rem; }
+@media (max-width: 1180px) {
+  .jlist { --jlist-gutter: 2.2rem; }
   .jlist-split { grid-template-columns: minmax(0, 1fr); }
   .jlist-detail {
     position: static;
@@ -438,11 +502,13 @@ const styles = `
 
 @media (max-width: 680px) {
   .jlist {
-    --jlist-brace-column: 1.55rem;
+    --jlist-gutter: 1.8rem;
+    --jlist-row-height: 4rem;
   }
-  .jlist-item { grid-template-columns: var(--jlist-brace-column) minmax(0, 1fr) 1.7rem; }
-  .jlist-heading { height: 3.6rem; }
-
+  .jlist-row {
+    grid-template-columns: 1.25rem minmax(0, 1fr) 1.65rem;
+    padding-inline: 0.5rem 0.35rem;
+  }
   .jlist-viewport-probe { display: block; }
 
   /* ドリルダウン。JS で幅を判定せず、表示の切り替えはここだけが持つ */

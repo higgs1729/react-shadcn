@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:sites": "npm run build && node scripts/build-sites.mjs",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "upload:assets": "node scripts/upload-assets.mjs",

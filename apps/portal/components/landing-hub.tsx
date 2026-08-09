@@ -99,7 +99,7 @@ function toListNode(app: AppEntry): JsonListNode {
   return {
     id: app.id,
     title: (
-      <span className="portal-app-name">
+      <span className="portal-app-entry" key={`${app.id}-title`}>
         <img
           className="portal-app-logo"
           src={assetPath(app.logo)}
@@ -107,30 +107,57 @@ function toListNode(app: AppEntry): JsonListNode {
           width="100"
           height="100"
         />
-        <span>{app.title}</span>
+        <span className="portal-json-key" aria-hidden="true">
+          &quot;name&quot;:
+        </span>
+        <span className="portal-app-name">
+          <span aria-hidden="true">&quot;</span>
+          {app.title}
+          <span aria-hidden="true">&quot;</span>
+        </span>
       </span>
     ),
     detail: (
-      <article className="portal-app-detail">
-        <img
-          className="portal-preview"
-          src={previewPath(app.preview)}
-          alt=""
-          width="1280"
-          height="800"
-        />
-        <p className="portal-description">
-          <BreakableCopy>{app.description}</BreakableCopy>
-        </p>
-        <a className="portal-action" href={app.href}>
-          <span>{app.action}</span>
+      <article className="portal-app-detail" key={`${app.id}-detail`}>
+        <div className="portal-app-summary">
+          <div className="portal-selected-object">
+            <div>
+              <span className="portal-json-key">&quot;selectedApp&quot;</span>
+              <span aria-hidden="true">: {"{"}</span>
+            </div>
+            <div className="portal-selected-name">
+              <span className="portal-selected-name-key">
+                <span className="portal-json-key">&quot;name&quot;</span>
+                <span aria-hidden="true">:</span>
+              </span>
+              <strong>&quot;{app.title}&quot;</strong>
+            </div>
+            <div aria-hidden="true">{"}"}</div>
+          </div>
+
+          <p className="portal-description">
+            <BreakableCopy>{app.description}</BreakableCopy>
+          </p>
+          <a className="portal-action" href={app.href}>
+            <span>{app.action}</span>
+            <img
+              src={assetPath("arrow-right.png")}
+              alt=""
+              width="33"
+              height="33"
+            />
+          </a>
+        </div>
+
+        <div className="portal-preview-frame">
           <img
-            src={assetPath("arrow-right.png")}
-            alt=""
-            width="33"
-            height="33"
+            className="portal-preview"
+            src={previewPath(app.preview)}
+            alt={`${app.title}の画面プレビュー`}
+            width="1280"
+            height="800"
           />
-        </a>
+        </div>
       </article>
     ),
   }
@@ -460,33 +487,110 @@ const styles = `
   --jlist-accent: var(--portal-accent);
   --jlist-mono: var(--font-mono, ui-monospace, monospace);
 }
-.portal-app-name {
+.portal .jlist-detail {
+  container-type: inline-size;
+  container-name: portal-detail-pane;
+}
+.portal-app-entry {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
-  font-weight: 560;
-  letter-spacing: -0.02em;
+  width: 100%;
+  min-width: 0;
+  gap: 0.65rem;
+  white-space: nowrap;
 }
 .portal-app-logo {
-  width: 1em;
-  height: 1em;
+  flex: none;
+  width: 1.55rem;
+  height: 1.55rem;
   object-fit: contain;
 }
-.portal-app-detail { min-width: 0; }
+.portal-json-key {
+  flex: none;
+  font-family: var(--jlist-mono);
+  font-size: 0.84rem;
+  font-weight: 540;
+  letter-spacing: 0;
+}
+.portal-app-name {
+  min-width: 0;
+  overflow: hidden;
+  font-size: clamp(0.92rem, 1.08vw, 1.05rem);
+  font-weight: 620;
+  letter-spacing: -0.018em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.portal-app-detail {
+  display: grid;
+  grid-template-columns: minmax(15rem, 18rem) minmax(26rem, 43.375rem);
+  gap: clamp(2.75rem, 4vw, 4rem);
+  align-items: start;
+  justify-content: space-between;
+  min-width: 0;
+}
+.portal-app-summary {
+  min-width: 0;
+  padding-top: 0.2rem;
+}
+.portal-selected-object {
+  display: grid;
+  gap: 1.4rem;
+  font-family: var(--jlist-mono);
+  font-size: 0.94rem;
+  line-height: 1.3;
+}
+.portal-selected-name {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: start;
+  min-width: 0;
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--portal-line);
+  white-space: normal;
+}
+.portal-selected-name-key {
+  display: inline-flex;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.portal-selected-name strong {
+  min-width: 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: clamp(1.25rem, 1.35vw, 1.4rem);
+  font-weight: 780;
+  line-height: 1.25;
+  letter-spacing: -0.045em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.portal-selected-object > div:first-child .portal-json-key {
+  color: var(--portal-accent);
+}
+.portal-preview-frame {
+  width: 100%;
+  max-width: 43.375rem;
+  overflow: hidden;
+  padding: 0.75rem;
+  background: #f0ece9;
+}
 .portal-preview {
   display: block;
   width: 100%;
+  max-width: 41.875rem;
+  max-height: 33.125rem;
   height: auto;
   aspect-ratio: 16 / 10;
-  object-fit: cover;
+  object-fit: contain;
 }
 .portal-description {
-  margin: 1rem 0 0;
-  font-size: 0.86rem;
-  line-height: 1.6;
+  margin: 2rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
 }
-.portal-copy-segment { white-space: nowrap; }
+.portal-copy-segment { white-space: normal; }
 .portal-action {
   width: fit-content;
   min-height: 3.15rem;
@@ -538,12 +642,22 @@ const styles = `
   outline-color: color-mix(in srgb, var(--portal-accent) 58%, transparent);
 }
 
+@container portal-detail-pane (max-width: 46rem) {
+  .portal-app-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 980px) {
   .portal {
     --portal-curve-opacity: 0.34;
     min-height: 100svh;
   }
   .portal-hero-copy { width: min(38rem, calc(100vw - 7rem)); }
+  .portal-app-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .portal-preview-frame { max-width: 41.875rem; }
 }
 
 @media (max-width: 680px) {
@@ -577,6 +691,16 @@ const styles = `
     font-size: clamp(0.68rem, 2.8vw, 0.84rem);
     line-height: 1.65;
   }
+  .portal-app-entry { gap: 0.45rem; }
+  .portal-app-logo {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+  .portal-json-key { font-size: 0.75rem; }
+  .portal-app-name { font-size: 0.84rem; }
+  .portal-selected-object { gap: 1rem; }
+  .portal-selected-name strong { font-size: 1.35rem; }
+  .portal-description { margin-top: 1.4rem; }
   .portal-footer {
     min-height: 6.5rem;
     align-items: flex-start;
