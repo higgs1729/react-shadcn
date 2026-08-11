@@ -1,0 +1,6 @@
+[mcp_servers.shadcn]
+command = "npx"
+args = ["shadcn", "mcp", "-c", "C:\\dev\\react-shadcn\\packages\\shadcn-kit"]
+startup_timeout_sec = 30
+tool_timeout_sec = 120
+

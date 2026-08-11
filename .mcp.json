@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn",
+        "mcp",
+        "-c",
+        "C:\\dev\\react-shadcn\\packages\\shadcn-kit"
+      ]
+    }
+  }
+}
