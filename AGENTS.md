@@ -111,7 +111,7 @@ npx serve /tmp/pages    # → http://localhost:3000/react-shadcn/
 
 ### GitHub Pagesへ公開する
 
-正規の公開経路は `.github/workflows/deploy-pages.yml` だけ。`master` へのpushで起動し、
+正規の公開経路は `.github/workflows/deploy-pages.yml` だけ。`main` へのpushで起動し、
 次の順に検査・ビルド・合成・公開を行う。
 
 1. `npm ci`
@@ -127,7 +127,7 @@ npx serve /tmp/pages    # → http://localhost:3000/react-shadcn/
 
 ```powershell
 git status --short
-git push origin master
+git push origin main
 ```
 
 push後はActionsの `deploy-pages` で `build` と `deploy` の成功を確認し、

@@ -5,7 +5,7 @@ name: deploy-pages
 # pattern-detail deep-links resolve. Registry/coverage are read at build time.
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 # GitHub Pages project site is served under /<repo>; the app is built with a

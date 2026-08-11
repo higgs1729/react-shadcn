@@ -7,7 +7,7 @@
 一般公開の正規サイトはGitHub Pagesです。
 
 - 公開URL: <https://higgs1729.github.io/react-shadcn/>
-- 公開元ブランチ: `master`
+- 公開元ブランチ: `main`
 - 自動公開workflow: [`.github/workflows/deploy-pages.yml`](../.github/workflows/deploy-pages.yml)
 
 | 内容 | workspace | 公開パス |
@@ -21,7 +21,7 @@
 
 ## 2. 自動公開の仕組み
 
-`master`へのpushを契機に、GitHub Actionsが次の順で処理します。
+`main`へのpushを契機に、GitHub Actionsが次の順で処理します。
 
 1. Node.js 22を準備し、`npm ci` で依存関係を復元する。
 2. Studioのcontracts・lint・typecheckを実行する。
@@ -59,11 +59,11 @@ Remove-Item Env:PAGES_BASE_PATH
 
 ## 4. 公開手順
 
-意図した変更だけが含まれていることを確認し、commit後に `master`へpushします。
+意図した変更だけが含まれていることを確認し、commit後に `main`へpushします。
 
 ```powershell
 git status --short
-git push origin master
+git push origin main
 ```
 
 手動で `out/` や `dist/` をPagesへアップロードしません。push後の公開処理は `deploy-pages` workflowに任せます。
@@ -81,4 +81,4 @@ git push origin master
 
 ## 6. ロールバック
 
-問題のあるcommitを `git revert` し、revert commitを `master`へpushします。履歴を書き換える操作は行いません。再度 `deploy-pages` が成功し、本番表示が戻ったことを確認します。
+問題のあるcommitを `git revert` し、revert commitを `main`へpushします。履歴を書き換える操作は行いません。再度 `deploy-pages` が成功し、本番表示が戻ったことを確認します。
