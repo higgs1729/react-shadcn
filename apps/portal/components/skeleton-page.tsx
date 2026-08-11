@@ -1,17 +1,25 @@
+import type { ReactNode } from "react"
+
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
 type SkeletonPageProps = {
-  activePath: "works" | "projects" | "activities"
+  activePath: "works" | "about" | "contact" | "projects" | "activities"
   eyebrow: string
   title: string
+  children?: ReactNode
 }
 
-const navItems = [{ path: "works", label: "作品紹介" }] as const
+const navItems = [
+  { path: "works", label: "作品紹介" },
+  { path: "about", label: "About Me" },
+  { path: "contact", label: "Contact" },
+] as const
 
 export function SkeletonPage({
   activePath,
   eyebrow,
   title,
+  children,
 }: SkeletonPageProps) {
   return (
     <div className="skeleton-page">
@@ -36,7 +44,9 @@ export function SkeletonPage({
       <main className="skeleton-main">
         <p className="skeleton-eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
-        <section className="skeleton-content" aria-label="コンテンツ領域" />
+        <section className="skeleton-content" aria-label="コンテンツ領域">
+          {children}
+        </section>
       </main>
     </div>
   )
@@ -71,7 +81,10 @@ const styles = `
 .skeleton-main { width: min(calc(100% - 2rem), 72rem); margin: 0 auto; padding: clamp(4rem, 10vw, 9rem) 0; }
 .skeleton-eyebrow { margin: 0; color: #ea4b17; font-size: 0.78rem; font-weight: 760; letter-spacing: 0.055em; }
 .skeleton-main h1 { margin: 1rem 0 0; font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1.05; letter-spacing: -0.055em; }
-.skeleton-content { min-height: 24rem; margin-top: clamp(3rem, 7vw, 6rem); border: 1px solid #d8d2ce; background: rgba(255, 255, 255, 0.16); }
+.skeleton-content { min-height: 24rem; margin-top: clamp(3rem, 7vw, 6rem); padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid #d8d2ce; background: rgba(255, 255, 255, 0.16); }
+.skeleton-copy { max-width: 42rem; font-size: clamp(1rem, 1.8vw, 1.25rem); line-height: 1.9; }
+.skeleton-copy p { margin: 0; }
+.skeleton-copy p + p { margin-top: 1.5rem; }
 .skeleton-page a:focus-visible { outline: 3px solid #2563eb; outline-offset: 4px; }
 @media (max-width: 680px) {
   .skeleton-header { align-items: flex-start; flex-direction: column; gap: 0.55rem; }
