@@ -1619,3 +1619,33 @@ footer {
     right: -0.8em;
   }
 }
+
+/* PULSE//TRACE */
+.pulse-back-link { color: rgba(245,240,220,.58); font: 9px var(--font-geist-mono), monospace; letter-spacing: .08em; text-decoration: none; }
+.pulse-back-link:hover, .pulse-back-link:focus-visible { color: var(--acid); }
+.pulse-arena { aspect-ratio: 10 / 7; min-height: 420px; }
+.pulse-arena canvas { position: absolute; inset: 0; }
+.pulse-overlay h1 { font-size: clamp(48px, 8vw, 108px); font-style: italic; font-weight: 950; letter-spacing: -.1em; line-height: .75; transform: skewX(-5deg); }
+.pulse-overlay h1 span { color: var(--acid); }
+.pulse-countdown { color: var(--acid); font: 900 clamp(28px, 5vw, 62px) var(--font-geist-mono), monospace; letter-spacing: .08em; }
+.pulse-status { color: var(--acid); font: 9px var(--font-geist-mono), monospace; letter-spacing: .12em; min-height: 16px; padding: 8px 0 0; text-align: right; }
+.pulse-tap-deck { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding-top: 10px; }
+.pulse-tap-deck button { min-height: 56px; border: 1px solid var(--line); background: rgba(245,240,220,.035); color: var(--paper); cursor: pointer; font: 800 18px var(--font-geist-mono), monospace; }
+.pulse-tap-deck button:hover, .pulse-tap-deck button:active, .pulse-tap-deck button:focus-visible { border-color: var(--acid); color: var(--acid); outline: none; }
+.pulse-tap-deck small { display: block; color: rgba(245,240,220,.42); font-size: 7px; letter-spacing: .08em; }
+.pulse-side h2 { font-size: 30px; line-height: .9; letter-spacing: -.06em; }
+.pulse-side ol { list-style: none; padding: 0; margin: 18px 0 0; }
+.pulse-side li { border-top: 1px solid var(--line); padding: 12px 0; }
+.pulse-side li b, .pulse-side li span { display: block; font: 10px var(--font-geist-mono), monospace; letter-spacing: .08em; }
+.pulse-side li span { color: rgba(245,240,220,.44); font-size: 8px; margin-top: 4px; }
+@media (max-width: 899px) {
+  .pulse-shell { padding-inline: 12px; }
+  .pulse-shell .game-layout { display: flex; flex-direction: column-reverse; gap: 12px; }
+  .pulse-arena { aspect-ratio: 4 / 5; }
+  .pulse-side { display: grid; grid-template-columns: 1fr 1fr; }
+  .pulse-side .panel-section:first-child { display: none; }
+  .pulse-side .panel-section { padding: 12px; }
+  .pulse-side .record-section { display: none; }
+  .pulse-overlay { padding: 20px 12px; }
+  .pulse-overlay .primary-button { width: 100%; }
+}
