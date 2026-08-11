@@ -3,6 +3,7 @@
 // preserve GitHub Pages basePath behavior while every app remains independently
 // bootable inside the monorepo.
 import { ASSET_BASE_URL } from "../lib/asset-base"
+import { HubHeader } from "./hub-header"
 import { JsonList, type JsonListNode } from "./json-list"
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
@@ -173,16 +174,7 @@ export function LandingHub() {
     <div className="portal" id="portal-top">
       <style>{styles}</style>
 
-      <header className="portal-header">
-        <a className="portal-brand" href={`${basePath}/`}>
-          higgs1729
-        </a>
-        <nav className="portal-nav" aria-label="サイト内ナビゲーション">
-          <a href={`${basePath}/works/`}>作品紹介</a>
-          <a href={`${basePath}/about/`}>About Me</a>
-          <a href={`${basePath}/contact/`}>Contact</a>
-        </nav>
-      </header>
+      <HubHeader />
 
       <figure className="portal-coordinate-system" aria-hidden="true">
         <img
@@ -233,13 +225,49 @@ export function LandingHub() {
           </div>
         </section>
 
-        <section className="portal-directory" aria-label="アプリ一覧">
+        <section
+          className="portal-directory portal-anchor-section"
+          id="works"
+          aria-label="アプリ一覧"
+        >
           <JsonList
             label="アプリ一覧"
             layout="detail"
             defaultSelectedId="team-t"
             nodes={apps.map(toListNode)}
           />
+        </section>
+
+        <section
+          className="portal-info-section portal-anchor-section"
+          id="aboutme"
+          aria-labelledby="aboutme-title"
+        >
+          <p className="portal-section-eyebrow">ABOUT ME</p>
+          <h2 id="aboutme-title">About Me</h2>
+          <div className="portal-section-copy">
+            <p>
+              higgs1729 は、ウェブアプリケーションの設計と実装を通して、
+              使う人の学びや仕事を少し軽くする制作を続けています。
+            </p>
+            <p>
+              アイデアを小さく試し、観察し、改善する。その過程も含めて、
+              このサイトに記録しています。
+            </p>
+          </div>
+        </section>
+
+        <section
+          className="portal-info-section portal-anchor-section"
+          id="contact"
+          aria-labelledby="contact-title"
+        >
+          <p className="portal-section-eyebrow">CONTACT</p>
+          <h2 id="contact-title">Contact</h2>
+          <div className="portal-section-copy">
+            <p>制作物についての質問や、協力の相談があればお知らせください。</p>
+            <p>連絡先の案内は準備中です。</p>
+          </div>
         </section>
       </main>
 
@@ -312,6 +340,12 @@ const styles = `
   transition: color 140ms ease;
 }
 .portal-nav a:hover { color: #fff; }
+.portal-nav a.is-active {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: var(--portal-accent);
+  text-underline-offset: 0.45rem;
+}
 .portal-nav a:focus-visible {
   outline: 2px solid var(--portal-accent);
   outline-offset: 5px;
@@ -486,6 +520,34 @@ const styles = `
 .portal-directory {
   margin-inline: var(--portal-content-left) var(--portal-content-right);
 }
+.portal-anchor-section { scroll-margin-top: calc(var(--portal-header-height) + 1rem); }
+.portal-info-section {
+  width: min(42rem, calc(100% - 2rem));
+  margin: clamp(7rem, 14vw, 12rem) var(--portal-content-right) 0 var(--portal-content-left);
+  padding: clamp(2rem, 5vw, 4rem) 0;
+  border-top: 1px solid var(--portal-line);
+}
+.portal-section-eyebrow {
+  margin: 0;
+  color: var(--portal-accent);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.055em;
+}
+.portal-info-section h2 {
+  margin: 1rem 0 0;
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+}
+.portal-section-copy {
+  max-width: 42rem;
+  margin-top: clamp(2rem, 5vw, 4rem);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.9;
+}
+.portal-section-copy p { margin: 0; }
+.portal-section-copy p + p { margin-top: 1.5rem; }
 /* 枠(見出し・区切り線・波括弧)は JsonList が持つ。ここはカードの中身だけ。 */
 .portal .jlist {
   --jlist-line: var(--portal-line);

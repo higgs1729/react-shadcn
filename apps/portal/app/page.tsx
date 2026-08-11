@@ -12,8 +12,8 @@ export default function Page() {
 
   return (
     <main>
-      <p>作品紹介へ移動しています…</p>
-      <a href={worksPath}>作品紹介を開く</a>
+      <p>workへ移動しています…</p>
+      <a href={worksPath}>workを開く</a>
     </main>
   )
 }

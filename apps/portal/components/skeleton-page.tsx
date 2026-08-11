@@ -10,7 +10,7 @@ type SkeletonPageProps = {
 }
 
 const navItems = [
-  { path: "works", label: "作品紹介" },
+  { path: "works", label: "work" },
   { path: "about", label: "About Me" },
   { path: "contact", label: "Contact" },
 ] as const
