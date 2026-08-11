@@ -179,8 +179,6 @@ export function LandingHub() {
         </a>
         <nav className="portal-nav" aria-label="サイト内ナビゲーション">
           <a href={`${basePath}/works/`}>作品紹介</a>
-          <a href={`${basePath}/projects/`}>進行中のプロジェクト</a>
-          <a href={`${basePath}/activities/`}>継続的な活動</a>
         </nav>
       </header>
 

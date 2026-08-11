@@ -64,3 +64,6 @@ docs/examples/checks-latest.json
 
 # temporary working space
 tmp/
+
+# Hermes project-skill-router synchronization lock (runtime-only; do not commit).
+**/.hermes/.project-skill-router.lock

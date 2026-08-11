@@ -6,11 +6,7 @@ type SkeletonPageProps = {
   title: string
 }
 
-const navItems = [
-  { path: "works", label: "作品紹介" },
-  { path: "projects", label: "進行中のプロジェクト" },
-  { path: "activities", label: "継続的な活動" },
-] as const
+const navItems = [{ path: "works", label: "作品紹介" }] as const
 
 export function SkeletonPage({
   activePath,

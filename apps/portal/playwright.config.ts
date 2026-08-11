@@ -1,7 +1,7 @@
 import { defineConfig } from "playwright/test"
 
 const PORT = process.env.SMOKE_PORT ?? "3413"
-const BASE_URL = `http://127.0.0.1:${PORT}`
+const BASE_URL = `http://localhost:${PORT}`
 
 export default defineConfig({
   testDir: "./e2e",

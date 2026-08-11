@@ -1,5 +1,5 @@
-import { SkeletonPage } from "@/components/skeleton-page"
+import { LandingHub } from "@/components/landing-hub"
 
 export default function WorksPage() {
-  return <SkeletonPage activePath="works" eyebrow="WORKS" title="作品紹介" />
+  return <LandingHub />
 }
