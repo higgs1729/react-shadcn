@@ -11,9 +11,7 @@ test("redirects the site root to the works page", async ({ page }) => {
   const navigation = page.getByRole("navigation", {
     name: "サイト内ナビゲーション",
   })
-  await expect(navigation.getByRole("link", { name: "作品紹介" })).toHaveCount(
-    1
-  )
+  await expect(navigation.getByRole("link", { name: "work" })).toHaveCount(1)
   await expect(
     navigation.getByRole("link", { name: "進行中のプロジェクト" })
   ).toHaveCount(0)
