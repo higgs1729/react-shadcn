@@ -48,11 +48,11 @@ test("server-renders the searchable ALL GAMES catalogue", async () => {
   const { html } = await render("/games")
 
   assert.match(html, /SEARCH THE CATALOG/)
-  assert.match(html, /02 PLAYABLE \/ 04 DUMMY/)
+  assert.match(html, /03 PLAYABLE \/ 04 DUMMY/)
   assert.match(html, /aria-current="page"[^>]*>ALL GAMES/)
   assert.match(html, /ECHO\/\/SHIFT/)
   assert.match(html, /NEON TUNNEL/)
-  assert.match(html, /06<!-- --> RESULTS/)
+  assert.match(html, /07<!-- --> RESULTS/)
   // Removed: JSON VIEW / CATALOG SIDEBAR / aria-label="Expand ..." /
   // data-json-path. Those four assertions described a JSON-tree sidebar that
   // has never existed in this app — at the vinext/Workers commit they matched

@@ -23,7 +23,7 @@ export default function AllGamesPage() {
             <span className="hub-kicker">FIND YOUR NEXT GAME</span>
             <h1 id="all-games-title">ALL GAMES</h1>
           </div>
-          <span className="hub-count">02 PLAYABLE / 04 DUMMY</span>
+          <span className="hub-count">03 PLAYABLE / 04 DUMMY</span>
         </div>
         <GameCatalog games={hubGames} />
       </section>

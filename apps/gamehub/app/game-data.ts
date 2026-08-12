@@ -30,6 +30,13 @@ export const hubGames: readonly HubGame[] = [
     image: withBasePath("/game-previews/neon-tunnel.png"),
     imageAlt: "NEON TUNNELのゲーム画面",
   },
+  {
+    id: "pulse-trace",
+    title: "PULSE//TRACE",
+    genre: "RHYTHM SIGNAL",
+    description: "4レーンのノーツを読み、60秒のビートを完走する。",
+    href: withBasePath("/games/pulse-trace"),
+  },
   ...Array.from({ length: 4 }, (_, index) => ({
     id: `placeholder-${index + 1}`,
     title: `DUMMY SLOT ${String(index + 1).padStart(2, "0")}`,
