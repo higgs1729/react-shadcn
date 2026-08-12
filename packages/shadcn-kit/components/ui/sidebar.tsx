@@ -18,11 +18,7 @@ import {
   SheetTitle,
 } from "./sheet"
 import { Skeleton } from "./skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "./tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 import { PanelLeftIcon } from "lucide-react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
@@ -285,7 +281,9 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
-  const [width, setWidth] = React.useState(Number.parseFloat(SIDEBAR_WIDTH) * 16)
+  const [width, setWidth] = React.useState(
+    Number.parseFloat(SIDEBAR_WIDTH) * 16
+  )
   const dragState = React.useRef<{
     pointerId: number
     startX: number
@@ -467,7 +465,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        "scrollbar-thin scrollbar-gutter-stable scrollbar-track-transparent scrollbar-thumb-[color-mix(in_oklab,var(--sidebar-foreground)_18%,transparent)] flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "flex min-h-0 flex-1 scrollbar-thin scrollbar-thumb-[color-mix(in_oklab,var(--sidebar-foreground)_18%,transparent)] scrollbar-track-transparent scrollbar-gutter-stable flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
         className
       )}
       {...props}
