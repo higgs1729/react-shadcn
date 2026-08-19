@@ -34,3 +34,13 @@ test("opens every app-directory action in a new tab", async ({ page }) => {
     await expect(action).toHaveAttribute("rel", "noopener noreferrer")
   }
 })
+
+test("activates Contact when navigating to the final section", async ({ page }) => {
+  await page.goto("/works/")
+
+  const contactLink = page.getByRole("link", { name: "Contact", exact: true })
+  await contactLink.click()
+
+  await expect(page).toHaveURL(/#contact$/)
+  await expect(contactLink).toHaveAttribute("aria-current", "location")
+})

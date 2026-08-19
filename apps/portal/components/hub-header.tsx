@@ -22,7 +22,9 @@ export function HubHeader() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
         if (visibleSection) setActiveSection(visibleSection.target.id)
       },
-      { rootMargin: "-20% 0px -60%", threshold: [0, 0.25, 0.5, 0.75, 1] }
+      // Keep enough of the viewport in the observation area for the final
+      // section to become active before the document reaches its scroll end.
+      { rootMargin: "-20% 0px -20%", threshold: [0, 0.25, 0.5, 0.75, 1] }
     )
     observedSections.forEach((section) => observer.observe(section))
     return () => observer.disconnect()
