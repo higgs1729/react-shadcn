@@ -27,7 +27,7 @@ disabled states need a semantically disabled control.
 2. **Compose pages** — wire the installed screen pattern and blocks into a route under `app/flows/<flowId>/<stepId>/`.
 3. **Generate stories** — `node scripts/gen-pattern-stories.mjs <spec>`.
 4. **Run checks**:
-   - `node scripts/run-checks.mjs` — fixed whole-repo suite: contracts, lint, typecheck, build, `build-storybook`.
+   - `node scripts/run-checks.mjs` — named whole-repo gate: contracts, pipeline, provenance, secrets, lint, typecheck, tests, build, `build-storybook`.
    - `node scripts/run-planned-checks.mjs <spec>` — executes every check each screen's `checksPlanned` actually names (see "Planned checks" below). This is the one that decides whether a screen's declared checks were honored, not just whether the repo compiles.
 
 ## Fix Loop Policy

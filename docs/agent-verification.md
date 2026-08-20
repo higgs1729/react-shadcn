@@ -27,7 +27,7 @@ npm run skills:check
 | `npm run skills:sync` | 正本SkillをClaude／Hermesへ配布 | 変更する |
 | `npm run skills:check` | Skillの完全一致を検査 | 変更しない |
 | `npm run validate` | 全workspaceの契約・指示・文書・静的validatorを検査 | 原則変更しない |
-| `npm run checks` | Skill検査後、各workspaceのlint・型・test・build等を実行 | 生成物を作る |
+| `npm run checks` | Skill検査後、各workspaceの名前付きcheckを実行。Studioではcontracts・pipeline・provenance・secrets・lint・typecheck・tests・build・storybookをゲートする | 生成物を作る |
 | `npm -w apps/studio run test:all` | `test:*`スクリプトを自動発見して実行 | テストによる |
 | `npm -w apps/studio run eval` | 埋め込みgolden candidateを決定論的に評価 | 変更しない |
 | `npm -w apps/studio run eval:fixture` | 意図的に失敗するfixtureが検出されることを確認 | 変更しない |

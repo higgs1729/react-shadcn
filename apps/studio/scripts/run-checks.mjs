@@ -1,4 +1,4 @@
-// Pure reporter: runs the fixed six-check verification suite and emits results
+// Pure reporter: runs the named verification suite and emits results
 // in the exact shape of the BuildReport `checks[]` array. Never fixes anything
 // itself — fixing under the fix-loop policy is the executor's job.
 //
@@ -8,6 +8,9 @@ import { spawnSync } from 'node:child_process'
 
 const CHECKS = [
   { name: 'contracts', script: 'validate' },
+  { name: 'pipeline', script: 'validate:pipeline' },
+  { name: 'provenance', script: 'validate:provenance' },
+  { name: 'secrets', script: 'scan:secrets' },
   { name: 'lint', script: 'lint' },
   { name: 'typecheck', script: 'typecheck' },
   // Deliberately NOT skipped when typecheck fails: the test:* scripts are plain
