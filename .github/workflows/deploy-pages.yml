@@ -12,6 +12,7 @@ on:
 # matching basePath so asset URLs resolve.
 env:
   PAGES_BASE_PATH: /react-shadcn
+  NEXT_PUBLIC_GAMEHUB_STATS_API_URL: ${{ vars.GAMEHUB_STATS_API_URL }}
 
 # Allow one concurrent deployment; let an in-progress run finish.
 concurrency:

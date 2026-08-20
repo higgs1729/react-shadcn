@@ -1559,6 +1559,43 @@ footer {
   color: #aaa39a;
 }
 
+.hub-card-rank,
+.hub-card-stat {
+  color: var(--hub-accent) !important;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px !important;
+  letter-spacing: 0.06em;
+}
+
+.hub-card-stat {
+  margin-top: 3px;
+}
+
+.hub-popular-periods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -8px 0 16px;
+}
+
+.hub-popular-periods button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: rgba(245, 240, 220, 0.62);
+  cursor: pointer;
+  font: 9px var(--font-geist-mono), monospace;
+  letter-spacing: 0.08em;
+  padding: 7px 10px;
+}
+
+.hub-popular-periods button:hover,
+.hub-popular-periods button:focus-visible,
+.hub-popular-periods button.is-active {
+  border-color: var(--hub-accent);
+  color: var(--hub-accent);
+  outline: none;
+}
+
 .hub-section-heading h1,
 .hub-section-heading.is-small h2 {
   position: relative;

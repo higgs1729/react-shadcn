@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { PlayCountTracker } from "../../components/PlayCountTracker"
 import { withBasePath } from "../../lib/base-path"
 
 export const metadata: Metadata = {
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
 
 export default function NeonTunnelPage() {
   return (
-    <main className="hub-game-frame-page">
+    <>
+      <PlayCountTracker gameId="neon-tunnel" />
+      <main className="hub-game-frame-page">
       <header className="hub-game-frame-header">
         <a href={withBasePath("/")}>← GAMEHUB</a>
         <strong>NEON TUNNEL</strong>
@@ -20,6 +23,7 @@ export default function NeonTunnelPage() {
         title="NEON TUNNEL"
         allow="fullscreen"
       />
-    </main>
+      </main>
+    </>
   )
 }

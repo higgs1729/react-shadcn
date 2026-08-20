@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { PlayCountTracker } from "../../components/PlayCountTracker"
 import PulseTraceGame from "./PulseTraceGame"
 
 export const metadata: Metadata = {
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 }
 
 export default function PulseTracePage() {
-  return <PulseTraceGame />
+  return (
+    <>
+      <PlayCountTracker gameId="pulse-trace" />
+      <PulseTraceGame />
+    </>
+  )
 }

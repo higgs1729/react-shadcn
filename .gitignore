@@ -44,6 +44,8 @@ design-qa-*.png
 apps/team-t/public/game-previews/
 apps/team-t/public/api-page-previews/
 apps/portal/public/app-previews/
+apps/gamehub/public/gamehub-previews/
+apps/gamehub/stats-worker/.wrangler/
 
 # debug
 npm-debug.log*

@@ -22,22 +22,25 @@ async function render(pathname = "/") {
   return { html }
 }
 
-test("server-renders DISCOVER with a featured game and explicit dummy slots", async () => {
+test("server-renders DISCOVER with ranked playable games", async () => {
   const { html } = await render()
 
   assert.match(html, /<title>GAMEHUB<\/title>/i)
-  assert.match(html, /MAIN GAME \/ FEATURED/)
+  assert.match(html, /MAIN GAME \/ RECOMMENDED/)
   assert.match(html, /POPULAR GAMES/)
+  assert.match(html, /1 WEEK/)
+  assert.match(html, /250 PLAYS \/ 1 WEEK/)
   assert.match(html, /NEW GAMES/)
   assert.match(html, /ALL GAMES/)
   assert.match(html, /ECHO\/\/SHIFT/)
   assert.match(html, /NEON TUNNEL/)
+  assert.match(html, /PULSE\/\/TRACE/)
   // The static-export app owns /gamehub, so plain anchors must include its
   // basePath and trailing slash rather than relying on Next/link rewriting.
   assert.match(html, /href="\/gamehub\/games\/echo-shift\/"/)
   assert.match(html, /href="\/gamehub\/games\/neon-tunnel\/"/)
-  assert.match(html, /DUMMY SLOT 01/)
-  assert.match(html, /NOT PLAYABLE/)
+  assert.doesNotMatch(html, /DUMMY SLOT 01/)
+  assert.match(html, /gamehub-previews\/pulse-trace\.png/)
   assert.doesNotMatch(html, /hub-card-badge|hub-play-label/)
   assert.match(html, /aria-current="page"[^>]*>DISCOVER/)
   assert.doesNotMatch(html, /SYSTEM LIVE|ORBIT FALL|TINY HEIST|CROWN\/O/)
@@ -52,6 +55,8 @@ test("server-renders the searchable ALL GAMES catalogue", async () => {
   assert.match(html, /aria-current="page"[^>]*>ALL GAMES/)
   assert.match(html, /ECHO\/\/SHIFT/)
   assert.match(html, /NEON TUNNEL/)
+  assert.match(html, /PULSE\/\/TRACE/)
+  assert.match(html, /gamehub-previews\/pulse-trace\.png/)
   assert.match(html, /07<!-- --> RESULTS/)
   // Removed: JSON VIEW / CATALOG SIDEBAR / aria-label="Expand ..." /
   // data-json-path. Those four assertions described a JSON-tree sidebar that

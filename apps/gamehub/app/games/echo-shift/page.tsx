@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { PlayCountTracker } from "../../components/PlayCountTracker"
 import EchoShiftGame from "./EchoShiftGame"
 
 export const metadata: Metadata = {
@@ -8,5 +9,10 @@ export const metadata: Metadata = {
 }
 
 export default function EchoShiftPage() {
-  return <EchoShiftGame />
+  return (
+    <>
+      <PlayCountTracker gameId="echo-shift" />
+      <EchoShiftGame />
+    </>
+  )
 }

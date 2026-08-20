@@ -1,10 +1,12 @@
 import { withBasePath } from "./lib/base-path"
+import { gamePreviewUrl } from "./lib/asset-base"
 
 export type HubGame = {
   id: string
   title: string
   genre: string
   description: string
+  uploadedAt: string
   href?: string
   image?: string
   imageAlt?: string
@@ -17,8 +19,9 @@ export const hubGames: readonly HubGame[] = [
     title: "ECHO//SHIFT",
     genre: "MEMORY SURVIVAL",
     description: "6秒前の自分から逃げ切る、60秒の記憶サバイバル。",
+    uploadedAt: "2026-08-08",
     href: withBasePath("/games/echo-shift"),
-    image: withBasePath("/game-previews/echo-shift-wide.png"),
+    image: gamePreviewUrl("echo-shift-wide.png"),
     imageAlt: "ECHO//SHIFTのゲームバナー",
   },
   {
@@ -26,8 +29,9 @@ export const hubGames: readonly HubGame[] = [
     title: "NEON TUNNEL",
     genre: "ARCADE RUNNER",
     description: "ネオンのトンネルを旋回し、障害物を避けて走破する。",
+    uploadedAt: "2026-07-21",
     href: withBasePath("/games/neon-tunnel"),
-    image: withBasePath("/game-previews/neon-tunnel.png"),
+    image: gamePreviewUrl("neon-tunnel.png"),
     imageAlt: "NEON TUNNELのゲーム画面",
   },
   {
@@ -35,13 +39,17 @@ export const hubGames: readonly HubGame[] = [
     title: "PULSE//TRACE",
     genre: "RHYTHM SIGNAL",
     description: "4レーンのノーツを読み、60秒のビートを完走する。",
+    uploadedAt: "2026-08-12",
     href: withBasePath("/games/pulse-trace"),
+    image: gamePreviewUrl("pulse-trace.png"),
+    imageAlt: "PULSE//TRACEのゲーム画面",
   },
   ...Array.from({ length: 4 }, (_, index) => ({
     id: `placeholder-${index + 1}`,
     title: `DUMMY SLOT ${String(index + 1).padStart(2, "0")}`,
     genre: "CATALOG PLACEHOLDER",
     description: "今後追加されるゲーム用の表示確認枠です。",
+    uploadedAt: "2099-01-01",
     placeholder: true,
   })),
 ]

@@ -4,9 +4,11 @@ import type { HubGame } from "../game-data"
 type GameCardProps = {
   game: HubGame
   compact?: boolean
+  rank?: number
+  statLabel?: string
 }
 
-function CardContents({ game }: { game: HubGame }) {
+function CardContents({ game, rank, statLabel }: GameCardProps) {
   return (
     <>
       <span className="hub-card-media">
@@ -21,15 +23,17 @@ function CardContents({ game }: { game: HubGame }) {
       </span>
       <span className="hub-card-details">
         <span>
+          {rank ? <small className="hub-card-rank">#{rank}</small> : null}
           <strong>{game.title}</strong>
           <small>{game.genre}</small>
+          {statLabel ? <small className="hub-card-stat">{statLabel}</small> : null}
         </span>
       </span>
     </>
   )
 }
 
-export function GameCard({ game, compact = false }: GameCardProps) {
+export function GameCard({ game, compact = false, rank, statLabel }: GameCardProps) {
   const className = [
     "hub-game-card",
     compact ? "is-compact" : "",
@@ -44,7 +48,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
         className={className}
         aria-label={`${game.title}（ダミー表示・プレイ不可）`}
       >
-        <CardContents game={game} />
+        <CardContents game={game} rank={rank} statLabel={statLabel} />
       </article>
     )
   }
@@ -55,7 +59,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
       href={game.href}
       aria-label={`${game.title}をプレイ`}
     >
-      <CardContents game={game} />
+      <CardContents game={game} rank={rank} statLabel={statLabel} />
     </a>
   )
 }
