@@ -4,9 +4,7 @@ test("redirects the site root to the works page", async ({ page }) => {
   await page.goto("/")
 
   await expect(page).toHaveURL(/\/works\/$/)
-  await expect(
-    page.getByRole("heading", { name: /公開中のアプリを.*今すぐ使おう/ })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Work" })).toBeVisible()
 
   const navigation = page.getByRole("navigation", {
     name: "サイト内ナビゲーション",

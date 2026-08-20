@@ -34,7 +34,7 @@ const apps: AppEntry[] = [
     id: "team-t",
     title: "Team T API Lab",
     description:
-      "目的やカテゴリから公開APIを探し、その場で仕様とレスポンスを確かめられる開発者向けカタログです。",
+      "目的やカテゴリから公開APIを探し、その場で仕様とレスポンスを確かめられる誰でも楽しめるカタログです。",
     href: `${basePath}/team-t/`,
     action: "Team T API Labを開く",
     logo: "logo-team-t.png",
@@ -44,7 +44,7 @@ const apps: AppEntry[] = [
     id: "studio",
     title: "AI Design System Studio",
     description:
-      "briefから実装までを分解し、採用したパターン、選定理由、検証結果をまとめた設計ポートフォリオです。",
+      "要求から実際にAIが画面を選ぶ様子をまとめたポートフォリオです。",
     href: `${basePath}/studio/overview/`,
     action: "Studioを開く",
     logo: "logo-studio.png",
@@ -213,14 +213,10 @@ export function LandingHub() {
           <div className="portal-hero-copy">
             <p className="portal-kicker">WEB APPS</p>
             <h1 id="portal-title">
-              <span>公開中のアプリを、</span>
-              <span>今すぐ使おう。</span>
+              <span>Work</span>
             </h1>
             <p className="portal-lead">
-              <span>制作物のうちウェブ上で利用できるアプリを、</span>
-              <span>
-                ここにまとめています。すべてブラウザから直接開けます。
-              </span>
+              <span>ウェブで利用できる制作物をまとめています。</span>
             </p>
           </div>
         </section>
@@ -247,12 +243,7 @@ export function LandingHub() {
           <h2 id="aboutme-title">About Me</h2>
           <div className="portal-section-copy">
             <p>
-              higgs1729 は、ウェブアプリケーションの設計と実装を通して、
-              使う人の学びや仕事を少し軽くする制作を続けています。
-            </p>
-            <p>
-              アイデアを小さく試し、観察し、改善する。その過程も含めて、
-              このサイトに記録しています。
+              AIを活用したアプリ制作のほか、自分でPRを作る、競技プログラミングに参加するなどの活動を通して自身のコーディング力向上にも励んでいます。
             </p>
           </div>
         </section>
@@ -266,7 +257,9 @@ export function LandingHub() {
           <h2 id="contact-title">Contact</h2>
           <div className="portal-section-copy">
             <p>制作物についての質問や、協力の相談があればお知らせください。</p>
-            <p>連絡先の案内は準備中です。</p>
+            <p>
+              GitHubについて、まずユーザー名はhiggs1729で、メールアドレスは253207@ocsjoho.onmicrosoft.comです。AtCoderについても同様です。
+            </p>
           </div>
         </section>
       </main>
@@ -498,7 +491,8 @@ const styles = `
   height: 0.22rem;
   background: var(--portal-accent);
 }
-.portal-hero h1 {
+.portal-hero h1,
+.portal-info-section h2 {
   margin: 1rem 0 0;
   font-size: clamp(3.25rem, 4.35vw, 4.2rem);
   line-height: 1.08;
@@ -533,12 +527,6 @@ const styles = `
   font-size: 0.78rem;
   font-weight: 760;
   letter-spacing: 0.055em;
-}
-.portal-info-section h2 {
-  margin: 1rem 0 0;
-  font-size: clamp(2.4rem, 6vw, 5rem);
-  line-height: 1.05;
-  letter-spacing: -0.055em;
 }
 .portal-section-copy {
   max-width: 42rem;
@@ -750,7 +738,8 @@ const styles = `
     width: calc(100% - 3.9rem);
     padding-top: 4.3rem;
   }
-  .portal-hero h1 {
+  .portal-hero h1,
+  .portal-info-section h2 {
     font-size: clamp(2.15rem, 9.4vw, 3.15rem);
     line-height: 1.12;
   }
