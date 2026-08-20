@@ -24,5 +24,6 @@ jobs:
       - run: npx playwright install --with-deps chromium
       # Fans out to every workspace's own `checks` script (npm run checks
       # --workspaces --if-present). For apps/studio that is scripts/run-checks.mjs:
-      # contracts (ajv) -> lint -> typecheck -> tests -> next build -> storybook build.
+      # contracts (ajv) -> lint -> typecheck -> tests (including browser smoke)
+      # -> next build -> storybook build.
       - run: npm run checks

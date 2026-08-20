@@ -72,14 +72,14 @@ per-screen.
 
 | Check ID      | Command                | What it does                                                                 | Status |
 | ------------- | ----------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| `smoke`       | `npm run test:smoke`    | Playwright: boots `next dev`, navigates all 3 golden routes, asserts a route-specific landmark; invoice-list also asserts `?state=` empty/error/loading | **Observational** |
+| `smoke`       | `npm run test:smoke`    | Playwright: boots `next dev`, navigates all 3 golden routes, asserts a route-specific landmark; invoice-list also asserts `?state=` empty/error/loading | **Required-now** |
 | `deps-audit`  | `npm run audit:deps`    | `npm audit --audit-level=high` (local lockfile). Baseline: moderate advisories pass; a new high/critical fails | **Required-now** |
 | `secret-scan` | `npm run scan:secrets`  | `scripts/scan-secrets.mjs`: scans `git ls-files` content for fixed high-confidence secret patterns; allowlist baseline in `scripts/fixtures/secrets-baseline.json` (empty). `scripts/scan-secrets.test.mjs` proves detection | **Required-now** |
 
-- `smoke` is observational because it needs a live `next dev` (slower, port-contention-prone) and inherits the
-  Turbopack workspace-root limitation in worktree checkouts. `scripts/run-smoke.mjs` verifies the Chromium binary
-  first and exits with a classified `(classification: environment)` + `npm run setup:playwright` guidance if it's
-  missing — never a silent skip. Promote to required-now after a clean stability window on a real `node_modules`.
+- `smoke` is required because CI installs Chromium before running the workspace checks. It needs a live `next dev`
+  (slower, port-contention-prone) and inherits the Turbopack workspace-root limitation in worktree checkouts.
+  `scripts/run-smoke.mjs` verifies the Chromium binary first and exits with a classified `(classification: environment)`
+  + `npm run setup:playwright` guidance if it's missing — never a silent skip.
 - `a11y` reuses the existing `screenStoryCheck` implementation (no second runner). `components/a11y-fixtures/`
   + `scripts/a11y-known-violation.test.mjs` prove the gate still fails on a real `image-alt` violation.
 

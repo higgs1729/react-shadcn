@@ -1,7 +1,7 @@
 // Runs every `test:*` script in this workspace's package.json and reports which
 // ones failed. Exists so `npm run checks` has something to gate tests on: until
-// this was added, all two dozen test:* scripts were reachable only by typing
-// their exact name, so two of them sat broken without anyone noticing.
+// this was added, all test:* scripts were reachable only by typing their exact
+// name, so some of them sat broken without anyone noticing.
 //
 // The list is DISCOVERED from package.json, never hand-written here. A hand-kept
 // array is the same failure mode one level up: a new test:* script gets added,
@@ -18,13 +18,10 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dirname, '..')
 
-// Both exclusions are load-bearing; neither is a matter of taste.
+// The only exclusion is load-bearing: discovering ourselves would recurse.
 const EXCLUDED = new Map([
   // Discovering ourselves would make `npm run test:all` spawn itself forever.
   ['test:all', 'self-reference'],
-  // Needs a chromium download (`npm run setup:playwright`) that CI does not do,
-  // and run-smoke.mjs is deliberately built to fail rather than skip quietly.
-  ['test:smoke', 'needs playwright chromium'],
 ])
 
 const args = process.argv.slice(2)
