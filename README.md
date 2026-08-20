@@ -10,4 +10,5 @@
 ## 詳細情報
 
 - リポジトリ構成の地図・エージェント運用ルール(編集禁止領域・承認境界を含む): [AGENTS.md](AGENTS.md)
+- AgentのSkill配布と検証コマンド: [docs/agent-verification.md](docs/agent-verification.md)
 - 細かい文書: [docs/]内のmdファイル

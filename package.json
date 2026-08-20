@@ -10,8 +10,10 @@
   "scripts": {
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "build": "npm run build --workspaces --if-present",
-    "validate": "npm run validate --workspaces --if-present",
-    "checks": "npm run checks --workspaces --if-present",
+    "validate": "npm run skills:check && npm run validate --workspaces --if-present",
+    "checks": "npm run skills:check && npm run checks --workspaces --if-present",
+    "skills:sync": "node scripts/sync-skills.mjs",
+    "skills:check": "node scripts/check-skills.mjs",
     "studio": "npm --workspace apps/studio run"
   },
   "devDependencies": {

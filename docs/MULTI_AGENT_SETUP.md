@@ -35,11 +35,14 @@
 ### プロジェクト層スキル
 
 - Codex の正本: `.agents/skills/`
-- Claude Code の配置先: `.claude/skills/`
+- Claude Code の配布先: `.claude/skills/`
+- Hermes の配布先: `.hermes/skills/`
 
-この Windows 環境は Git の `core.symlinks=false` である。リポジトリへ端末固有の
-ジャンクションを記録しないため、現在の `dispatch` スキルは両方の場所に通常ファイルとして
-置いている。変更時は内容を同期し、ハッシュを照合する。
+`.agents/skills/shadcn/`を正本とし、`npm run skills:sync`でClaude CodeとHermesへ配布する。
+`npm run skills:check`は3箇所のファイル構成・ディレクトリ構成・SHA-256を比較する。
+Windowsのjunctionやsymlinkをrepoに記録する方式は採用しない。
+
+`dispatch`はrepo内のProject Skillから外し、`C:\agents\skills\react-shadcn-dispatch`へ退避している。
 
 ### 指示ファイル
 
