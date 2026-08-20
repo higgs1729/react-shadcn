@@ -16,7 +16,6 @@ import {
   type PopularPeriod,
 } from "../lib/game-stats"
 import { fetchGameStats } from "../lib/stats-api"
-import { withBasePath } from "../lib/base-path"
 
 export function DiscoverSections() {
   const [stats, setStats] = useState<GameStats>(INITIAL_GAME_STATS)
@@ -57,14 +56,12 @@ export function DiscoverSections() {
         className="hub-discovery-section"
         aria-labelledby="popular-title"
         data-section-mark="POPULAR"
-        data-register="01"
       >
         <div className="hub-section-heading is-small">
           <div>
             <span className="hub-kicker">WHAT PLAYERS OPEN FIRST</span>
             <h2 id="popular-title">POPULAR GAMES</h2>
           </div>
-          <a href={withBasePath("/games")}>VIEW ALL</a>
         </div>
         <div className="hub-popular-periods" aria-label="人気の集計期間">
           {POPULAR_PERIODS.map((option) => (
@@ -96,14 +93,12 @@ export function DiscoverSections() {
         className="hub-discovery-section"
         aria-labelledby="new-title"
         data-section-mark="NEW"
-        data-register="02"
       >
         <div className="hub-section-heading is-small">
           <div>
             <span className="hub-kicker">RECENTLY ADDED</span>
             <h2 id="new-title">NEW GAMES</h2>
           </div>
-          <a href={withBasePath("/games")}>BROWSE CATALOG</a>
         </div>
         <div className="hub-game-grid">
           {newest.map((game) => (

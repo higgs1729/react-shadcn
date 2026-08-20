@@ -30,6 +30,12 @@ dist/
 /sampleforYou/
 /.artifacts/
 
+# Local Claude permissions and session settings; the tracked settings.json is
+# the shared project configuration.
+.claude/settings.local.json
+.claude/setting.json
+.claude/scheduled_tasks.lock
+
 # Ad-hoc design-QA screenshots agents drop next to the app they were checking.
 # They are throwaway evidence for one review, not assets; five of them had been
 # sitting untracked in apps/portal/. Commit real assets under public/ instead.

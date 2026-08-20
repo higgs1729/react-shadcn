@@ -16,14 +16,12 @@ export default function AllGamesPage() {
         className="hub-content hub-catalog-content"
         aria-labelledby="all-games-title"
         data-section-mark="CATALOG"
-        data-register="03"
       >
         <div className="hub-section-heading">
           <div>
             <span className="hub-kicker">FIND YOUR NEXT GAME</span>
             <h1 id="all-games-title">ALL GAMES</h1>
           </div>
-          <span className="hub-count">03 PLAYABLE / 04 DUMMY</span>
         </div>
         <GameCatalog games={hubGames} />
       </section>

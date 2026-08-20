@@ -30,6 +30,8 @@ test("server-renders DISCOVER with ranked playable games", async () => {
   assert.match(html, /POPULAR GAMES/)
   assert.match(html, /1 WEEK/)
   assert.match(html, /250 PLAYS \/ 1 WEEK/)
+  assert.doesNotMatch(html, /VIEW ALL|BROWSE CATALOG/)
+  assert.doesNotMatch(html, /data-register="0[12]"/)
   assert.match(html, /NEW GAMES/)
   assert.match(html, /ALL GAMES/)
   assert.match(html, /ECHO\/\/SHIFT/)
@@ -51,7 +53,8 @@ test("server-renders the searchable ALL GAMES catalogue", async () => {
   const { html } = await render("/games")
 
   assert.match(html, /SEARCH THE CATALOG/)
-  assert.match(html, /03 PLAYABLE \/ 04 DUMMY/)
+  assert.doesNotMatch(html, /03 PLAYABLE \/ 04 DUMMY/)
+  assert.doesNotMatch(html, /data-register="03"/)
   assert.match(html, /aria-current="page"[^>]*>ALL GAMES/)
   assert.match(html, /ECHO\/\/SHIFT/)
   assert.match(html, /NEON TUNNEL/)
