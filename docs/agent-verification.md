@@ -30,6 +30,7 @@ npm run skills:check
 | `npm run checks` | Skill検査後、各workspaceの名前付きcheckを実行。Studioではcontracts・pipeline・provenance・secrets・lint・typecheck・tests・build・storybookをゲートする | 生成物を作る |
 | `npm -w apps/studio run test:all` | `test:*`スクリプトを自動発見して実行 | テストによる |
 | `npm -w apps/studio run eval` | 埋め込みgolden candidateを決定論的に評価 | 変更しない |
+| `npm -w apps/studio run eval:candidate -- --candidates <dir>` | 外部Agentが出力したcase別candidateを一時領域へステージして同じgraderで評価 | 一時領域のみ |
 | `npm -w apps/studio run eval:fixture` | 意図的に失敗するfixtureが検出されることを確認 | 変更しない |
 | `npm -w apps/studio run eval -- --candidates <dir>` | 外部Agentが生成したcase別candidateを評価 | candidateは呼び出さない |
 

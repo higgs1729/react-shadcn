@@ -23,18 +23,22 @@ hosted eval service is involved (an LLM is never the grader).
 | Command | What it does |
 | --- | --- |
 | `npm run eval` | Grade every case in `eval/cases`. Exit 0 iff all pass. |
+| `npm run eval:candidate -- --candidates <dir>` | Stage external candidate JSON files in a temporary directory and grade them against the frozen cases. The wrapper does not start an agent. |
 | `npm run eval:fixture` | Grade the failing fixture; exits non-zero and names the failing case ID. |
 | `npm run test:eval` | Assert the positive dataset passes and the failing fixture is detected. |
 
-The runner also accepts an explicit path and an optional live-candidate source:
+The underlying runner also accepts an explicit path and an optional candidate source:
 
 ```
 node scripts/run-eval.mjs [<dataset-dir-or-file>] [--candidates <dir>]
 ```
 
 `--candidates <dir>` loads each case's candidate output from `<dir>/<caseId>.json`
-instead of the embedded one, so a future **agent runner** can drop live model
-output beside the frozen inputs/expectations **without changing the case format**.
+instead of the embedded one. `eval:candidate` is the recommended local wrapper:
+it copies only top-level regular JSON files into a temporary staging directory,
+then invokes this runner without changing the source candidates or frozen cases.
+An external **agent runner** remains responsible for producing those JSON files;
+the wrapper never calls an agent or an LLM.
 
 ## Case format
 
