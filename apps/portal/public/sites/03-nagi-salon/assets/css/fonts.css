@@ -1,0 +1,19 @@
+/* 自動生成 — tools/subset_fonts.py が作る。直接編集しない。
+   ページに出てくる文字だけを含む woff2 を自己ホストする。
+   本文を書き換えたら再生成すること。 */
+
+@font-face {
+  font-family: "Murecho";
+  src: url("../fonts/murecho.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Marcellus";
+  src: url("../fonts/marcellus.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}

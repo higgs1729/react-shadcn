@@ -5,7 +5,16 @@ import nextTs from "eslint-config-next/typescript"
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  // public/ は配信物をそのまま置く場所。同梱した静的サイトは webSites 側が
+  // 正本で、こちらの規約で直すものではないので見ない。
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "dist/**",
+    "public/**",
+    "next-env.d.ts",
+  ]),
 ])
 
 export default eslintConfig

@@ -1,23 +1,619 @@
-/* The portal deliberately ships no UI kit: landing-hub.tsx carries its own
-   scoped styles and uses no utility classes. All this file has to do is
-   neutralize the browser defaults that a CSS reset would otherwise handle. */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* 正本: portfolio/webSites/sites/08-portal-axis/assets/css/style.css
+   08（集中・座標系）を apps/portal へ移植したもの。セレクタ名も値も改名しない。
+   08 と突き合わせられなくなるため、差分を入れるときは向こうも一緒に直す。
+
+   フォントは読み込まない。08 の fonts.css は Noto Sans JP の subset なのに
+   --face は "Noto Serif JP" を指していて、実際には汎用 serif で描かれていた。
+   移植は 08 の見た目に合わせるのが目的なので、その状態をそのまま写している。
+   （申し送りは docs/design-direction.md）*/
+
+/* =========================================================================
+   08 higgs1729 portal — 「集中」版・座標系
+   規律の正本: https://antigravity.google/
+   モチーフの正本: apps/portal（直交座標と積分領域）
+
+   07 との差は、隔離した演出の中身。ヒーローは portal 固有の座標系と積分領域、
+   下帯は Canvas 2D の波紋の重力場に入れ替えている。規律のほうは変えていない。
+
+   06（足し算）との違いは、足す量ではなく置き場所である。
+   Antigravity を計測して分かった規律を、そのまま制約として持ち込む。
+
+   1. 派手さは演出層（座標系と重力場）に隔離する
+     2. CSS の @keyframes は出現とカーソル点滅の2つだけ
+     3. transition は 0.12〜0.4秒。対象は opacity / transform / color / background のみ
+     4. 色は「素の階調 → 役割名」の2層。有彩色は1色だけ
+     5. 暗転は1回だけ。最後に置く
+     6. 大きい字は字間を締め、小さい字は開く
+
+   4 の徹底が効く。部品は --grey-* を直接見ない。役割名だけを見る。
+   ========================================================================= */
+
+:root {
+  /* --- 1層目: 素の階調。役割を持たせない ------------------------------- */
+  --grey-0:    #ffffff;
+  --grey-10:   #f8f9fc;
+  --grey-15:   #f0f1f5;
+  --grey-20:   #eff2f7;
+  --grey-50:   #e6eaf0;
+  --grey-100:  #e1e6ec;
+  --grey-200:  #cdd4dc;
+  --grey-300:  #b2bbc5;
+  --grey-600:  #6b7280;
+  --grey-800:  #45474d;
+  --grey-900:  #2f3034;
+  --grey-1000: #212226;
+  --grey-1100: #18191d;
+  --grey-1200: #121317;
+
+  /* 有彩色は1色だけ。portal の朱を継ぐ。
+     元の #ea4b17 は白地で 3.81:1、いちばん暗い明るい地（--grey-20）で 3.39:1 しかなく
+     本文に使えない。3種の明るい地すべてで 4.5:1 を満たすところまで落とす。
+     曲線の上の点だけは図の一部なので、元の鮮やかさのまま使う。 */
+  --red-600: #c63307;    /* --grey-0 5.42:1 / --grey-10 5.14:1 / --grey-20 4.83:1 */
+  --red-500: #ea4b17;    /* 図の中だけ。文字には使わない */
+  --red-300: #ff8a65;    /* 暗い地の上でだけ使う。--grey-1200 で 8.02:1 */
+
+  /* --- 2層目: 役割。部品はここだけを見る ------------------------------- */
+  --surface:                  var(--grey-0);
+  --on-surface:               var(--grey-1200);
+  --on-surface-variant:       var(--grey-800);
+  --surface-container:        var(--grey-10);
+  --surface-container-high:   var(--grey-20);
+  --surface-container-higher: var(--grey-50);
+  --outline:                  var(--grey-200);
+  --outline-variant:          var(--grey-100);
+  --inverse-surface:          var(--grey-1200);
+  --inverse-on-surface:       var(--grey-10);
+  --inverse-on-surface-variant: var(--grey-300);
+  --inverse-outline:          var(--grey-900);
+  --accent:                   var(--red-600);
+  --accent-on-inverse:        var(--red-300);
+
+  /* --- タイポ。1書体。差はウェイトと字間だけ ----------------------------
+     明朝。Noto Serif JP は可変フォントなので、この1本でウェイトを取り切れる。
+     ゴシックから替えたのは、画数の多い字だけ線が細く見えたため
+     （Noto Sans JP の設計どおりの挙動で、不具合ではない。経緯は Design/sites.md）。 */
+  --face: "Noto Serif JP", serif;
+
+  /* Antigravity は見出しを 450 で組んでいた。400 でも 500 でもない中間値。
+     可変フォントなのでそのまま取れる。 */
+  --w-display: 450;
+  --w-body:    400;
+  --w-medium:  500;
+  --w-bold:    700;
+
+  --step--2: clamp(0.69rem, 0.67rem + 0.11vw, 0.75rem);
+  --step--1: clamp(0.81rem, 0.79rem + 0.12vw, 0.88rem);
+  --step-0:  clamp(0.94rem, 0.91rem + 0.14vw, 1.00rem);
+  --step-1:  clamp(1.06rem, 1.01rem + 0.24vw, 1.19rem);
+  --step-2:  clamp(1.25rem, 1.15rem + 0.50vw, 1.50rem);
+  --step-3:  clamp(1.50rem, 1.32rem + 0.90vw, 2.13rem);
+  --step-4:  clamp(1.88rem, 1.56rem + 1.60vw, 3.00rem);
+  --step-5:  clamp(2.25rem, 1.70rem + 2.75vw, 4.00rem);
+
+  --sp-2xs: 0.25rem;
+  --sp-xs:  0.5rem;
+  --sp-s:   0.75rem;
+  --sp-m:   clamp(1rem, 0.9rem + 0.5vw, 1.5rem);
+  --sp-l:   clamp(1.75rem, 1.4rem + 1.75vw, 3rem);
+  --sp-xl:  clamp(3rem, 2.2rem + 4vw, 6rem);
+  --sp-2xl: clamp(4.5rem, 3.2rem + 6.5vw, 9rem);
+
+  --wrap: 76rem;
+  --r-s: 8px;
+  --r-m: 14px;
+  --r-l: 24px;
+  --r-pill: 999px;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  min-height: 100svh;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--face);
+  font-weight: var(--w-body);
+  font-size: var(--step-0);
+  line-height: 1.8;
+  letter-spacing: 0.01em;      /* 小さい字は開く */
+  overflow-x: clip;
 }
 
-img,
-svg {
+img { display: block; max-width: 100%; height: auto; }
+ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+
+.wrap { width: min(100% - var(--sp-m) * 2, var(--wrap)); margin-inline: auto; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--inverse-surface); color: var(--inverse-on-surface);
+  padding: 0.75rem 1.25rem; border-radius: 0 0 var(--r-s) 0;
+}
+.skip:focus { left: 0; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+:where(a, button):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* --- 規律 2: @keyframes は出現とカーソル点滅だけ ------------------------ */
+@keyframes fade-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+.js-anim .rise { opacity: 0; }
+.js-anim .rise.is-in { animation: fade-in 0.72s cubic-bezier(0.22, 0.61, 0.36, 1) var(--rise-delay, 0ms) both; }
+
+.typewrite__text { display: inline; }
+.typewrite__caret {
+  display: inline-block;
+  width: 0.045em; height: 0.9em;
+  margin-left: 0.1em;
+  background: var(--accent);
+  vertical-align: -0.08em;
+  opacity: 0;
+}
+.js-anim .typewrite .typewrite__text { visibility: hidden; }
+.js-anim .typewrite.is-typing .typewrite__text,
+.js-anim .typewrite.is-complete .typewrite__text { visibility: visible; }
+.js-anim .typewrite.is-typing .typewrite__caret,
+.js-anim .typewrite.is-complete .typewrite__caret { animation: caret 1.1s step-end infinite; opacity: 1; }
+
+/* =========================================================================
+   部品
+   ========================================================================= */
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
+  padding: 0.85em 1.6em;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  font-size: var(--step-0);
+  font-weight: var(--w-medium);
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration: none;
+  /* 規律 3: 0.12〜0.4秒。対象は opacity / transform / color / background だけ */
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.btn--sm { padding: 0.6em 1.1em; font-size: var(--step--1); }
+.btn--primary { background: var(--on-surface); color: var(--surface); }
+.btn--primary:hover { background: var(--grey-900); }
+.btn--tonal { background: var(--surface-container-high); color: var(--on-surface); }
+.btn--tonal:hover { background: var(--surface-container-higher); }
+.btn--invert { background: var(--inverse-on-surface); color: var(--inverse-surface); }
+.btn--invert:hover { background: var(--grey-0); }
+.btn--outline { background: transparent; color: var(--inverse-on-surface); border-color: var(--inverse-outline); }
+.btn--outline:hover { background: var(--grey-1100); }
+.btn:active { transform: scale(0.98); }
+
+.sec { max-width: 42rem; margin-bottom: var(--sp-xl); }
+.sec__label {
+  font-size: var(--step--1); font-weight: var(--w-medium);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: var(--sp-s);
+}
+.sec__t {
+  font-size: var(--step-4);
+  font-weight: var(--w-display);
+  line-height: 1.24;
+  letter-spacing: -0.02em;      /* 大きい字は締める */
+}
+.sec__lead { margin-top: var(--sp-m); color: var(--on-surface-variant); font-size: var(--step-1); }
+
+/* =========================================================================
+   ナビ
+   ========================================================================= */
+
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: var(--sp-m);
+  padding: 0.7rem var(--sp-m);
+  background: var(--inverse-surface);
+  color: var(--inverse-on-surface);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--inverse-outline);
+}
+.nav__brand {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  font-size: var(--step-1); font-weight: var(--w-medium);
+  letter-spacing: -0.01em; text-decoration: none;
+}
+.brand__number { color: var(--accent); }
+.nav .brand__number, .foot .brand__number { color: var(--accent-on-inverse); }
+.nav__glyph { display: block; width: 1.15em; height: 1.15em; color: var(--inverse-on-surface); }
+.hero__glyph { display: block; flex: 0 0 40px; width: 40px; height: 40px; color: var(--on-surface); }
+.nav__glyph svg, .hero__glyph svg { width: 100%; height: 100%; }
+.nav__toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid var(--inverse-outline);
+  margin-left: auto;
+  padding: 0;
+  background: transparent;
+  color: var(--inverse-on-surface);
+  border-radius: var(--r-s);
+  cursor: pointer;
+  font: inherit;
+}
+.nav__toggle-icon { display: grid; gap: 4px; width: 1.15rem; }
+.nav__toggle-icon i { display: block; height: 2px; background: var(--inverse-on-surface); transition: transform 0.2s; }
+.nav__toggle[aria-expanded="true"] .nav__toggle-icon { gap: 0; }
+.nav__toggle[aria-expanded="true"] .nav__toggle-icon i:nth-child(1) { transform: translateY(2px) rotate(45deg); }
+.nav__toggle[aria-expanded="true"] .nav__toggle-icon i:nth-child(2) { opacity: 0; }
+.nav__toggle[aria-expanded="true"] .nav__toggle-icon i:nth-child(3) { transform: translateY(-2px) rotate(-45deg); }
+.nav__links { display: none; }
+.nav__links a {
+  position: relative;
+  font-size: var(--step--1); font-weight: var(--w-medium);
+  color: var(--inverse-on-surface-variant); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav__links a:hover { color: var(--accent-on-inverse); }
+/* 現在地の印。文字の下に朱の線を1本引くだけ */
+.nav__links a::before {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -0.35em;
+  height: 2px;
+  background: var(--accent-on-inverse);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: left;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.nav__links a:hover::before,
+.nav__links a:focus-visible::before,
+.nav__links a[aria-current="location"]::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.nav__links a[aria-current="location"] { color: var(--inverse-on-surface); }
+.nav__links.is-open {
+  position: absolute; top: 100%; left: 0; right: 0;
+  display: grid; gap: 0;
+  padding: var(--sp-xs) var(--sp-m) var(--sp-s);
+  background: var(--inverse-surface);
+  border-bottom: 1px solid var(--inverse-outline);
+}
+.nav__links.is-open a { padding: 0.6em 0; }
+
+@media (min-width: 52em) {
+  .nav { padding-inline: var(--sp-l); }
+  .nav__toggle { display: none; }
+  .nav__links, .nav__links.is-open {
+    position: static; display: flex; gap: var(--sp-m); margin-left: var(--sp-m);
+    padding: 0; background: transparent; border: 0;
+  }
+}
+
+/* =========================================================================
+   ヒーロー。ここだけが派手な層
+   ========================================================================= */
+
+.hero {
+  position: relative;
+  padding: var(--sp-2xl) 0 calc(var(--sp-2xl) * 2.2);
+  text-align: center;
+  overflow: clip;
+}
+/* 図の箱は縦横比で持たせる。高さを % で切ると preserveAspectRatio="slice" が
+   上端を削り、曲線の頂点と点が枠外へ出る（実際に出た）。 */
+.hero__stage {
+  position: absolute; inset: auto 0 0;
+  aspect-ratio: 1200 / 520;
+  pointer-events: none; z-index: 0;
+}
+/* 唯一動く層。文書の下に敷き、当たり判定を持たせない */
+/* overflow は切る。矢印も軸ラベルも viewBox の内側にあるので欠けない。
+   visible にすると 863〜864px で図が枠外へ抜け、横スクロールが出た。 */
+.axis { width: 100%; height: 100%; display: block; }
+.axis__lines path { fill: none; stroke: var(--outline); stroke-width: 1.5; }
+.axis__heads path { fill: var(--outline); }
+.axis__labels text {
+  fill: var(--grey-600); font-family: var(--face);
+  font-size: 20px; font-weight: var(--w-body); font-style: italic;
+}
+/* 短冊。塗りではなく細い縦線の束にして、面が主張しすぎないようにする */
+.axis .bar { fill: url(#hatch); }
+/* 曲線は本文より弱くする。主役は見出しのほう */
+.axis__curve {
+  fill: none; stroke: var(--grey-600);
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+.axis__dot { fill: var(--red-500); }
+
+.hero__inner { position: relative; z-index: 1; width: min(100% - var(--sp-m) * 2, 54rem); margin-inline: auto; }
+.hero__mark {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  font-size: var(--step-1); font-weight: var(--w-medium);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--sp-m);
+}
+.hero__t {
+  font-size: var(--step-5);
+  font-weight: var(--w-display);
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+}
+.hero__lead,
+.sec__lead {
+  margin-top: var(--sp-m);
+  color: var(--on-surface-variant);
+  font-size: var(--step-1);
+}
+.hero__acts { display: flex; flex-wrap: wrap; gap: var(--sp-s); justify-content: center; margin-top: var(--sp-l); }
+
+.js-anim .hero__mark,
+.js-anim .hero__lead,
+.js-anim .hero__acts,
+.js-anim .sec__label,
+.js-anim .sec__lead {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.js-anim .hero__mark.is-in,
+.js-anim .hero__lead.is-in,
+.js-anim .sec__label.is-in,
+.js-anim .sec__lead.is-in {
+  opacity: 1;
+  transform: none;
+}
+.js-anim .hero__acts { transition-duration: 0.5s; }
+.js-anim .hero__acts.is-in { opacity: 1; transform: none; }
+.js-anim .hero__acts .btn {
+  opacity: 0;
+  transform: translateY(18px) scale(0.97);
+  transition: opacity 0.62s ease, transform 0.62s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.js-anim .hero__acts.is-in .btn {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--button-delay, 0ms);
+}
+.js-anim .hero__acts .btn:nth-child(2) { --button-delay: 130ms; }
+
+/* =========================================================================
+   制作物の一覧
+   ========================================================================= */
+
+.works { padding: var(--sp-2xl) 0; background: var(--surface-container); }
+
+.tabs { display: flex; flex-wrap: wrap; gap: var(--sp-xs); margin-bottom: var(--sp-l); }
+.tab {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  padding: 0.55em 1.15em;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--outline);
+  background: var(--surface);
+  color: var(--on-surface-variant);
+  font-family: inherit; font-size: var(--step--1); font-weight: var(--w-medium);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+.tab:hover { background: var(--surface-container-high); }
+.tab.is-on { background: var(--on-surface); color: var(--surface); border-color: var(--on-surface); }
+.list { display: grid; gap: var(--sp-m); grid-template-columns: 1fr; }
+.item[hidden] { display: none; }
+.item__a {
+  display: block; height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--r-l);
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.item__a:hover { border-color: var(--outline); transform: translateY(-3px); }
+.item__media { display: block; background: var(--surface-container-high); }
+.item__media img { transition: transform 0.3s; }
+.item__a:hover .item__media img { transform: scale(1.03); }
+.item__body { display: block; padding: var(--sp-m); }
+.item__tag {
+  display: inline-block;
+  font-size: var(--step--2); font-weight: var(--w-medium);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: var(--sp-2xs);
+}
+.item__t {
   display: block;
-  max-width: 100%;
+  font-size: var(--step-2); font-weight: var(--w-display);
+  line-height: 1.35; letter-spacing: -0.015em;
+}
+.item__d { display: block; margin-top: var(--sp-xs); color: var(--on-surface-variant); font-size: var(--step--1); }
+.item__go {
+  display: inline-flex; align-items: center; gap: 0.35em;
+  margin-top: var(--sp-s);
+  font-size: var(--step--1); font-weight: var(--w-medium);
+  color: var(--accent);
+}
+.item__go::after { content: "→"; transition: transform 0.2s; }
+.item__a:hover .item__go::after { transform: translateX(3px); }
+
+/* --- ピックアップ -------------------------------------------------------
+   厳選3つ。左右を交互に入れ替える。--dir が重ねをずらす向き（外側へ）。 */
+.picks { display: grid; gap: var(--sp-2xl); }
+.picks[hidden], .list[hidden] { display: none; }
+
+.pick { --dir: -1; display: grid; gap: var(--sp-l); align-items: center; }
+.pick--flip { --dir: 1; }
+
+/* 重ね。3枚とも同じ枡に置いて、奥の2枚をずらす。
+   ずらした分だけ内側に余白を取る。取らないと枠外へ出て横あふれになる。 */
+.pick__stack { display: grid; padding: 7% 7% 0; }
+/* 押せる見た目は、JS が role を付けてから */
+.pick__stack[role="button"] { cursor: pointer; }
+.pick__stack:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: var(--r-m); }
+.pick__img {
+  grid-area: 1 / 1;
+  width: 100%; height: auto;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--r-m);
+  background: var(--surface-container-high);
+}
+/* 開いた形が初期値。JS が落ちても3枚は開いたまま */
+/* filter は重ね順を作る。付けた要素が本文より後に描かれるので、
+   3枚の前後は z-index で明示する（付けないと奥の2枚が手前に出る）。 */
+.pick__img--1 { z-index: 3; }
+.pick__img--2 { z-index: 2; transform: translate(calc(var(--dir) * 4%), -5%) scale(0.96); filter: brightness(0.98); }
+.pick__img--3 { z-index: 1; transform: translate(calc(var(--dir) * 8%), -10%) scale(0.92); filter: brightness(0.95); }
+
+/* 重ねが開く。動くのはここだけで、開いた形から transform で閉じて戻す。
+   閉じた状態には遷移を持たせない。持たせると読み込み直後に一度たたむ絵が見える。 */
+.js-anim .pick.is-closed .pick__img--2,
+.js-anim .pick.is-closed .pick__img--3 { transform: scale(0.97); }
+.js-anim .pick.is-open .pick__img--1,
+.js-anim .pick.is-open .pick__img--2 { transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1); }
+.js-anim .pick.is-open .pick__img--3 { transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.08s; }
+
+.pick__t { display: grid; gap: var(--sp-2xs); }
+.pick__name { font-size: var(--step--1); font-weight: var(--w-medium); color: var(--accent); }
+.pick__claim {
+  font-size: var(--step-3); font-weight: var(--w-display);
+  line-height: 1.3; letter-spacing: -0.02em;
+}
+.pick__d { margin-top: var(--sp-m); color: var(--on-surface-variant); }
+.pick__go {
+  display: inline-flex; align-items: center; gap: 0.4em;
+  margin-top: var(--sp-m); font-weight: var(--w-medium); text-decoration: none;
+  color: var(--on-surface);
+}
+.pick__go::after { content: "→"; transition: transform 0.2s; }
+.pick__go:hover::after { transform: translateX(3px); }
+
+@media (min-width: 60em) {
+  .pick { grid-template-columns: 1.25fr 1fr; gap: var(--sp-xl); }
+  /* 画像の側をいつも広いほうに。列の比も一緒に入れ替える */
+  .pick--flip { grid-template-columns: 1fr 1.25fr; }
+  .pick--flip .pick__stack { order: 2; }
+}
+
+@media (min-width: 44em) { .list { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 68em) { .list { grid-template-columns: repeat(3, 1fr); } }
+
+/* =========================================================================
+   つくり方
+   ========================================================================= */
+
+.method { padding: var(--sp-2xl) 0; }
+.cards { display: grid; gap: var(--sp-m); grid-template-columns: 1fr; }
+.mcard {
+  padding: var(--sp-l) var(--sp-m);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--r-l);
+  background: var(--surface-container);
+}
+.mcard__n { font-size: var(--step--1); color: var(--accent); font-weight: var(--w-medium); font-variant-numeric: tabular-nums; }
+.mcard h3 { margin-top: var(--sp-xs); font-size: var(--step-2); font-weight: var(--w-display); line-height: 1.35; letter-spacing: -0.015em; }
+.mcard p { margin-top: var(--sp-xs); color: var(--on-surface-variant); font-size: var(--step--1); }
+
+@media (min-width: 44em) { .cards { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 68em) { .cards { grid-template-columns: repeat(4, 1fr); } }
+
+/* =========================================================================
+   暗転。1回だけ、最後に
+   ========================================================================= */
+
+.close {
+  position: relative;
+  background: var(--inverse-surface);
+  color: var(--inverse-on-surface);
+  padding: var(--sp-2xl) 0;
+  text-align: center;
+  overflow: clip;
+}
+/* 下の帯の背景。波紋の伝わる重力場（gravity.js が描く）。
+   ヒーローの座標系とは別のものなので、縦横比ではなく帯いっぱいに敷く。 */
+.close__stage { position: absolute; inset: 0; pointer-events: none; }
+.close__stage canvas { display: block; width: 100%; height: 100%; }
+
+.close__inner { position: relative; }
+.close__t { font-size: var(--step-5); font-weight: var(--w-display); line-height: 1.2; letter-spacing: -0.028em; }
+.close__d { margin-top: var(--sp-m); color: var(--inverse-on-surface-variant); font-size: var(--step-1); }
+.close__acts { display: flex; flex-wrap: wrap; gap: var(--sp-s); justify-content: center; margin-top: var(--sp-l); }
+
+/* =========================================================================
+   連絡先。暗転のあと、明るい面に戻して置く
+   ========================================================================= */
+
+.contact { padding: var(--sp-2xl) 0; }
+.links { display: grid; gap: var(--sp-m); list-style: none; }
+
+.link {
+  display: flex; align-items: center; gap: var(--sp-m);
+  padding: var(--sp-m);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--r-m);
+  background: var(--surface);
+  color: inherit; text-decoration: none;
+  transition: border-color 0.2s;
+}
+a.link:hover { border-color: var(--outline); }
+.link__icon { flex: 0 0 24px; width: 24px; height: 24px; color: var(--accent); }
+.link__icon svg { width: 100%; height: 100%; display: block; }
+.link__body { display: grid; gap: var(--sp-2xs); min-width: 0; }
+.link__t { font-size: var(--step--1); color: var(--on-surface-variant); }
+.link__v { font-weight: var(--w-medium); overflow-wrap: anywhere; }
+/* JS が動かなかったとき。代替文なので、値ほど強く出さない */
+.link.is-off .link__v { font-weight: var(--w-body); color: var(--on-surface-variant); font-size: var(--step--1); }
+
+@media (min-width: 44em) { .links { grid-template-columns: repeat(2, 1fr); } }
+
+/* =========================================================================
+   フッター
+   ========================================================================= */
+
+.foot { background: var(--inverse-surface); color: var(--inverse-on-surface); padding: var(--sp-xl) 0 var(--sp-m); }
+.foot a { text-decoration: none; transition: color 0.2s; }
+.foot a:hover { color: var(--accent-on-inverse); }
+
+/* 巨大ワードマーク。1729 の各字をばらばらに持ち上げて、名前の由来を字の位置で言う。
+   Antigravity が t と y を浮かせて「反重力」を表していたのと同じ手。 */
+.foot__mark {
+  margin: 0 0 var(--sp-l);
+  font-size: clamp(3rem, 15vw, 14rem);
+  font-weight: var(--w-display);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+.foot__mark span { display: inline-block; color: var(--accent-on-inverse); }
+.foot__mark span:nth-child(1) { transform: translateY(-0.16em); }
+.foot__mark span:nth-child(2) { transform: translateY(-0.07em); }
+.foot__mark span:nth-child(3) { transform: translateY(-0.21em); }
+.foot__mark span:nth-child(4) { transform: translateY(-0.11em); }
+
+.foot__legal {
+  display: grid; gap: var(--sp-xs);
+  padding-top: var(--sp-m);
+  border-top: 1px solid var(--inverse-outline);
+  font-size: var(--step--2);
+  color: var(--inverse-on-surface-variant);
+}
+.foot__legal strong { color: var(--inverse-on-surface); }
+
+@media (min-width: 48em) {
+  .foot__legal { grid-template-columns: 1fr auto; align-items: baseline; }
+}
+
+/* =========================================================================
+   動きを減らす設定。Antigravity には無かったもの。ここでは入れる
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* 図は消さない。完成形を静止で見せる（axis.js が settle() する）*/
 }

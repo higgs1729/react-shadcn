@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meguri｜サブスクEC のための定期便管理</title>
+<meta name="description" content="定期購入を扱うEC事業者のための定期便管理サービス。解約の予兆、スキップ理由、決済失敗のリカバリを一つの画面に。初期費用なし、月額29,800円から。">
+<meta name="theme-color" content="#0a0c11">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Meguri｜サブスクEC のための定期便管理">
+<meta property="og:description" content="解約は、起きてから知るには遅すぎる。定期便の解約予兆・スキップ・決済失敗を一つの画面に。">
+<meta property="og:image" content="assets/img/og.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>
+  /* JS が動く環境でのみ出現アニメを有効化する。
+     CSS 側で最初から隠すと、JS 不達時に本文ごと消える。 */
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-anim');
+  }
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0c11'/><circle cx='50' cy='50' r='22' fill='none' stroke='%235fe3b0' stroke-width='9'/><circle cx='72' cy='28' r='9' fill='%235fe3b0'/></svg>">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Meguri",
+  "applicationCategory": "BusinessApplication",
+  "description": "サブスクリプションEC向けの定期便管理サービス（架空のサービス）",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "29800", "priceCurrency": "JPY" }
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">本文へスキップ</a>
+
+<header class="site-header" id="header">
+  <a class="brand" href="#top"><span class="brand__dot" aria-hidden="true"></span>Meguri</a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">MENU</button>
+  <nav class="nav" id="nav" aria-label="メインナビゲーション">
+    <a href="#why">課題</a>
+    <a href="#features">機能</a>
+    <a href="#screen">画面</a>
+    <a href="#price">料金</a>
+    <a href="#start">導入</a>
+    <a class="btn btn--fill" href="#cta">資料を請求する</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ===== ヒーロー ===== -->
+  <section class="hero" id="top">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="wrap hero__inner">
+      <p class="hero__badge"><b>NEW</b> スキップ理由の自動収集に対応しました</p>
+
+      <h1 class="rise">解約は、<br>起きてから知るには<em>遅すぎる</em>。</h1>
+
+      <p class="hero__lead rise">
+        Meguri は、定期購入を扱うEC事業者のための定期便管理サービスです。
+        配送スキップ・お届け間隔の変更・決済失敗といった「解約の前に必ず起きること」を拾い、
+        担当者が手を打てる状態にして渡します。
+      </p>
+
+      <div class="hero__actions rise">
+        <a class="btn btn--fill" href="#cta">資料を請求する</a>
+        <a class="btn btn--line" href="#screen">画面を見る</a>
+      </div>
+      <p class="hero__note rise">初期費用なし ／ 最低契約期間なし ／ 14日間の試用</p>
+
+      <dl class="stats rise">
+        <div class="stat">
+          <dt class="stat__label">導入事業者数</dt>
+          <dd class="stat__num" data-count="182">0</dd>
+        </div>
+        <div class="stat">
+          <dt class="stat__label">解約率の平均改善幅</dt>
+          <dd class="stat__num" data-count="31" data-suffix="%">0</dd>
+        </div>
+        <div class="stat">
+          <dt class="stat__label">月あたりの工数削減</dt>
+          <dd class="stat__num" data-count="4.2" data-suffix="h">0</dd>
+        </div>
+        <div class="stat">
+          <dt class="stat__label">直近12か月の稼働率</dt>
+          <dd class="stat__num" data-count="99.9" data-suffix="%">0</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===== 課題 → 解決 ===== -->
+  <section class="section shift" id="why">
+    <div class="wrap shift__grid">
+      <div class="shift__sticky">
+        <p class="eyebrow">The problem</p>
+        <h2 class="sec-title">解約は、<br>四つの兆候のあとに来る。</h2>
+        <p class="sec-lead">
+          定期便の解約は、ある日突然は起きません。
+          その前に必ず、いくつかの小さな信号が出ています。
+          問題は、それらが管理画面・決済代行・カスタマーサポートに散らばっていて、
+          誰も一つの流れとして見ていないことです。
+        </p>
+      </div>
+
+      <div class="shift__list">
+        <article class="shift__item" data-step>
+          <p class="tag">SIGNAL 01</p>
+          <h3>スキップが二回続く</h3>
+          <p>
+            一度のスキップは旅行や在庫過多で起きます。
+            二回続いたときの解約率は、そうでない場合の 4.1 倍です。
+          </p>
+        </article>
+        <article class="shift__item" data-step>
+          <p class="tag">SIGNAL 02</p>
+          <h3>お届け間隔を伸ばす</h3>
+          <p>
+            4週から8週への変更は、多くの場合「やめる前の様子見」です。
+            変更操作の直後は、まだ気持ちが残っています。
+          </p>
+        </article>
+        <article class="shift__item" data-step>
+          <p class="tag">SIGNAL 03</p>
+          <h3>決済が失敗する</h3>
+          <p>
+            カードの有効期限切れは、意思のない離脱です。
+            通知が届かないまま、3回目の失敗で自動解約になる例が最も多いパターンです。
+          </p>
+        </article>
+        <article class="shift__item" data-step>
+          <p class="tag">SIGNAL 04</p>
+          <h3>問い合わせのあと沈黙する</h3>
+          <p>
+            返信内容ではなく「そのあと何も起きていない」ことが信号です。
+            対応済みフラグは、解決したことを意味しません。
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 機能 ===== -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="rise">
+        <p class="eyebrow">Features</p>
+        <h2 class="sec-title">拾って、つなげて、渡す。</h2>
+        <p class="sec-lead">
+          新しいことをするための道具ではありません。
+          すでに起きていることを、担当者が動ける形にして届けます。
+        </p>
+      </div>
+
+      <div class="features">
+        <article class="feature rise">
+          <p class="feature__no">F-01</p>
+          <h3>解約予兆スコア</h3>
+          <p>
+            四つの信号と購入履歴から、顧客ごとに 0〜100 のスコアを毎日更新します。
+            しきい値を超えた顧客だけが一覧に上がります。
+          </p>
+          <p class="feature__meta">更新: 毎日 04:00 JST</p>
+        </article>
+
+        <article class="feature rise">
+          <p class="feature__no">F-02</p>
+          <h3>スキップ理由の収集</h3>
+          <p>
+            マイページのスキップ操作に一問だけ差し込みます。
+            選択式のみ、平均回答率は 68%。理由別の推移がそのまま集計されます。
+          </p>
+          <p class="feature__meta">導入: タグ1行</p>
+        </article>
+
+        <article class="feature rise">
+          <p class="feature__no">F-03</p>
+          <h3>決済リトライ</h3>
+          <p>
+            失敗した決済を、カード会社ごとの成功率が高い時間帯に再試行します。
+            同時に、更新用のリンクをメールと SMS で送ります。
+          </p>
+          <p class="feature__meta">対応: Stripe / GMO / Square</p>
+        </article>
+
+        <article class="feature rise">
+          <p class="feature__no">F-04</p>
+          <h3>配送スケジュール</h3>
+          <p>
+            すべての定期便を1枚のカレンダーで見ます。
+            在庫の引き当てと突き合わせ、欠品が出る週を事前に警告します。
+          </p>
+          <p class="feature__meta">粒度: 週次 / 日次</p>
+        </article>
+
+        <article class="feature rise">
+          <p class="feature__no">F-05</p>
+          <h3>LTV とコホート</h3>
+          <p>
+            初回接点別・商品別のコホートを自動生成します。
+            広告経由と自然流入で継続率がどれだけ違うかが、初月から見えます。
+          </p>
+          <p class="feature__meta">出力: CSV / API</p>
+        </article>
+
+        <article class="feature rise">
+          <p class="feature__no">F-06</p>
+          <h3>アクションの記録</h3>
+          <p>
+            誰がいつ、どの顧客に何をしたか。効果があった打ち手だけが残るように、
+            結果と紐づけて記録します。
+          </p>
+          <p class="feature__meta">連携: Slack / メール</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 画面（CSSで作った製品画面） ===== -->
+  <section class="section" id="screen">
+    <div class="wrap">
+      <div class="rise">
+        <p class="eyebrow">Screen</p>
+        <h2 class="sec-title">見るところは、一画面。</h2>
+        <p class="sec-lead">
+          担当者が朝いちばんに開くのはこの画面だけです。
+          対応が要る顧客が上に来ます。
+        </p>
+      </div>
+
+      <div class="app rise" role="img"
+           aria-label="Meguri のダッシュボード画面の例。継続率97.2%、今週の解約4件、要対応12件のKPIと、直近12週の継続率の折れ線グラフ、対応が必要な顧客の一覧が表示されている。">
+        <div class="app__bar" aria-hidden="true">
+          <span class="app__dots"><i></i><i></i><i></i></span>
+          <span class="app__path">meguri.app / dashboard</span>
+        </div>
+
+        <div class="app__body" aria-hidden="true">
+          <nav class="app__side">
+            <ul>
+              <li class="on">ダッシュボード</li>
+              <li>定期便一覧</li>
+              <li>解約予兆</li>
+              <li>配送スケジュール</li>
+              <li>決済</li>
+              <li>コホート</li>
+              <li>設定</li>
+            </ul>
+          </nav>
+
+          <div class="app__main">
+            <div class="kpis">
+              <div class="kpi">
+                <p class="kpi__label">継続率</p>
+                <p class="kpi__val">97.2%</p>
+                <p class="kpi__delta up">▲ 1.4</p>
+              </div>
+              <div class="kpi">
+                <p class="kpi__label">今週の解約</p>
+                <p class="kpi__val">4</p>
+                <p class="kpi__delta up">▼ 6</p>
+              </div>
+              <div class="kpi">
+                <p class="kpi__label">要対応</p>
+                <p class="kpi__val">12</p>
+                <p class="kpi__delta down">▲ 3</p>
+              </div>
+            </div>
+
+            <div class="chart">
+              <div class="chart__head">
+                <p>継続率の推移</p>
+                <span>直近12週</span>
+              </div>
+              <svg viewBox="0 0 420 110" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4d9dff" stop-opacity="0.38"/>
+                    <stop offset="100%" stop-color="#4d9dff" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g stroke="#262d3a" stroke-width="1">
+                  <line x1="0" y1="27" x2="420" y2="27"/>
+                  <line x1="0" y1="55" x2="420" y2="55"/>
+                  <line x1="0" y1="83" x2="420" y2="83"/>
+                </g>
+                <path d="M0,84 L38,79 L76,86 L114,72 L152,66 L190,71 L228,58 L266,49 L304,52 L342,38 L380,32 L420,24 L420,110 L0,110 Z" fill="url(#g)"/>
+                <path d="M0,84 L38,79 L76,86 L114,72 L152,66 L190,71 L228,58 L266,49 L304,52 L342,38 L380,32 L420,24"
+                      fill="none" stroke="#4d9dff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+                <circle cx="420" cy="24" r="3.5" fill="#4d9dff"/>
+              </svg>
+            </div>
+
+            <div class="rows">
+              <div class="rows__r head"><span>対応が必要な顧客</span><span>SCORE</span><span>STATUS</span></div>
+              <div class="rows__r"><b>#10482 佐々木 様</b><span>88</span><span class="pill pill--risk">スキップ2回</span></div>
+              <div class="rows__r"><b>#10329 三浦 様</b><span>81</span><span class="pill pill--risk">決済失敗</span></div>
+              <div class="rows__r"><b>#10771 大久保 様</b><span>76</span><span class="pill pill--risk">間隔延長</span></div>
+              <div class="rows__r"><b>#10115 長谷川 様</b><span>44</span><span class="pill pill--ok">対応済み</span></div>
+              <div class="rows__r"><b>#10650 藤本 様</b><span>39</span><span class="pill pill--ok">対応済み</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="fineprint">
+        ※ 上の画面は架空のサービスの例示です。数値・顧客名はすべて実在しません。
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== 料金 ===== -->
+  <section class="section shift" id="price">
+    <div class="wrap">
+      <div class="rise">
+        <p class="eyebrow">Pricing</p>
+        <h2 class="sec-title">定期便の件数で決まります。</h2>
+        <p class="sec-lead">
+          売上に対する料率は取りません。伸びた分だけ請求が増える設計は、
+          事業者と提供者の利害がずれると考えているためです。表示はすべて税別です。
+        </p>
+      </div>
+
+      <div class="plans">
+        <article class="plan rise">
+          <h3 class="plan__name">Starter</h3>
+          <p class="plan__for">定期便 〜500件</p>
+          <p class="plan__price">¥29,800<span> / 月</span></p>
+          <ul class="plan__list">
+            <li>定期便管理・配送スケジュール</li>
+            <li>スキップ理由の収集</li>
+            <li>決済リトライ</li>
+            <li class="off">解約予兆スコア</li>
+            <li class="off">コホート分析</li>
+            <li class="off">API</li>
+          </ul>
+          <a class="btn btn--line" href="#cta">試用を申し込む</a>
+        </article>
+
+        <article class="plan plan--pick rise">
+          <h3 class="plan__name">Growth</h3>
+          <p class="plan__for">定期便 〜5,000件</p>
+          <p class="plan__price">¥98,000<span> / 月</span></p>
+          <ul class="plan__list">
+            <li>Starter のすべて</li>
+            <li>解約予兆スコア</li>
+            <li>コホート・LTV 分析</li>
+            <li>アクション記録と Slack 連携</li>
+            <li>API（読み取り・書き込み）</li>
+            <li class="off">専任担当</li>
+          </ul>
+          <a class="btn btn--fill" href="#cta">試用を申し込む</a>
+        </article>
+
+        <article class="plan rise">
+          <h3 class="plan__name">Enterprise</h3>
+          <p class="plan__for">定期便 5,000件以上</p>
+          <p class="plan__price">要相談</p>
+          <ul class="plan__list">
+            <li>Growth のすべて</li>
+            <li>専任担当・月次レビュー</li>
+            <li>SLA 99.9%</li>
+            <li>SSO / IP制限</li>
+            <li>データの個別エクスポート</li>
+            <li>導入時の移行支援</li>
+          </ul>
+          <a class="btn btn--line" href="#cta">相談する</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 導入 ===== -->
+  <section class="section" id="start">
+    <div class="wrap">
+      <div class="rise">
+        <p class="eyebrow">Onboarding</p>
+        <h2 class="sec-title">最短で 5営業日。</h2>
+        <p class="sec-lead">既存のカートを乗り換える必要はありません。読み取りから始められます。</p>
+      </div>
+
+      <div class="steps">
+        <div class="step rise">
+          <h3>接続</h3>
+          <p>カートと決済代行のAPIキーを登録します。書き込み権限は最初は不要です。</p>
+          <p class="term">所要 30分</p>
+        </div>
+        <div class="step rise">
+          <h3>取り込み</h3>
+          <p>過去24か月分の定期便履歴を読み込み、スコアの基準を作ります。</p>
+          <p class="term">1〜2営業日</p>
+        </div>
+        <div class="step rise">
+          <h3>すり合わせ</h3>
+          <p>しきい値と通知先を決めます。最初は緩めに設定し、2週間後に絞ります。</p>
+          <p class="term">1営業日</p>
+        </div>
+        <div class="step rise">
+          <h3>運用開始</h3>
+          <p>朝の一覧が届き始めます。書き込み権限は、必要になった時点で追加してください。</p>
+          <p class="term">5営業日目</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section cta" id="cta">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="wrap cta__inner rise">
+      <h2>まず、いまの解約理由を<br>数えるところから。</h2>
+      <p>
+        資料には、定期便の解約が起きる四つの信号と、その検知方法を書いています。
+        導入をご検討でない段階でもお使いいただけます。
+      </p>
+      <div class="cta__actions">
+        <a class="btn btn--fill" href="#cta">資料を請求する</a>
+        <a class="btn btn--line" href="#price">料金を見る</a>
+      </div>
+      <p class="hero__note cta__fineprint">
+        本サイトは架空のサービスのデモです。ボタンを押しても何も送信されません。
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__top">
+      <div>
+        <p class="brand"><span class="brand__dot" aria-hidden="true"></span>Meguri</p>
+        <p>
+          サブスクリプションEC のための定期便管理サービス。<br>
+          株式会社めぐり（架空）／ 東京都渋谷区
+        </p>
+      </div>
+      <div>
+        <h3>製品</h3>
+        <ul>
+          <li><a href="#features">機能</a></li>
+          <li><a href="#screen">画面</a></li>
+          <li><a href="#price">料金</a></li>
+          <li><a href="#start">導入の流れ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>連携</h3>
+        <ul>
+          <li>Stripe</li>
+          <li>GMOペイメント</li>
+          <li>Square</li>
+          <li>Slack</li>
+        </ul>
+      </div>
+      <div>
+        <h3>会社</h3>
+        <ul>
+          <li>会社概要</li>
+          <li>採用</li>
+          <li>プライバシーポリシー</li>
+          <li>特定商取引法に基づく表記</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="fiction">
+        本サイトはポートフォリオ用に制作した架空のサービスのウェブサイトです。
+        サービス名・社名・導入実績・数値・顧客名はすべて実在しません。
+        記載している連携先の各社名は、実在する製品名を例示として挙げたもので、提携関係はありません。
+      </p>
+      <p>© 2026 Meguri (fictional)</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/vendor/gsap.min.js" defer></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

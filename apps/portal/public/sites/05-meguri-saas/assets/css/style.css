@@ -1,0 +1,513 @@
+/* ==========================================================================
+   Meguri — style.css
+   方向性: 演出系・ダーク / セクション積層
+   01〜03 とは配色（暗色）・書体（幾何サンセリフ + 等幅）・骨格（カード積層）・
+   演出（GSAP ScrollTrigger の scrub 連動）のすべてを変えている。
+   製品画面は写真ではなく CSS で組んでいる（後述 §12）。
+   ========================================================================== */
+
+/* --- 1. トークン ---------------------------------------------------------- */
+:root {
+  --bg:       #0a0c11;
+  --bg-2:     #0f131a;
+  --surface:  #151a23;
+  --surface-2:#1c222d;
+  --line:     #262d3a;
+  --line-lt:  #333c4c;
+
+  --fg:       #e8ecf3;
+  --fg-2:     #a7b0c0;
+  --fg-3:     #7c8798;
+
+  /* 王道の SaaS に寄せた青。04 ツナギメ（ミント + バイオレット）と
+     はっきり別系統にするため、緑味を一切入れない。 */
+  --blue:     #4d9dff;   /* 主アクセント */
+  --blue-dp:  #2f7fd8;   /* 濃い青。塗りの上や境界に */
+  --sky:      #8ecbff;   /* 明るい青。暗い面の上の小さい文字に */
+  --indigo:   #6b7bff;   /* 装飾の光のみ。文字には使わない */
+  --amber:    #ffc46b;
+  --rose:     #ff8098;
+
+  --step--2: clamp(0.69rem, 0.67rem + 0.10vw, 0.75rem);
+  --step--1: clamp(0.81rem, 0.78rem + 0.14vw, 0.88rem);
+  --step-0:  clamp(0.94rem, 0.91rem + 0.16vw, 1.00rem);
+  --step-1:  clamp(1.09rem, 1.03rem + 0.32vw, 1.31rem);
+  --step-2:  clamp(1.31rem, 1.18rem + 0.64vw, 1.75rem);
+  --step-3:  clamp(1.63rem, 1.38rem + 1.22vw, 2.44rem);
+  --step-4:  clamp(2.06rem, 1.63rem + 2.14vw, 3.50rem);
+  --step-5:  clamp(2.56rem, 1.79rem + 3.85vw, 5.13rem);
+
+  --sp-2xs: 0.25rem;
+  --sp-xs:  0.5rem;
+  --sp-s:   0.75rem;
+  --sp-m:   1.25rem;
+  --sp-l:   2rem;
+  --sp-xl:  clamp(3rem, 2.3rem + 3.5vw, 5.5rem);
+  --sp-2xl: clamp(4.5rem, 3.2rem + 6.5vw, 9rem);
+
+  --wrap: 74rem;
+
+  --sans:    "Space Grotesk", "M PLUS 2", system-ui, sans-serif;
+  --ja:      "M PLUS 2", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --r:  10px;
+  --r-lg: 16px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- 2. 基礎 -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--ja);
+  font-size: var(--step-0);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; padding: 0; }
+h1, h2, h3, h4 { font-family: var(--sans); font-weight: 500; line-height: 1.3; letter-spacing: -0.01em; }
+
+::selection { background: var(--blue); color: #04121f; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+
+.skip {
+  position: absolute; left: -999px; top: 0; z-index: 300;
+  background: var(--blue); color: #04121f; padding: var(--sp-s) var(--sp-m);
+}
+.skip:focus { left: 0; }
+
+.wrap { width: min(100% - var(--sp-l) * 2, var(--wrap)); margin-inline: auto; }
+.section { padding-block: var(--sp-2xl); position: relative; }
+
+/* --- 3. 共通パーツ -------------------------------------------------------- */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: var(--sp-m);
+}
+.eyebrow::before {
+  content: ""; width: 1.6em; height: 1px; background: currentColor;
+}
+.sec-title { font-size: var(--step-3); margin-bottom: var(--sp-m); }
+.sec-lead { color: var(--fg-2); max-width: 40em; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
+  font-family: var(--sans);
+  font-size: var(--step--1); font-weight: 500;
+  padding: 0.85em 1.5em;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.btn--fill { background: var(--blue); color: #04121f; }
+.btn--fill:hover { background: #6fb0ff; }
+.btn--line { border-color: var(--line-lt); color: var(--fg); }
+.btn--line:hover { border-color: var(--blue); color: var(--blue); }
+
+/* 背景。装飾なので中身を持たない。
+   ヒーローと最終CTAで同じ「ぼかした円2つ」を使い回すと、
+   どちらも同じ強さで鳴ってしまい、締まりがなくなる。
+   サービス名（巡り）と定期便の周期に合わせ、同心円＝軌道をモチーフにし、
+   ヒーローは「真上から見た軌道」、CTAは「横から見た軌道」で描き分ける。 */
+.glow {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+}
+.glow::before, .glow::after {
+  content: ""; position: absolute;
+  width: 46rem; height: 46rem; border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.16;
+}
+
+/* ヒーロー: 真上から見た軌道 + 細かい点格子。
+   端は mask で消し、コンテンツの下に潜り込ませる。 */
+.hero .glow {
+  background:
+    repeating-radial-gradient(circle at 74% 8%,
+      rgba(77, 157, 255, 0.10) 0 1px, transparent 1px 86px),
+    radial-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1.4px) 0 0 / 28px 28px;
+  -webkit-mask-image: radial-gradient(130% 95% at 72% 0%, #000 18%, transparent 74%);
+          mask-image: radial-gradient(130% 95% at 72% 0%, #000 18%, transparent 74%);
+}
+.hero .glow::before {
+  background: var(--blue);
+  top: -22rem; right: -16rem; left: auto;
+  opacity: 0.15;
+}
+.hero .glow::after {
+  background: var(--indigo);
+  top: 12rem; left: -20rem; right: auto;
+  opacity: 0.10;
+}
+
+/* 最終CTA: 横から見た軌道。下から昇ってくる大きな円弧と、
+   上端の光の筋。ヒーローと同じモチーフだが見え方を変える。 */
+.cta .glow {
+  background:
+    radial-gradient(120% 62% at 50% 128%, rgba(77, 157, 255, 0.20), transparent 62%),
+    linear-gradient(180deg, rgba(77, 157, 255, 0.08), transparent 38%);
+}
+.cta .glow::before {
+  width: 86rem; height: 86rem;
+  left: 50%; bottom: -52rem; top: auto;
+  transform: translateX(-50%);
+  /* 1本の円だけだと「たまたま置かれた円」に見える。
+     ヒーローと同じ同心円にして、同じモチーフを別の角度から見せる。 */
+  background: repeating-radial-gradient(circle at 50% 50%,
+    rgba(77, 157, 255, 0.24) 0 1px, transparent 1px 72px);
+  border: 0;
+  filter: none;
+  opacity: 1;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 46%);
+          mask-image: linear-gradient(180deg, #000 0%, transparent 46%);
+}
+.cta .glow::after {
+  width: 100%; height: 1px;
+  top: 0; left: 0;
+  border-radius: 0;
+  background: linear-gradient(90deg, transparent, rgba(77, 157, 255, 0.55), transparent);
+  filter: none;
+  opacity: 1;
+}
+
+/* --- 4. ヘッダー ---------------------------------------------------------- */
+.site-header {
+  position: fixed; inset-inline: 0; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-m);
+  padding: var(--sp-m) clamp(1.25rem, 4vw, 3rem);
+  transition: background-color 0.4s var(--ease), border-color 0.4s var(--ease), padding 0.4s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+.site-header.is-solid {
+  background: rgba(10, 12, 17, 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+  padding-block: var(--sp-s);
+}
+.brand {
+  font-family: var(--sans); font-weight: 500;
+  font-size: var(--step-1); letter-spacing: -0.02em;
+  display: flex; align-items: center; gap: 0.5em;
+}
+.brand__dot {
+  width: 0.55em; height: 0.55em; border-radius: 50%;
+  background: var(--blue); box-shadow: 0 0 14px var(--blue);
+}
+.nav { display: flex; align-items: center; gap: clamp(1rem, 2.2vw, 2rem); }
+/* :not(.btn) が要る。これがないと .nav a の詳細度が .btn--fill を上回り、
+   ヘッダーのCTAだけ文字色が本文色に戻って読めなくなる（実測 1.36:1）。 */
+.nav a:not(.btn) { font-size: var(--step--1); color: var(--fg-2); transition: color 0.2s ease; }
+.nav a:not(.btn):hover, .nav a:not(.btn).is-current { color: var(--fg); }
+.nav-toggle { display: none; }
+
+/* --- 5. ヒーロー ---------------------------------------------------------- */
+.hero { padding-block: calc(var(--sp-2xl) + 4rem) var(--sp-2xl); position: relative; }
+.hero__inner { position: relative; z-index: 1; }
+.hero__badge {
+  display: inline-flex; align-items: center; gap: 0.55em;
+  font-family: var(--mono); font-size: var(--step--2);
+  color: var(--fg-2);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 0.4em 0.95em; margin-bottom: var(--sp-m);
+}
+.hero__badge b { color: var(--blue); font-weight: 500; }
+.hero h1 {
+  font-size: var(--step-5);
+  letter-spacing: -0.025em;
+  max-width: 16em;
+  margin-bottom: var(--sp-m);
+}
+.hero h1 em { font-style: normal; color: var(--blue); }
+.hero__lead { color: var(--fg-2); max-width: 34em; margin-bottom: var(--sp-l); }
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--sp-s); align-items: center; }
+.hero__note { font-size: var(--step--2); color: var(--fg-3); margin-top: var(--sp-m); }
+
+/* --- 6. 数字 -------------------------------------------------------------- */
+.stats {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-top: var(--sp-xl);
+}
+/* dl の中は dt → dd の順でないと不正。表示は数値が上なので、
+   ここで視覚順だけ入れ替える（読み上げ順はマークアップのまま）。 */
+.stat {
+  background: var(--bg-2);
+  padding: var(--sp-l) var(--sp-m);
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+}
+.stat__num {
+  font-family: var(--mono); font-size: var(--step-3); font-weight: 500;
+  letter-spacing: -0.02em; line-height: 1.2; color: var(--fg);
+}
+.stat__num span { font-size: var(--step-0); color: var(--blue); margin-left: 0.15em; }
+.stat__label { font-size: var(--step--2); color: var(--fg-3); margin-top: var(--sp-2xs); }
+
+/* --- 7. 課題→解決（貼り付き） -------------------------------------------- */
+.shift { background: var(--bg-2); border-block: 1px solid var(--line); }
+.shift__grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-xl); }
+.shift__sticky { position: static; }
+.shift__list { display: grid; gap: var(--sp-m); }
+.shift__item {
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: var(--sp-m);
+  background: var(--surface);
+  transition: border-color 0.4s var(--ease), background-color 0.4s var(--ease);
+}
+.shift__item.is-on { border-color: var(--blue); background: var(--surface-2); }
+.shift__item h3 { font-size: var(--step-1); margin-bottom: var(--sp-2xs); }
+.shift__item p { font-size: var(--step--1); color: var(--fg-2); }
+.shift__item .tag {
+  font-family: var(--mono); font-size: var(--step--2);
+  color: var(--fg-3); letter-spacing: 0.1em;
+}
+.shift__item.is-on .tag { color: var(--blue); }
+
+/* --- 8. 機能カード -------------------------------------------------------- */
+.features { display: grid; grid-template-columns: 1fr; gap: var(--sp-m); margin-top: var(--sp-xl); }
+.feature {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, var(--surface), var(--bg-2));
+  padding: var(--sp-l) var(--sp-m);
+  position: relative;
+  overflow: hidden;
+}
+.feature::after {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-lt), transparent);
+}
+.feature__no { font-family: var(--mono); font-size: var(--step--2); color: var(--blue); letter-spacing: 0.16em; }
+.feature h3 { font-size: var(--step-1); margin: var(--sp-xs) 0; }
+.feature p { font-size: var(--step--1); color: var(--fg-2); }
+.feature__meta {
+  margin-top: var(--sp-m); padding-top: var(--sp-s);
+  border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: var(--step--2); color: var(--fg-3);
+}
+
+/* --- 9. 料金 -------------------------------------------------------------- */
+.plans { display: grid; grid-template-columns: 1fr; gap: var(--sp-m); margin-top: var(--sp-xl); align-items: start; }
+.plan {
+  border: 1px solid var(--line); border-radius: var(--r-lg);
+  background: var(--bg-2); padding: var(--sp-l) var(--sp-m);
+}
+.plan--pick { border-color: var(--blue); background: var(--surface); position: relative; }
+.plan--pick::before {
+  content: "MOST CHOSEN";
+  position: absolute; top: -0.72em; left: var(--sp-m);
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em;
+  background: var(--blue); color: #04121f; padding: 0.25em 0.7em; border-radius: 999px;
+}
+.plan__name { font-family: var(--sans); font-size: var(--step-1); }
+.plan__for { font-size: var(--step--2); color: var(--fg-3); margin-bottom: var(--sp-m); }
+.plan__price { font-family: var(--mono); font-size: var(--step-3); letter-spacing: -0.02em; }
+.plan__price span { font-size: var(--step--1); color: var(--fg-3); letter-spacing: 0; }
+.plan__list { margin: var(--sp-m) 0; display: grid; gap: var(--sp-xs); font-size: var(--step--1); color: var(--fg-2); }
+.plan__list li { display: flex; gap: 0.6em; }
+.plan__list li::before { content: "+"; color: var(--blue); font-family: var(--mono); flex: none; }
+.plan__list li.off { color: var(--fg-3); }
+.plan__list li.off::before { content: "–"; color: var(--fg-3); }
+
+/* --- 10. FAQ / 導入 ------------------------------------------------------- */
+.steps { counter-reset: s; display: grid; gap: var(--sp-m); margin-top: var(--sp-xl); grid-template-columns: 1fr; }
+.step {
+  counter-increment: s;
+  border-left: 1px solid var(--line);
+  padding-left: var(--sp-m);
+  position: relative;
+}
+.step::before {
+  content: counter(s, decimal-leading-zero);
+  font-family: var(--mono); font-size: var(--step--2); color: var(--blue);
+  letter-spacing: 0.12em;
+}
+.step h3 { font-size: var(--step-1); margin: var(--sp-2xs) 0; }
+.step p { font-size: var(--step--1); color: var(--fg-2); }
+.step .term { font-family: var(--mono); font-size: var(--step--2); color: var(--fg-3); margin-top: var(--sp-xs); }
+
+/* --- 11. CTA -------------------------------------------------------------- */
+.cta { text-align: center; position: relative; overflow: hidden; }
+.cta__inner { position: relative; z-index: 1; }
+.cta h2 { font-size: var(--step-4); margin-bottom: var(--sp-m); }
+.cta p { color: var(--fg-2); max-width: 34em; margin: 0 auto var(--sp-l); }
+.cta__actions { display: flex; flex-wrap: wrap; gap: var(--sp-s); justify-content: center; }
+
+/* --- 12. 製品画面（写真ではなく CSS で組む） ------------------------------
+   スクリーンショットを貼ると、架空の製品では必ず解像度と内容が破綻する。
+   実データのない SaaS こそ、画面そのものをマークアップで作るほうが速く、
+   拡大にも強い。ここは装飾ではなく本文の一部なので aria も持たせる。 */
+.app {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--bg-2);
+  overflow: hidden;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+.app__bar {
+  display: flex; align-items: center; gap: var(--sp-s);
+  padding: var(--sp-s) var(--sp-m);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.app__dots { display: flex; gap: 6px; }
+.app__dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line-lt); }
+.app__path { font-family: var(--mono); font-size: var(--step--2); color: var(--fg-3); }
+.app__body { display: grid; grid-template-columns: 1fr; }
+.app__side { display: none; border-right: 1px solid var(--line); padding: var(--sp-m); background: var(--surface); }
+.app__side li { font-size: var(--step--2); color: var(--fg-3); padding: 0.45em 0; }
+.app__side li.on { color: var(--blue); }
+.app__main { padding: var(--sp-m); display: grid; gap: var(--sp-m); }
+
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-s); }
+.kpi { border: 1px solid var(--line); border-radius: var(--r); padding: var(--sp-s); background: var(--surface); }
+.kpi__label { font-size: 0.62rem; color: var(--fg-3); letter-spacing: 0.08em; }
+.kpi__val { font-family: var(--mono); font-size: var(--step-1); margin-top: 0.15em; }
+.kpi__delta { font-family: var(--mono); font-size: 0.62rem; }
+.kpi__delta.up { color: var(--blue); }
+.kpi__delta.down { color: var(--rose); }
+
+.chart { border: 1px solid var(--line); border-radius: var(--r); padding: var(--sp-s); background: var(--surface); }
+.chart__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--sp-xs); }
+.chart__head p { font-size: var(--step--2); color: var(--fg-2); }
+.chart__head span { font-family: var(--mono); font-size: 0.62rem; color: var(--fg-3); }
+.chart svg { width: 100%; height: auto; }
+
+.rows { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--surface); }
+.rows__r {
+  display: grid; grid-template-columns: 1fr auto auto;
+  gap: var(--sp-s); align-items: center;
+  padding: 0.55em var(--sp-s);
+  border-bottom: 1px solid var(--line);
+  font-size: 0.68rem;
+}
+.rows__r:last-child { border-bottom: 0; }
+.rows__r.head { color: var(--fg-3); font-family: var(--mono); letter-spacing: 0.08em; background: var(--bg-2); }
+.rows__r b { font-weight: 400; }
+.pill {
+  font-family: var(--mono); font-size: 0.6rem;
+  padding: 0.15em 0.55em; border-radius: 999px;
+  border: 1px solid var(--line-lt); color: var(--fg-3);
+}
+.pill--risk { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+.pill--ok { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 45%, transparent); }
+
+/* --- 13. フッター --------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: var(--sp-xl) clamp(1.25rem, 4vw, 3rem) var(--sp-l);
+  font-size: var(--step--1);
+  color: var(--fg-3);
+}
+.site-footer__top { display: grid; grid-template-columns: 1fr; gap: var(--sp-l); }
+.site-footer h3 { font-family: var(--sans); font-size: var(--step--1); color: var(--fg); margin-bottom: var(--sp-xs); }
+.site-footer li { padding: 0.15em 0; }
+.site-footer a:hover { color: var(--fg); }
+.site-footer__bottom {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--sp-s);
+  margin-top: var(--sp-l); padding-top: var(--sp-m); border-top: 1px solid var(--line);
+  font-size: var(--step--2);
+}
+.fiction { max-width: 52em; line-height: 1.9; }
+
+/* --- 14. 出現（既定は可視。JS がある時だけ隠す） -------------------------- */
+.js-anim .rise { opacity: 0; transform: translateY(1.6rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  .js-anim .rise { opacity: 1; transform: none; }
+  /* ぼかしは負荷が高いので狭い画面では外す。背景のレイヤーは残す。 */
+  .hero .glow::before, .hero .glow::after { display: none; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* --- 15. 画面幅（2箇所） -------------------------------------------------- */
+@media (min-width: 48em) {
+  .stats { grid-template-columns: repeat(4, 1fr); }
+  .features { grid-template-columns: repeat(2, 1fr); }
+  .plans { grid-template-columns: repeat(3, 1fr); }
+  .steps { grid-template-columns: repeat(2, 1fr); }
+  .app__body { grid-template-columns: 12rem 1fr; }
+  .app__side { display: block; }
+  .app__main { grid-template-columns: 1fr 1fr; }
+  .chart, .rows { grid-column: 1 / -1; }
+  .site-footer__top { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+}
+
+@media (min-width: 64em) {
+  .shift__grid { grid-template-columns: 0.9fr 1.1fr; gap: var(--sp-2xl); }
+  .shift__sticky { position: sticky; top: 22vh; align-self: start; }
+  .features { grid-template-columns: repeat(3, 1fr); }
+  .steps { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* --- 16. 狭い画面のナビ --------------------------------------------------- */
+@media (max-width: 47.99em) {
+  .nav-toggle {
+    display: block; background: none; color: var(--fg);
+    border: 1px solid var(--line-lt); border-radius: 999px;
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em;
+    padding: 0.5em 1em; cursor: pointer;
+  }
+  .nav {
+    position: fixed; inset: 0; background: rgba(10, 12, 17, 0.97);
+    flex-direction: column; justify-content: center; gap: var(--sp-l);
+    font-size: var(--step-2);
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.35s var(--ease), visibility 0.35s;
+  }
+  .nav.is-open { opacity: 1; visibility: visible; }
+
+  /* backdrop-filter は「固定要素の包含ブロック」を作る。ヘッダーに掛けたままだと
+     その子である .nav の position:fixed / inset:0 がヘッダーの箱に閉じ込められ、
+     全画面メニューが高さ57pxに潰れて背景が透ける。狭い画面では外す。 */
+  .site-header.is-solid { backdrop-filter: none; background: var(--bg); }
+
+  /* ナビはヘッダーごと覆うため、開閉ボタンが隠れて閉じられなくなる。 */
+  .nav { z-index: 1; }
+  .brand,
+  .nav-toggle { position: relative; z-index: 2; }
+  /* 上と同じ理由で :not(.btn)。狭い画面でも CTA の文字色を奪わない */
+  .nav a:not(.btn) { font-size: var(--step-2); color: var(--fg); }
+  .nav .btn { font-size: var(--step--1); }
+}
+
+/* 画面の作例は見出し群から一段離す */
+.app { margin-top: var(--sp-xl); }
+/* 料金カードの操作は幅いっぱい。カードごとに指定していたものを規則へ移した */
+.plan .btn { width: 100%; }
+/* 作例やデモである旨の但し書き */
+.fineprint {
+  margin-top: var(--sp-m);
+  font-size: var(--step--2);
+  color: var(--fg-2);
+  max-width: 60ch;
+}
+.cta__fineprint { margin-top: var(--sp-l); }
+/* フッター各列は段落を積むだけなので、間隔を規則で持たせる（HTML 側の style 属性を廃した） */
+.site-footer__top > div > * + * { margin-top: 1rem; }
+.site-footer__top > div > p { max-width: 22em; }

@@ -1,5 +1,5 @@
-// Portal's app-preview screenshots: one representative first-view image per
-// app card, named `${AppEntry.id}.png` at 1280x800 (16:10).
+// The portal's artwork: the pickup stacks (p-*), the app cards (a-*) and the
+// site cards (w-*) from lib/works.ts, all 1000x625 webp.
 //
 // Run: npm -w apps/portal run upload:assets
 //      npm -w apps/portal run upload:assets:check
@@ -12,7 +12,7 @@ import { uploadAssets } from "../../../scripts/r2-assets.mjs"
 await uploadAssets({
   appRoot: resolve(import.meta.dirname, ".."),
   // <public subdirectory> == <key prefix in the bucket>.
-  mirroredDirs: ["app-previews"],
+  mirroredDirs: ["portal-previews"],
   manifestRelPath: "scripts/asset-manifest.json",
   argv: process.argv.slice(2),
 })

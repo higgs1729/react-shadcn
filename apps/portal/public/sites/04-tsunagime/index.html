@@ -1,0 +1,493 @@
+<!-- 自動生成: tools/build_pages.py が src/ と _partials/ から作る。直接編集しない。 -->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ツナギメ｜複数チャネルの在庫をひとつの数に束ねる在庫同期基盤</title>
+<meta name="description" content="総合モール・フリマ・自社ECに散らばった在庫を1つに束ね、売れた瞬間に全チャネルへ反映します。売り越しをゼロにする在庫同期基盤ツナギメ。">
+<meta name="theme-color" content="#0a0e13">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="ツナギメ｜複数チャネルの在庫をひとつの数に束ねる在庫同期基盤">
+<meta property="og:description" content="総合モール・フリマ・自社ECに散らばった在庫を1つに束ね、売れた瞬間に全チャネルへ反映します。売り越しをゼロにする在庫同期基盤ツナギメ。">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- ページに出てくる文字だけを含む woff2 を自己ホストする。
+     tools/subset_fonts.py が生成。本文を書き換えたら再実行すること。 -->
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a0e13'/><path d='M8 11h16M16 11v12' stroke='%237cf5c4' stroke-width='3' stroke-linecap='round'/></svg>">
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-anim');
+  }
+</script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+
+<header class="gheader">
+  <a class="logo" href="index.html" aria-label="ツナギメ トップページ">
+    <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+      <rect x="1" y="1" width="30" height="30" rx="7" stroke="#253141" stroke-width="2"/>
+      <path d="M9 11h14M16 11v11" stroke="#7cf5c4" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="16" cy="24" r="2.4" fill="#7cf5c4"/>
+    </svg>
+    <span class="logo__text">TSUNAGIME</span>
+  </a>
+
+  <button class="gnav-toggle" type="button" aria-expanded="false" aria-controls="gnav">MENU</button>
+
+  <nav class="gnav" id="gnav" aria-label="メインナビゲーション">
+    <a class="gnav__link is-current" href="index.html">仕組み</a>
+    <a class="gnav__link " href="pricing.html">料金</a>
+    <a class="gnav__link " href="cases.html">導入事例</a>
+    <a class="btn btn--primary" href="pricing.html#sim">料金を試算する</a>
+  </nav>
+</header>
+
+
+<main id="main">
+
+  <!-- ===== ヒーロー ===== -->
+  <section class="hero">
+    <div class="hero__bg">
+      <img src="assets/img/hero-center.webp" width="1400" height="932" alt="" aria-hidden="true" fetchpriority="high">
+    </div>
+
+    <div class="wrap hero__inner">
+      <div>
+        <p class="hero__badge">モール・自社EC・実店舗をまたぐ在庫同期基盤</p>
+        <h1 class="hero__title">売り越しを、<em>ゼロ</em>にする。</h1>
+        <p class="hero__text">
+          総合モール、フリマ、自社EC。チャネルごとにバラバラだった在庫を、
+          ツナギメがひとつの数に束ねます。どこかで1点売れた瞬間、すべての売り場から1点減ります。
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="pricing.html#sim">料金を試算する</a>
+          <a class="btn btn--ghost btn--lg" href="#flow">仕組みを見る</a>
+        </div>
+        <p class="hero__note">初期費用なし／最短3営業日で接続／30日間の試用</p>
+      </div>
+
+      <div class="metrics reveal" data-delay="1">
+        <div class="metric">
+          <p class="metric__v">1.8<small>秒</small></p>
+          <p class="metric__k">在庫反映までの中央値</p>
+        </div>
+        <div class="metric">
+          <p class="metric__v">99.98<small>%</small></p>
+          <p class="metric__k">直近12か月の稼働率</p>
+        </div>
+        <div class="metric">
+          <p class="metric__v">1,240<small>店</small></p>
+          <p class="metric__k">接続されている売り場</p>
+        </div>
+        <div class="metric">
+          <p class="metric__v">6<small>区分</small></p>
+          <p class="metric__k">対応チャネル区分</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 課題 ===== -->
+  <section class="section section--tint" id="problem">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Problem</p>
+        <h2 class="section-title">在庫は、売れた瞬間からズレはじめる。</h2>
+        <p class="section-lead">
+          売り場を増やすほど売上は伸びますが、同じだけ在庫のズレも増えます。
+          多くの現場が、この3つを人手で吸収しています。
+        </p>
+      </div>
+
+      <div class="cards">
+        <article class="card card--problem reveal" data-delay="1">
+          <div class="card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4"/><path d="M12 17.5v.5"/>
+            </svg>
+          </div>
+          <p class="card__n">01</p>
+          <h3 class="card__t">売り越しと、そのお詫び</h3>
+          <p class="card__d">
+            最後の1点が2つの売り場で同時に売れる。謝罪とキャンセル処理が発生し、
+            売り場の評価点まで下がります。取り戻すのに数か月かかります。
+          </p>
+        </article>
+
+        <article class="card card--problem reveal" data-delay="2">
+          <div class="card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+            </svg>
+          </div>
+          <p class="card__n">02</p>
+          <h3 class="card__t">朝と夕の、手作業の突合</h3>
+          <p class="card__d">
+            CSVを落として、突き合わせて、また上げ直す。1日2回で足りず、
+            セール期間は張り付きになる。担当者が休めない構造になります。
+          </p>
+        </article>
+
+        <article class="card card--problem reveal" data-delay="3">
+          <div class="card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M4 7h16M4 12h16M4 17h10"/><path d="M18 15.5 21 18l-3 2.5"/>
+            </svg>
+          </div>
+          <p class="card__n">03</p>
+          <h3 class="card__t">売り切れていないのに、売れない</h3>
+          <p class="card__d">
+            ズレを恐れて安全在庫を厚く取ると、実際には在庫があるのに
+            売り場では品切れ表示になります。機会損失は数字に出てきません。
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 仕組みの図（演出の主役） ===== -->
+  <section class="section flow" id="flow">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">How it works</p>
+        <h2 class="section-title">在庫の数を、1か所だけに持つ。</h2>
+        <p class="section-lead">
+          各売り場に在庫を持たせるのをやめ、ツナギメが持つひとつの数だけを正とします。
+          売り場は「表示するだけ」になり、ズレる余地がなくなります。
+        </p>
+      </div>
+
+      <figure class="flow__stage reveal" data-delay="1">
+        <svg class="flow__svg" id="flow-svg" viewBox="0 0 920 400"
+             role="img" aria-labelledby="flow-title flow-desc">
+          <title id="flow-title">ツナギメの在庫同期の流れ</title>
+          <desc id="flow-desc">
+            総合モール・フリマ・自社ECの3つの売り場からの注文が、
+            中央のツナギメ同期エンジンに集まり、単一の在庫数として管理される。
+          </desc>
+
+          <defs>
+            <!-- 色だけに頼らないよう、外部チャネルは角の四角、自社側は丸で区別する -->
+            <marker id="tip" viewBox="0 0 10 10" refX="8" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 10 5 0 10Z" fill="#35485f"/>
+            </marker>
+          </defs>
+
+          <!-- 経路 -->
+          <g fill="none" stroke="#35485f" stroke-width="2">
+            <path class="wire" id="w1" d="M210 75 H300 A20 20 0 0 1 320 95 V180 A20 20 0 0 0 340 200 H374" marker-end="url(#tip)"/>
+            <path class="wire" id="w2" d="M210 200 H374" marker-end="url(#tip)"/>
+            <path class="wire" id="w3" d="M210 325 H300 A20 20 0 0 0 320 305 V220 A20 20 0 0 1 340 200 H374" marker-end="url(#tip)"/>
+            <path class="wire" id="w4" d="M550 200 H694" stroke="#22c894" marker-end="url(#tip)"/>
+          </g>
+
+          <!-- 走る光（装飾。GSAP が無い場合は表示しない） -->
+          <g fill="none" stroke="#9d8dff" stroke-width="3" stroke-linecap="round">
+            <path class="pulse" id="p1" d="M210 75 H300 A20 20 0 0 1 320 95 V180 A20 20 0 0 0 340 200 H374"/>
+            <path class="pulse" id="p2" d="M210 200 H374"/>
+            <path class="pulse" id="p3" d="M210 325 H300 A20 20 0 0 0 320 305 V220 A20 20 0 0 1 340 200 H374"/>
+            <path class="pulse" id="p4" d="M550 200 H694" stroke="#7cf5c4"/>
+          </g>
+
+          <!-- 外部チャネル（角の四角・紫） -->
+          <g class="node" id="ch1">
+            <rect x="30" y="40" width="180" height="70" rx="4" fill="#1b2531" stroke="#6f5be0" stroke-width="1.5"/>
+            <text x="50" y="70" fill="#e8eff7" font-size="15" font-weight="700">総合モール</text>
+            <text x="50" y="92" fill="#7286a0" font-size="12">注文 / キャンセル</text>
+          </g>
+          <g class="node" id="ch2">
+            <rect x="30" y="165" width="180" height="70" rx="4" fill="#1b2531" stroke="#6f5be0" stroke-width="1.5"/>
+            <text x="50" y="195" fill="#e8eff7" font-size="15" font-weight="700">フリマ・C2C</text>
+            <text x="50" y="217" fill="#7286a0" font-size="12">注文 / 取り下げ</text>
+          </g>
+          <g class="node" id="ch3">
+            <rect x="30" y="290" width="180" height="70" rx="4" fill="#1b2531" stroke="#6f5be0" stroke-width="1.5"/>
+            <text x="50" y="320" fill="#e8eff7" font-size="15" font-weight="700">自社EC</text>
+            <text x="50" y="342" fill="#7286a0" font-size="12">注文 / 返品</text>
+          </g>
+
+          <!-- 同期エンジン（丸みの強い形・ミント） -->
+          <g class="node" id="hub">
+            <rect x="380" y="150" width="170" height="100" rx="26" fill="#141c26" stroke="#7cf5c4" stroke-width="2"/>
+            <circle cx="465" cy="186" r="13" fill="none" stroke="#7cf5c4" stroke-width="2"/>
+            <path d="M465 179v7l5 3" stroke="#7cf5c4" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <text x="465" y="224" fill="#e8eff7" font-size="15" font-weight="700" text-anchor="middle">同期エンジン</text>
+            <!-- 説明は枠内に収まらないため外へ出す。枠内に置くと右の矢印に重なる。 -->
+            <text x="465" y="274" fill="#7286a0" font-size="11" text-anchor="middle">順序を保証して</text>
+            <text x="465" y="290" fill="#7286a0" font-size="11" text-anchor="middle">1件ずつ反映する</text>
+          </g>
+
+          <!-- 単一の在庫数 -->
+          <g class="node" id="stock">
+            <rect x="700" y="150" width="190" height="100" rx="26" fill="#141c26" stroke="#22c894" stroke-width="2"/>
+            <text x="795" y="180" fill="#7286a0" font-size="11" text-anchor="middle">在庫（単一の数）</text>
+            <text x="795" y="216" id="stock-num" fill="#7cf5c4" font-size="34" font-weight="700"
+                  text-anchor="middle" font-family="Space Grotesk, sans-serif">1,284</text>
+            <text x="795" y="238" fill="#7286a0" font-size="11" text-anchor="middle">点</text>
+          </g>
+
+          <!-- 売り越し件数 -->
+          <g class="label" id="oversell">
+            <text x="795" y="292" fill="#7286a0" font-size="12" text-anchor="middle">今月の売り越し</text>
+            <text x="795" y="322" id="oversell-num" fill="#7cf5c4" font-size="26" font-weight="700"
+                  text-anchor="middle" font-family="Space Grotesk, sans-serif">0</text>
+            <text x="795" y="342" fill="#7286a0" font-size="11" text-anchor="middle">件</text>
+          </g>
+
+          <!-- 売り場の列の真下に置く。中央寄りに置くと何を指すか読み取れない。 -->
+          <text class="label" x="120" y="384" fill="#7286a0" font-size="12" text-anchor="middle">売り場は在庫を持たない</text>
+        </svg>
+
+        <figcaption class="flow__legend">
+          <span><i></i>外部チャネル（角のある枠）</span>
+          <span><i class="is-hub"></i>ツナギメ側（丸みのある枠）</span>
+        </figcaption>
+      </figure>
+
+      <ol class="flow__steps reveal" data-delay="2">
+        <li class="flow__step">
+          <h3>受け取る</h3>
+          <p>各売り場の注文・キャンセル・返品を、発生した順にそのまま受け取ります。</p>
+        </li>
+        <li class="flow__step">
+          <h3>順序を保証する</h3>
+          <p>同時に届いた更新も1件ずつ直列に処理します。ここが二重引き当てを防ぐ要です。</p>
+        </li>
+        <li class="flow__step">
+          <h3>ひとつの数を更新する</h3>
+          <p>正となる在庫数はツナギメだけが持ちます。売り場側の数は結果の写しです。</p>
+        </li>
+        <li class="flow__step">
+          <h3>全売り場へ返す</h3>
+          <p>更新後の数を、接続中のすべての売り場へ数秒のうちに書き戻します。</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 対応チャネル ===== -->
+  <section class="section section--tint" id="channels">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Channels</p>
+        <h2 class="section-title">対応しているチャネル区分</h2>
+        <p class="section-lead">
+          区分ごとに接続方式を用意しています。個別の事業者名については、お問い合わせ時にご案内します。
+        </p>
+      </div>
+
+      <div class="channels reveal" data-delay="1">
+        <div class="channel">
+          <p class="channel__t">総合モール</p>
+          <p class="channel__d">API接続。在庫・受注・返品に対応</p>
+        </div>
+        <div class="channel">
+          <p class="channel__t">フリマ・C2C</p>
+          <p class="channel__d">API接続。取り下げ・再出品に対応</p>
+        </div>
+        <div class="channel">
+          <p class="channel__t">自社EC（カート）</p>
+          <p class="channel__d">主要カート向けの接続設定を同梱</p>
+        </div>
+        <div class="channel">
+          <p class="channel__t">越境EC</p>
+          <p class="channel__d">通貨・時差をまたいだ在庫の按分に対応</p>
+        </div>
+        <div class="channel">
+          <p class="channel__t">実店舗POS</p>
+          <p class="channel__d">店頭在庫をオンラインと同じ数として扱う</p>
+        </div>
+        <div class="channel">
+          <p class="channel__t">卸・BtoB</p>
+          <p class="channel__d">取引先ごとの引当枠を分けて管理</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 主要機能 ===== -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Features</p>
+        <h2 class="section-title">現場が実際に使う4つ</h2>
+      </div>
+
+      <div class="cards cards--4">
+        <article class="card reveal" data-delay="1">
+          <div class="card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/>
+              <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>
+            </svg>
+          </div>
+          <h3 class="card__t">在庫の按分</h3>
+          <p class="card__d">売り場ごとに配分比率や上限を設定できます。売れ筋のチャネルに厚く寄せる運用も可能です。</p>
+        </article>
+
+        <article class="card reveal" data-delay="2">
+          <div class="card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>
+            </svg>
+          </div>
+          <h3 class="card__t">ズレの検知</h3>
+          <p class="card__d">売り場の数とツナギメの数が食い違ったら、原因の候補とともに通知します。放置されません。</p>
+        </article>
+
+        <article class="card reveal" data-delay="3">
+          <div class="card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/>
+            </svg>
+          </div>
+          <h3 class="card__t">操作の履歴</h3>
+          <p class="card__d">誰がいつどの数をどう変えたかを全件残します。売り越しが起きた際に原因まで辿れます。</p>
+        </article>
+
+        <article class="card reveal" data-delay="3">
+          <div class="card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="m8 16-5-4 5-4M16 8l5 4-5 4M14 4l-4 16"/>
+            </svg>
+          </div>
+          <h3 class="card__t">API と Webhook</h3>
+          <p class="card__d">独自の売り場や基幹システムも同じ扱いで接続できます。在庫が動いた瞬間に通知します。</p>
+        </article>
+      </div>
+
+      <div class="code reveal" data-delay="3">
+        <p class="code__bar">在庫が動いたときに届く Webhook</p>
+        <pre><code>{
+  <span class="s">"event"</span>: <span class="s">"stock.changed"</span>,
+  <span class="s">"sku"</span>: <span class="s">"TG-1042-BLK-M"</span>,
+  <span class="s">"before"</span>: <span class="k">3</span>,
+  <span class="s">"after"</span>: <span class="k">2</span>,
+  <span class="s">"cause"</span>: <span class="s">"order"</span>,      <span class="c">// order / cancel / return / manual</span>
+  <span class="s">"channel"</span>: <span class="s">"marketplace"</span>,
+  <span class="s">"at"</span>: <span class="s">"2026-08-25T11:04:12+09:00"</span>
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 導入の流れ ===== -->
+  <section class="section section--tint" id="onboarding">
+    <div class="wrap wrap-tight">
+      <div class="reveal">
+        <p class="eyebrow">Onboarding</p>
+        <h2 class="section-title">接続までの4ステップ</h2>
+        <p class="section-lead">最短3営業日。既存の売り場を止めずに切り替えます。</p>
+      </div>
+
+      <ol class="steps reveal" data-delay="1">
+        <li class="step">
+          <p class="step__n">01</p>
+          <div>
+            <h3 class="step__t">売り場をつなぐ</h3>
+            <p class="step__d">管理画面から各売り場の認証情報を登録します。コードを書く必要はありません。</p>
+          </div>
+        </li>
+        <li class="step">
+          <p class="step__n">02</p>
+          <div>
+            <h3 class="step__t">商品を突き合わせる</h3>
+            <p class="step__d">売り場ごとにバラバラの商品コードを、SKU単位で対応づけます。候補は自動で提示されます。</p>
+          </div>
+        </li>
+        <li class="step">
+          <p class="step__n">03</p>
+          <div>
+            <h3 class="step__t">読み取りだけで様子を見る</h3>
+            <p class="step__d">最初の数日は書き込みを止めたまま動かします。現状とのズレを可視化してから本番に入ります。</p>
+          </div>
+        </li>
+        <li class="step">
+          <p class="step__n">04</p>
+          <div>
+            <h3 class="step__t">同期を開始する</h3>
+            <p class="step__d">書き込みを有効にすると、その時点から在庫はひとつの数になります。切り戻しも1操作です。</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section cta">
+    <div class="wrap-tight reveal">
+      <h2 class="cta__t">まず、いまの費用を出してみてください。</h2>
+      <p class="cta__d">月間の注文件数と売り場の数を入れるだけで、概算が出ます。登録は不要です。</p>
+      <div class="cta__actions">
+        <a class="btn btn--primary btn--lg" href="pricing.html#sim">料金を試算する</a>
+        <a class="btn btn--ghost btn--lg" href="cases.html">導入事例を読む</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="gfooter">
+  <div class="wrap">
+    <div class="gfooter__top">
+      <div>
+        <span class="logo">
+          <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+            <rect x="1" y="1" width="30" height="30" rx="7" stroke="#253141" stroke-width="2"/>
+            <path d="M9 11h14M16 11v11" stroke="#7cf5c4" stroke-width="2.6" stroke-linecap="round"/>
+            <circle cx="16" cy="24" r="2.4" fill="#7cf5c4"/>
+          </svg>
+          <span class="logo__text">TSUNAGIME</span>
+        </span>
+        <p>
+          複数チャネルの在庫を、ひとつの数に束ねる。<br>
+          在庫同期基盤ツナギメ
+        </p>
+      </div>
+
+      <nav aria-label="フッターナビゲーション">
+        <h2>サービス</h2>
+        <ul>
+          <li><a href="index.html#flow">同期の仕組み</a></li>
+          <li><a href="index.html#channels">対応チャネル</a></li>
+          <li><a href="index.html#features">主要機能</a></li>
+          <li><a href="pricing.html">料金</a></li>
+          <li><a href="cases.html">導入事例</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h2>運営</h2>
+        <ul>
+          <li>株式会社ツナギメ（架空）</li>
+          <li>東京都渋谷区</li>
+          <li>サポート 平日 10:00–18:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gfooter__bottom">
+      <p class="fiction">
+        本サイトはポートフォリオ用に制作した架空サービスのウェブサイトです。
+        社名・サービス名・所在地・導入事例・数値・人物はすべて実在しません。
+        対応チャネルは特定の事業者を指すものではなく、一般的な区分として記載しています。
+      </p>
+      <p class="gfooter__copy">© 2026 TSUNAGIME (fictional)</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/vendor/gsap.min.js" defer></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
+
+\n

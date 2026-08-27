@@ -1,0 +1,13 @@
+<!-- 正本: C:\agents\brand\mark-small.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="higgs1729">
+  <!-- 単体の .svg として開かれたときだけ ink を与える。 -->
+  <style>
+    svg:root { color: #121317; }
+    @media (prefers-color-scheme: dark) { svg:root { color: #f0f1f5; } }
+  </style>
+  <!-- higgs1729 小寸法マーク。統合マークの左側面に彫ってある模様だけを取り出したもの。 -->
+  <g fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 78 V50 H50 V22 H78"/>
+    <path d="M22 78 H50 V50 H78 V22"/>
+  </g>
+</svg>

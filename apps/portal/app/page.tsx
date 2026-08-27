@@ -1,19 +1,5 @@
-"use client"
-
-import { useEffect } from "react"
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
-const worksPath = `${basePath}/works/`
+import { PortalLanding } from "@/components/portal-landing"
 
 export default function Page() {
-  useEffect(() => {
-    window.location.replace(worksPath)
-  }, [])
-
-  return (
-    <main>
-      <p>workへ移動しています…</p>
-      <a href={worksPath}>workを開く</a>
-    </main>
-  )
+  return <PortalLanding />
 }

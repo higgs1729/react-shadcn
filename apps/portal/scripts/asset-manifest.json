@@ -1,21 +1,77 @@
 {
   "bucket": "react-shadcn-assets",
   "objects": {
-    "app-previews/gamehub.png": {
-      "bytes": 441633,
-      "md5": "46f319846449d06b4e44557bb5350da9"
+    "portal-previews/a-gamehub.webp": {
+      "bytes": 27138,
+      "md5": "02c679aec6c66bb005acfb52d2631ec3"
     },
-    "app-previews/python-test.png": {
-      "bytes": 53824,
-      "md5": "7211497db03e4d2b04e09ac2b2f68c2c"
+    "portal-previews/a-python-test.webp": {
+      "bytes": 14190,
+      "md5": "674ebcbf4fb45c73e5a9b1151c1bcdd9"
     },
-    "app-previews/studio.png": {
-      "bytes": 99122,
-      "md5": "420434aa05694947c693d9515ea4497e"
+    "portal-previews/a-studio.webp": {
+      "bytes": 25760,
+      "md5": "5251d9dc5b5b8d93d6830ce101c48ff5"
     },
-    "app-previews/team-t.png": {
-      "bytes": 88768,
-      "md5": "788f76dcce19712fdac6df68ea058abc"
+    "portal-previews/a-team-t.webp": {
+      "bytes": 16248,
+      "md5": "c3fb088713fec79aafa3a641b6b34b16"
+    },
+    "portal-previews/p-asagiri-1.webp": {
+      "bytes": 34052,
+      "md5": "eb5e9e635b5115d792ba71ba40f4776c"
+    },
+    "portal-previews/p-asagiri-2.webp": {
+      "bytes": 27290,
+      "md5": "b2a71a1c00ca7fb811bb2b8b774be5a6"
+    },
+    "portal-previews/p-asagiri-3.webp": {
+      "bytes": 14638,
+      "md5": "8a6ee35852001addbe2029b664c19905"
+    },
+    "portal-previews/p-gamehub-1.webp": {
+      "bytes": 26762,
+      "md5": "38f561b30b507a65743570a8b263e984"
+    },
+    "portal-previews/p-gamehub-2.webp": {
+      "bytes": 31662,
+      "md5": "f05cb7fa52bdf3f9dded732fadedd340"
+    },
+    "portal-previews/p-gamehub-3.webp": {
+      "bytes": 12198,
+      "md5": "83d77e35bc600354e4918902d04b49b2"
+    },
+    "portal-previews/p-studio-1.webp": {
+      "bytes": 25892,
+      "md5": "bf01aa640572c58b1d690740a71f94ec"
+    },
+    "portal-previews/p-studio-2.webp": {
+      "bytes": 28136,
+      "md5": "bb08386a54a837e534fe679c1453b656"
+    },
+    "portal-previews/p-studio-3.webp": {
+      "bytes": 46558,
+      "md5": "8a1abe27ac8cbe513a122389afe03ef4"
+    },
+    "portal-previews/w-aoyagi.webp": {
+      "bytes": 35334,
+      "md5": "9d68f9ed080cf61f961c442b2589b4c8"
+    },
+    "portal-previews/w-asagiri.webp": {
+      "bytes": 35722,
+      "md5": "88898f38821592acf1f865a0741feb23"
+    },
+    "portal-previews/w-meguri.webp": {
+      "bytes": 25804,
+      "md5": "aa7e3167f250cefd4bea1b7b4f636d25"
+    },
+    "portal-previews/w-nagi.webp": {
+      "bytes": 20248,
+      "md5": "8fe9b0fa11ecc2472c4267ea86a2d79f"
+    },
+    "portal-previews/w-tsunagime.webp": {
+      "bytes": 25550,
+      "md5": "da5c09f59c326187a1226e7779f582a5"
     }
   }
 }

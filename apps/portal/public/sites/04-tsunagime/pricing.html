@@ -1,0 +1,296 @@
+<!-- 自動生成: tools/build_pages.py が src/ と _partials/ から作る。直接編集しない。 -->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>料金｜ツナギメ 在庫同期基盤</title>
+<meta name="description" content="初期費用なし。月額と注文件数の従量課金だけの明快な料金です。月間注文件数と売り場の数を入れると、その場で概算が出ます。">
+<meta name="theme-color" content="#0a0e13">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="料金｜ツナギメ 在庫同期基盤">
+<meta property="og:description" content="初期費用なし。月額と注文件数の従量課金だけの明快な料金です。月間注文件数と売り場の数を入れると、その場で概算が出ます。">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- ページに出てくる文字だけを含む woff2 を自己ホストする。
+     tools/subset_fonts.py が生成。本文を書き換えたら再実行すること。 -->
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a0e13'/><path d='M8 11h16M16 11v12' stroke='%237cf5c4' stroke-width='3' stroke-linecap='round'/></svg>">
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-anim');
+  }
+</script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+
+<header class="gheader">
+  <a class="logo" href="index.html" aria-label="ツナギメ トップページ">
+    <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+      <rect x="1" y="1" width="30" height="30" rx="7" stroke="#253141" stroke-width="2"/>
+      <path d="M9 11h14M16 11v11" stroke="#7cf5c4" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="16" cy="24" r="2.4" fill="#7cf5c4"/>
+    </svg>
+    <span class="logo__text">TSUNAGIME</span>
+  </a>
+
+  <button class="gnav-toggle" type="button" aria-expanded="false" aria-controls="gnav">MENU</button>
+
+  <nav class="gnav" id="gnav" aria-label="メインナビゲーション">
+    <a class="gnav__link " href="index.html">仕組み</a>
+    <a class="gnav__link is-current" href="pricing.html">料金</a>
+    <a class="gnav__link " href="cases.html">導入事例</a>
+    <a class="btn btn--primary" href="pricing.html#sim">料金を試算する</a>
+  </nav>
+</header>
+
+
+<main id="main">
+
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Pricing</p>
+        <h1 class="section-title">初期費用なし。月額と、注文件数だけ。</h1>
+        <p class="section-lead">
+          売り場をいくつ増やしても、追加料金はかかりません。
+          増えるのは処理した注文の件数だけです。契約は月単位で、いつでも止められます。
+        </p>
+      </div>
+
+      <div class="plans">
+        <article class="plan reveal" data-delay="1">
+          <h2 class="plan__name">Starter</h2>
+          <p class="plan__for">売り場2つまで／月3,000件まで</p>
+          <p class="plan__price">19,800<small>円 / 月（税込）</small></p>
+          <p class="plan__meter">超過分 3.0円 / 件</p>
+          <ul class="plan__list">
+            <li>在庫の同期と按分</li>
+            <li>ズレの検知と通知</li>
+            <li>操作履歴 90日</li>
+            <li>メールサポート</li>
+          </ul>
+          <a class="btn btn--ghost" href="#sim">この規模で試算する</a>
+        </article>
+
+        <article class="plan plan--pick reveal" data-delay="2">
+          <p class="plan__tag">よく選ばれています</p>
+          <h2 class="plan__name">Standard</h2>
+          <p class="plan__for">売り場は無制限／月15,000件まで</p>
+          <p class="plan__price">54,800<small>円 / 月（税込）</small></p>
+          <p class="plan__meter">超過分 2.2円 / 件</p>
+          <ul class="plan__list">
+            <li>Starter のすべて</li>
+            <li>API と Webhook</li>
+            <li>実店舗POSの接続</li>
+            <li>操作履歴 3年</li>
+            <li>チャットサポート（平日）</li>
+          </ul>
+          <a class="btn btn--primary" href="#sim">この規模で試算する</a>
+        </article>
+
+        <article class="plan reveal" data-delay="3">
+          <h2 class="plan__name">Scale</h2>
+          <p class="plan__for">月50,000件から／個別見積</p>
+          <p class="plan__price">148,000<small>円 / 月〜（税込）</small></p>
+          <p class="plan__meter">超過分 1.4円 / 件</p>
+          <ul class="plan__list">
+            <li>Standard のすべて</li>
+            <li>卸・BtoBの引当枠</li>
+            <li>越境ECの按分</li>
+            <li>専任の担当者</li>
+            <li>稼働率の保証</li>
+          </ul>
+          <a class="btn btn--ghost" href="#sim">この規模で試算する</a>
+        </article>
+      </div>
+
+      <div class="tablewrap reveal" tabindex="0" role="region" aria-label="プラン比較表（横にスクロールできます）">
+        <table>
+          <caption>プランの違い（横にスクロールできます）</caption>
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">Starter</th>
+              <th scope="col">Standard</th>
+              <th scope="col">Scale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">接続できる売り場</th><td>2つまで</td><td>無制限</td><td>無制限</td></tr>
+            <tr><th scope="row">月間の注文件数</th><td>3,000</td><td>15,000</td><td>50,000〜</td></tr>
+            <tr><th scope="row">超過分の単価</th><td>3.0円</td><td>2.2円</td><td>1.4円</td></tr>
+            <tr><th scope="row">在庫の按分</th><td class="yes">対応</td><td class="yes">対応</td><td class="yes">対応</td></tr>
+            <tr><th scope="row">API・Webhook</th><td class="no">なし</td><td class="yes">対応</td><td class="yes">対応</td></tr>
+            <tr><th scope="row">実店舗POS</th><td class="no">なし</td><td class="yes">対応</td><td class="yes">対応</td></tr>
+            <tr><th scope="row">卸・BtoBの引当枠</th><td class="no">なし</td><td class="no">なし</td><td class="yes">対応</td></tr>
+            <tr><th scope="row">操作履歴の保存</th><td>90日</td><td>3年</td><td>5年</td></tr>
+            <tr><th scope="row">サポート</th><td>メール</td><td>チャット（平日）</td><td>専任担当</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 料金シミュレーター ===== -->
+  <section class="section section--tint" id="sim">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Simulator</p>
+        <h2 class="section-title">いまの規模で、いくらになるか</h2>
+        <p class="section-lead">
+          月間の注文件数と、つなぐ売り場の数を動かしてください。登録も入力欄への個人情報も不要です。
+        </p>
+      </div>
+
+      <form class="sim reveal" data-delay="1" id="sim-form" novalidate>
+        <div>
+          <div class="sim__field">
+            <div class="sim__label">
+              <label for="sim-orders">月間の注文件数</label>
+              <input class="sim__num" type="number" id="sim-orders" name="orders"
+                     value="8000" min="0" max="200000" step="100" inputmode="numeric">
+            </div>
+            <input type="range" id="sim-orders-range" min="0" max="200000" step="100" value="8000"
+                   aria-label="月間の注文件数（スライダー）">
+            <div class="sim__scale"><span>0</span><span>100,000</span><span>200,000</span></div>
+          </div>
+
+          <div class="sim__field">
+            <div class="sim__label">
+              <label for="sim-channels">つなぐ売り場の数</label>
+              <input class="sim__num" type="number" id="sim-channels" name="channels"
+                     value="4" min="1" max="40" step="1" inputmode="numeric">
+            </div>
+            <input type="range" id="sim-channels-range" min="1" max="40" step="1" value="4"
+                   aria-label="つなぐ売り場の数（スライダー）">
+            <div class="sim__scale"><span>1</span><span>20</span><span>40</span></div>
+          </div>
+        </div>
+
+        <output class="sim__out" id="sim-out" for="sim-orders sim-channels" aria-live="polite">
+          <p class="sim__plan" id="sim-plan">Standard</p>
+          <p class="sim__why" id="sim-why">売り場が3つ以上のため</p>
+          <div class="sim__rows">
+            <p class="sim__row"><span>月額</span><b id="sim-base">54,800円</b></p>
+            <p class="sim__row"><span>含まれる件数</span><b id="sim-included">15,000件</b></p>
+            <p class="sim__row"><span>超過分</span><b id="sim-over">0件 × 2.2円</b></p>
+          </div>
+          <div class="sim__total">
+            <span>月額の概算</span>
+            <b id="sim-total">54,800円</b>
+          </div>
+          <p class="sim__note">
+            税込・目安の金額です。本サイトは架空のサービスのため、実際の請求は発生しません。
+          </p>
+        </output>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap-tight">
+      <div class="reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="section-title">料金についてよくある質問</h2>
+      </div>
+
+      <div class="faq reveal" data-delay="1">
+        <details>
+          <summary>売り場を増やすと高くなりますか？</summary>
+          <p>Standard 以上では売り場の数による課金はありません。増えるのは処理した注文の件数だけです。Starter のみ2つまでの制限があります。</p>
+        </details>
+        <details>
+          <summary>注文件数は何を数えていますか？</summary>
+          <p>在庫を動かした更新の件数です。注文・キャンセル・返品・手動の修正がそれぞれ1件になります。売り場への書き戻しは何回行っても数えません。</p>
+        </details>
+        <details>
+          <summary>繁忙期だけ件数が跳ねます。プランを変えるべきですか？</summary>
+          <p>その月だけ超過分としてお支払いいただく形で問題ありません。3か月続けて超過した場合のみ、上位プランのほうが安くなる旨をご案内します。</p>
+        </details>
+        <details>
+          <summary>途中で解約した場合の返金はありますか？</summary>
+          <p>日割りでの返金は行っていません。契約は月単位で、解約した月の末日までご利用いただけます。次月以降の請求は発生しません。</p>
+        </details>
+        <details>
+          <summary>試用期間中に費用はかかりますか？</summary>
+          <p>30日間は無料です。期間中に自動で課金へ切り替わることはなく、こちらから継続の意思を確認します。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="wrap-tight reveal">
+      <h2 class="cta__t">実際の数字を見てから決めてください。</h2>
+      <p class="cta__d">読み取りだけの状態で数日動かし、現状とのズレを可視化してから本番に入れます。</p>
+      <div class="cta__actions">
+        <a class="btn btn--primary btn--lg" href="cases.html">導入事例を読む</a>
+        <a class="btn btn--ghost btn--lg" href="index.html#flow">仕組みを見る</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="gfooter">
+  <div class="wrap">
+    <div class="gfooter__top">
+      <div>
+        <span class="logo">
+          <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+            <rect x="1" y="1" width="30" height="30" rx="7" stroke="#253141" stroke-width="2"/>
+            <path d="M9 11h14M16 11v11" stroke="#7cf5c4" stroke-width="2.6" stroke-linecap="round"/>
+            <circle cx="16" cy="24" r="2.4" fill="#7cf5c4"/>
+          </svg>
+          <span class="logo__text">TSUNAGIME</span>
+        </span>
+        <p>
+          複数チャネルの在庫を、ひとつの数に束ねる。<br>
+          在庫同期基盤ツナギメ
+        </p>
+      </div>
+
+      <nav aria-label="フッターナビゲーション">
+        <h2>サービス</h2>
+        <ul>
+          <li><a href="index.html#flow">同期の仕組み</a></li>
+          <li><a href="index.html#channels">対応チャネル</a></li>
+          <li><a href="index.html#features">主要機能</a></li>
+          <li><a href="pricing.html">料金</a></li>
+          <li><a href="cases.html">導入事例</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h2>運営</h2>
+        <ul>
+          <li>株式会社ツナギメ（架空）</li>
+          <li>東京都渋谷区</li>
+          <li>サポート 平日 10:00–18:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gfooter__bottom">
+      <p class="fiction">
+        本サイトはポートフォリオ用に制作した架空サービスのウェブサイトです。
+        社名・サービス名・所在地・導入事例・数値・人物はすべて実在しません。
+        対応チャネルは特定の事業者を指すものではなく、一般的な区分として記載しています。
+      </p>
+      <p class="gfooter__copy">© 2026 TSUNAGIME (fictional)</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/vendor/gsap.min.js" defer></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
+
+\n

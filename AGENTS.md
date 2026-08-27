@@ -23,13 +23,17 @@ npm workspaces。1リポジトリで複数アプリを持ち、GitHub Pages の�
 
 | workspace | basePath | 配信 URL | UI |
 | --- | --- | --- | --- |
-| `apps/portal` | `/react-shadcn` | `/react-shadcn/` | なし(自己完結 CSS) |
+| `apps/portal` | `/react-shadcn` | `/react-shadcn/` | なし(自己完結 CSS + GSAP) |
 | `apps/studio` | `/react-shadcn/studio` | `/react-shadcn/studio/` | shadcn |
 | `apps/team-t` | `/react-shadcn/team-t` | `/react-shadcn/team-t/` | shadcn |
 | `apps/python-test` | `/react-shadcn/python-test` | `/react-shadcn/python-test/` | shadcn |
 | `apps/gamehub` | `/react-shadcn/gamehub` | `/react-shadcn/gamehub/` | Tailwind CSS |
 
 Storybook は studio のみが持ち、`/react-shadcn/storybook/` に合成される。
+
+`apps/portal` は上記に加えて、ポートフォリオ用に制作した架空サイト5本を
+`public/sites/` に同梱し、`/react-shadcn/sites/<slug>/index.html` で配信する。
+中身の正本は `portfolio/webSites/sites/` で、ここに置いてあるのは配信物である。
 
 ## 動かし方(dev / 本番プレビュー)
 
@@ -71,7 +75,7 @@ dev では空になる(他アプリは `${PAGES_BASE_PATH ?? ""}/<name>`)。
 `apps/gamehub` は他アプリと同じnpm workspaceで、Next.jsの静的exportを
 `/react-shadcn/gamehub/` に合成してGitHub Pagesへ公開する。
 
-ポータルのカードのリンクは環境で切り替わる(`apps/portal/components/landing-hub.tsx`):
+ポータルのカードのリンクは環境で切り替わる(`apps/portal/lib/works.ts`):
 
 | 環境 | リンク先 |
 | --- | --- |
