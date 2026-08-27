@@ -603,17 +603,3 @@ a.link:hover { border-color: var(--outline); }
 @media (min-width: 48em) {
   .foot__legal { grid-template-columns: 1fr auto; align-items: baseline; }
 }
-
-/* =========================================================================
-   動きを減らす設定。Antigravity には無かったもの。ここでは入れる
-   ========================================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-  /* 図は消さない。完成形を静止で見せる（axis.js が settle() する）*/
-}

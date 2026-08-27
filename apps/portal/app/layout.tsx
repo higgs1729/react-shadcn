@@ -25,8 +25,9 @@ export const viewport: Viewport = {
 
 // 出現とタイプ表示の初期状態（隠す側）は js-anim が付いて初めて効く。
 // 描画より前に付けないと、一度見えたものが隠れてから出る絵になるので、
-// 08 と同じく <head> のインラインスクリプトで付ける。
-const enableMotion = `if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('js-anim')}`
+// 08 と同じく <head> のインラインスクリプトで付ける。演出を見せるページなので、
+// OS の Reduce Motion 設定に関係なく通常は有効にする。
+const enableMotion = `document.documentElement.classList.add('js-anim')`
 
 export default function RootLayout({
   children,

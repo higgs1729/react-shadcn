@@ -53,11 +53,12 @@ test("assembles the mail address once scripts run", async ({ page }) => {
   await expect(mail).toHaveAttribute("href", "mailto:tomoharu1008@outlook.com")
 })
 
-// 動きを減らす設定でも、図は消さずに完成形を見せる（08 の axis.js と同じ約束）。
-test("settles the figure when motion is reduced", async ({ browser }) => {
+// Reduce Motion の設定に関係なく、演出を見せる（Google Antigravity と同じ方針）。
+test("keeps the figure animated when motion is reduced", async ({ browser }) => {
   const page = await browser.newPage({ reducedMotion: "reduce" })
   await page.goto("/")
 
+  await expect(page.locator("html")).toHaveClass(/js-anim/)
   await expect(
     page.getByRole("heading", { name: "常に、学びを止めない", level: 1 })
   ).toBeVisible()
