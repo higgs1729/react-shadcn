@@ -57,10 +57,15 @@
 
 移植では 08 の見た目に合わせることを優先し、次は直していない。
 
-- **書体。** 08 は `--face` が `"Noto Serif JP", serif` なのに、同梱の subset は
-  Noto Sans JP のままで、実際には汎用 serif で描かれていた。ここも同じ状態に合わせて、
-  フォントを読み込んでいない。直すなら Noto Serif JP の subset を作って自己ホストし、
-  08 と同時に直す。
+- ~~**書体。**~~ 解消済み。`--face` は `"Noto Serif JP", serif` だったが、フォントを
+  1本も読み込んでいなかったため、第1候補は常に外れて総称 `serif` に落ちていた
+  （Windows は游明朝、macOS はヒラギノ明朝 ProN、Linux は中国語のゴシック
+  WenQuanYi Zen Hei。Chromium の `CSS.getPlatformFontsForNode` で実測）。
+  Noto Sans JP を `next/font/google` で読み込み、`--face` をそこへ向けた。
+  next/font はビルド時に self-host するので、静的 export でも実行時の外部アクセスは無い。
+  **08 側（`portfolio/webSites/sites/08-portal-axis/`）は未対応。** 別リポジトリにあるため
+  ここでは直せていない。`assets/css/fonts.css` の `@font-face` を Noto Sans JP に揃え、
+  `style.css` の `--face` を同じ形にすること。
 - **画像の取りこぼし。** `lib/works.ts` が bucket に無い画像名を書いても、いまは誰も止めない。
   team-t は `npm run validate` でそれを見ている(`scripts/validate-team-t-app.mjs`)。
   同じものを portal にも置くと、この穴が塞がる。
