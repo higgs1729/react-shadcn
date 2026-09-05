@@ -68,6 +68,7 @@ export function AxisFigure() {
       curve.style.strokeDashoffset = "0"
       for (const bar of bars) bar.style.transform = "none"
       putDot(stopLen)
+      svg.classList.add("is-ready")
     }
 
     if (!motionOK) {
@@ -87,14 +88,21 @@ export function AxisFigure() {
         ;({ gsap } = await import("gsap"))
         ;({ ScrollTrigger } = await import("gsap/ScrollTrigger"))
       } catch {
-        settle()
+        if (!cancelled) settle()
         return
       }
       if (cancelled) return
+      // Once the CSS fallback has revealed the figure, do not hide it again.
+      if (getComputedStyle(svg).visibility === "visible") {
+        settle()
+        return
+      }
       gsap.registerPlugin(ScrollTrigger)
 
       curve.style.strokeDashoffset = String(len)
       gsap.set(bars, { scaleY: 0, transformOrigin: "50% 100%" })
+      putDot(0)
+      svg.classList.add("is-ready")
 
       const tl = gsap.timeline({
         defaults: { ease: "power2.out" },

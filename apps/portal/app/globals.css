@@ -316,6 +316,13 @@ a { color: inherit; }
 /* overflow は切る。矢印も軸ラベルも viewBox の内側にあるので欠けない。
    visible にすると 863〜864px で図が枠外へ抜け、横スクロールが出た。 */
 .axis { width: 100%; height: 100%; display: block; }
+/* Hide the server-rendered figure until its animation start state is ready.
+   If scripts fail to load, reveal the static figure after a short grace period. */
+.js-anim .axis:not(.is-ready) {
+  visibility: hidden;
+  animation: axis-fallback 0s 4s forwards;
+}
+@keyframes axis-fallback { to { visibility: visible; } }
 .axis__lines path { fill: none; stroke: var(--outline); stroke-width: 1.5; }
 .axis__heads path { fill: var(--outline); }
 .axis__labels text {
