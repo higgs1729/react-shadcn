@@ -57,7 +57,7 @@ export function PortalLanding() {
                 <span className="typewrite__caret" aria-hidden="true" />
               </h2>
               <p className="sec__lead">
-                性格の違う3つを選びました。残りはアプリ・サイトのタブから見られます。
+                性格の違う3つを選びました。残りはタブを切り替えると確認できます。
               </p>
             </header>
 
@@ -75,7 +75,7 @@ export function PortalLanding() {
                 <span className="typewrite__caret" aria-hidden="true" />
               </h2>
               <p className="sec__lead">
-                考えたことを、設計して、実装して、確かめます。
+                考えたことを、設計して、実装して、検証します。
               </p>
             </header>
 
@@ -83,7 +83,7 @@ export function PortalLanding() {
               <li className="mcard">
                 <p className="mcard__n">01</p>
                 <h3>コンセプトを決定</h3>
-                <p>何を伝え、誰にどう動いてほしいかを定めます。</p>
+                <p>何を伝え、誰に向けてどう動いてほしいかを定めます。</p>
               </li>
               <li className="mcard">
                 <p className="mcard__n">02</p>
@@ -98,7 +98,7 @@ export function PortalLanding() {
               <li className="mcard">
                 <p className="mcard__n">04</p>
                 <h3>部分最適化</h3>
-                <p>見落としやすい一箇所ずつを見直し、全体の精度を上げます。</p>
+                <p>見落としやすい点を一つずつ見直し、全体の質を上げます。</p>
               </li>
             </ol>
           </div>
@@ -108,14 +108,14 @@ export function PortalLanding() {
         <section className="close">
           <GravityField />
           <div className="wrap close__inner">
-            <h2 className="close__t">気になるものからどうぞ</h2>
-            <p className="close__d">説明より、実物を見るほうが早い。</p>
+            <h2 className="close__t">気になるものから見てください</h2>
+            <p className="close__d">説明より、実物を見たほうが早い。</p>
             <div className="close__acts">
               <a className="btn btn--invert" href="#works">
                 一覧を見る
               </a>
               <a className="btn btn--outline" href={closingHref}>
-                朝霧を開く
+                最新のWebサイトを見る
               </a>
             </div>
           </div>
