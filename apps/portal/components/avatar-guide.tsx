@@ -1,14 +1,15 @@
 "use client"
 
-// 分身の案内役。Works から下で画面の端に立ち、ピックアップの作品が画面の中ほどに来たら
-// その作品の方を指して、前もって合成した本人の声(複製)で一言案内する。
-// 「分身に聞く」から質問すると、頭脳の Worker(avatar-worker)が答えを流し、音がオンなら
-// 文ごとに本人の声で読む。口は声の大きさで開け閉めする(音がオフなら字の長さだけ決まった揺れで)。
-// 音はユーザーが右下の「音を出す」を押すまで出さない(sound-toggle の SOUND_EVENT に従う)。
+// 分身の案内役。勝手には出ない(本人 2026-11-24)。右下の「分身を呼ぶ」を押すと出て、閉じると引っ込む。
+// 出ている間だけ、ピックアップの作品が画面の中ほどに来たらその作品の方を指して、前もって合成した本人の声(複製)で一言案内する。
+// 質問すると頭脳の Worker(avatar-worker)が答えを流し、音がオンなら文ごとに本人の声で読む。
+// 口は重ねない。話す間は口も体も動画の中で動いている talk_1 の型を流す。
+// 音は「音を出す」がオンのときだけ。AudioContext は押した操作(呼ぶ・聞く・音をオン)の中で起こす。
+// 話し終えたら・「止める」・次の質問で、必ず待機に戻る(声の 1 本ごとに時間の上限がある。lib/avatar-voice.ts)
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react"
 
 import lines from "../lib/avatar-lines.json"
-import { AvatarPlayer, type ClipId, type MouthTrack } from "../lib/avatar-player"
+import { AvatarPlayer, type ClipId } from "../lib/avatar-player"
 import { AvatarVoice } from "../lib/avatar-voice"
 import { picks } from "../lib/works"
 import styles from "./avatar-guide.module.css"
@@ -24,6 +25,10 @@ const BRAIN_URL =
 
 const CLIPS: ClipId[] = ["idle_1", "talk_1", "point_l_2", "point_r_2", "bow_1"]
 const LINE = Object.fromEntries(lines.map((l) => [l.id, l])) as Record<string, (typeof lines)[number]>
+/** 声が無いとき、字幕を読む速さに合わせて話す型を続ける長さ(1 字あたり) */
+const MS_PER_CHAR = 110
+/** 答えの流れが止まったときの上限 */
+const ANSWER_TIMEOUT_MS = 60_000
 
 // 答えの中にこの語が出たら、その作品へ連れて行って指す
 const MENTION: Record<string, string[]> = {
@@ -34,7 +39,8 @@ const MENTION: Record<string, string[]> = {
   studio: ["Design System Studio"],
 }
 
-const SUGGEST = ["どんな人ですか？", "ネフェリアはどうやって作ったの？", "AIをどう使っていますか？"]
+// 自己紹介は候補に出さない(本人 2026-11-24)
+const SUGGEST = ["ネフェリアはどうやって作ったの？", "AIをどう使っていますか？"]
 
 type Turn = { role: "user" | "assistant"; content: string }
 /** 立つ所。x は姿の中心の画面上の横位置(px)。null は既定(広い画面は右、狭い画面は左)。bubble は吹き出しを出す側 */
@@ -59,6 +65,7 @@ function subscribeSound(onChange: () => void) {
 }
 
 const wide = () => window.matchMedia("(min-width: 75em)").matches
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 
 function nearCenter(el: HTMLElement) {
   const r = el.getBoundingClientRect()
@@ -87,28 +94,33 @@ function aim(article: HTMLElement, canvasW: number): { spot: Spot; clip: ClipId 
 
 export function AvatarGuide() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const mouthRef = useRef<HTMLCanvasElement>(null)
   const playerRef = useRef<AvatarPlayer | null>(null)
   const voiceRef = useRef<AvatarVoice>(new AvatarVoice())
   const speakingRef = useRef(false)
   const afterRef = useRef<ClipId[]>([])
-  const sayTokenRef = useRef(0)
+  /** 話す・答えるのたびに増やす。古い番号の続きは何もしない */
+  const tokenRef = useRef(0)
+  const abortRef = useRef<AbortController | null>(null)
   const guidedRef = useRef(new Set<string>())
   const greetedRef = useRef(false)
   /** 挨拶を言い終えるまでは作品の案内を始めない */
   const greetDoneRef = useRef(false)
   const recheckRef = useRef<() => void>(() => {})
   const chattingRef = useRef(false)
+  const openRef = useRef(false)
 
-  const [visible, setVisible] = useState(false)
+  /** 呼ばれて出ているか */
+  const [open, setOpen] = useState(false)
   const [ready, setReady] = useState(false)
   const [spot, setSpot] = useState<Spot>(HOME)
   const figureRef = useRef<HTMLDivElement>(null)
   const [moving, setMoving] = useState(false)
   const [bubble, setBubble] = useState("")
-  const [open, setOpen] = useState(false)
   const [input, setInput] = useState("")
-  const [busy, setBusy] = useState(false)
+  /** 答えを待っている(最初の字が来るまで) */
+  const [thinking, setThinking] = useState(false)
+  /** 話している(声か、声が無ければ字幕の長さだけ) */
+  const [talking, setTalking] = useState(false)
   const sound = useSyncExternalStore(subscribeSound, soundIsOn, () => false)
   const [turns, setTurns] = useState<Turn[]>([])
 
@@ -123,42 +135,15 @@ export function AvatarGuide() {
     return () => window.removeEventListener(SOUND_EVENT, onSound)
   }, [])
 
-  // 前に「オン」を選んだ人も、ページを開き直した後は押すまで鳴らせない(ブラウザの決まり)。最初の操作で起こす
+  // 初めて呼ばれたときに動画を読み込んで再生を始める
   useEffect(() => {
-    if (!sound) return
-    const wake = () => voiceRef.current.unlock()
-    window.addEventListener("pointerdown", wake, { once: true })
-    window.addEventListener("keydown", wake, { once: true })
-    return () => {
-      window.removeEventListener("pointerdown", wake)
-      window.removeEventListener("keydown", wake)
-    }
-  }, [sound])
-
-  // Works に入ったら出す
-  useEffect(() => {
-    const works = document.getElementById("works")
-    if (!works) return
-    const check = () => setVisible(works.getBoundingClientRect().top < window.innerHeight * 0.55)
-    check()
-    window.addEventListener("scroll", check, { passive: true })
-    window.addEventListener("resize", check)
-    return () => {
-      window.removeEventListener("scroll", check)
-      window.removeEventListener("resize", check)
-    }
-  }, [])
-
-  // 初めて出るときに動画を読み込んで再生を始める
-  useEffect(() => {
-    if (!visible || playerRef.current || !canvasRef.current || !mouthRef.current) return
+    if (!open || playerRef.current || !canvasRef.current) return
     let cancelled = false
     ;(async () => {
-      const track = (await fetch(`${ASSETS}/mouth.json`).then((r) => r.json())) as MouthTrack
-      if (cancelled || !canvasRef.current || !mouthRef.current) return
+      if (!canvasRef.current) return
       let player: AvatarPlayer
       try {
-        player = new AvatarPlayer(canvasRef.current, mouthRef.current, ASSETS, track, {
+        player = new AvatarPlayer(canvasRef.current, ASSETS, {
           next: (current) => {
             // 話している間は話す型を続け、お辞儀などの後の型は話し終えてから
             if (speakingRef.current) return "talk_1"
@@ -166,7 +151,6 @@ export function AvatarGuide() {
             if (queued) return queued
             return current === "idle_1" ? null : "idle_1"
           },
-          mouth: () => voiceRef.current.level(),
         })
       } catch {
         return // WebGL が無い環境では出さない
@@ -175,7 +159,13 @@ export function AvatarGuide() {
       if (process.env.NODE_ENV === "development") {
         // 試しの観測用(本番のビルドには入らない)
         ;(window as unknown as Record<string, unknown>).__avatar = {
-          state: () => ({ clip: player.current, speaking: speakingRef.current, after: [...afterRef.current], voiceBusy: voiceRef.current.busy, unlocked: voiceRef.current.unlocked }),
+          state: () => ({
+            clip: player.current,
+            speaking: speakingRef.current,
+            after: [...afterRef.current],
+            voiceBusy: voiceRef.current.busy,
+            audio: voiceRef.current.state,
+          }),
         }
       }
       await player.preload(CLIPS)
@@ -186,11 +176,12 @@ export function AvatarGuide() {
     return () => {
       cancelled = true
     }
-  }, [visible])
+  }, [open])
 
   useEffect(() => () => playerRef.current?.dispose(), [])
 
   // 画面の幅が変わったら、測った立つ所は使えないので既定へ戻す
+  const spotRef = useRef<Spot>(HOME)
   useEffect(() => {
     const reset = () => {
       spotRef.current = HOME
@@ -200,68 +191,87 @@ export function AvatarGuide() {
     return () => window.removeEventListener("resize", reset)
   }, [])
 
-  /** 話し終えたら待機へ。話す型の残りが長ければ途中で溶かして戻す */
-  const finishSpeaking = useCallback(() => {
+  /** 待機へ戻す。話す型の残りが長ければ途中で溶かして戻す */
+  const toIdle = useCallback(() => {
     speakingRef.current = false
+    setTalking(false)
     const player = playerRef.current
     if (!player) return
-    const hasAfter = afterRef.current.length > 0
-    if (player.current === "talk_1" && player.remaining > 2.2) {
-      void player.switchTo(afterRef.current.shift() ?? "idle_1", { cut: true })
+    if (player.current === "talk_1" || player.current?.startsWith("point")) {
+      if (player.remaining > 1.2) void player.switchTo(afterRef.current.shift() ?? "idle_1", { cut: true })
     }
+  }, [])
+
+  /** 話している物・答えの流れを全部止めて待機へ。次の質問・「止める」・閉じるで呼ぶ */
+  const silence = useCallback(() => {
+    tokenRef.current++
+    abortRef.current?.abort()
+    abortRef.current = null
+    voiceRef.current.stop()
+    chattingRef.current = false
+    setThinking(false)
+    afterRef.current = []
+    toIdle()
+  }, [toIdle])
+
+  const finishSpeaking = useCallback(() => {
+    const hasAfter = afterRef.current.length > 0
+    toIdle()
     // お辞儀などが残っていれば、それが済んでから次の案内へ
     setTimeout(() => recheckRef.current(), hasAfter ? 6500 : 900)
-  }, [])
+  }, [toIdle])
+
+  /** 声を鳴らせるか(音がオンで AudioContext が動いている) */
+  const canSpeak = useCallback(async () => soundIsOn() && (await voiceRef.current.ready()), [])
 
   /** 前もって合成した台詞を言う。point を渡すとその方を指してから話す */
   const say = useCallback(
     async (lineId: string, opts: { point?: ClipId; bowAfter?: boolean } = {}) => {
       const player = playerRef.current
       const line = LINE[lineId]
-      if (!player || !line) return
-      const token = ++sayTokenRef.current
+      if (!player || !line || !openRef.current) return
+      const token = ++tokenRef.current
       const voice = voiceRef.current
       voice.stop()
       setBubble(line.text)
       afterRef.current = opts.bowAfter ? ["bow_1"] : []
+      speakingRef.current = true
+      setTalking(true)
       if (opts.point) {
-        speakingRef.current = true
         await player.switchTo(opts.point, { cut: true })
         // 腕が上がり始めてから話す
-        await new Promise((r) => setTimeout(r, 700))
-      } else {
-        speakingRef.current = true
-        if (player.current !== "talk_1") await player.switchTo("talk_1", { cut: true })
+        await sleep(700)
+      } else if (player.current !== "talk_1") {
+        await player.switchTo("talk_1", { cut: true })
       }
-      if (token !== sayTokenRef.current) return
-      const buf = voice.unlocked && soundIsOn() ? await voice.load(`${ASSETS}/voice/${lineId}.m4a`) : null
-      if (token !== sayTokenRef.current) return
+      if (token !== tokenRef.current) return
+      const buf = (await canSpeak()) ? await voice.load(`${ASSETS}/voice/${lineId}.m4a`) : null
+      if (token !== tokenRef.current) return
       if (buf) await voice.enqueue(buf)
-      else await voice.pretend(line.text.length)
-      if (token !== sayTokenRef.current) return
+      else await sleep(line.text.length * MS_PER_CHAR)
+      if (token !== tokenRef.current) return
       finishSpeaking()
     },
-    [finishSpeaking]
+    [finishSpeaking, canSpeak]
   )
 
   /** 立つ所を替える(消えて、別の所に出る) */
-  const spotRef = useRef<Spot>(HOME)
   const moveTo = useCallback(async (next: Spot) => {
     const cur = spotRef.current
     if (cur.bubble === next.bubble && (cur.x === next.x || (cur.x !== null && next.x !== null && Math.abs(cur.x - next.x) < 4))) return
     spotRef.current = next
     setMoving(true)
-    await new Promise((r) => setTimeout(r, 250))
+    await sleep(250)
     setSpot(next)
     setMoving(false)
-    await new Promise((r) => setTimeout(r, 250))
+    await sleep(250)
   }, [])
 
   const guideTo = useCallback(
     async (id: string, speak: boolean) => {
       const index = picks.findIndex((p) => p.id === id)
       const article = document.querySelectorAll<HTMLElement>("#panel-pick .pick")[index]
-      if (index < 0 || !article) return
+      if (index < 0 || !article || !openRef.current) return
       guidedRef.current.add(id)
       const { spot: next, clip } = aim(article, figureRef.current?.offsetWidth ?? 400)
       await moveTo(next)
@@ -280,31 +290,29 @@ export function AvatarGuide() {
     [moveTo, say]
   )
 
-  // 最初に出たときの挨拶
+  // 呼ばれて最初に出たときの挨拶
   useEffect(() => {
-    if (!ready || greetedRef.current) return
+    if (!ready || !open || greetedRef.current) return
     greetedRef.current = true
     void (async () => {
-      // 広い画面は、最初の作品の文の列のすぐ外に立って挨拶する(本文に重ねない)
       const first = document.querySelector<HTMLElement>("#panel-pick .pick")
-      if (first && wide()) await moveTo(aim(first, figureRef.current?.offsetWidth ?? 400).spot)
+      if (first && wide() && nearCenter(first)) await moveTo(aim(first, figureRef.current?.offsetWidth ?? 400).spot)
       await say("greet", { bowAfter: true })
       greetDoneRef.current = true
     })()
-  }, [ready, say, moveTo])
+  }, [ready, open, say, moveTo])
 
-  // ピックアップの作品が画面の中ほどに来たら、1 回だけ案内する
+  // 出ている間、ピックアップの作品が画面の中ほどに来たら 1 回だけ案内する
   useEffect(() => {
-    if (!ready) return
+    if (!ready || !open) return
     const articles = [...document.querySelectorAll<HTMLElement>("#panel-pick .pick")]
+    const busyNow = () => !openRef.current || chattingRef.current || speakingRef.current || !greetDoneRef.current
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting) continue
-          const index = articles.indexOf(e.target as HTMLElement)
-          const id = picks[index]?.id
-          if (!id || guidedRef.current.has(id) || chattingRef.current || speakingRef.current || !greetDoneRef.current)
-            continue
+          const id = picks[articles.indexOf(e.target as HTMLElement)]?.id
+          if (!id || guidedRef.current.has(id) || busyNow()) continue
           void guideTo(id, true)
         }
       },
@@ -313,38 +321,59 @@ export function AvatarGuide() {
     articles.forEach((a) => io.observe(a))
     // 話している間に中ほどへ来た作品は、話し終えてから案内する
     recheckRef.current = () => {
-      if (chattingRef.current || speakingRef.current || !greetDoneRef.current) return
-      const index = articles.findIndex(nearCenter)
-      const id = picks[index]?.id
+      if (busyNow()) return
+      const id = picks[articles.findIndex(nearCenter)]?.id
       if (id && !guidedRef.current.has(id)) void guideTo(id, true)
     }
-    return () => io.disconnect()
-  }, [ready, guideTo])
+    return () => {
+      io.disconnect()
+      recheckRef.current = () => {}
+    }
+  }, [ready, open, guideTo])
+
+  const summon = () => {
+    voiceRef.current.unlock()
+    openRef.current = true
+    setOpen(true)
+  }
+
+  const dismiss = () => {
+    openRef.current = false
+    silence()
+    setOpen(false)
+    setBubble("")
+  }
 
   const ask = useCallback(
     async (question: string) => {
       const q = question.trim().slice(0, 400)
-      if (!q || busy) return
+      if (!q) return
+      // 前の答え(声・流れ)は捨てる
+      silence()
+      voiceRef.current.unlock()
       const voice = voiceRef.current
       const player = playerRef.current
       const history: Turn[] = [...turns, { role: "user" as const, content: q }].slice(-8)
       setTurns(history)
       setInput("")
-      setBusy(true)
+      setThinking(true)
       chattingRef.current = true
-      const token = ++sayTokenRef.current
-      voice.stop()
-      afterRef.current = []
+      const token = ++tokenRef.current
+      const ctrl = new AbortController()
+      abortRef.current = ctrl
+      const timer = setTimeout(() => ctrl.abort(), ANSWER_TIMEOUT_MS)
+      const live = () => token === tokenRef.current
       setBubble("…")
 
       let answer = ""
       let pointed = false
       let audioChain: Promise<void> = Promise.resolve()
       const plays: Promise<void>[] = []
-      const withVoice = soundIsOn() && voice.unlocked
+      const withVoice = await canSpeak()
       const startTalk = () => {
         if (speakingRef.current) return
         speakingRef.current = true
+        setTalking(true)
         if (player && player.current !== "talk_1" && !pointed) void player.switchTo("talk_1", { cut: true })
       }
 
@@ -353,6 +382,7 @@ export function AvatarGuide() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ messages: history, voice: withVoice }),
+          signal: ctrl.signal,
         })
         if (!res.ok || !res.body) {
           const err = (await res.json().catch(() => null)) as { message?: string } | null
@@ -362,7 +392,7 @@ export function AvatarGuide() {
         let buf = ""
         for (;;) {
           const { value, done } = await reader.read()
-          if (done) break
+          if (done || !live()) break
           buf += value
           let cut: number
           while ((cut = buf.indexOf("\n\n")) >= 0) {
@@ -370,13 +400,14 @@ export function AvatarGuide() {
             buf = buf.slice(cut + 2)
             const event = /^event: (.+)$/m.exec(block)?.[1]
             const raw = /^data: (.+)$/m.exec(block)?.[1]
-            if (!event || !raw || token !== sayTokenRef.current) continue
+            if (!event || !raw || !live()) continue
             const data = JSON.parse(raw)
             if (event === "delta") {
               answer += data.text
+              setThinking(false)
               setBubble(answer)
               startTalk()
-              if (!withVoice) plays.push(voice.pretend(data.text.length))
+              if (!withVoice) plays.push(sleep(String(data.text).length * MS_PER_CHAR))
               if (!pointed) {
                 const hit = Object.entries(MENTION).find(([, words]) => words.some((w) => answer.includes(w)))
                 if (hit) {
@@ -390,11 +421,11 @@ export function AvatarGuide() {
             } else if (event === "audio") {
               audioChain = audioChain.then(async () => {
                 const b = await voice.decode(data.mime, data.data)
-                if (b && token === sayTokenRef.current) plays.push(voice.enqueue(b, { normalize: true }))
+                if (b && live()) plays.push(voice.enqueue(b, { normalize: true }))
               })
             } else if (event === "audio_skip") {
               audioChain = audioChain.then(() => {
-                plays.push(voice.pretend(String(data.text ?? "").length))
+                plays.push(sleep(String(data.text ?? "").length * MS_PER_CHAR))
               })
             } else if (event === "error") {
               answer = data.message
@@ -405,46 +436,63 @@ export function AvatarGuide() {
         await audioChain
         await Promise.all(plays)
       } catch (e) {
-        answer = e instanceof Error && /[ぁ-ん]/.test(e.message) ? e.message : "いまは答えられませんでした。少し時間をおいてもう一度どうぞ。"
+        if (!live()) return // 次の質問か「止める」で捨てた
+        answer =
+          e instanceof Error && /[ぁ-ん]/.test(e.message)
+            ? e.message
+            : "いまは答えられませんでした。少し時間をおいてもう一度どうぞ。"
         setBubble(answer)
       } finally {
+        clearTimeout(timer)
         if (answer) setTurns((t) => [...t, { role: "assistant" as const, content: answer.slice(0, 800) }].slice(-8))
-        setBusy(false)
-        chattingRef.current = false
-        if (token === sayTokenRef.current) finishSpeaking()
+        if (live()) {
+          abortRef.current = null
+          chattingRef.current = false
+          setThinking(false)
+          finishSpeaking()
+        }
       }
     },
-    [busy, turns, finishSpeaking, guideTo]
+    [turns, finishSpeaking, guideTo, silence, canSpeak]
   )
 
   const cls = [
     styles.dock,
     spot.x === null ? styles.home : "",
     spot.bubble === "left" ? styles.bubbleLeft : styles.bubbleRight,
-    visible && ready ? styles.on : "",
+    open && ready ? styles.on : "",
     moving ? styles.moving : "",
   ].join(" ")
 
   return (
-    <aside
-      className={cls}
-      aria-label="分身の案内役"
-      style={spot.x === null ? undefined : ({ "--x": `${Math.round(spot.x)}px` } as CSSProperties)}
-    >
-      <div className={styles.figure} ref={figureRef} aria-hidden="true">
-        <canvas ref={canvasRef} className={styles.canvas} width={640} height={660} />
-        <canvas ref={mouthRef} className={styles.canvas} width={640} height={660} />
-      </div>
+    <>
+      {!open ? (
+        <button type="button" className={styles.launcher} onClick={summon} aria-label="分身を呼ぶ(作品を案内し、質問に答えます)">
+          <span className={styles.launcherFace} aria-hidden="true">
+            <img src={`${ASSETS}/face.png`} alt="" width={40} height={40} />
+          </span>
+          分身を呼ぶ
+        </button>
+      ) : null}
 
-      <div className={styles.talk}>
-        {bubble ? (
-          <p className={styles.bubble} aria-live="polite">
-            {bubble}
-          </p>
-        ) : null}
-        {!sound ? <p className={styles.hint}>右下の「音を出す」で、声も聞けます</p> : null}
+      <aside
+        className={cls}
+        aria-label="分身の案内役"
+        hidden={!open}
+        style={spot.x === null ? undefined : ({ "--x": `${Math.round(spot.x)}px` } as CSSProperties)}
+      >
+        <div className={styles.figure} ref={figureRef} aria-hidden="true">
+          <canvas ref={canvasRef} className={styles.canvas} width={640} height={660} />
+        </div>
 
-        {open ? (
+        <div className={styles.talk}>
+          {bubble ? (
+            <p className={styles.bubble} aria-live="polite">
+              {bubble}
+            </p>
+          ) : null}
+          {!sound ? <p className={styles.hint}>右下の「音を出す」をオンにすると、声も聞けます</p> : null}
+
           <form
             className={styles.panel}
             onSubmit={(e) => {
@@ -454,7 +502,7 @@ export function AvatarGuide() {
           >
             <div className={styles.chips}>
               {SUGGEST.map((s) => (
-                <button key={s} type="button" className={styles.chip} disabled={busy} onClick={() => void ask(s)}>
+                <button key={s} type="button" className={styles.chip} onClick={() => void ask(s)}>
                   {s}
                 </button>
               ))}
@@ -470,21 +518,27 @@ export function AvatarGuide() {
                 maxLength={400}
                 placeholder="作品や僕のことを聞いてください"
                 onChange={(e) => setInput(e.target.value)}
-                disabled={busy}
               />
-              <button type="submit" className={styles.send} disabled={busy || !input.trim()}>
-                {busy ? "考え中" : "聞く"}
+              <button type="submit" className={styles.send} disabled={!input.trim()}>
+                聞く
               </button>
             </div>
             <p className={styles.note}>
               AI が答えています。質問は AI の提供元に送られます。声は本人の声を元にした AI の合成音声です。
             </p>
           </form>
-        ) : null}
-        <button type="button" className={styles.toggle} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-          {open ? "閉じる" : "分身に聞く"}
-        </button>
-      </div>
-    </aside>
+          <div className={styles.acts}>
+            {thinking || talking ? (
+              <button type="button" className={styles.stop} onClick={silence}>
+                {thinking ? "考え中…止める" : "止める"}
+              </button>
+            ) : null}
+            <button type="button" className={styles.toggle} onClick={dismiss}>
+              閉じる
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   )
 }

@@ -1,5 +1,6 @@
 /* 分身の案内役(components/avatar-guide.tsx)。
-   画面の下端に立つ(動画は脛の辺りで切れているので、下端に付けると立って見える)。
+   勝手には出ない。右下の「音を出す」の上の「分身を呼ぶ」(.launcher)で出て、「閉じる」で引っ込む。
+   出ている間は画面の下端に立つ(動画は脛の辺りで切れているので、下端に付けると立って見える)。
    広い画面は案内する作品の文の列のすぐ外(画像の側)に立ち、狭い画面は左下に小さく立つ。
    右下には「音を出す」(.sound、z-index 110)があるので、右に立つときはその分だけ内側に寄せる */
 
@@ -114,4 +115,42 @@
   .home { left: calc(var(--w) * -0.18); right: auto; }
   .home .talk { left: 64%; right: auto; justify-items: start; bottom: 30%; }
   .bubble { max-height: 8.5em; }
+}
+
+/* 呼び出し。右下の「音を出す」(.sound)の真上 */
+.launcher {
+  position: fixed;
+  right: var(--sp-m);
+  bottom: calc(var(--sp-m) + 2.9rem);
+  z-index: 105;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.3em 1em 0.3em 0.3em;
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--on-surface);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: var(--w-medium);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.14);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.launcher:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgb(0 0 0 / 0.18); }
+.launcherFace { width: 2.4em; height: 2.4em; border-radius: 50%; overflow: hidden; flex: none; background: var(--surface-container-high); }
+.launcherFace img { width: 100%; height: 100%; display: block; }
+
+.acts { display: flex; gap: 0.4em; }
+.stop {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0.55em 1.2em;
+  border: 1px solid var(--outline);
+  background: var(--surface);
+  color: var(--on-surface);
+  font-size: var(--step--1);
+  font-weight: var(--w-medium);
 }

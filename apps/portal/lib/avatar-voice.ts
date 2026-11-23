@@ -1,35 +1,62 @@
-// 分身の声と口の開き。声は Web Audio で鳴らし、AnalyserNode の音量から口の開き(0〜1)を出す。
-// 音を出さない人(既定)には、字の長さから見積もった時間だけ、決まった揺れで口を動かす。
-// AudioContext は「音を出す」を押した操作の中でだけ作る(ブラウザは押される前の音を止める)。
+// 分身の声。Web Audio で順に鳴らす。
+// - AudioContext は押した操作(分身を呼ぶ・聞く・音を出す)の中で作って resume する。ブラウザは押される前の音を止める
+// - 鳴らす前に running になっているか確かめ、ならなければ鳴らさずに進める(待ち続けない)
+// - 1 本ごとに「長さ+0.6 秒」で必ず終わった扱いにする(onended が来なくても止まらない)
+// - stop() で鳴っている物も順番待ちの物も全部捨てる。次の質問や「止める」はこれを呼ぶ
+// 調べやすいよう、状態の変わり目を console.info("[avatar-voice] …") に出す
 
-const TARGET_RMS = 0.11 // 約 -19 dBFS。前もって合成した声(-16 LUFS)と、その場の声の大きさをそろえる
+const TARGET_RMS = 0.11 // 約 -19 dBFS。その場の声(Gemini の出力は約 -40 LUFS と小さい)を前もって合成した声(-16 LUFS)にそろえる
 const PEAK_CAP = 0.85
+
+const log = (...args: unknown[]) => console.info("[avatar-voice]", ...args)
 
 export class AvatarVoice {
   private ctx: AudioContext | null = null
-  private analyser: AnalyserNode | null = null
-  private data = new Float32Array(512)
+  private gen = 0
   private queue: Promise<void> = Promise.resolve()
-  private playing = 0
-  private sources = new Set<AudioBufferSourceNode>()
-  private fake: { until: number; start: number } | null = null
-  private smooth = 0
+  private live = new Set<{ src: AudioBufferSourceNode; done: () => void }>()
+  private pending = 0
   private cache = new Map<string, Promise<AudioBuffer | null>>()
+  /** 出力へ流れた音の大きさを測る(記録用。鳴っている間の最大の振幅を play の終わりに console へ出す) */
+  private meter: AnalyserNode | null = null
 
-  get unlocked() {
-    return this.ctx !== null && this.ctx.state === "running"
+  get state(): string {
+    return this.ctx?.state ?? "none"
   }
 
-  /** 押した操作の中で呼ぶ */
+  /** 押した操作の中で呼ぶ。作って resume し、無音を 1 つ鳴らして出力を開く */
   unlock() {
-    if (!this.ctx) {
-      const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-      this.ctx = new Ctx()
-      this.analyser = this.ctx.createAnalyser()
-      this.analyser.fftSize = 1024
-      this.analyser.connect(this.ctx.destination)
+    try {
+      if (!this.ctx) {
+        const Ctx =
+          window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        this.ctx = new Ctx()
+        this.ctx.onstatechange = () => log("state", this.ctx?.state)
+      }
+      const ctx = this.ctx
+      if (!this.meter) {
+        this.meter = ctx.createAnalyser()
+        this.meter.fftSize = 2048
+      }
+      void ctx.resume().then(() => log("resumed", ctx.state, "rate", ctx.sampleRate))
+      const s = ctx.createBufferSource()
+      s.buffer = ctx.createBuffer(1, 1, ctx.sampleRate)
+      s.connect(ctx.destination)
+      s.start()
+    } catch (e) {
+      log("unlock failed", e)
     }
-    void this.ctx.resume()
+  }
+
+  /** running でなければ resume を 0.6 秒だけ待つ。だめなら false(鳴らさず進める) */
+  async ready(): Promise<boolean> {
+    const ctx = this.ctx
+    if (!ctx) return false
+    if (ctx.state !== "running") {
+      await Promise.race([ctx.resume().catch(() => {}), new Promise((r) => setTimeout(r, 600))])
+    }
+    if (ctx.state !== "running") log("not running:", ctx.state)
+    return ctx.state === "running"
   }
 
   /** 前もって合成した声を読む(同じ URL は 1 回だけ) */
@@ -39,15 +66,21 @@ export class AvatarVoice {
     if (!p) {
       const ctx = this.ctx
       p = fetch(url)
-        .then((r) => r.arrayBuffer())
+        .then((r) => {
+          if (!r.ok) throw new Error(`${r.status}`)
+          return r.arrayBuffer()
+        })
         .then((b) => ctx.decodeAudioData(b))
-        .catch(() => null)
+        .catch((e) => {
+          log("load failed", url, String(e))
+          return null
+        })
       this.cache.set(url, p)
     }
     return p
   }
 
-  /** Worker から届いた声(base64)を AudioBuffer に。RIFF でなければ 24kHz・mono・16bit の PCM */
+  /** Worker から届いた声(base64)。RIFF でなければ 24kHz・mono・16bit の PCM */
   async decode(mime: string, base64: string): Promise<AudioBuffer | null> {
     if (!this.ctx) return null
     const bin = atob(base64)
@@ -64,82 +97,81 @@ export class AvatarVoice {
       const view = new DataView(bytes.buffer)
       for (let i = 0; i < n; i++) ch[i] = view.getInt16(i * 2, true) / 32768
       return trimSilence(buf)
-    } catch {
+    } catch (e) {
+      log("decode failed", String(e))
       return null
     }
   }
 
-  /** 順番に鳴らす。鳴り終わったら解決する */
+  /** 順番に鳴らす。鳴り終わる(か stop される)と解決する */
   enqueue(buffer: AudioBuffer, opts: { normalize?: boolean } = {}): Promise<void> {
-    this.playing++
-    const p = this.queue.then(
+    const gen = this.gen
+    this.pending++
+    const job = this.queue.then(
       () =>
         new Promise<void>((resolve) => {
           const ctx = this.ctx
-          if (!ctx || !this.analyser) return resolve()
+          if (!ctx || gen !== this.gen) return resolve()
           const src = ctx.createBufferSource()
           src.buffer = buffer
           const gain = ctx.createGain()
-          gain.gain.value = opts.normalize ? normalizeGain(buffer) : 1
-          src.connect(gain).connect(this.analyser)
-          this.sources.add(src)
-          src.onended = () => {
-            this.sources.delete(src)
-            resolve()
+          gain.gain.value = opts.normalize ? normalizeGain(buffer) : 0.9 // 前もって合成した声は peak 1.03 まで出たので少し下げる
+          src.connect(gain).connect(ctx.destination)
+          const meter = this.meter
+          if (meter) gain.connect(meter)
+          let peak = 0
+          const sample = new Float32Array(2048)
+          const probe = setInterval(() => {
+            if (!meter) return
+            meter.getFloatTimeDomainData(sample)
+            for (const v of sample) peak = Math.max(peak, Math.abs(v))
+          }, 50)
+          let finished = false
+          const entry = {
+            src,
+            done: () => {
+              if (finished) return
+              finished = true
+              clearTimeout(guard)
+              clearInterval(probe)
+              try {
+                if (meter) gain.disconnect(meter)
+              } catch {}
+              log("ended", "out peak", peak.toFixed(3))
+              this.live.delete(entry)
+              resolve()
+            },
           }
+          const guard = setTimeout(entry.done, (buffer.duration + 0.6) * 1000)
+          src.onended = entry.done
+          this.live.add(entry)
           src.start()
+          log("play", buffer.duration.toFixed(2) + "s", "gain", gain.gain.value.toFixed(2), "state", ctx.state)
         })
     )
-    this.queue = p.finally(() => {
-      this.playing--
+    const tracked = job.finally(() => {
+      this.pending = Math.max(0, this.pending - 1)
     })
-    return this.queue
-  }
-
-  /** 音を出さないときの口の動き。字数から見積もった秒だけ動かす */
-  pretend(chars: number) {
-    const now = performance.now()
-    const ms = Math.max(1200, chars * 140)
-    const until = Math.max(this.fake?.until ?? 0, now) + ms
-    this.fake = { start: this.fake?.start ?? now, until }
-    return new Promise<void>((r) => setTimeout(r, until - now))
+    this.queue = tracked
+    return tracked
   }
 
   get busy() {
-    return this.playing > 0 || (this.fake !== null && performance.now() < this.fake.until)
+    return this.pending > 0
   }
 
-  /** 今鳴っているものを止める */
+  /** 鳴っている物と順番待ちを全部捨てる */
   stop() {
-    for (const s of this.sources) {
+    this.gen++
+    for (const e of [...this.live]) {
       try {
-        s.stop()
+        e.src.stop()
       } catch {}
+      e.done()
     }
-    this.sources.clear()
-    this.fake = null
-  }
-
-  /** 口の開き 0〜1 */
-  level(): number {
-    let raw = 0
-    const now = performance.now()
-    if (this.fake && now < this.fake.until) {
-      // 音節の速さ(1 秒に 7〜8 回)で開け閉めし、ときどき閉じる
-      const t = (now - this.fake.start) / 1000
-      const syll = Math.max(0, Math.sin(t * 2 * Math.PI * 3.7))
-      const phrase = Math.sin(t * 1.3) > -0.75 ? 1 : 0
-      raw = syll * phrase * (0.55 + 0.45 * Math.abs(Math.sin(t * 5.1)))
-    } else if (this.analyser && this.playing > 0) {
-      this.analyser.getFloatTimeDomainData(this.data)
-      let sum = 0
-      for (let i = 0; i < this.data.length; i++) sum += this.data[i] * this.data[i]
-      const rms = Math.sqrt(sum / this.data.length)
-      raw = Math.min(1, Math.max(0, (rms - 0.012) * 9))
-    }
-    // 開くのは速く、閉じるのは少し遅く
-    this.smooth += (raw - this.smooth) * (raw > this.smooth ? 0.6 : 0.3)
-    return this.smooth
+    this.live.clear()
+    this.queue = Promise.resolve()
+    this.pending = 0
   }
 }
 
@@ -151,27 +183,29 @@ function normalizeGain(buf: AudioBuffer): number {
   for (let i = 0; i < ch.length; i++) {
     const v = Math.abs(ch[i])
     if (v > peak) peak = v
-    if (v > 0.01) {
+    if (v > 0.005) {
       sum += v * v
       n++
     }
   }
   if (!n || !peak) return 1
   const rms = Math.sqrt(sum / n)
-  return Math.min(TARGET_RMS / rms, PEAK_CAP / peak, 8)
+  return Math.min(TARGET_RMS / rms, PEAK_CAP / peak, 12)
 }
 
-/** 先頭の無音を落とし、2 秒以上の無音が来たらそこで切る(Gemini の声は末尾に長い無音が付くことがある) */
+/** 先頭の無音を落とし、1.5 秒以上の無音が来たらそこで切る(Gemini の声は末尾に 20 秒前後の無音が付くことがある) */
 function trimSilence(buf: AudioBuffer): AudioBuffer {
   const ch = buf.getChannelData(0)
   const rate = buf.sampleRate
+  let peak = 0
+  for (let i = 0; i < ch.length; i++) peak = Math.max(peak, Math.abs(ch[i]))
+  // 声が小さい(peak 0.05 前後)ので、しきい値は声の大きさに合わせる
+  const thr = Math.max(0.002, peak * 0.06)
   const win = Math.floor(rate / 50)
-  const peakOf = (i: number) => {
-    let m = 0
-    for (let j = i; j < Math.min(ch.length, i + win); j++) m = Math.max(m, Math.abs(ch[j]))
-    return m
+  const loud = (i: number) => {
+    for (let j = i; j < Math.min(ch.length, i + win); j++) if (Math.abs(ch[j]) > thr) return true
+    return false
   }
-  const loud = (i: number) => peakOf(i) > 0.006
   let first = 0
   while (first < ch.length && !loud(first)) first += win
   if (first >= ch.length) return buf
@@ -181,7 +215,7 @@ function trimSilence(buf: AudioBuffer): AudioBuffer {
     if (loud(i)) {
       last = i
       quiet = 0
-    } else if ((quiet += win) >= rate * 2) break
+    } else if ((quiet += win) >= rate * 1.5) break
   }
   const s = Math.max(0, first - Math.floor(rate / 20))
   const e = Math.min(ch.length, last + win + Math.floor(rate / 8))

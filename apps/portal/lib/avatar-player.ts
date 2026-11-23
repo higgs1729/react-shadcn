@@ -1,16 +1,9 @@
 // 分身の姿の再生。緑一色の背景で焼いた型の動画(全部が中立の姿勢で始まり中立で終わる)を、
 // <video> 2 枚の重ね替えでつなぎ、WebGL で緑を抜いて canvas に描く。
 // 透過の動画(WebM の alpha と Safari の HEVC alpha の 2 本)を持たずに済み、どのブラウザでも同じに見える。
-// 口は別の 2D canvas に重ねる(口の位置は動画ごとに前もって追跡した mouth.json)。
+// 口は後から重ねない(本人 2026-11-24「後付けでは絶対合わない」)。話す間は、口も体も動画の中で動いている talk_1 の型を流す。
 
 export type ClipId = "idle_1" | "talk_1" | "point_l_2" | "point_r_2" | "bow_1"
-
-export type MouthTrack = {
-  crop: [number, number, number, number]
-  fps: number
-  mouthW: number
-  clips: Record<string, [number, number, number][]>
-}
 
 const VERT = `
 attribute vec2 p;
@@ -47,8 +40,6 @@ type Slot = { video: HTMLVideoElement; clip: ClipId | null; tex: WebGLTexture }
 export type PlayerHooks = {
   /** 今の型が終わりに近づいたとき、次の型を決める。null なら同じ型を繰り返す */
   next: (current: ClipId) => ClipId | null
-  /** 口の開き(0〜1)。毎コマ読む */
-  mouth: () => number
 }
 
 export class AvatarPlayer {
@@ -57,7 +48,6 @@ export class AvatarPlayer {
   private front = 0
   private fade: { start: number; ms: number } | null = null
   private raf = 0
-  private mouthCtx: CanvasRenderingContext2D
   private disposed = false
 
   /** 重ね替えにかける時間。中立の姿勢どうしなので短くてよい */
@@ -67,15 +57,12 @@ export class AvatarPlayer {
 
   constructor(
     private canvas: HTMLCanvasElement,
-    private mouthCanvas: HTMLCanvasElement,
     private base: string,
-    private track: MouthTrack,
     private hooks: PlayerHooks
   ) {
     const gl = canvas.getContext("webgl", { premultipliedAlpha: true, alpha: true, antialias: false })
     if (!gl) throw new Error("webgl_unavailable")
     this.gl = gl
-    this.mouthCtx = mouthCanvas.getContext("2d")!
     const prog = this.program()
     gl.useProgram(prog)
     const buf = gl.createBuffer()
@@ -241,42 +228,6 @@ export class AvatarPlayer {
     gl.uniform1f(this.uMix, t)
     gl.uniform1f(this.uHasB, this.fade ? 1 : 0)
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
-    this.drawMouth(t > 0.5 ? b : a)
-  }
-
-  // 口は話す型と待機の型のときだけ重ねる(指す・お辞儀は顔が横や下を向き、正面の口が合わない)
-  private drawMouth(s: Slot) {
-    const ctx = this.mouthCtx
-    const { width, height } = this.mouthCanvas
-    ctx.clearRect(0, 0, width, height)
-    if (!s.clip || (s.clip !== "talk_1" && s.clip !== "idle_1")) return
-    const open = this.hooks.mouth()
-    if (open < 0.12) return
-    const pts = this.track.clips[s.clip]
-    const f = Math.min(pts.length - 1, Math.floor(s.video.currentTime * this.track.fps))
-    const [x, y, score] = pts[f] ?? [0, 0, 0]
-    if (score < 0.42) return
-    const [, , cw, ch] = this.track.crop
-    const sx = width / cw
-    const sy = height / ch
-    // 動画の閉じた口の線(幅 約 21px)の上に、開いた口を描く。開きは 2 段(半開き・開き)
-    const level = open < 0.45 ? 0.5 : 1
-    const w = this.track.mouthW * (0.55 + 0.15 * level) * sx
-    const h = (2.2 + 4.2 * level) * sy
-    const cx = x * sx
-    const cy = (y + 0.6) * sy
-    ctx.save()
-    ctx.beginPath()
-    ctx.ellipse(cx, cy + h * 0.25, w / 2, h / 2, 0, 0, Math.PI * 2)
-    ctx.fillStyle = "#5b2a2c"
-    ctx.fill()
-    // 舌の明るさを下半分に少し
-    ctx.beginPath()
-    ctx.ellipse(cx, cy + h * 0.5, w * 0.3, h * 0.22, 0, 0, Math.PI * 2)
-    ctx.fillStyle = "#b8616a"
-    ctx.globalAlpha = level
-    ctx.fill()
-    ctx.restore()
   }
 
   dispose() {
