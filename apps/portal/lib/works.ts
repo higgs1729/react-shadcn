@@ -1,5 +1,6 @@
 // 一覧の正本。08（portfolio/webSites/sites/08-portal-axis/index.html）に直書き
-// されていた内容をここへ移した。文言・並び・説明文は 08 のまま。
+// されていた内容をここへ移した。文言・説明文は 08 のまま。ピックアップの並びは
+// 本人の指定（2026-11-23）で ネフェリア → 事業 → 朝霧 → GAMEHUB → Studio。
 //
 // 08 は他サイトへ相対パス、アプリへは絶対 URL で飛んでいた。ここでは両方とも
 // basePath から組む。dev（basePath 空）と本番（/react-shadcn）の両方で解決させ、
@@ -60,75 +61,7 @@ export type Entry = {
 }
 
 export const picks: Pick[] = [
-  {
-    id: "gamehub",
-    name: "GAMEHUB",
-    claim: "すべてのゲームを、ひとまとめに",
-    description:
-      "今まで制作してきたゲームを一つのアプリから遊べることを目標としました。注目タイトルからでも一覧からでもゲームを選べます。",
-    links: [{ label: "開く", href: gamehubHref }],
-    shots: [
-      {
-        src: "p-gamehub-1.webp",
-        caption:
-          "GAMEHUB のトップ。注目タイトル PULSE//TRACE が大きく置かれている",
-      },
-      {
-        src: "p-gamehub-2.webp",
-        caption:
-          "GAMEHUB の一覧。3本のゲームがカードで並び、上に検索欄がある",
-      },
-      {
-        src: "p-gamehub-3.webp",
-        caption: "PULSE//TRACE の実際の画面。4レーンにノーツが落ちてくる",
-      },
-    ],
-  },
-  {
-    id: "studio",
-    name: "AI Design System Studio",
-    claim: "AIが画面を選ぶ過程を可視化する",
-    description:
-      "結果だけを出すと、なぜその画面なのかを誰も確かめられません。要求から候補、採用した理由までを画面の上に残しました。",
-    links: [{ label: "開く", href: `${basePath}/studio/overview/` }],
-    shots: [
-      {
-        src: "p-studio-1.webp",
-        caption:
-          "AI Design System Studio の概要。要求から実装までの流れが4段で並んでいる",
-      },
-      {
-        src: "p-studio-2.webp",
-        caption: "AI Design System Studio の検証結果の画面",
-      },
-      {
-        src: "p-studio-3.webp",
-        caption:
-          "AI Design System Studio のパターン在庫。画面の型がカードで並んでいる",
-      },
-    ],
-  },
-  {
-    id: "asagiri",
-    name: "喫茶と焙煎 朝霧",
-    claim: "情報より先に、朝の静けさを",
-    description:
-      "朝の静かな時間に詰め込みすぎは似合いません。縦組みと余白を主役にして、写真は増やさず、焙煎の一枚に寄せました。",
-    links: [{ label: "開く", href: `${basePath}/sites/01-asagiri-coffee/index.html` }],
-    shots: [
-      {
-        src: "p-asagiri-1.webp",
-        caption:
-          "喫茶と焙煎 朝霧のトップページ。焙煎した豆の写真に縦組みの見出しが重なっている",
-      },
-      {
-        src: "p-asagiri-2.webp",
-        caption: "朝霧の紹介文。縦組みの見出しと、ハンドドリップの写真",
-      },
-      { src: "p-asagiri-3.webp", caption: "朝霧の焙煎豆の節。豆の写真が並んでいる" },
-    ],
-  },
-  // ここから下の2件は、文を本人の言葉（就活の下書き）から取っている。
+  // 先頭の2件は、文を本人の言葉（就活の下書き）から取っている。
   // 金額・学校名・取引先の名前は本人の確認待ちなので載せていない。
   {
     id: "nephelia",
@@ -181,6 +114,74 @@ export const picks: Pick[] = [
       {
         src: "p-cadence-3.webp",
         caption: "CADENCE のつくり方の節。8つの工程と使っている道具",
+      },
+    ],
+  },
+  {
+    id: "asagiri",
+    name: "喫茶と焙煎 朝霧",
+    claim: "情報より先に、朝の静けさを",
+    description:
+      "朝の静かな時間に詰め込みすぎは似合いません。縦組みと余白を主役にして、写真は増やさず、焙煎の一枚に寄せました。",
+    links: [{ label: "開く", href: `${basePath}/sites/01-asagiri-coffee/index.html` }],
+    shots: [
+      {
+        src: "p-asagiri-1.webp",
+        caption:
+          "喫茶と焙煎 朝霧のトップページ。焙煎した豆の写真に縦組みの見出しが重なっている",
+      },
+      {
+        src: "p-asagiri-2.webp",
+        caption: "朝霧の紹介文。縦組みの見出しと、ハンドドリップの写真",
+      },
+      { src: "p-asagiri-3.webp", caption: "朝霧の焙煎豆の節。豆の写真が並んでいる" },
+    ],
+  },
+  {
+    id: "gamehub",
+    name: "GAMEHUB",
+    claim: "すべてのゲームを、ひとまとめに",
+    description:
+      "今まで制作してきたゲームを一つのアプリから遊べることを目標としました。注目タイトルからでも一覧からでもゲームを選べます。",
+    links: [{ label: "開く", href: gamehubHref }],
+    shots: [
+      {
+        src: "p-gamehub-1.webp",
+        caption:
+          "GAMEHUB のトップ。注目タイトル PULSE//TRACE が大きく置かれている",
+      },
+      {
+        src: "p-gamehub-2.webp",
+        caption:
+          "GAMEHUB の一覧。3本のゲームがカードで並び、上に検索欄がある",
+      },
+      {
+        src: "p-gamehub-3.webp",
+        caption: "PULSE//TRACE の実際の画面。4レーンにノーツが落ちてくる",
+      },
+    ],
+  },
+  {
+    id: "studio",
+    name: "AI Design System Studio",
+    claim: "AIが画面を選ぶ過程を可視化する",
+    description:
+      "結果だけを出すと、なぜその画面なのかを誰も確かめられません。要求から候補、採用した理由までを画面の上に残しました。",
+    links: [{ label: "開く", href: `${basePath}/studio/overview/` }],
+    shots: [
+      {
+        src: "p-studio-1.webp",
+        caption:
+          "AI Design System Studio の概要。要求から実装までの流れが4段で並んでいる",
+      },
+      {
+        src: "p-studio-2.webp",
+        caption: "AI Design System Studio の検証結果の画面",
+      },
+      {
+        src: "p-studio-3.webp",
+        caption:
+          "AI Design System Studio のパターン在庫。画面の型がカードで並んでいる",
       },
     ],
   },

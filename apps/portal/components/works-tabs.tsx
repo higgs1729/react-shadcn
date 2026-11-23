@@ -97,7 +97,7 @@ export function WorksTabs() {
         {announce ? `${LABEL[kind]}を表示しています。${COUNT[kind]}件。` : ""}
       </p>
 
-      {/* 画像が主役。同じ作品の別カットを3枚重ね、文は下に置く。ずらす向きは1件ごとに入れ替える */}
+      {/* 画像が主役。同じ作品の別カットを3枚重ねる。広い画面は文と左右に並べ、左右とずらす向きは1件ごとに入れ替える */}
       <div
         className="picks"
         id="panel-pick"
