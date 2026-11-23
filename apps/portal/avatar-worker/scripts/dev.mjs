@@ -2,11 +2,24 @@
 // OPENAI_API_KEY はユーザー環境変数から、OPENROUTER_API_KEY・ZAI_API_KEY は free-ai-pool の .env から読み、
 // 子プロセスの環境変数だけに渡す(CLOUDFLARE_INCLUDE_PROCESS_ENV で wrangler が binding に載せる)。
 // 使い方: node scripts/dev.mjs [--skip openai] [--port 8788] [-- <wrangler dev にそのまま渡す引数(例 --var IP_PER_10MIN:3)>]
-import { spawn } from "node:child_process"
+import { execFileSync, spawn } from "node:child_process"
 import { readFileSync, existsSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { tmpdir } from "node:os"
+
+// 声の鍵(Gemini の有料の鍵)はユーザー環境変数 GEMINI_PAID_API_KEY。今のシェルに無ければレジストリから読む
+function userEnv(name) {
+  if (process.env[name]) return process.env[name]
+  if (process.platform !== "win32") return undefined
+  try {
+    const out = execFileSync("reg", ["query", "HKCU\\Environment", "/v", name], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] })
+    const m = out.match(new RegExp(`${name}\\s+REG_\\w+\\s+(.+)`))
+    return m ? m[1].trim() : undefined
+  } catch {
+    return undefined
+  }
+}
 
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, "..")
@@ -27,9 +40,10 @@ if (existsSync(poolEnv)) {
     if (m && !env[m[1]]) env[m[1]] = m[2].trim().replace(/^["']|["']$/g, "")
   }
 }
+if (!env.GEMINI_API_KEY) env.GEMINI_API_KEY = userEnv("GEMINI_PAID_API_KEY")
 const skip = opt("--skip", "")
 if (skip) env.TEST_SKIP_PROVIDERS = skip
-for (const k of ["OPENAI_API_KEY", "OPENROUTER_API_KEY", "ZAI_API_KEY"]) {
+for (const k of ["OPENAI_API_KEY", "OPENROUTER_API_KEY", "ZAI_API_KEY", "GEMINI_API_KEY"]) {
   console.log(`${k}: ${env[k] ? "set" : "missing"}`)
 }
 

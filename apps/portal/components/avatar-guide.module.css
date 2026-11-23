@@ -1,0 +1,117 @@
+/* 分身の案内役(components/avatar-guide.tsx)。
+   画面の下端に立つ(動画は脛の辺りで切れているので、下端に付けると立って見える)。
+   広い画面は案内する作品の文の列のすぐ外(画像の側)に立ち、狭い画面は左下に小さく立つ。
+   右下には「音を出す」(.sound、z-index 110)があるので、右に立つときはその分だけ内側に寄せる */
+
+.dock {
+  --h: min(46vh, 26rem);
+  --w: calc(var(--h) * 640 / 660);
+  position: fixed;
+  bottom: 0;
+  /* --x は姿の中心。案内中は文の列のすぐ外に置く(avatar-guide.tsx の aim) */
+  left: calc(var(--x, 50vw) - var(--w) / 2);
+  z-index: 90;
+  width: var(--w);
+  height: var(--h);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: opacity 0.25s, transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.on { opacity: 1; transform: none; }
+.on.moving { opacity: 0; }
+/* 既定の立つ所。広い画面は右(右下の「音を出す」の分だけ内側)、狭い画面は左 */
+.home { left: auto; right: 4.5rem; }
+
+.figure { position: absolute; inset: 0; }
+.canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* 吹き出しと質問の入口は、姿の肩の高さで、画面の内側に出す */
+.talk {
+  position: absolute;
+  bottom: 40%;
+  display: grid;
+  gap: var(--sp-xs);
+  width: min(22rem, calc(100vw - var(--w) * 0.7 - 1.5rem));
+  pointer-events: auto;
+}
+.bubbleLeft .talk { right: 72%; justify-items: end; }
+.bubbleRight .talk { left: 72%; justify-items: start; }
+
+.bubble {
+  max-height: 11.5em;
+  overflow: auto;
+  padding: var(--sp-s) var(--sp-m);
+  border: 1px solid var(--grey-800);
+  border-radius: var(--r-l);
+  background: var(--grey-1100);
+  color: var(--inverse-on-surface);
+  font-size: var(--step--1);
+  line-height: 1.75;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+  white-space: pre-wrap;
+}
+.hint { font-size: var(--step--2); color: var(--on-surface-variant); background: rgb(255 255 255 / 0.85); padding: 0.1em 0.5em; border-radius: var(--r-s, 6px); }
+
+.toggle,
+.send,
+.chip {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+}
+.toggle {
+  padding: 0.55em 1.2em;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--grey-0);
+  font-size: var(--step--1);
+  font-weight: var(--w-medium);
+}
+.toggle:hover { filter: brightness(1.08); }
+
+.panel {
+  display: grid;
+  gap: var(--sp-xs);
+  width: 100%;
+  padding: var(--sp-s);
+  border: 1px solid var(--outline);
+  border-radius: var(--r-l);
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+}
+.chips { display: flex; flex-wrap: wrap; gap: 0.4em; }
+.chip {
+  padding: 0.3em 0.8em;
+  border: 1px solid var(--outline);
+  background: var(--surface-container);
+  color: var(--on-surface);
+  font-size: var(--step--2);
+}
+.chip:disabled, .send:disabled { opacity: 0.5; cursor: default; }
+.row { display: flex; gap: 0.4em; }
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5em 0.8em;
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  font: inherit;
+  font-size: var(--step--1);
+}
+.send {
+  padding: 0.5em 1em;
+  border: 0;
+  background: var(--inverse-surface);
+  color: var(--inverse-on-surface);
+  font-size: var(--step--1);
+}
+.note { font-size: var(--step--2); color: var(--on-surface-variant); line-height: 1.6; }
+
+/* 狭い画面: 左下に小さく。吹き出しは右へ横いっぱいに近く */
+@media (max-width: 74.99em) {
+  .dock { --h: min(30vh, 13.5rem); }
+  .home { left: calc(var(--w) * -0.18); right: auto; }
+  .home .talk { left: 64%; right: auto; justify-items: start; bottom: 30%; }
+  .bubble { max-height: 8.5em; }
+}

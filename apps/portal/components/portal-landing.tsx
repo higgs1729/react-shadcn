@@ -2,6 +2,7 @@
 // マークアップも文言も 08 のまま。状態を持つのは各 client component の中だけで、
 // この component は server のまま保つ。
 import { closingHref } from "../lib/works"
+import { AvatarGuide } from "./avatar-guide"
 import { AxisFigure } from "./axis-figure"
 import { BrandMark } from "./brand-mark"
 import { GravityField } from "./gravity-field"
@@ -35,6 +36,8 @@ export function PortalLanding() {
         <p className="loader__sound">このサイトは音が出ます。右下のボタンで切り替えられます</p>
       </div>
       <SoundToggle />
+      {/* 分身の案内役。Works から下で画面の端に立つ */}
+      <AvatarGuide />
 
       <a className="skip" href="#main">
         本文へスキップ

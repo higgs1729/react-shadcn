@@ -17,7 +17,7 @@ export type Admission =
   | { ok: false; reason: "ip_burst" | "ip_day" | "global_day"; retryAfterSec: number }
 
 type IpRecord = { count: number; recent: number[] }
-type DayRecord = { requests: number; spentUsd: number; reservedUsd: number; paidCalls: number }
+type DayRecord = { requests: number; spentUsd: number; reservedUsd: number; paidCalls: number; ttsChars?: number }
 
 const TEN_MIN = 10 * 60 * 1000
 
@@ -89,6 +89,22 @@ export class Guard extends DurableObject {
     if (actualUsd > 0) total.paidCalls += 1
     await this.ctx.storage.put(dayKey, total)
     return total
+  }
+
+  /** 声の合成の字数を 1 日の上限から取る。収まらなければ false(その文は声を付けない)。 */
+  async reserveTts(day: string, chars: number, dailyLimit: number): Promise<boolean> {
+    const dayKey = `d:${day}:total`
+    const total = (await this.ctx.storage.get<DayRecord>(dayKey)) ?? {
+      requests: 0,
+      spentUsd: 0,
+      reservedUsd: 0,
+      paidCalls: 0,
+    }
+    const used = total.ttsChars ?? 0
+    if (dailyLimit <= 0 || used + chars > dailyLimit) return false
+    total.ttsChars = used + chars
+    await this.ctx.storage.put(dayKey, total)
+    return true
   }
 
   async status(): Promise<DayRecord & { day: string }> {

@@ -2,11 +2,24 @@
 // 鍵は環境変数(OPENAI_API_KEY)と free-ai-pool の .env(OPENROUTER_API_KEY・ZAI_API_KEY)から読み、
 // wrangler secret put の標準入力にだけ流す(画面・ログ・ファイルに出さない)。IP_SALT はその場で作って入れるだけ。
 // 使い方: node scripts/deploy.mjs [--secrets-only]
-import { spawn } from "node:child_process"
+import { execFileSync, spawn } from "node:child_process"
 import { readFileSync, existsSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { randomBytes } from "node:crypto"
+
+// 声の鍵(Gemini の有料の鍵)はユーザー環境変数 GEMINI_PAID_API_KEY。今のシェルに無ければレジストリから読む
+function userEnv(name) {
+  if (process.env[name]) return process.env[name]
+  if (process.platform !== "win32") return undefined
+  try {
+    const out = execFileSync("reg", ["query", "HKCU\\Environment", "/v", name], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] })
+    const m = out.match(new RegExp(`${name}\\s+REG_\\w+\\s+(.+)`))
+    return m ? m[1].trim() : undefined
+  } catch {
+    return undefined
+  }
+}
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..")
 const config = join(root, "wrangler.jsonc")
@@ -20,6 +33,7 @@ if (existsSync(poolEnv)) {
     if (m) keys[m[1]] = process.env[m[1]] || m[2].trim().replace(/^["']|["']$/g, "")
   }
 }
+keys.GEMINI_API_KEY = userEnv("GEMINI_PAID_API_KEY")
 keys.IP_SALT = randomBytes(24).toString("hex")
 
 function wrangler(args, input) {

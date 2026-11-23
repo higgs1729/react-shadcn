@@ -2,6 +2,7 @@
 import persona from "./persona.md"
 import knowledge from "./knowledge.md"
 import { Guard, type GuardLimits } from "./guard"
+import { synthesize, takeSentences, type TtsAudio } from "./tts"
 import {
   CHAIN,
   costUsd,
@@ -28,6 +29,12 @@ type Env = {
   DAILY_MAX_REQUESTS?: string
   MAX_OUTPUT_TOKENS?: string
   MAX_ANSWER_CHARS?: string
+  /** 声の合成(Gemini の TTS)。鍵が無ければ声は付けない */
+  GEMINI_API_KEY?: string
+  TTS_VOICE?: string
+  TTS_MODEL?: string
+  /** 1 日(日本時間)に声にする字数の上限。超えたら字だけで答える */
+  DAILY_TTS_CHARS?: string
   /** 試験用。並べた provider を飛ばす(例 "openai")。本番では置かない。 */
   TEST_SKIP_PROVIDERS?: string
 }
@@ -124,6 +131,7 @@ export default {
         providers: CHAIN.map((p) => ({ id: p.id, model: p.model, ready: hasKey(p, env) })),
         today: { day: status.day, requests: status.requests, spentUsd: Number(status.spentUsd.toFixed(5)) },
         budgetUsd: num(env.DAILY_BUDGET_USD, 1),
+        voice: { ready: Boolean(env.GEMINI_API_KEY && env.TTS_VOICE), ttsChars: status.ttsChars ?? 0, dailyTtsChars: num(env.DAILY_TTS_CHARS, 0) },
       })
     }
     if (request.method !== "POST" || url.pathname !== "/chat") {
@@ -136,7 +144,7 @@ export default {
     }
     const length = Number(request.headers.get("Content-Length") ?? "0")
     if (length > MAX_BODY_BYTES) return json(request, env, { error: "too_large" }, 413)
-    let body: { messages?: unknown }
+    let body: { messages?: unknown; voice?: unknown }
     try {
       const text = await request.text()
       if (text.length > MAX_BODY_BYTES) return json(request, env, { error: "too_large" }, 413)
@@ -177,6 +185,10 @@ export default {
     const skip = new Set((env.TEST_SKIP_PROVIDERS ?? "").split(",").map((s) => s.trim()).filter(Boolean))
     const chain = CHAIN.filter((p) => hasKey(p, env) && !skip.has(p.id) && (!p.paid || admission.paidAllowed))
 
+    // 声は訪問者が音をオンにしたときだけ(body.voice)。鍵と声の id が無ければ付けない
+    const voiceOn = body.voice === true && Boolean(env.GEMINI_API_KEY && env.TTS_VOICE)
+    const dailyTtsChars = num(env.DAILY_TTS_CHARS, 0)
+
     const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
     const writer = writable.getWriter()
     const enc = new TextEncoder()
@@ -191,6 +203,54 @@ export default {
         cacheWriteTokens: inputEstimate,
         outputTokens: Math.min(maxOutputTokens, Math.ceil(chars * 1.2) + 20),
       })
+
+    // 文が 1 つ終わるたびに合成を始め、届いた順でなく文の順に audio を送る
+    let ttsChain: Promise<void> = Promise.resolve()
+    let ttsSeq = 0
+    let ttsBuffer = ""
+    let ttsStopped = !voiceOn
+    const ttsAbort = new AbortController()
+    const speak = (sentence: string) => {
+      if (ttsStopped) return
+      const seq = ttsSeq++
+      const job: Promise<TtsAudio | null> = (async () => {
+        const ok = await guard.reserveTts(admission.day, sentence.length, dailyTtsChars)
+        if (!ok) {
+          ttsStopped = true
+          return null
+        }
+        const timer = setTimeout(() => ttsAbort.abort("tts_timeout"), 30_000)
+        try {
+          return await synthesize(sentence, {
+            apiKey: env.GEMINI_API_KEY!,
+            voice: env.TTS_VOICE!,
+            model: env.TTS_MODEL ?? "gemini-3.8-flash-tts",
+            signal: ttsAbort.signal,
+          })
+        } catch (err) {
+          console.log(JSON.stringify({ at: "tts", error: String(err).slice(0, 120) }))
+          return null
+        } finally {
+          clearTimeout(timer)
+        }
+      })()
+      ttsChain = ttsChain.then(async () => {
+        const audio = await job
+        if (audio) await send("audio", { seq, text: sentence, ...audio })
+        else await send("audio_skip", { seq, text: sentence })
+      })
+    }
+    const feedVoice = (text: string, flush = false) => {
+      if (ttsStopped) return
+      ttsBuffer += text
+      const { sentences, rest } = takeSentences(ttsBuffer)
+      ttsBuffer = rest
+      for (const s of sentences) speak(s)
+      if (flush && ttsBuffer.trim()) {
+        speak(ttsBuffer.trim())
+        ttsBuffer = ""
+      }
+    }
 
     const run = async () => {
       const started = Date.now()
@@ -225,7 +285,10 @@ export default {
                 truncated = true
               }
               chars += text.length
-              if (text) await send("delta", { text })
+              if (text) {
+                await send("delta", { text })
+                feedVoice(text)
+              }
               if (truncated) {
                 controller.abort("answer_too_long")
                 break
@@ -234,6 +297,8 @@ export default {
             if (firstMs === null) throw new UpstreamError(spec.id, 502, "empty_answer")
             const cost = usage ? costUsd(spec.model, usage) : spec.paid ? estimateCut(spec.model, chars) : 0
             actualUsd += cost
+            feedVoice("", true)
+            await ttsChain
             await send("done", {
               provider: spec.id,
               model: resolvedModel,
@@ -249,6 +314,8 @@ export default {
             if (firstMs !== null) {
               // 途中まで流した後に切れたら、次へは回さずに終える
               if (spec.paid) actualUsd += usage ? costUsd(spec.model, usage) : estimateCut(spec.model, chars)
+              feedVoice("", true)
+              await ttsChain
               await send("done", {
                 provider: spec.id,
                 model: resolvedModel,

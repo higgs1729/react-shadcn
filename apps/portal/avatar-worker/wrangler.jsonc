@@ -19,7 +19,11 @@
     // 全体の 1 日の回数の上限。超えたら無料のモデルも呼ばずに止まる
     "DAILY_MAX_REQUESTS": "500",
     "MAX_OUTPUT_TOKENS": "600",
-    "MAX_ANSWER_CHARS": "700"
+    "MAX_ANSWER_CHARS": "700",
+    // 声。本人の声の複製(Gemini TTS)。月の上限 ¥800 に収めるため、1 日に声にする字数を絞る
+    "TTS_VOICE": "voice_3akpdpcg1b0n",
+    "TTS_MODEL": "gemini-3.8-flash-tts",
+    "DAILY_TTS_CHARS": "5000"
   }
-  // 鍵は secret: wrangler secret put OPENAI_API_KEY / OPENROUTER_API_KEY / ZAI_API_KEY / IP_SALT
+  // 鍵は secret: wrangler secret put OPENAI_API_KEY / OPENROUTER_API_KEY / ZAI_API_KEY / IP_SALT / GEMINI_API_KEY
 }
