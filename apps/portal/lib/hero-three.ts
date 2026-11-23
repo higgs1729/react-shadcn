@@ -265,20 +265,34 @@ export function startHeroScene({
     return { mesh, centerX: x + w / 2 }
   })
 
-  /* ---- 曲線（鋼の管）と点 ---- */
+  /* ---- 曲線（鋼の線路）と点 ----
+     曲線は短冊の奥行きいっぱいに敷いた線路にする（本人 2026-11-23「線路のような立体に」）。
+     2本のレールは短冊の手前と奥の縁の上、枕木はその間に一定の間隔で渡す。
+     点は2本のレールの間を走る */
   const curvePath = svg.querySelector<SVGPathElement>(".axis__curve")
   const curve2d = curvePath ? pathPoints(curvePath.getAttribute("d") ?? "") : []
-  const curve3d = curve2d.map((p) => new THREE.Vector3(toX(p.x), toY(p.y), 2))
-  const tubePath = new THREE.CurvePath<THREE.Vector3>()
-  for (let i = 1; i < curve3d.length; i++) {
-    tubePath.add(new THREE.LineCurve3(curve3d[i - 1], curve3d[i]))
-  }
-  const RADIAL = 8
+  const RAIL_LIFT = 5
+  const RAIL_RADIUS = 2.6
+  const RAIL_Z = [-4, -DEPTH + 4]
+  const curve3d = curve2d.map((p) => new THREE.Vector3(toX(p.x), toY(p.y) + RAIL_LIFT, -DEPTH / 2))
+  const RADIAL = 10
   const tubeSegments = Math.max(1, curve3d.length - 1) * 2
-  const curveGeometry = keep(new THREE.TubeGeometry(tubePath, tubeSegments, 2.2, RADIAL, false))
-  const curveIndexCount = curveGeometry.index?.count ?? 0
-  curveGeometry.setDrawRange(0, 0)
-  chartScene.add(new THREE.Mesh(curveGeometry, steel))
+  const rails = RAIL_Z.map((z) => {
+    const path = new THREE.CurvePath<THREE.Vector3>()
+    for (let i = 1; i < curve3d.length; i++) {
+      path.add(
+        new THREE.LineCurve3(
+          curve3d[i - 1].clone().setZ(z),
+          curve3d[i].clone().setZ(z),
+        ),
+      )
+    }
+    const geometry = keep(new THREE.TubeGeometry(path, tubeSegments, RAIL_RADIUS, RADIAL, false))
+    geometry.setDrawRange(0, 0)
+    chartScene.add(new THREE.Mesh(geometry, steel))
+    return geometry
+  })
+  const curveIndexCount = rails[0]?.index?.count ?? 0
 
   // 弧長の累積。点を曲線の上で動かし、5本目の短冊の真ん中で止めるのに使う
   const lengths = [0]
@@ -302,20 +316,47 @@ export function startHeroScene({
     const t = (length - lengths[i - 1]) / (lengths[i] - lengths[i - 1] || 1)
     return out.lerpVectors(curve3d[i - 1], curve3d[i], clamp01(t))
   }
-  const dot = new THREE.Mesh(keep(new THREE.SphereGeometry(8, 32, 20)), steel)
+  const dot = new THREE.Mesh(keep(new THREE.SphereGeometry(9, 32, 20)), steel)
   chartScene.add(dot)
 
-  /* ---- 軸（鋼の棒）と矢じり ---- */
+  // 枕木。弧長で等間隔に置き、曲線が引かれたところまでだけ見せる
+  const SLEEPER_GAP = 24
+  const sleeperGeometry = keep(new THREE.BoxGeometry(6, 2.6, DEPTH + 6))
+  const sleepers: { mesh: THREE.Mesh; at: number }[] = []
+  const tangent = new THREE.Vector3()
+  for (let at = SLEEPER_GAP / 2; at < total; at += SLEEPER_GAP) {
+    let i = 1
+    while (i < lengths.length - 1 && lengths[i] < at) i++
+    tangent.subVectors(curve3d[i], curve3d[i - 1]).normalize()
+    const mesh = new THREE.Mesh(sleeperGeometry, darkSteel)
+    pointAt(at, mesh.position)
+    mesh.position.y -= RAIL_RADIUS + 0.6
+    mesh.rotation.z = Math.atan2(tangent.y, tangent.x)
+    mesh.visible = false
+    chartScene.add(mesh)
+    sleepers.push({ mesh, at })
+  }
+
+  /* ---- 軸（鋼のパイプ）と矢じり ----
+     2D の細い線のままだと 3D の中で消えるので、太いパイプと大きめの円錐にする。
+     端は球で丸める */
+  const AXIS_RADIUS = 5
   for (const path of svg.querySelectorAll<SVGPathElement>(".axis__lines path")) {
     const [a, b] = pathPoints(path.getAttribute("d") ?? "")
     if (!a || !b) continue
     const from = new THREE.Vector3(toX(a.x), toY(a.y), 0)
     const to = new THREE.Vector3(toX(b.x), toY(b.y), 0)
     const length = from.distanceTo(to)
-    const rod = new THREE.Mesh(keep(new THREE.CylinderGeometry(1.6, 1.6, length, 10)), steel)
+    const rod = new THREE.Mesh(
+      keep(new THREE.CylinderGeometry(AXIS_RADIUS, AXIS_RADIUS, length, 24)),
+      steel,
+    )
     rod.position.copy(from).add(to).multiplyScalar(0.5)
     rod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), to.clone().sub(from).normalize())
     chartScene.add(rod)
+    const cap = new THREE.Mesh(keep(new THREE.SphereGeometry(AXIS_RADIUS, 20, 12)), steel)
+    cap.position.copy(from)
+    chartScene.add(cap)
   }
   for (const path of svg.querySelectorAll<SVGPathElement>(".axis__heads path")) {
     const pts = pathPoints(path.getAttribute("d") ?? "")
@@ -325,11 +366,13 @@ export function startHeroScene({
     const base = new THREE.Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
     const tip3 = new THREE.Vector3(toX(tip.x), toY(tip.y), 0)
     const base3 = new THREE.Vector3(toX(base.x), toY(base.y), 0)
-    const height = tip3.distanceTo(base3)
-    const radius = p1.distanceTo(p2) / 2
-    const cone = new THREE.Mesh(keep(new THREE.ConeGeometry(radius, height, 16)), steel)
-    cone.position.copy(tip3).add(base3).multiplyScalar(0.5)
-    cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tip3.clone().sub(base3).normalize())
+    // 底は SVG の位置に残し、パイプの太さに合わせて先へ伸ばす
+    const dir = tip3.clone().sub(base3).normalize()
+    const height = Math.max(tip3.distanceTo(base3) * 1.6, AXIS_RADIUS * 6)
+    const radius = Math.max((p1.distanceTo(p2) / 2) * 1.6, AXIS_RADIUS * 2.4)
+    const cone = new THREE.Mesh(keep(new THREE.ConeGeometry(radius, height, 32)), steel)
+    cone.position.copy(base3).addScaledVector(dir, height / 2)
+    cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir)
     chartScene.add(cone)
   }
 
@@ -506,8 +549,10 @@ export function startHeroScene({
     // 図
     const drawn = easeInOut(clamp01(t / 1.6))
     const segments = Math.ceil(drawn * tubeSegments)
-    curveGeometry.setDrawRange(0, Math.min(curveIndexCount, segments * RADIAL * 6))
+    for (const rail of rails) rail.setDrawRange(0, Math.min(curveIndexCount, segments * RADIAL * 6))
+    for (const sleeper of sleepers) sleeper.mesh.visible = sleeper.at <= total * drawn
     dot.position.copy(pointAt(stopLength * drawn, dotPosition))
+    dot.position.y += 6
     bars.forEach(({ mesh }, i) => {
       const k = easeOut(clamp01((t - 0.45 - i * 0.045) / 0.5))
       mesh.scale.y = Math.max(0.0001, k)
