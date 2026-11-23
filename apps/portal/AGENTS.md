@@ -17,7 +17,10 @@
 - `components/works-tabs.tsx` — 3タブと、その下の3パネル(ピックアップ・アプリ・サイト)
 - `components/pick-stack.tsx` — 重ねた3枚の画像。押すと順番が入れ替わる
 - `components/portal-nav.tsx` / `mail-link.tsx` — ナビの開閉と現在地、メールアドレスの組み立て
-- `components/axis-figure.tsx` — ヒーローの座標系(SVG + GSAP)。`components/gravity-field.tsx` — 暗転帯の波紋(Canvas 2D)
+- `components/axis-figure.tsx` — ヒーローの座標系(SVG + GSAP)。3D が出たときは完成形で置いて隠れ、2D に戻ったときだけ動く
+- `components/hero-scene.tsx` / `lib/hero-three.ts` — ヒーローの 3D 版(three)と読み込み画面の進み具合。形は SVG から読み、数値を持たない。短冊の前の面に `public/hero/hero-reel*.mp4`(14 列のアトラス)を貼る
+- `public/hero/` — 3D の映像。R2 に置かないのは、R2 が CORS の見出しを返さず WebGL のテクスチャに使えないため(2026-11-23 に curl で確認)。作り方と素材は `docs/design-direction.md` の「ヒーローの 3D」
+- `components/gravity-field.tsx` — 暗転帯の波紋(Canvas 2D)
 - `components/portal-motion.tsx` — 出現とタイプ表示。React の外から class と textContent を触る
 - `lib/works.ts` — 一覧の正本(ピックアップ5・アプリ4・サイト5)。href は basePath から組む
 - `lib/asset-base.ts` — R2 で配信する画像の公開URL基点。`apps/team-t/lib/team-t-app/asset-base.ts` と同じバケット・公開URL
@@ -29,9 +32,10 @@
 ## このディレクトリだけの約束
 
 - **UI キットを持ち込まない。** Tailwind も shadcn も依存に足さない。
-  依存は Next・React と、演出に使う GSAP だけ
+  依存は Next・React と、演出に使う GSAP、ヒーローの 3D に使う three だけ。three は `lib/hero-three.ts` だけが読み、動的 import で遅延させる
 - **演出は隔離する。** 動くのはヒーローの座標系と暗転帯の重力場、それに出現とタイプ表示だけ。
   文書側の部品を動かさない(08 の規律。理由は `docs/design-direction.md`)
+- **3D は試せる環境だけ。** `app/layout.tsx` の head のスクリプトが、WebGL がある・動きを減らす設定でない・データ節約でないときだけ html に `hero-3d` を付ける。付かなければ three も映像も読まず、今までの 2D が出る。8 秒で最初の1枚が出なければ 2D に戻す
 - **JS が無い・動きを減らす設定でも、図と文字が完成形で出ること。**
   `axis-figure.tsx` の `settle()` と保険タイマー、`pick-stack.tsx` の初期状態を消さない
 - アプリ間リンクは素の `<a>` と `NEXT_PUBLIC_BASE_PATH` で組み立てる。Next は `<a>` の href に basePath を付けないため、リンク先は兄弟アプリの basePath を含めて自分で書く

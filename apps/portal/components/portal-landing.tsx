@@ -13,6 +13,22 @@ import { WorksTabs } from "./works-tabs"
 export function PortalLanding() {
   return (
     <>
+      {/* 3D のヒーローを読み込む間だけ被せる。html に hero-3d が無ければ出ない。
+          曲線が引かれる長さで進み具合を見せる（座標系の演出と同じ意味の図） */}
+      <div className="loader" aria-hidden="true">
+        <svg className="loader__fig" viewBox="0 0 240 120">
+          <path className="loader__axis" d="M 20 10 V 104 M 12 100 H 232" />
+          <path
+            className="loader__curve"
+            pathLength={1}
+            d="M 20 99 C 70 99 90 96 110 70 C 130 40 150 30 228 28"
+          />
+        </svg>
+        <p className="loader__t">
+          読み込み中 <span className="loader__n">0</span>%
+        </p>
+      </div>
+
       <a className="skip" href="#main">
         本文へスキップ
       </a>

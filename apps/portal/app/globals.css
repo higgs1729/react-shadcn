@@ -338,6 +338,33 @@ a { color: inherit; }
 }
 .axis__dot { fill: var(--red-500); }
 
+/* 3D 版（components/hero-scene.tsx）。html に hero-3d があるときだけ試し、
+   最初の1枚が出たら hero-3d-ready で SVG と入れ替える。SVG は消さず透明にするだけ
+   （axis-fallback の animation が visibility を持っているので、opacity で隠す） */
+.hero__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.4s; }
+.hero-3d-ready .hero__gl { opacity: 1; }
+.hero-3d-ready .axis { opacity: 0; }
+
+/* 読み込み画面。3D を試すときだけ出る。押せる物は無いので当たり判定も持たない。
+   JS が途中で止まっても被さったままにならないよう、9 秒で必ず消える（保険） */
+.loader { display: none; }
+.hero-3d .loader {
+  position: fixed; inset: 0; z-index: 100;
+  display: grid; place-content: center; justify-items: center; gap: var(--sp-s);
+  background: var(--surface); pointer-events: none;
+  transition: opacity 0.4s, visibility 0s 0.4s;
+  animation: loader-giveup 0s 9s forwards;
+}
+.hero-3d-ready .loader { opacity: 0; visibility: hidden; }
+@keyframes loader-giveup { to { opacity: 0; visibility: hidden; } }
+.loader__fig { width: min(60vw, 240px); height: auto; overflow: visible; }
+.loader__axis { fill: none; stroke: var(--outline); stroke-width: 1.5; }
+.loader__curve {
+  fill: none; stroke: var(--grey-600); stroke-width: 1.5; stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p, 0));
+}
+.loader__t { color: var(--on-surface-variant); font-size: var(--step--1); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
 .hero__inner { position: relative; z-index: 1; width: min(100% - var(--sp-m) * 2, 54rem); margin-inline: auto; }
 .hero__mark {
   display: inline-flex; align-items: center; gap: 0.45em;
