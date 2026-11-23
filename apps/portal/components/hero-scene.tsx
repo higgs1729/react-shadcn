@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react"
 /* ヒーローの 3D 版の入口。描くのは lib/hero-three.ts で、ここは読み込みと切り替えだけ。
  *
  * 3D を試すかは <head> のインラインスクリプトが先に決め、html に hero-3d を付ける
- * （WebGL がある・動きを減らす設定でない・データ節約でない、のときだけ）。
+ * （WebGL があるときだけ。動きを減らす設定でも 3D を出す。本人 2026-11-23）。
  * 付いていなければ何も読まず、今までの 2D（axis-figure.tsx）がそのまま動く。
  *
  * 読み込みの間は .loader（portal-landing.tsx のマークアップ）を被せ、進み具合を
