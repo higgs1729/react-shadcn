@@ -16,9 +16,10 @@
 // 描くのは1枚の canvas（ヒーロー全体）に2回。文字の層はヒーロー全体、
 // 図の層は .hero__stage の矩形だけに viewport を絞る。WebGL の文脈を1つに保つため。
 import * as THREE from "three"
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js"
 import { FontLoader, type Font } from "three/examples/jsm/loaders/FontLoader.js"
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
+
+import { createBackdrop, defaultEnvironment, readBackdrop } from "./hero-backdrop"
 
 export type HeroSceneOptions = {
   canvas: HTMLCanvasElement
@@ -193,11 +194,12 @@ export function startHeroScene({
   }
 
   /* ---- 環境（映り込み）と光。2つの層で同じものを使う ---- */
-  const pmrem = new THREE.PMREMGenerator(renderer)
-  const room = new RoomEnvironment()
-  const envMap = keep(pmrem.fromScene(room, 0.04).texture)
-  room.dispose()
-  pmrem.dispose()
+  // 背景の候補（?bg=1〜4）。無ければ今までどおり白の地に RoomEnvironment
+  const backdropKind = readBackdrop()
+  const backdrop = backdropKind ? keep(createBackdrop(backdropKind, renderer, narrow)) : null
+  const envMap = backdrop ? backdrop.environment : keep(defaultEnvironment(renderer))
+  // ボタン（2D のまま）の色を暗い地に合わせるための目印。globals.css が読む
+  if (backdrop) document.documentElement.dataset.heroBg = backdrop.dark ? "dark" : "light"
 
   const textScene = new THREE.Scene()
   const chartScene = new THREE.Scene()
@@ -221,15 +223,32 @@ export function startHeroScene({
   const orange = cssColor("--red-500", "#ea4b17")
   const deepOrange = cssColor("--red-600", "#c63307")
   // 金属は色が映り込みの色になるので、真っ黒にすると何も映らない。黒は少し持ち上げる
-  const blackMetal = ink.clone().lerp(new THREE.Color("#ffffff"), 0.12)
+  // 暗い地の候補では、黒の鋼が地に沈むので、鉄色（ガンメタル）まで持ち上げる
+  const blackMetal = ink.clone().lerp(new THREE.Color("#ffffff"), backdrop?.dark ? 0.3 : 0.12)
   const metal = (color: THREE.Color, roughness: number) =>
     keep(new THREE.MeshStandardMaterial({ color, metalness: 1, roughness }))
   const blackSteel = metal(blackMetal, 0.16)
   const orangeSteel = metal(orange, 0.12)
   const deepOrangeSteel = metal(deepOrange, 0.14)
   // 字の面。白い地の上で字として読めるよう、黒の鋼を少し粗くして映り込みを和らげる
-  const faceSteel = metal(blackMetal, 0.24)
+  // 暗い地の候補では、黒の字が読めないので面を明るい鋼にする
+  // 暗い部屋を映す金属は暗く見えるので、わずかに自ら光らせて字として読ませる
+  const faceSteel = backdrop?.dark
+    ? keep(
+        new THREE.MeshStandardMaterial({
+          color: "#d5d9e0",
+          metalness: 1,
+          roughness: 0.2,
+          emissive: "#9aa0aa",
+          emissiveIntensity: 1,
+        }),
+      )
+    : metal(blackMetal, 0.24)
   const accentFace = metal(deepOrange, 0.2)
+  if (backdrop?.dark) {
+    accentFace.emissive = orange.clone()
+    accentFace.emissiveIntensity = 0.6
+  }
 
   /* ---- 映像 ---- */
   const videoTexture = keep(new THREE.VideoTexture(video))
@@ -606,6 +625,10 @@ export function startHeroScene({
 
     renderer.setViewport(0, 0, heroWidth, heroHeight)
     renderer.clear()
+    if (backdrop) {
+      backdrop.render(renderer, t, heroWidth, heroHeight)
+      renderer.clearDepth()
+    }
     renderer.render(textScene, textCamera)
     renderer.clearDepth()
     renderer.setViewport(stageBox.x, stageBox.y, stageBox.w, stageBox.h)

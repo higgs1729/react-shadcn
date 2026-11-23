@@ -355,6 +355,10 @@ a { color: inherit; }
 .hero-3d-ready .hero__mark.hero-3d-text .hero__glyph { color: transparent; }
 .hero-3d-ready .hero-3d-text .typewrite__caret { display: none; }
 
+/* 背景の候補（?bg=1〜4、lib/hero-backdrop.ts）で暗い地を選んだときだけ、2D のボタンを反転する */
+.hero-3d-ready[data-hero-bg="dark"] .hero .btn--primary { background: var(--inverse-on-surface); color: var(--inverse-surface); }
+.hero-3d-ready[data-hero-bg="dark"] .hero .btn--tonal { background: var(--grey-1000); color: var(--inverse-on-surface); }
+
 /* 読み込み画面。3D を試すときだけ出る。押せる物は無いので当たり判定も持たない。
    JS が途中で止まっても被さったままにならないよう、9 秒で必ず消える（保険） */
 .loader { display: none; }
