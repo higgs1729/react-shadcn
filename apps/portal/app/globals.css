@@ -341,9 +341,19 @@ a { color: inherit; }
 /* 3D 版（components/hero-scene.tsx）。html に hero-3d があるときだけ試し、
    最初の1枚が出たら hero-3d-ready で SVG と入れ替える。SVG は消さず透明にするだけ
    （axis-fallback の animation が visibility を持っているので、opacity で隠す） */
-.hero__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.4s; }
+.hero__gl {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.4s;
+}
 .hero-3d-ready .hero__gl { opacity: 1; }
 .hero-3d-ready .axis { opacity: 0; }
+/* 3 行の字は 3D が同じ位置に置く。HTML の字は透明にして残す（読み上げ・選択・折り返し）。
+   3D を試す間は字を動かさない。出現の translateY が残ると、測った位置がずれる */
+.hero-3d .hero__mark, .hero-3d .hero__lead { transform: none; transition: none; }
+.hero-3d-ready .hero-3d-text,
+.hero-3d-ready .hero-3d-text * { color: transparent; }
+.hero-3d-ready .hero__mark.hero-3d-text .hero__glyph { color: transparent; }
+.hero-3d-ready .hero-3d-text .typewrite__caret { display: none; }
 
 /* 読み込み画面。3D を試すときだけ出る。押せる物は無いので当たり判定も持たない。
    JS が途中で止まっても被さったままにならないよう、9 秒で必ず消える（保険） */

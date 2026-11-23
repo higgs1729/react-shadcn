@@ -1,22 +1,37 @@
 // ヒーローの 3D 版。2D の座標系（axis-figure.tsx）を奥行きのある形に起こし、
-// 短冊（積分の面積）の前の面に、本人の作品の映像を映す。
+// 短冊（積分の面積）の前の面に、本人の作品の映像を映す。ヒーローの 3 行の文字も
+// 同じ鋼で 3D に起こす。
 //
 // three はこのファイルだけが読む。hero-scene.tsx が動的 import するので、
 // 3D を使わない環境（WebGL が無い）では落ちてこない。
 //
 // 形の数値は持たない。短冊・曲線・軸・ラベルは、サーバーが描いた 2D の SVG から読む。
-// ここに写すと正本が二つになり、片方だけ直す事故が起きるため（axis-figure と同じ考え）。
+// 文字の位置も、HTML の文字が組まれた位置を1字ずつ測って置く。HTML の文字は消さず
+// 透明にして残すので、読み上げ・選択・折り返しは今までどおり HTML が受け持つ。
 //
-// 映像は1本の横長の動画（アトラス）。幅を短冊の本数で等分し、i 本目の短冊の前の面に
-// i 列目を貼る。14 本の動画を別々に回すより、デコードが1本で済むのでスマホでも軽い。
+// 質感は磨いた鋼（本人 2026-11-23）。金属は映り込みで金属に見えるので、
+// RoomEnvironment を環境マップにし、そのまわりをゆっくり回して光を流す。
+// 文字は読めることが先なので、正面（字の面）は暗い鋼、縁と側面を明るい鋼にする。
+//
+// 描くのは1枚の canvas（ヒーロー全体）に2回。文字の層はヒーロー全体、
+// 図の層は .hero__stage の矩形だけに viewport を絞る。WebGL の文脈を1つに保つため。
 import * as THREE from "three"
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js"
+import { FontLoader, type Font } from "three/examples/jsm/loaders/FontLoader.js"
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
 
 export type HeroSceneOptions = {
   canvas: HTMLCanvasElement
+  hero: HTMLElement
+  stage: HTMLElement
   svg: SVGSVGElement
   video: HTMLVideoElement
+  /** three の typeface JSON（scripts/build-hero-font.py が書き出す） */
+  fontData: unknown
+  /** 3D にできた行。呼んだ側が HTML の文字を透明にする */
+  textElements: HTMLElement[]
   /** 最初の1枚を描いたときに1回だけ呼ぶ */
-  onReady: () => void
+  onReady: (builtText: HTMLElement[]) => void
 }
 
 export type HeroSceneHandle = { dispose: () => void }
@@ -33,6 +48,9 @@ const DEPTH = 46
 /** 点が止まる短冊（2D と同じく左から5本目の真ん中） */
 const STOP_BAR = 4
 const FOV = 24
+const TEXT_FOV = 30
+/** 字形はこの大きさで1回だけ作り、置くときに字の大きさへ縮める */
+const GLYPH_UNIT = 100
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)
@@ -90,58 +108,82 @@ function pathPoints(d: string): THREE.Vector2[] {
   return points
 }
 
-function cssColor(name: string, fallback: string) {
-  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-  return new THREE.Color(value || fallback)
+/* ------------------------------------------------------------------ 字を測る
+   HTML の文字を1字ずつ Range で測り、左端と基線の位置を返す。基線は「字の箱の上端から
+   基線までの差」で出す。差は、同じ書体・大きさ・太さの字を画面外の見本に組み、高さ 0 の
+   inline-block の下端で測る（フォントの値から推さない。ロゴ行は flex なので、行の中に
+   印を差すと並びが変わって測れない）。 */
+function baselineOffset(el: Element) {
+  const style = getComputedStyle(el)
+  const probe = document.createElement("div")
+  probe.style.cssText =
+    "position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;line-height:normal"
+  probe.style.fontFamily = style.fontFamily
+  probe.style.fontSize = style.fontSize
+  probe.style.fontWeight = style.fontWeight
+  const text = document.createElement("span")
+  text.textContent = "あ"
+  const marker = document.createElement("span")
+  marker.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline"
+  probe.append(text, marker)
+  document.body.append(probe)
+  const offset = marker.getBoundingClientRect().bottom - text.getBoundingClientRect().top
+  probe.remove()
+  return offset
 }
 
-function labelSprite(text: string, color: THREE.Color, size: number) {
-  const canvas = document.createElement("canvas")
-  canvas.width = 64
-  canvas.height = 64
-  const ctx = canvas.getContext("2d")
-  if (ctx) {
-    const face = getComputedStyle(document.body).fontFamily
-    ctx.fillStyle = `#${color.getHexString()}`
-    ctx.font = `italic 44px ${face}`
-    ctx.textAlign = "center"
-    ctx.textBaseline = "middle"
-    ctx.fillText(text, 32, 34)
+type Spot = { ch: string; x: number; baseline: number; size: number }
+
+function measureText(el: HTMLElement): Spot[] {
+  const size = parseFloat(getComputedStyle(el).fontSize) || 16
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+    acceptNode: (node) =>
+      node.parentElement?.closest("[aria-hidden='true']")
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+  })
+  const spots: Spot[] = []
+  const range = document.createRange()
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const text = node.textContent ?? ""
+    const offset = node.parentElement ? baselineOffset(node.parentElement) : size * 0.88
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i]
+      if (!ch.trim()) continue
+      range.setStart(node, i)
+      range.setEnd(node, i + 1)
+      const rect = range.getClientRects()[0]
+      if (!rect) continue
+      spots.push({ ch, x: rect.left, baseline: rect.top + offset, size })
+    }
   }
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  const sprite = new THREE.Sprite(
-    new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }),
-  )
-  sprite.scale.set(size * 1.4, size * 1.4, 1)
-  return sprite
+  range.detach()
+  return spots
 }
 
 export function startHeroScene({
   canvas,
+  hero,
+  stage,
   svg,
   video,
+  fontData,
+  textElements,
   onReady,
 }: HeroSceneOptions): HeroSceneHandle {
   const narrow = window.innerWidth < 768
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: !narrow,
+    antialias: true,
     alpha: true,
     powerPreference: "low-power",
   })
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, narrow ? 1.25 : 1.5))
+  // 字の縁が読めることを優先し、スマホでもアンチエイリアスを入れて画素比は 1.5 まで
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
   renderer.setClearColor(0x000000, 0)
   renderer.outputColorSpace = THREE.SRGBColorSpace
-
-  const scene = new THREE.Scene()
-  const camera = new THREE.PerspectiveCamera(FOV, VB_W / VB_H, 10, 6000)
-  const baseDistance = VB_H / 2 / Math.tan(THREE.MathUtils.degToRad(FOV / 2))
-
-  const accent = cssColor("--accent", "#c63307")
-  const line = cssColor("--outline", "#cdd4dc")
-  const ink = cssColor("--grey-600", "#6b7280")
-  const dotColor = cssColor("--red-500", "#e0451a")
+  renderer.toneMapping = THREE.NeutralToneMapping
+  renderer.autoClear = false
 
   const disposables: { dispose: () => void }[] = []
   const keep = <T extends { dispose: () => void }>(item: T) => {
@@ -149,25 +191,52 @@ export function startHeroScene({
     return item
   }
 
+  /* ---- 環境（映り込み）と光。2つの層で同じものを使う ---- */
+  const pmrem = new THREE.PMREMGenerator(renderer)
+  const room = new RoomEnvironment()
+  const envMap = keep(pmrem.fromScene(room, 0.04).texture)
+  room.dispose()
+  pmrem.dispose()
+
+  const textScene = new THREE.Scene()
+  const chartScene = new THREE.Scene()
+  for (const scene of [textScene, chartScene]) {
+    scene.environment = envMap
+    const key = new THREE.DirectionalLight(0xffffff, 1.6)
+    key.position.set(-0.6, 1, 0.8)
+    scene.add(key)
+  }
+
+  /* ---- 鋼 ----
+     明るい鋼: 短冊の側面と上面・軸・曲線・点・字の縁。
+     暗い鋼: 字の面。白い地の上で字として読めるよう、映り込みを残したまま暗くする */
+  const steel = keep(
+    new THREE.MeshStandardMaterial({ color: 0xeef1f5, metalness: 1, roughness: 0.07 }),
+  )
+  const darkSteel = keep(
+    new THREE.MeshStandardMaterial({
+      color: 0x8b939d,
+      metalness: 1,
+      roughness: 0.2,
+      envMapIntensity: 0.85,
+    }),
+  )
+
   /* ---- 映像 ---- */
   const videoTexture = keep(new THREE.VideoTexture(video))
   videoTexture.colorSpace = THREE.SRGBColorSpace
   videoTexture.minFilter = THREE.LinearFilter
   videoTexture.generateMipmaps = false
+  const videoMaterial = keep(new THREE.MeshBasicMaterial({ map: videoTexture, toneMapped: false }))
+
+  /* ================================================================ 図の層 */
+  const chartCamera = new THREE.PerspectiveCamera(FOV, VB_W / VB_H, 10, 6000)
+  const baseDistance = VB_H / 2 / Math.tan(THREE.MathUtils.degToRad(FOV / 2))
 
   /* ---- 短冊 ---- */
   const rects = [...svg.querySelectorAll<SVGRectElement>(".bar")]
   const columns = rects.length
   const maxHeight = Math.max(...rects.map((r) => r.height.baseVal.value))
-  const sideMaterial = keep(
-    new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.14, depthWrite: false }),
-  )
-  const topMaterial = keep(
-    new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.3, depthWrite: false }),
-  )
-  const edgeMaterial = keep(
-    new THREE.LineBasicMaterial({ color: accent, transparent: true, opacity: 0.5 }),
-  )
   const bars = rects.map((rect, index) => {
     const x = rect.x.baseVal.value
     const y = rect.y.baseVal.value
@@ -189,31 +258,27 @@ export function startHeroScene({
     }
     uv.needsUpdate = true
 
-    const front = keep(new THREE.MeshBasicMaterial({ map: videoTexture, toneMapped: false }))
-    const mesh = new THREE.Mesh(geometry, [
-      sideMaterial,
-      sideMaterial,
-      topMaterial,
-      sideMaterial,
-      front,
-      sideMaterial,
-    ])
+    const mesh = new THREE.Mesh(geometry, [steel, steel, steel, steel, videoMaterial, steel])
     mesh.position.set(toX(x + w / 2), toY(y + h), 0)
-    const edges = new THREE.LineSegments(keep(new THREE.EdgesGeometry(geometry)), edgeMaterial)
-    mesh.add(edges)
     mesh.scale.y = 0.0001
-    scene.add(mesh)
+    chartScene.add(mesh)
     return { mesh, centerX: x + w / 2 }
   })
 
-  /* ---- 曲線と点 ---- */
+  /* ---- 曲線（鋼の管）と点 ---- */
   const curvePath = svg.querySelector<SVGPathElement>(".axis__curve")
   const curve2d = curvePath ? pathPoints(curvePath.getAttribute("d") ?? "") : []
-  const curve3d = curve2d.map((p) => new THREE.Vector3(toX(p.x), toY(p.y), 0.5))
-  const curveGeometry = keep(new THREE.BufferGeometry().setFromPoints(curve3d))
-  const curveLine = new THREE.Line(curveGeometry, keep(new THREE.LineBasicMaterial({ color: ink })))
+  const curve3d = curve2d.map((p) => new THREE.Vector3(toX(p.x), toY(p.y), 2))
+  const tubePath = new THREE.CurvePath<THREE.Vector3>()
+  for (let i = 1; i < curve3d.length; i++) {
+    tubePath.add(new THREE.LineCurve3(curve3d[i - 1], curve3d[i]))
+  }
+  const RADIAL = 8
+  const tubeSegments = Math.max(1, curve3d.length - 1) * 2
+  const curveGeometry = keep(new THREE.TubeGeometry(tubePath, tubeSegments, 2.2, RADIAL, false))
+  const curveIndexCount = curveGeometry.index?.count ?? 0
   curveGeometry.setDrawRange(0, 0)
-  scene.add(curveLine)
+  chartScene.add(new THREE.Mesh(curveGeometry, steel))
 
   // 弧長の累積。点を曲線の上で動かし、5本目の短冊の真ん中で止めるのに使う
   const lengths = [0]
@@ -237,45 +302,172 @@ export function startHeroScene({
     const t = (length - lengths[i - 1]) / (lengths[i] - lengths[i - 1] || 1)
     return out.lerpVectors(curve3d[i - 1], curve3d[i], clamp01(t))
   }
-  const dot = new THREE.Mesh(
-    keep(new THREE.SphereGeometry(6.5, 20, 14)),
-    keep(new THREE.MeshBasicMaterial({ color: dotColor })),
-  )
-  scene.add(dot)
+  const dot = new THREE.Mesh(keep(new THREE.SphereGeometry(8, 32, 20)), steel)
+  chartScene.add(dot)
 
-  /* ---- 軸・矢印・ラベル ---- */
-  const lineMaterial = keep(new THREE.LineBasicMaterial({ color: line }))
+  /* ---- 軸（鋼の棒）と矢じり ---- */
   for (const path of svg.querySelectorAll<SVGPathElement>(".axis__lines path")) {
-    const pts = pathPoints(path.getAttribute("d") ?? "").map((p) => new THREE.Vector3(toX(p.x), toY(p.y), 0))
-    scene.add(new THREE.Line(keep(new THREE.BufferGeometry().setFromPoints(pts)), lineMaterial))
+    const [a, b] = pathPoints(path.getAttribute("d") ?? "")
+    if (!a || !b) continue
+    const from = new THREE.Vector3(toX(a.x), toY(a.y), 0)
+    const to = new THREE.Vector3(toX(b.x), toY(b.y), 0)
+    const length = from.distanceTo(to)
+    const rod = new THREE.Mesh(keep(new THREE.CylinderGeometry(1.6, 1.6, length, 10)), steel)
+    rod.position.copy(from).add(to).multiplyScalar(0.5)
+    rod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), to.clone().sub(from).normalize())
+    chartScene.add(rod)
   }
-  const headMaterial = keep(new THREE.MeshBasicMaterial({ color: line, side: THREE.DoubleSide }))
   for (const path of svg.querySelectorAll<SVGPathElement>(".axis__heads path")) {
     const pts = pathPoints(path.getAttribute("d") ?? "")
-    const shape = new THREE.Shape(pts.map((p) => new THREE.Vector2(toX(p.x), toY(p.y))))
-    scene.add(new THREE.Mesh(keep(new THREE.ShapeGeometry(shape)), headMaterial))
+    if (pts.length < 3) continue
+    // 三角形の頂点（先端）と底辺の中点から、円錐の向きと長さを決める
+    const [tip, p1, p2] = pts
+    const base = new THREE.Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
+    const tip3 = new THREE.Vector3(toX(tip.x), toY(tip.y), 0)
+    const base3 = new THREE.Vector3(toX(base.x), toY(base.y), 0)
+    const height = tip3.distanceTo(base3)
+    const radius = p1.distanceTo(p2) / 2
+    const cone = new THREE.Mesh(keep(new THREE.ConeGeometry(radius, height, 16)), steel)
+    cone.position.copy(tip3).add(base3).multiplyScalar(0.5)
+    cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tip3.clone().sub(base3).normalize())
+    chartScene.add(cone)
   }
+
+  /* ================================================================ 字 */
+  const font: Font = new FontLoader().parse(fontData as never)
+  const glyphCache = new Map<string, THREE.BufferGeometry | null>()
+  const glyphGeometry = (ch: string) => {
+    if (glyphCache.has(ch)) return glyphCache.get(ch) ?? null
+    if (!(font.data.glyphs as Record<string, unknown>)[ch]) {
+      glyphCache.set(ch, null)
+      return null
+    }
+    const depth = GLYPH_UNIT * 0.14
+    const geometry = keep(
+      new TextGeometry(ch, {
+        font,
+        size: GLYPH_UNIT,
+        depth,
+        curveSegments: narrow ? 3 : 5,
+        bevelEnabled: true,
+        bevelThickness: GLYPH_UNIT * 0.05,
+        bevelSize: GLYPH_UNIT * 0.028,
+        bevelSegments: 2,
+      }),
+    )
+    // 字の面を z = 0 に揃える（押し出しは奥へ）
+    geometry.translate(0, 0, -depth - GLYPH_UNIT * 0.05)
+    glyphCache.set(ch, geometry)
+    return geometry
+  }
+
+  /* 軸のラベル（O・x・y）。図の層に置く */
   for (const text of svg.querySelectorAll<SVGTextElement>(".axis__labels text")) {
-    const sprite = labelSprite(text.textContent ?? "", ink, 20)
-    disposables.push(sprite.material, sprite.material.map as THREE.Texture)
-    const x = Number(text.getAttribute("x"))
-    const y = Number(text.getAttribute("y"))
-    sprite.position.set(toX(x + 6), toY(y - 7), 0)
-    scene.add(sprite)
+    const geometry = glyphGeometry(text.textContent ?? "")
+    if (!geometry) continue
+    const mesh = new THREE.Mesh(geometry, [darkSteel, steel])
+    const s = 20 / GLYPH_UNIT
+    mesh.scale.set(s, s, s)
+    mesh.position.set(toX(Number(text.getAttribute("x"))), toY(Number(text.getAttribute("y"))), 0)
+    chartScene.add(mesh)
+  }
+
+  /* ヒーローの 3 行。行のどこかに作れない字があれば、その行は HTML のまま残す */
+  const textCamera = new THREE.PerspectiveCamera(TEXT_FOV, 1, 1, 10000)
+  const textGroup = new THREE.Group()
+  textScene.add(textGroup)
+  const builtText = textElements.filter((el) =>
+    [...(el.textContent ?? "")].every((ch) => !ch.trim() || glyphCache.has(ch) || glyphGeometry(ch)),
+  )
+  // 字の現れる順（ロゴ行 → 見出し → 小見出し）。1字ずつ基線から立ち上がる
+  type Placed = { mesh: THREE.Object3D; delay: number }
+  let placed: Placed[] = []
+
+  /* ロゴの図（BrandMark）。2本の階段状の線を鋼の管にする。形は brand-mark.tsx の path から読む */
+  const markSvg = hero.querySelector<SVGSVGElement>(".hero__glyph svg")
+  const markPaths = markSvg
+    ? [...markSvg.querySelectorAll("path")].map((p) => pathPoints(p.getAttribute("d") ?? ""))
+    : []
+  const markGroup = new THREE.Group()
+  if (markPaths.length && builtText.some((el) => el.classList.contains("hero__mark"))) {
+    for (const pts of markPaths) {
+      const path = new THREE.CurvePath<THREE.Vector3>()
+      const v = pts.map((p) => new THREE.Vector3(p.x - 50, 50 - p.y, 0))
+      for (let i = 1; i < v.length; i++) path.add(new THREE.LineCurve3(v[i - 1], v[i]))
+      markGroup.add(new THREE.Mesh(keep(new THREE.TubeGeometry(path, 32, 5.5, 10, false)), darkSteel))
+      // 角と端を丸める（2D の round の継ぎと端）
+      for (const corner of v) {
+        const ball = new THREE.Mesh(keep(new THREE.SphereGeometry(5.5, 12, 8)), darkSteel)
+        ball.position.copy(corner)
+        markGroup.add(ball)
+      }
+    }
+    textGroup.add(markGroup)
+  }
+
+  let heroWidth = 1
+  let heroHeight = 1
+  const layoutText = () => {
+    const heroRect = hero.getBoundingClientRect()
+    heroWidth = heroRect.width || 1
+    heroHeight = heroRect.height || 1
+    textCamera.aspect = heroWidth / heroHeight
+    textCamera.position.set(0, 0, heroHeight / 2 / Math.tan(THREE.MathUtils.degToRad(TEXT_FOV / 2)))
+    textCamera.updateProjectionMatrix()
+    textCamera.lookAt(0, 0, 0)
+
+    for (const item of placed) if (item.mesh !== markGroup) textGroup.remove(item.mesh)
+    placed = []
+    const toWorldX = (px: number) => px - heroRect.left - heroWidth / 2
+    const toWorldY = (py: number) => heroHeight / 2 - (py - heroRect.top)
+
+    let order = 0
+    for (const el of builtText) {
+      if (el.classList.contains("hero__mark") && markSvg && markGroup.children.length) {
+        const r = markSvg.getBoundingClientRect()
+        const s = r.width / 100
+        markGroup.scale.set(s, s, s)
+        markGroup.position.set(toWorldX(r.left + r.width / 2), toWorldY(r.top + r.height / 2), 0)
+        placed.push({ mesh: markGroup, delay: order++ })
+      }
+      for (const spot of measureText(el)) {
+        const geometry = glyphGeometry(spot.ch)
+        if (!geometry) continue
+        const mesh = new THREE.Mesh(geometry, [darkSteel, steel])
+        const s = spot.size / GLYPH_UNIT
+        mesh.scale.set(s, s, s)
+        mesh.position.set(toWorldX(spot.x), toWorldY(spot.baseline), 0)
+        textGroup.add(mesh)
+        placed.push({ mesh, delay: order++ })
+      }
+    }
   }
 
   /* ---- 寸法 ---- */
+  let stageBox = { x: 0, y: 0, w: 1, h: 1 }
   const resize = () => {
-    const width = canvas.clientWidth
-    const height = canvas.clientHeight
+    const width = hero.clientWidth
+    const height = hero.clientHeight
     if (!width || !height) return
     renderer.setSize(width, height, false)
-    camera.aspect = width / height
-    camera.updateProjectionMatrix()
+    const heroRect = hero.getBoundingClientRect()
+    const stageRect = stage.getBoundingClientRect()
+    // GL の viewport は下からの座標
+    stageBox = {
+      x: stageRect.left - heroRect.left,
+      y: heroRect.bottom - stageRect.bottom,
+      w: stageRect.width,
+      h: stageRect.height,
+    }
+    chartCamera.aspect = stageBox.w / (stageBox.h || 1)
+    chartCamera.updateProjectionMatrix()
+    layoutText()
   }
   const resizeObserver = new ResizeObserver(resize)
-  resizeObserver.observe(canvas)
+  resizeObserver.observe(hero)
   resize()
+  // Web フォントが後から差し替わると字の位置が変わるので、揃ってから測り直す
+  void document.fonts?.ready.then(() => resize())
 
   /* ---- 指の位置で少しだけ回す（マウスのある画面だけ） ---- */
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 }
@@ -288,10 +480,10 @@ export function startHeroScene({
 
   /* ---- 動き ----
      2D と同じ順で積み上げてから、正面の図を斜めに起こして奥行きを見せる。
-       0.0〜1.6 s  曲線を引く・点が走る
+       0.0〜1.6 s  曲線を引く・点が走る。字が1字ずつ基線から立つ
        0.45 s〜    短冊が左から立つ
-       2.0〜3.6 s  正面から斜めへ回る
-       以降        ゆっくり揺れる                                        */
+       2.0〜3.6 s  図が正面から斜めへ回る
+       以降        ゆっくり揺れる。映り込みが流れて鋼が光る                   */
   const target = new THREE.Vector3(0, 0, -DEPTH / 2)
   const dotPosition = new THREE.Vector3()
   let start = -1
@@ -304,10 +496,18 @@ export function startHeroScene({
     if (start < 0) start = now
     const t = (now - start) / 1000
 
-    const drawn = easeInOut(clamp01(t / 1.6))
-    curveGeometry.setDrawRange(0, Math.max(2, Math.ceil(drawn * curve3d.length)))
-    dot.position.copy(pointAt(stopLength * drawn, dotPosition))
+    // 字
+    for (const { mesh, delay } of placed) {
+      const k = easeOut(clamp01((t - 0.1 - delay * 0.03) / 0.45))
+      const s = mesh.scale.x
+      mesh.scale.y = Math.max(0.0001, s * k)
+    }
 
+    // 図
+    const drawn = easeInOut(clamp01(t / 1.6))
+    const segments = Math.ceil(drawn * tubeSegments)
+    curveGeometry.setDrawRange(0, Math.min(curveIndexCount, segments * RADIAL * 6))
+    dot.position.copy(pointAt(stopLength * drawn, dotPosition))
     bars.forEach(({ mesh }, i) => {
       const k = easeOut(clamp01((t - 0.45 - i * 0.045) / 0.5))
       mesh.scale.y = Math.max(0.0001, k)
@@ -320,17 +520,36 @@ export function startHeroScene({
     const yaw = -0.36 * turn + idle * (Math.sin(t * 0.25) * 0.05 + pointer.x * 0.07)
     const pitch = 0.17 * turn + idle * (Math.sin(t * 0.19) * 0.02 - pointer.y * 0.03)
     const distance = baseDistance * (1 + 0.12 * turn)
-    camera.position.set(
+    chartCamera.position.set(
       target.x + distance * Math.sin(yaw) * Math.cos(pitch),
       target.y + distance * Math.sin(pitch),
       target.z + distance * Math.cos(yaw) * Math.cos(pitch),
     )
-    camera.lookAt(target)
+    chartCamera.lookAt(target)
 
-    renderer.render(scene, camera)
+    // 字の層を少しだけ傾ける。面が全部同じ向きだと映り込みが一様になり、鋼に見えない。
+    // 傾きは読める範囲に留める（数度）
+    textGroup.rotation.set(
+      pointer.y * 0.03 + Math.sin(t * 0.21) * 0.02,
+      Math.sin(t * 0.35) * 0.06 + pointer.x * 0.05,
+      0,
+    )
+
+    // 映り込みを回して、鋼の上を光が流れるようにする
+    const sweep = Math.sin(t * 0.35) * 0.6 + pointer.x * 0.25
+    textScene.environmentRotation.set(pointer.y * 0.15, sweep, 0)
+    chartScene.environmentRotation.set(0, sweep * 0.8, 0)
+
+    renderer.setViewport(0, 0, heroWidth, heroHeight)
+    renderer.clear()
+    renderer.render(textScene, textCamera)
+    renderer.clearDepth()
+    renderer.setViewport(stageBox.x, stageBox.y, stageBox.w, stageBox.h)
+    renderer.render(chartScene, chartCamera)
+
     if (!readySent) {
       readySent = true
-      onReady()
+      onReady(builtText)
     }
   }
 

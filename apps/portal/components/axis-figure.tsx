@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 
-import { HERO3D_EVENT, HeroScene } from "./hero-scene"
+import { HERO3D_EVENT } from "./hero-scene"
 
 /* 08 — ヒーローの演出層。座標系と積分領域。
  *
@@ -197,8 +197,6 @@ export function AxisFigure() {
 
   return (
     <div className="hero__stage" aria-hidden="true">
-      {/* 3D 版。読み込めたときだけ、下の SVG と入れ替わって見える */}
-      <HeroScene />
       <svg
         className="axis"
         id="axis"

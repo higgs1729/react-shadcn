@@ -5,6 +5,7 @@ import { closingHref } from "../lib/works"
 import { AxisFigure } from "./axis-figure"
 import { BrandMark } from "./brand-mark"
 import { GravityField } from "./gravity-field"
+import { HeroScene } from "./hero-scene"
 import { MailLink } from "./mail-link"
 import { PortalMotion } from "./portal-motion"
 import { PortalNav } from "./portal-nav"
@@ -39,6 +40,8 @@ export function PortalLanding() {
         {/* ===== ヒーロー。演出はここに集中させる ===== */}
         <section className="hero" id="top">
           <AxisFigure />
+          {/* 3D 版。ヒーロー全体に1枚。読み込めたときだけ、図と 3 行の文字を鋼の 3D に替える */}
+          <HeroScene />
 
           <div className="hero__inner">
             <p className="hero__mark">

@@ -8,6 +8,9 @@ import { useEffect, useRef } from "react"
  * （WebGL があるときだけ。動きを減らす設定でも 3D を出す。本人 2026-11-23）。
  * 付いていなければ何も読まず、今までの 2D（axis-figure.tsx）がそのまま動く。
  *
+ * 3D になるのは図（座標系と短冊）と、ヒーローの 3 行（ロゴ行・見出し・小見出し）の字。
+ * 3D にできた行には hero-3d-text を付け、HTML の字は CSS で透明にする（消さない）。
+ *
  * 読み込みの間は .loader（portal-landing.tsx のマークアップ）を被せ、進み具合を
  * 曲線の長さと数字で見せる。three の読み込みが 1/4、映像のダウンロードが 3/4。
  * 決めた時間までに最初の1枚が出なければ 2D に戻す。CSS 側にも同じ保険がある。
@@ -44,7 +47,12 @@ export function HeroScene() {
   useEffect(() => {
     const root = document.documentElement
     const canvas = canvasRef.current
-    const svg = canvas?.parentElement?.querySelector<SVGSVGElement>("svg.axis")
+    const hero = canvas?.closest<HTMLElement>(".hero")
+    const stage = hero?.querySelector<HTMLElement>(".hero__stage")
+    const svg = stage?.querySelector<SVGSVGElement>("svg.axis")
+    const textElements = hero
+      ? [...hero.querySelectorAll<HTMLElement>(".hero__mark, .hero__t, .hero__lead")]
+      : []
     const loader = document.querySelector<HTMLElement>(".loader")
     const number = loader?.querySelector<HTMLElement>(".loader__n")
 
@@ -62,7 +70,7 @@ export function HeroScene() {
       window.dispatchEvent(new CustomEvent(HERO3D_EVENT, { detail: { ok } }))
     }
 
-    if (!root.classList.contains("hero-3d") || !canvas || !svg) {
+    if (!root.classList.contains("hero-3d") || !canvas || !hero || !stage || !svg) {
       decide(false)
       return
     }
@@ -94,8 +102,13 @@ export function HeroScene() {
         bytesDone = fraction
         paint()
       }),
+      // 3 行の字の字形（約 23KB）。映像に比べて小さいので進み具合には数えない
+      fetch(`${basePath}/hero/hero-text.json`).then((response) => {
+        if (!response.ok) throw new Error(`hero text: ${response.status}`)
+        return response.json() as Promise<unknown>
+      }),
     ])
-      .then(async ([mod, blob]) => {
+      .then(async ([mod, blob, fontData]) => {
         if (disposed || settled) return
         const video = document.createElement("video")
         video.muted = true
@@ -113,10 +126,15 @@ export function HeroScene() {
         if (disposed || settled) return
         handle = mod.startHeroScene({
           canvas,
+          hero,
+          stage,
           svg,
           video,
-          onReady: () => {
+          fontData,
+          textElements,
+          onReady: (built) => {
             window.clearTimeout(giveUp)
+            for (const el of built) el.classList.add("hero-3d-text")
             decide(true)
           },
         })
@@ -127,6 +145,7 @@ export function HeroScene() {
       disposed = true
       window.clearTimeout(giveUp)
       handle?.dispose()
+      for (const el of textElements) el.classList.remove("hero-3d-text")
       if (videoUrl) URL.revokeObjectURL(videoUrl)
     }
   }, [])
