@@ -5,14 +5,37 @@ import { closingHref } from "../lib/works"
 import { AxisFigure } from "./axis-figure"
 import { BrandMark } from "./brand-mark"
 import { GravityField } from "./gravity-field"
+import { HeroScene } from "./hero-scene"
 import { MailLink } from "./mail-link"
 import { PortalMotion } from "./portal-motion"
 import { PortalNav } from "./portal-nav"
+import { SoundToggle } from "./sound-toggle"
 import { WorksTabs } from "./works-tabs"
 
 export function PortalLanding() {
   return (
     <>
+      {/* 3D のヒーローを読み込む間だけ被せる。html に hero-3d が無ければ出ない。
+          曲線が引かれる長さで進み具合を見せる（座標系の演出と同じ意味の図）。
+          左右の端はフィルムの送り穴の帯で、進み具合に合わせてフィルムが送られる */}
+      <div className="loader" aria-hidden="true">
+        <span className="loader__film loader__film--l" />
+        <span className="loader__film loader__film--r" />
+        <svg className="loader__fig" viewBox="0 0 240 120">
+          <path className="loader__axis" d="M 20 10 V 104 M 12 100 H 232" />
+          <path
+            className="loader__curve"
+            pathLength={1}
+            d="M 20 99 C 70 99 90 96 110 70 C 130 40 150 30 228 28"
+          />
+        </svg>
+        <p className="loader__t">
+          読み込み中 <span className="loader__n">0</span>%
+        </p>
+        <p className="loader__sound">このサイトは音が出ます。右下のボタンで切り替えられます</p>
+      </div>
+      <SoundToggle />
+
       <a className="skip" href="#main">
         本文へスキップ
       </a>
@@ -23,6 +46,8 @@ export function PortalLanding() {
         {/* ===== ヒーロー。演出はここに集中させる ===== */}
         <section className="hero" id="top">
           <AxisFigure />
+          {/* 3D 版。ヒーロー全体に1枚。読み込めたときだけ、図と 3 行の文字を鋼の 3D に替える */}
+          <HeroScene />
 
           <div className="hero__inner">
             <p className="hero__mark">
@@ -53,11 +78,11 @@ export function PortalLanding() {
             <header className="sec">
               <p className="sec__label">Works</p>
               <h2 className="sec__t typewrite">
-                <span className="typewrite__text">まずは、この3つから</span>
+                <span className="typewrite__text">まずは、この5つから</span>
                 <span className="typewrite__caret" aria-hidden="true" />
               </h2>
               <p className="sec__lead">
-                性格の違う3つを選びました。残りはタブを切り替えると確認できます。
+                性格の違う5つを選びました。残りはタブを切り替えると確認できます。
               </p>
             </header>
 

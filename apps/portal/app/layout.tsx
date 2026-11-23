@@ -39,7 +39,12 @@ const face = Noto_Sans_JP({
 // 描画より前に付けないと、一度見えたものが隠れてから出る絵になるので、
 // 08 と同じく <head> のインラインスクリプトで付ける。演出を見せるページなので、
 // OS の Reduce Motion 設定に関係なく通常は有効にする。
-const enableMotion = `document.documentElement.classList.add('js-anim')`
+//
+// 同じ場所で、ヒーローを 3D で出すかも決める（hero-3d）。読み込み画面を最初の描画から
+// 被せるには、描画より前に決まっている必要があるため。2D に戻すのは環境の上で 3D が
+// 無理なとき（WebGL が無い）だけ。動きを減らす設定の人にも 3D を出す（本人 2026-11-23）。
+// 読み込みに失敗したときの 2D への戻りは hero-scene.tsx が受け持つ。
+const enableMotion = `(function(){var d=document.documentElement;d.classList.add('js-anim');try{var c=document.createElement('canvas');if(!(c.getContext('webgl2')||c.getContext('webgl')))return;d.classList.add('hero-3d')}catch(e){}})()`
 
 export default function RootLayout({
   children,

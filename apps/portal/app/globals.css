@@ -338,6 +338,76 @@ a { color: inherit; }
 }
 .axis__dot { fill: var(--red-500); }
 
+/* 3D 版（components/hero-scene.tsx）。html に hero-3d があるときだけ試し、
+   最初の1枚が出たら hero-3d-ready で SVG と入れ替える。SVG は消さず透明にするだけ
+   （axis-fallback の animation が visibility を持っているので、opacity で隠す） */
+.hero__gl {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.4s;
+}
+.hero-3d-ready .hero__gl { opacity: 1; }
+.hero-3d-ready .axis { opacity: 0; }
+/* 3 行の字は 3D が同じ位置に置く。HTML の字は透明にして残す（読み上げ・選択・折り返し）。
+   3D を試す間は字を動かさない。出現の translateY が残ると、測った位置がずれる */
+.hero-3d .hero__mark, .hero-3d .hero__lead { transform: none; transition: none; }
+.hero-3d-ready .hero-3d-text,
+.hero-3d-ready .hero-3d-text * { color: transparent; }
+.hero-3d-ready .hero__mark.hero-3d-text .hero__glyph { color: transparent; }
+.hero-3d-ready .hero-3d-text .typewrite__caret { display: none; }
+
+/* 3D のヒーローの地は暗い（光の粒が漂う奥行き、lib/hero-backdrop.ts。本人 2026-11-23）。
+   2D のまま残すボタンは、暗い地で読めるよう反転する。2D に戻ったときは白の地のまま */
+.hero-3d-ready .hero { background: var(--hero-deep, #0f1218); }
+.hero-3d-ready .hero .btn--primary { background: var(--inverse-on-surface); color: var(--inverse-surface); }
+.hero-3d-ready .hero .btn--primary:hover { background: var(--grey-0); }
+.hero-3d-ready .hero .btn--tonal { background: var(--grey-1000); color: var(--inverse-on-surface); border-color: var(--grey-800); }
+.hero-3d-ready .hero .btn--tonal:hover { background: var(--grey-900); }
+
+/* 読み込み画面。地はヒーローと同じ暗がりにして、読み込み後の切り替わりで明暗が跳ねないようにする。
+   3D を試すときだけ出る。押せる物は無いので当たり判定も持たない。
+   JS が途中で止まっても被さったままにならないよう、9 秒で必ず消える（保険） */
+.loader { display: none; }
+.hero-3d .loader {
+  position: fixed; inset: 0; z-index: 100;
+  display: grid; place-content: center; justify-items: center; gap: var(--sp-s);
+  background: var(--hero-deep, #0f1218); pointer-events: none;
+  transition: opacity 0.4s, visibility 0s 0.4s;
+  animation: loader-giveup 0s 9s forwards;
+}
+.hero-3d-ready .loader { opacity: 0; visibility: hidden; }
+@keyframes loader-giveup { to { opacity: 0; visibility: hidden; } }
+.loader__fig { width: min(60vw, 240px); height: auto; overflow: visible; }
+.loader__axis { fill: none; stroke: var(--grey-800); stroke-width: 1.5; }
+.loader__curve {
+  fill: none; stroke: var(--red-500); stroke-width: 2; stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p, 0));
+}
+.loader__t { color: var(--inverse-on-surface); font-size: var(--step--1); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.loader__sound { color: var(--grey-300); font-size: var(--step--1); margin-top: var(--sp-s); text-align: center; padding-inline: var(--sp-xl); }
+/* フィルムの送り穴の帯（左右の端）。地より明るい帯に、地の色の四角い穴を一定の間隔で抜く。
+   読み込みが進むと（--p）、フィルムが下へ送られる。曲線を引く量と同じ値で動かす */
+.loader__film {
+  position: absolute; top: 0; bottom: 0; width: var(--film-w);
+  background-color: var(--grey-900);
+  background-image: linear-gradient(to bottom, var(--hero-deep, #0f1218) 0 0.875rem, transparent 0.875rem 1.75rem);
+  background-size: 0.875rem 1.75rem;
+  background-repeat: repeat-y;
+  background-position: 50% calc(var(--p, 0) * 28rem);
+  transition: background-position 0.25s linear;
+}
+.loader__film--l { left: 0; }
+.loader__film--r { right: 0; }
+/* 音を出すかの入口（components/sound-toggle.tsx）。右下に固定。読み込み画面より上に出す */
+/* 暗いヒーローの上にも白い節の上にも重なるので、暗い地の札にして縁を付ける */
+.sound {
+  position: fixed; right: var(--sp-m); bottom: var(--sp-m); z-index: 110; transition: right 0.4s;
+  background: var(--grey-1100); color: var(--inverse-on-surface); border-color: var(--grey-800);
+}
+.sound:hover { background: var(--grey-900); }
+:root { --film-w: clamp(1.75rem, 4vw, 2.75rem); }
+/* 読み込み画面が出ている間は、右のフィルムの帯に重ならないよう内側へ寄せる */
+.hero-3d:not(.hero-3d-ready):not([data-hero3d="off"]) .sound { right: calc(var(--film-w) + var(--sp-m)); }
+
 .hero__inner { position: relative; z-index: 1; width: min(100% - var(--sp-m) * 2, 54rem); margin-inline: auto; }
 .hero__mark {
   display: inline-flex; align-items: center; gap: 0.45em;
@@ -448,16 +518,28 @@ a { color: inherit; }
 .item__a:hover .item__go::after { transform: translateX(3px); }
 
 /* --- ピックアップ -------------------------------------------------------
-   厳選3つ。左右を交互に入れ替える。--dir が重ねをずらす向き（外側へ）。 */
-.picks { display: grid; gap: var(--sp-2xl); }
+   画像が主役。スマホは重ねを幅いっぱいに置いて文は下、広い画面は画像と文を左右に並べる。
+   --dir が重ねをずらす向きと傾く向きで、1件ごとに入れ替える。 */
+.picks { display: grid; gap: calc(var(--sp-2xl) * 1.6); }
 .picks[hidden], .list[hidden] { display: none; }
 
-.pick { --dir: -1; display: grid; gap: var(--sp-l); align-items: center; }
+.pick { --dir: -1; display: grid; gap: var(--sp-l); }
 .pick--flip { --dir: 1; }
 
 /* 重ね。3枚とも同じ枡に置いて、奥の2枚をずらす。
    ずらした分だけ内側に余白を取る。取らないと枠外へ出て横あふれになる。 */
 .pick__stack { display: grid; padding: 7% 7% 0; }
+/* 斜めから正面へ起きる。ヒーローの 3D（正面の図が斜めに起きる）と逆向きの同じ動き。
+   --tilt は 1 が斜め・0 が正面。初期値は 0 なので、JS が無ければ正面のまま */
+.pick__stage {
+  width: 100%; max-width: 64rem; margin-inline: auto;
+  transform:
+    perspective(1400px)
+    rotateY(calc(var(--dir) * 16deg * var(--tilt, 0)))
+    rotateX(calc(9deg * var(--tilt, 0)))
+    scale(calc(1 - 0.1 * var(--tilt, 0)));
+  transform-origin: 50% 70%;
+}
 /* 押せる見た目は、JS が role を付けてから */
 .pick__stack[role="button"] { cursor: pointer; }
 .pick__stack:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: var(--r-m); }
@@ -497,12 +579,40 @@ a { color: inherit; }
 }
 .pick__go::after { content: "→"; transition: transform 0.2s; }
 .pick__go:hover::after { transform: translateX(3px); }
+/* 公開先が2つある作品だけ。右に間を取り、折り返しても行頭がそろう */
+.pick__go:not(:last-child) { margin-right: var(--sp-l); }
 
-@media (min-width: 60em) {
-  .pick { grid-template-columns: 1.25fr 1fr; gap: var(--sp-xl); }
-  /* 画像の側をいつも広いほうに。列の比も一緒に入れ替える */
-  .pick--flip { grid-template-columns: 1fr 1.25fr; }
-  .pick--flip .pick__stack { order: 2; }
+/* 左右に並べるのは 75em（1200px）から。それより狭いと画像が文より低くなるので、スマホと同じく画像の下に文を置く */
+@media (min-width: 75em) {
+  /* 画像と文を左右に並べ、左右は1件ごとに入れ替える。画像の列をできるだけ広く取り、
+     画像の高さが文の高さを上回るようにする（文の列は読める幅の下限まで細くする） */
+  /* 帯は本文の幅（--wrap）より広げ、画面の端から 2rem までを使う。
+     100vw はスクロールバーの幅を含むので、その分も 2rem の内に収める */
+  .picks {
+    --picks-w: min(96rem, calc(100vw - 4rem));
+    width: var(--picks-w);
+    margin-inline: calc((100% - var(--picks-w)) / 2);
+  }
+  .pick {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
+    gap: var(--sp-l); align-items: center;
+  }
+  .pick--flip { grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr); }
+  .pick--flip .pick__stage { order: 2; }
+  /* 奥の2枚がはみ出すのは --dir の側（外側）だけなので、余白もそちらにだけ取る。
+     はみ出しは横が幅の 4%、上が 3.75%（3枚目の 8% ずらしと 0.92 倍の縮みから） */
+  .pick__stack { padding: 4.5% 0 0 5%; }
+  .pick--flip .pick__stack { padding: 4.5% 5% 0 0; }
+  .pick__stage { max-width: none; }
+  /* 傾きは文の側を向く。左の画像は右へ、右の画像は左へ面を向けて、斜めから正面へ起きる */
+  .pick__stage {
+    transform:
+      perspective(1400px)
+      rotateY(calc(var(--dir) * -16deg * var(--tilt, 0)))
+      rotateX(calc(9deg * var(--tilt, 0)))
+      scale(calc(1 - 0.1 * var(--tilt, 0)));
+  }
+  .pick__claim { font-size: var(--step-2); }
 }
 
 @media (min-width: 44em) { .list { grid-template-columns: repeat(2, 1fr); } }

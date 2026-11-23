@@ -151,3 +151,13 @@ GitHub Actionsのビルド・デプロイ環境はUbuntuで、Node.js 22を使�
 - 残る複製は `apps/team-t/components/blocks/` の3ファイルのみ。studio の registry が
   `files[].path` で在庫 block を追跡しているため、パッケージ化すると契約が壊れる。
   GoldenFlow の凍結(Phase 5)とあわせて再検討する
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+This repository uses a single-context layout. See `docs/agents/domain.md`.

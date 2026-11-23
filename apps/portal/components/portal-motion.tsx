@@ -2,6 +2,8 @@
 
 import { useEffect } from "react"
 
+import { HERO3D_EVENT } from "./hero-scene"
+
 /* 08 — 文書側の出現。main.js のうち「動き」の部分。
  *
  * 集中版なので、ここで動かしてよいのは次の2つだけ。
@@ -97,8 +99,31 @@ export function PortalMotion() {
       wait(() => type(), delay)
     }
 
-    reveal(document.querySelector(".hero__mark"))
-    startTyping(document.querySelector<HTMLElement>(".hero__t.typewrite"), 360)
+    /* ヒーローの見出し。3D を試している間は打たずに待つ（hero-scene.tsx）。
+       3D は HTML の字の位置を測って字を置くので、打ちかけの短い字では測れない。
+       3D が出たら字の出現は 3D が受け持つので、ボタンだけを後から出す。
+       2D に戻ったときは今までどおり打つ */
+    const root = document.documentElement
+    const heroTitle = document.querySelector<HTMLElement>(".hero__t.typewrite")
+    const startHero = () => {
+      reveal(document.querySelector(".hero__mark"))
+      startTyping(heroTitle, 360)
+    }
+    const showHero3d = () => {
+      heroTitle?.classList.add("is-complete")
+      reveal(document.querySelector(".hero__mark"))
+      reveal(document.querySelector(".hero__lead"))
+      wait(() => reveal(document.querySelector(".hero__acts")), 1200)
+    }
+    const onHero3d = (event: Event) => {
+      window.removeEventListener(HERO3D_EVENT, onHero3d)
+      if ((event as CustomEvent<{ ok: boolean }>).detail?.ok) showHero3d()
+      else startHero()
+    }
+    if (root.dataset.hero3d === "ok") showHero3d()
+    else if (root.classList.contains("hero-3d") && root.dataset.hero3d !== "off") {
+      window.addEventListener(HERO3D_EVENT, onHero3d)
+    } else startHero()
 
     const typeObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -148,7 +173,38 @@ export function PortalMotion() {
       }
     }, 2500)
 
+    /* --------------------------------------------------- 重ねが起きる
+       画面の下から入るとき斜めで、真ん中より少し上に来たら正面。スクロールに
+       合わせて --tilt を書くだけで、時間で動くものは足さない。隠れたパネル（高さ 0）は飛ばす */
+    const stages = [...document.querySelectorAll<HTMLElement>(".pick__stage")]
+    let tiltFrame = 0
+    const tilt = () => {
+      tiltFrame = 0
+      const vh = window.innerHeight
+      for (const el of stages) {
+        const r = el.getBoundingClientRect()
+        if (!r.height) continue
+        const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.45 + r.height / 2)))
+        const eased = 1 - (1 - p) ** 2
+        el.style.setProperty("--tilt", (1 - eased).toFixed(3))
+      }
+    }
+    const requestTilt = () => {
+      if (!tiltFrame) tiltFrame = requestAnimationFrame(tilt)
+    }
+    window.addEventListener("scroll", requestTilt, { passive: true })
+    window.addEventListener("resize", requestTilt)
+    // タブで重ねのパネルに戻ったときも、その位置で一度測る
+    document.addEventListener("click", requestTilt)
+    tilt()
+
     return () => {
+      window.removeEventListener(HERO3D_EVENT, onHero3d)
+      cancelAnimationFrame(tiltFrame)
+      window.removeEventListener("scroll", requestTilt)
+      window.removeEventListener("resize", requestTilt)
+      document.removeEventListener("click", requestTilt)
+      for (const el of stages) el.style.removeProperty("--tilt")
       for (const timer of timers) clearTimeout(timer)
       for (const { el, out, text } of typed) {
         out.textContent = text

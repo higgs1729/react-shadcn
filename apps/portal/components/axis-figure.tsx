@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react"
 
+import { HERO3D_EVENT } from "./hero-scene"
+
 /* 08 — ヒーローの演出層。座標系と積分領域。
  *
  * 07 は Antigravity と同じく WebGL の粒子をこの位置に置いていた。
@@ -81,7 +83,7 @@ export function AxisFigure() {
     let cleanup = () => {}
 
     // GSAP は動的に読む。読めなければ完成形のまま置く。
-    void (async () => {
+    const run = async () => {
       let gsap
       let ScrollTrigger
       try {
@@ -157,7 +159,34 @@ export function AxisFigure() {
         parallax.scrollTrigger?.kill()
         parallax.kill()
       }
-    })()
+    }
+
+    /* 3D を試している間（html に hero-3d）は、読み込み画面の下で 2D を先に
+       動かしても誰にも見えない。結果を待ち、3D が出たら完成形で置いて隠れる側に回り、
+       2D に戻ったときだけ演出を始める。 */
+    const root = document.documentElement
+    const decided = root.dataset.hero3d
+    if (root.classList.contains("hero-3d") && decided !== "off") {
+      if (decided === "ok") {
+        settle()
+        return
+      }
+      const onDecide = (event: Event) => {
+        window.removeEventListener(HERO3D_EVENT, onDecide)
+        if (cancelled) return
+        if ((event as CustomEvent<{ ok: boolean }>).detail?.ok) settle()
+        else void run()
+      }
+      window.addEventListener(HERO3D_EVENT, onDecide)
+      return () => {
+        cancelled = true
+        window.removeEventListener(HERO3D_EVENT, onDecide)
+        clearTimeout(guard)
+        cleanup()
+      }
+    }
+
+    void run()
 
     return () => {
       cancelled = true

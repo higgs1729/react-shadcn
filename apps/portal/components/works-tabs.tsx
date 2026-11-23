@@ -97,7 +97,7 @@ export function WorksTabs() {
         {announce ? `${LABEL[kind]}を表示しています。${COUNT[kind]}件。` : ""}
       </p>
 
-      {/* 厳選3つ。左右を交互に入れ替える。画像は同じ作品の別カットを3枚重ねる */}
+      {/* 画像が主役。同じ作品の別カットを3枚重ねる。広い画面は文と左右に並べ、左右とずらす向きは1件ごとに入れ替える */}
       <div
         className="picks"
         id="panel-pick"
@@ -110,16 +110,22 @@ export function WorksTabs() {
             className={index % 2 === 1 ? "pick pick--flip" : "pick"}
             key={pick.id}
           >
-            <PickStack name={pick.name} shots={pick.shots} />
+            {/* 傾きはスクロールで portal-motion が --tilt に入れる。無ければ正面 */}
+            <div className="pick__stage">
+              <PickStack name={pick.name} shots={pick.shots} />
+            </div>
             <div className="pick__body">
               <h3 className="pick__t">
                 <span className="pick__name">{pick.name}</span>
                 <span className="pick__claim">{pick.claim}</span>
               </h3>
               <p className="pick__d">{pick.description}</p>
-              <a className="pick__go" href={pick.href}>
-                開く
-              </a>
+              {pick.note ? <p className="pick__d">{pick.note}</p> : null}
+              {pick.links.map((link) => (
+                <a className="pick__go" href={link.href} key={link.href}>
+                  {link.label}
+                </a>
+              ))}
             </div>
           </article>
         ))}
