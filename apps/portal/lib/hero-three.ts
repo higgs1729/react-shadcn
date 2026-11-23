@@ -19,7 +19,7 @@ import * as THREE from "three"
 import { FontLoader, type Font } from "three/examples/jsm/loaders/FontLoader.js"
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
 
-import { createBackdrop, defaultEnvironment, readBackdrop } from "./hero-backdrop"
+import { createBackdrop } from "./hero-backdrop"
 
 export type HeroSceneOptions = {
   canvas: HTMLCanvasElement
@@ -46,8 +46,6 @@ const toY = (y: number) => VB_H / 2 - y
 
 /** 短冊の奥行き。幅 71 に対して深すぎると、回したときに隣の映像を隠す */
 const DEPTH = 46
-/** 点が止まる短冊（2D と同じく左から5本目の真ん中） */
-const STOP_BAR = 4
 const FOV = 24
 const TEXT_FOV = 30
 /** 字形はこの大きさで1回だけ作り、置くときに字の大きさへ縮める */
@@ -193,13 +191,10 @@ export function startHeroScene({
     return item
   }
 
-  /* ---- 環境（映り込み）と光。2つの層で同じものを使う ---- */
-  // 背景の候補（?bg=1〜4）。無ければ今までどおり白の地に RoomEnvironment
-  const backdropKind = readBackdrop()
-  const backdrop = backdropKind ? keep(createBackdrop(backdropKind, renderer, narrow)) : null
-  const envMap = backdrop ? backdrop.environment : keep(defaultEnvironment(renderer))
-  // ボタン（2D のまま）の色を暗い地に合わせるための目印。globals.css が読む
-  if (backdrop) document.documentElement.dataset.heroBg = backdrop.dark ? "dark" : "light"
+  /* ---- 背景・環境（映り込み）と光。2つの層で同じものを使う ----
+     背景は光の粒が漂う暗い奥行き（lib/hero-backdrop.ts。本人 2026-11-23 に 4 案から選んだ） */
+  const backdrop = keep(createBackdrop(renderer, narrow))
+  const envMap = backdrop.environment
 
   const textScene = new THREE.Scene()
   const chartScene = new THREE.Scene()
@@ -209,12 +204,16 @@ export function startHeroScene({
     key.position.set(-0.6, 1, 0.8)
     scene.add(key)
   }
+  // 字は暗い地に沈みやすいので、正面のやや上からもう1灯当てて面を起こす
+  const textFill = new THREE.DirectionalLight(0xffffff, 1.4)
+  textFill.position.set(0.2, 0.5, 1)
+  textScene.add(textFill)
 
   /* ---- 色のついた鋼 ----
-     質感は磨いた鋼のまま（金属度 1・映り込み）、色はサイトの配色のオレンジと黒に戻す
-     （本人 2026-11-23）。色は CSS の変数から読み、数値を二か所に持たない。
-       黒の鋼: 軸・枕木・ラベル・字の面
-       オレンジの鋼: レール・点・字の縁と側面・ロゴの数字
+     質感は磨いた鋼（金属度 1・映り込み）、色はサイトの配色のオレンジと黒（本人 2026-11-23）。
+     色は CSS の変数から読み、数値を二か所に持たない。
+       黒の鋼: 軸・枕木・字の縁と側面
+       オレンジの鋼: レール・字の面
        短冊: 左（古い）の黒から右（新しい）のオレンジへ、1本ずつ濃さを変える */
   const css = getComputedStyle(document.documentElement)
   const cssColor = (name: string, fallback: string) =>
@@ -222,33 +221,44 @@ export function startHeroScene({
   const ink = cssColor("--grey-1100", "#18191d")
   const orange = cssColor("--red-500", "#ea4b17")
   const deepOrange = cssColor("--red-600", "#c63307")
-  // 金属は色が映り込みの色になるので、真っ黒にすると何も映らない。黒は少し持ち上げる
-  // 暗い地の候補では、黒の鋼が地に沈むので、鉄色（ガンメタル）まで持ち上げる
-  const blackMetal = ink.clone().lerp(new THREE.Color("#ffffff"), backdrop?.dark ? 0.3 : 0.12)
+  const lightOrange = cssColor("--red-300", "#ff8a65")
+  // 金属は色が映り込みの色になるので、真っ黒にすると何も映らない。
+  // 暗い地に沈まないよう、黒は鉄色（ガンメタル）まで持ち上げる
+  const blackMetal = ink.clone().lerp(new THREE.Color("#ffffff"), 0.3)
   const metal = (color: THREE.Color, roughness: number) =>
     keep(new THREE.MeshStandardMaterial({ color, metalness: 1, roughness }))
   const blackSteel = metal(blackMetal, 0.16)
   const orangeSteel = metal(orange, 0.12)
-  const deepOrangeSteel = metal(deepOrange, 0.14)
-  // 字の面。白い地の上で字として読めるよう、黒の鋼を少し粗くして映り込みを和らげる
-  // 暗い地の候補では、黒の字が読めないので面を明るい鋼にする
-  // 暗い部屋を映す金属は暗く見えるので、わずかに自ら光らせて字として読ませる
-  const faceSteel = backdrop?.dark
-    ? keep(
-        new THREE.MeshStandardMaterial({
-          color: "#d5d9e0",
-          metalness: 1,
-          roughness: 0.2,
-          emissive: "#9aa0aa",
-          emissiveIntensity: 1,
-        }),
-      )
-    : metal(blackMetal, 0.24)
-  const accentFace = metal(deepOrange, 0.2)
-  if (backdrop?.dark) {
-    accentFace.emissive = orange.clone()
-    accentFace.emissiveIntensity = 0.6
-  }
+
+  /* 字。暗い地で読めることが先（本人「沈んで薄く見える」）。面はオレンジの鋼に
+     わずかな自己発光を足して明るさを保ち、縁と側面は映り込みを強めた黒の鋼にして
+     光の線で字の形を縁取る。ロゴの数字は明るいオレンジ。
+     オレンジと黒は「字の色」のこと。縁・側面・影にはオレンジを使わない（本人 2026-11-23） */
+  const glow = (color: THREE.Color, emissive: THREE.Color, intensity: number, roughness = 0.28) =>
+    keep(
+      new THREE.MeshStandardMaterial({
+        color,
+        metalness: 1,
+        roughness,
+        emissive,
+        emissiveIntensity: intensity,
+        envMapIntensity: 1,
+      }),
+    )
+  const faceSteel = glow(orange, deepOrange, 0.8)
+  const accentFace = glow(lightOrange, orange, 0.8)
+  // 縁と側面はオレンジを使わない（本人 2026-11-23 の訂正）。色の無い鋼にして、
+  // 光の向きに沿った明暗（光の側は明るい灰、陰の側は黒）で字の厚みを見せる
+  const edgeSteel = keep(
+    new THREE.MeshStandardMaterial({
+      color: "#aab0b9",
+      metalness: 1,
+      roughness: 0.14,
+      envMapIntensity: 1.6,
+    }),
+  )
+  // 軸のラベル（O・x・y）は図の一部なので、字より控えめな明るい鋼
+  const labelSteel = glow(new THREE.Color("#c9ced6"), new THREE.Color("#7d838d"), 0.6, 0.2)
 
   /* ---- 映像 ---- */
   const videoTexture = keep(new THREE.VideoTexture(video))
@@ -303,7 +313,7 @@ export function startHeroScene({
   /* ---- 曲線（鋼の線路）と点 ----
      曲線は短冊の奥行きいっぱいに敷いた線路にする（本人 2026-11-23「線路のような立体に」）。
      2本のレールは短冊の手前と奥の縁の上、枕木はその間に一定の間隔で渡す。
-     点は2本のレールの間を走る */
+     （レールの上を走る球は外した。本人 2026-11-23） */
   const curvePath = svg.querySelector<SVGPathElement>(".axis__curve")
   const curve2d = curvePath ? pathPoints(curvePath.getAttribute("d") ?? "") : []
   const RAIL_LIFT = 5
@@ -329,30 +339,18 @@ export function startHeroScene({
   })
   const curveIndexCount = rails[0]?.index?.count ?? 0
 
-  // 弧長の累積。点を曲線の上で動かし、5本目の短冊の真ん中で止めるのに使う
+  // 弧長の累積。枕木を等間隔に置くのに使う（線路の上を走る球は外した。本人 2026-11-23）
   const lengths = [0]
   for (let i = 1; i < curve3d.length; i++) {
     lengths.push(lengths[i - 1] + curve3d[i].distanceTo(curve3d[i - 1]))
   }
   const total = lengths[lengths.length - 1] || 1
-  const stopX = bars[STOP_BAR]?.centerX ?? curve2d[curve2d.length - 1]?.x ?? 0
-  const stopLength = (() => {
-    for (let i = 1; i < curve2d.length; i++) {
-      if (curve2d[i].x >= stopX) {
-        const t = (stopX - curve2d[i - 1].x) / (curve2d[i].x - curve2d[i - 1].x || 1)
-        return lengths[i - 1] + t * (lengths[i] - lengths[i - 1])
-      }
-    }
-    return total
-  })()
   const pointAt = (length: number, out: THREE.Vector3) => {
     let i = 1
     while (i < lengths.length - 1 && lengths[i] < length) i++
     const t = (length - lengths[i - 1]) / (lengths[i] - lengths[i - 1] || 1)
     return out.lerpVectors(curve3d[i - 1], curve3d[i], clamp01(t))
   }
-  const dot = new THREE.Mesh(keep(new THREE.SphereGeometry(9, 32, 20)), orangeSteel)
-  chartScene.add(dot)
 
   // 枕木。弧長で等間隔に置き、曲線が引かれたところまでだけ見せる
   const SLEEPER_GAP = 24
@@ -443,7 +441,7 @@ export function startHeroScene({
   for (const text of svg.querySelectorAll<SVGTextElement>(".axis__labels text")) {
     const geometry = glyphGeometry(text.textContent ?? "")
     if (!geometry) continue
-    const mesh = new THREE.Mesh(geometry, [faceSteel, blackSteel])
+    const mesh = new THREE.Mesh(geometry, [labelSteel, blackSteel])
     const s = 20 / GLYPH_UNIT
     mesh.scale.set(s, s, s)
     mesh.position.set(toX(Number(text.getAttribute("x"))), toY(Number(text.getAttribute("y"))), 0)
@@ -513,7 +511,7 @@ export function startHeroScene({
         if (!geometry) continue
         const mesh = new THREE.Mesh(
           geometry,
-          spot.accent ? [accentFace, orangeSteel] : [faceSteel, deepOrangeSteel],
+          spot.accent ? [accentFace, edgeSteel] : [faceSteel, edgeSteel],
         )
         const s = spot.size / GLYPH_UNIT
         mesh.scale.set(s, s, s)
@@ -561,12 +559,11 @@ export function startHeroScene({
 
   /* ---- 動き ----
      2D と同じ順で積み上げてから、正面の図を斜めに起こして奥行きを見せる。
-       0.0〜1.6 s  曲線を引く・点が走る。字が1字ずつ基線から立つ
+       0.0〜1.6 s  曲線（線路）を引く。字が1字ずつ基線から立つ
        0.45 s〜    短冊が左から立つ
        2.0〜3.6 s  図が正面から斜めへ回る
        以降        ゆっくり揺れる。映り込みが流れて鋼が光る                   */
   const target = new THREE.Vector3(0, 0, -DEPTH / 2)
-  const dotPosition = new THREE.Vector3()
   let start = -1
   let raf = 0
   let running = false
@@ -589,8 +586,6 @@ export function startHeroScene({
     const segments = Math.ceil(drawn * tubeSegments)
     for (const rail of rails) rail.setDrawRange(0, Math.min(curveIndexCount, segments * RADIAL * 6))
     for (const sleeper of sleepers) sleeper.mesh.visible = sleeper.at <= total * drawn
-    dot.position.copy(pointAt(stopLength * drawn, dotPosition))
-    dot.position.y += 6
     bars.forEach(({ mesh }, i) => {
       const k = easeOut(clamp01((t - 0.45 - i * 0.045) / 0.5))
       mesh.scale.y = Math.max(0.0001, k)
@@ -625,10 +620,8 @@ export function startHeroScene({
 
     renderer.setViewport(0, 0, heroWidth, heroHeight)
     renderer.clear()
-    if (backdrop) {
-      backdrop.render(renderer, t, heroWidth, heroHeight)
-      renderer.clearDepth()
-    }
+    backdrop.render(renderer, t, heroWidth, heroHeight)
+    renderer.clearDepth()
     renderer.render(textScene, textCamera)
     renderer.clearDepth()
     renderer.setViewport(stageBox.x, stageBox.y, stageBox.w, stageBox.h)

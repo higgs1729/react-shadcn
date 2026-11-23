@@ -355,36 +355,41 @@ a { color: inherit; }
 .hero-3d-ready .hero__mark.hero-3d-text .hero__glyph { color: transparent; }
 .hero-3d-ready .hero-3d-text .typewrite__caret { display: none; }
 
-/* 背景の候補（?bg=1〜4、lib/hero-backdrop.ts）で暗い地を選んだときだけ、2D のボタンを反転する */
-.hero-3d-ready[data-hero-bg="dark"] .hero .btn--primary { background: var(--inverse-on-surface); color: var(--inverse-surface); }
-.hero-3d-ready[data-hero-bg="dark"] .hero .btn--tonal { background: var(--grey-1000); color: var(--inverse-on-surface); }
+/* 3D のヒーローの地は暗い（光の粒が漂う奥行き、lib/hero-backdrop.ts。本人 2026-11-23）。
+   2D のまま残すボタンは、暗い地で読めるよう反転する。2D に戻ったときは白の地のまま */
+.hero-3d-ready .hero { background: var(--hero-deep, #141821); }
+.hero-3d-ready .hero .btn--primary { background: var(--inverse-on-surface); color: var(--inverse-surface); }
+.hero-3d-ready .hero .btn--primary:hover { background: var(--grey-0); }
+.hero-3d-ready .hero .btn--tonal { background: var(--grey-1000); color: var(--inverse-on-surface); border-color: var(--grey-800); }
+.hero-3d-ready .hero .btn--tonal:hover { background: var(--grey-900); }
 
-/* 読み込み画面。3D を試すときだけ出る。押せる物は無いので当たり判定も持たない。
+/* 読み込み画面。地はヒーローと同じ暗がりにして、読み込み後の切り替わりで明暗が跳ねないようにする。
+   3D を試すときだけ出る。押せる物は無いので当たり判定も持たない。
    JS が途中で止まっても被さったままにならないよう、9 秒で必ず消える（保険） */
 .loader { display: none; }
 .hero-3d .loader {
   position: fixed; inset: 0; z-index: 100;
   display: grid; place-content: center; justify-items: center; gap: var(--sp-s);
-  background: var(--surface); pointer-events: none;
+  background: var(--hero-deep, #141821); pointer-events: none;
   transition: opacity 0.4s, visibility 0s 0.4s;
   animation: loader-giveup 0s 9s forwards;
 }
 .hero-3d-ready .loader { opacity: 0; visibility: hidden; }
 @keyframes loader-giveup { to { opacity: 0; visibility: hidden; } }
 .loader__fig { width: min(60vw, 240px); height: auto; overflow: visible; }
-.loader__axis { fill: none; stroke: var(--outline); stroke-width: 1.5; }
+.loader__axis { fill: none; stroke: var(--grey-800); stroke-width: 1.5; }
 .loader__curve {
-  fill: none; stroke: var(--grey-600); stroke-width: 1.5; stroke-linecap: round;
+  fill: none; stroke: var(--red-500); stroke-width: 2; stroke-linecap: round;
   stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p, 0));
 }
-.loader__t { color: var(--on-surface-variant); font-size: var(--step--1); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
-.loader__sound { color: var(--on-surface-variant); font-size: var(--step--1); margin-top: var(--sp-s); text-align: center; padding-inline: var(--sp-xl); }
-/* フィルムの送り穴の帯（左右の端）。黒い帯に地の色の四角い穴を一定の間隔で抜く。
+.loader__t { color: var(--inverse-on-surface); font-size: var(--step--1); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.loader__sound { color: var(--grey-300); font-size: var(--step--1); margin-top: var(--sp-s); text-align: center; padding-inline: var(--sp-xl); }
+/* フィルムの送り穴の帯（左右の端）。地より明るい帯に、地の色の四角い穴を一定の間隔で抜く。
    読み込みが進むと（--p）、フィルムが下へ送られる。曲線を引く量と同じ値で動かす */
 .loader__film {
   position: absolute; top: 0; bottom: 0; width: var(--film-w);
-  background-color: var(--grey-1200);
-  background-image: linear-gradient(to bottom, var(--surface) 0 0.875rem, transparent 0.875rem 1.75rem);
+  background-color: var(--grey-900);
+  background-image: linear-gradient(to bottom, var(--hero-deep, #141821) 0 0.875rem, transparent 0.875rem 1.75rem);
   background-size: 0.875rem 1.75rem;
   background-repeat: repeat-y;
   background-position: 50% calc(var(--p, 0) * 28rem);
@@ -393,7 +398,12 @@ a { color: inherit; }
 .loader__film--l { left: 0; }
 .loader__film--r { right: 0; }
 /* 音を出すかの入口（components/sound-toggle.tsx）。右下に固定。読み込み画面より上に出す */
-.sound { position: fixed; right: var(--sp-m); bottom: var(--sp-m); z-index: 110; transition: right 0.4s; }
+/* 暗いヒーローの上にも白い節の上にも重なるので、暗い地の札にして縁を付ける */
+.sound {
+  position: fixed; right: var(--sp-m); bottom: var(--sp-m); z-index: 110; transition: right 0.4s;
+  background: var(--grey-1100); color: var(--inverse-on-surface); border-color: var(--grey-800);
+}
+.sound:hover { background: var(--grey-900); }
 :root { --film-w: clamp(1.75rem, 4vw, 2.75rem); }
 /* 読み込み画面が出ている間は、右のフィルムの帯に重ならないよう内側へ寄せる */
 .hero-3d:not(.hero-3d-ready):not([data-hero3d="off"]) .sound { right: calc(var(--film-w) + var(--sp-m)); }
