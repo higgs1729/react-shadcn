@@ -38,7 +38,7 @@ keys.IP_SALT = randomBytes(24).toString("hex")
 
 function wrangler(args, input) {
   return new Promise((resolve, reject) => {
-    const child = spawn("npx", ["-y", "wrangler@4", ...args, "--config", config], {
+    const child = spawn("npx", ["-y", "wrangler@4.166.0", ...args, "--config", config], {
       cwd: root,
       stdio: [input === undefined ? "inherit" : "pipe", "inherit", "inherit"],
       shell: process.platform === "win32",
