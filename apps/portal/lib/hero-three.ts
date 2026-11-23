@@ -288,15 +288,33 @@ export function startHeroScene({
   const chartCamera = new THREE.PerspectiveCamera(FOV, VB_W / VB_H, 10, 6000)
   const baseDistance = VB_H / 2 / Math.tan(THREE.MathUtils.degToRad(FOV / 2))
 
-  /* ---- 短冊 ---- */
+  /* ---- 短冊 ----
+     2D の短冊は中点の高さ（曲線が上面の真ん中を通る）なので、そのまま立てると上面の左半分に
+     線路がめり込む（本人 2026-11-24）。3D では短冊の高さを左端での曲線の高さにする（下の和）。
+     曲線は右へ単調に上がるので、上面は短冊の幅のどこでも曲線より下になり、線路が上に乗る */
+  const curvePath = svg.querySelector<SVGPathElement>(".axis__curve")
+  const curve2d = curvePath ? pathPoints(curvePath.getAttribute("d") ?? "") : []
+  /** SVG の x での曲線の y（SVG の座標）。曲線が無ければ null */
+  const curveYAt = (x: number) => {
+    if (curve2d.length < 2) return null
+    let i = 1
+    while (i < curve2d.length - 1 && curve2d[i].x < x) i++
+    const a = curve2d[i - 1]
+    const b = curve2d[i]
+    return a.y + (b.y - a.y) * clamp01((x - a.x) / (b.x - a.x || 1))
+  }
   const rects = [...svg.querySelectorAll<SVGRectElement>(".bar")]
   const columns = rects.length
-  const maxHeight = Math.max(...rects.map((r) => r.height.baseVal.value))
-  const bars = rects.map((rect, index) => {
+  const barShape = rects.map((rect) => {
     const x = rect.x.baseVal.value
-    const y = rect.y.baseVal.value
     const w = rect.width.baseVal.value
-    const h = rect.height.baseVal.value
+    const bottom = rect.y.baseVal.value + rect.height.baseVal.value
+    const top = curveYAt(x)
+    const h = top === null ? rect.height.baseVal.value : Math.max(0.5, bottom - top)
+    return { x, w, h, y: bottom - h }
+  })
+  const maxHeight = Math.max(...barShape.map((b) => b.h))
+  const bars = barShape.map(({ x, y, w, h }, index) => {
     const geometry = keep(new THREE.BoxGeometry(w, h, DEPTH))
     geometry.translate(0, h / 2, -DEPTH / 2)
 
@@ -331,10 +349,10 @@ export function startHeroScene({
      曲線は短冊の奥行きいっぱいに敷いた線路にする（本人 2026-11-23「線路のような立体に」）。
      2本のレールは短冊の手前と奥の縁の上、枕木はその間に一定の間隔で渡す。
      （レールの上を走る球は外した。本人 2026-11-23） */
-  const curvePath = svg.querySelector<SVGPathElement>(".axis__curve")
-  const curve2d = curvePath ? pathPoints(curvePath.getAttribute("d") ?? "") : []
-  const RAIL_LIFT = 5
+  // 枕木の下面を曲線の高さに置き（短冊の上面の左端に接する）、レールはその上に乗せる
+  const SLEEPER_HEIGHT = 2.6
   const RAIL_RADIUS = 2.6
+  const RAIL_LIFT = SLEEPER_HEIGHT + RAIL_RADIUS
   const RAIL_Z = [-4, -DEPTH + 4]
   const curve3d = curve2d.map((p) => new THREE.Vector3(toX(p.x), toY(p.y) + RAIL_LIFT, -DEPTH / 2))
   const RADIAL = 10
@@ -371,7 +389,7 @@ export function startHeroScene({
 
   // 枕木。弧長で等間隔に置き、曲線が引かれたところまでだけ見せる
   const SLEEPER_GAP = 24
-  const sleeperGeometry = keep(new THREE.BoxGeometry(6, 2.6, DEPTH + 6))
+  const sleeperGeometry = keep(new THREE.BoxGeometry(6, SLEEPER_HEIGHT, DEPTH + 6))
   const sleepers: { mesh: THREE.Mesh; at: number }[] = []
   const tangent = new THREE.Vector3()
   for (let at = SLEEPER_GAP / 2; at < total; at += SLEEPER_GAP) {
@@ -380,7 +398,7 @@ export function startHeroScene({
     tangent.subVectors(curve3d[i], curve3d[i - 1]).normalize()
     const mesh = new THREE.Mesh(sleeperGeometry, blackSteel)
     pointAt(at, mesh.position)
-    mesh.position.y -= RAIL_RADIUS + 0.6
+    mesh.position.y -= RAIL_RADIUS + SLEEPER_HEIGHT / 2
     mesh.rotation.z = Math.atan2(tangent.y, tangent.x)
     mesh.visible = false
     chartScene.add(mesh)
@@ -469,6 +487,45 @@ export function startHeroScene({
   const textCamera = new THREE.PerspectiveCamera(TEXT_FOV, 1, 1, 10000)
   const textGroup = new THREE.Group()
   textScene.add(textGroup)
+
+  /* 字の下の暗がり。字は図の前に描くが、短冊の映像の上では字の形が映像に紛れる。
+     文字の塊（3 行とボタン）の後ろに、地の色で縁のぼけた楕円を敷いて図を沈める。
+     傾けない（textGroup に入れない）。字は不透明で先に描かれるので、暗がりは字の奥（SCRIM_Z）に
+     置いて深度で字の後ろに回す。位置と大きさは layoutText が決める */
+  const SCRIM_Z = -80
+  const scrimMaterial = keep(
+    new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        color: { value: cssColor("--hero-deep", "#0f1218") },
+        strength: { value: 0.78 },
+      },
+      vertexShader: /* glsl */ `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }`,
+      fragmentShader: /* glsl */ `
+        uniform vec3 color;
+        uniform float strength;
+        varying vec2 vUv;
+        void main() {
+          // 中心からの楕円の距離。0.55 までは濃いまま、1.0 で消える
+          float d = length((vUv - 0.5) * 2.0);
+          float a = strength * (1.0 - smoothstep(0.55, 1.0, d));
+          gl_FragColor = vec4(color, a);
+          #include <colorspace_fragment>
+        }`,
+    }),
+  )
+  scrimMaterial.toneMapped = false
+  const scrim = new THREE.Mesh(keep(new THREE.PlaneGeometry(1, 1)), scrimMaterial)
+  scrim.renderOrder = -1
+  scrim.visible = false
+  textScene.add(scrim)
+  const textBlock = hero.querySelector<HTMLElement>(".hero__inner")
   const builtText = textElements.filter((el) =>
     [...(el.textContent ?? "")].every((ch) => !ch.trim() || glyphCache.has(ch) || glyphGeometry(ch)),
   )
@@ -513,6 +570,31 @@ export function startHeroScene({
     placed = []
     const toWorldX = (px: number) => px - heroRect.left - heroWidth / 2
     const toWorldY = (py: number) => heroHeight / 2 - (py - heroRect.top)
+
+    // 暗がりは、組まれた字とボタンの外接矩形に合わせる（行の箱は幅いっぱいなので中身で測る）
+    if (textBlock) {
+      const range = document.createRange()
+      const boxes = [...textElements, ...textBlock.querySelectorAll<HTMLElement>(".hero__acts .btn")]
+        .map((el) => {
+          range.selectNodeContents(el)
+          return range.getBoundingClientRect()
+        })
+        .filter((r) => r.width && r.height)
+      range.detach()
+      if (boxes.length) {
+        const left = Math.min(...boxes.map((r) => r.left))
+        const right = Math.max(...boxes.map((r) => r.right))
+        const top = Math.min(...boxes.map((r) => r.top))
+        const bottom = Math.max(...boxes.map((r) => r.bottom))
+        // 奥に置いた分だけ小さく映るので、カメラからの距離の比で広げる
+        const k = (textCamera.position.z - SCRIM_Z) / textCamera.position.z
+        const pad = Math.min(heroWidth, heroHeight) * 0.08
+        scrim.position.set(toWorldX((left + right) / 2) * k, toWorldY((top + bottom) / 2) * k, SCRIM_Z)
+        // 楕円の濃い芯（半径 0.55）が矩形の角まで届く大きさにする
+        scrim.scale.set(((right - left + pad) * 1.55) * k, ((bottom - top + pad) * 1.55) * k, 1)
+        scrim.visible = true
+      }
+    }
 
     let order = 0
     for (const el of builtText) {
@@ -638,11 +720,13 @@ export function startHeroScene({
     renderer.setViewport(0, 0, heroWidth, heroHeight)
     renderer.clear()
     backdrop.render(renderer, t, heroWidth, heroHeight)
-    renderer.clearDepth()
-    renderer.render(textScene, textCamera)
+    // 図を先に、字を後に描く。字が図の後ろに回ると短冊とレールに隠れる（本人 2026-11-24）
     renderer.clearDepth()
     renderer.setViewport(stageBox.x, stageBox.y, stageBox.w, stageBox.h)
     renderer.render(chartScene, chartCamera)
+    renderer.clearDepth()
+    renderer.setViewport(0, 0, heroWidth, heroHeight)
+    renderer.render(textScene, textCamera)
 
     if (!readySent) {
       readySent = true
