@@ -51,7 +51,9 @@ node apps/portal/avatar-worker/scripts/ask.mjs questions.json out.jsonl
 
 `npx wrangler` はこのリポジトリの workspaces のせいで `apps/portal` を作業場所と見なすので、**必ず `--config <このフォルダ>/wrangler.jsonc` を付ける**(dev.mjs は付けている)。状態は `%TEMP%/avatar-brain-state` に置く。
 
-## 本番に出す(本人の OK の後)
+## 本番に出す
+
+2026-11-24 に出した: https://react-shadcn-avatar-brain.higgs1729.workers.dev 。`node apps/portal/avatar-worker/scripts/deploy.mjs` が deploy と secret 4 本をまとめてする(下は手で打つ場合)。
 
 ```
 npx -y wrangler@4 secret put OPENAI_API_KEY --config apps/portal/avatar-worker/wrangler.jsonc
@@ -61,4 +63,4 @@ npx -y wrangler@4 secret put IP_SALT --config apps/portal/avatar-worker/wrangler
 npx -y wrangler@4 deploy --config apps/portal/avatar-worker/wrangler.jsonc
 ```
 
-出す前に `ALLOWED_ORIGINS` から `http://localhost:3000` を外すか決める(Origin はブラウザ以外なら偽れるので、本当の守りは回数と額の上限)。OpenAI の管理画面の月の予算も別に掛けておく。画面には「AI が答えています。質問は AI の提供元に送られます」を出す(Z.AI の表示義務)。
+本番の `ALLOWED_ORIGINS` は `https://higgs1729.github.io` だけ(手元の試しは dev.mjs が localhost を足す)。Origin はブラウザ以外なら偽れるので、本当の守りは回数と額の上限。OpenAI の管理画面の月の予算も別に掛けておく。画面には「AI が答えています。質問は AI の提供元に送られます」を出す(Z.AI の表示義務)。
