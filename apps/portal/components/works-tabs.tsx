@@ -117,9 +117,12 @@ export function WorksTabs() {
                 <span className="pick__claim">{pick.claim}</span>
               </h3>
               <p className="pick__d">{pick.description}</p>
-              <a className="pick__go" href={pick.href}>
-                開く
-              </a>
+              {pick.note ? <p className="pick__d">{pick.note}</p> : null}
+              {pick.links.map((link) => (
+                <a className="pick__go" href={link.href} key={link.href}>
+                  {link.label}
+                </a>
+              ))}
             </div>
           </article>
         ))}

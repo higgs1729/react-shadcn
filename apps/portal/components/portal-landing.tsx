@@ -53,11 +53,11 @@ export function PortalLanding() {
             <header className="sec">
               <p className="sec__label">Works</p>
               <h2 className="sec__t typewrite">
-                <span className="typewrite__text">まずは、この3つから</span>
+                <span className="typewrite__text">まずは、この5つから</span>
                 <span className="typewrite__caret" aria-hidden="true" />
               </h2>
               <p className="sec__lead">
-                性格の違う3つを選びました。残りはタブを切り替えると確認できます。
+                性格の違う5つを選びました。残りはタブを切り替えると確認できます。
               </p>
             </header>
 

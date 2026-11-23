@@ -31,12 +31,20 @@ export type Shot = {
   caption: string
 }
 
+export type PickLink = {
+  label: string
+  href: string
+}
+
 export type Pick = {
   id: string
   name: string
   claim: string
   description: string
-  href: string
+  /** 2段落目。無ければ出さない。 */
+  note?: string
+  /** 空なら「開く」を出さない（公開先がまだ無い作品）。 */
+  links: PickLink[]
   /** 手前から奥の順。3枚とも同じ作品の別カット。 */
   shots: Shot[]
 }
@@ -58,7 +66,7 @@ export const picks: Pick[] = [
     claim: "すべてのゲームを、ひとまとめに",
     description:
       "今まで制作してきたゲームを一つのアプリから遊べることを目標としました。注目タイトルからでも一覧からでもゲームを選べます。",
-    href: gamehubHref,
+    links: [{ label: "開く", href: gamehubHref }],
     shots: [
       {
         src: "p-gamehub-1.webp",
@@ -82,7 +90,7 @@ export const picks: Pick[] = [
     claim: "AIが画面を選ぶ過程を可視化する",
     description:
       "結果だけを出すと、なぜその画面なのかを誰も確かめられません。要求から候補、採用した理由までを画面の上に残しました。",
-    href: `${basePath}/studio/overview/`,
+    links: [{ label: "開く", href: `${basePath}/studio/overview/` }],
     shots: [
       {
         src: "p-studio-1.webp",
@@ -106,7 +114,7 @@ export const picks: Pick[] = [
     claim: "情報より先に、朝の静けさを",
     description:
       "朝の静かな時間に詰め込みすぎは似合いません。縦組みと余白を主役にして、写真は増やさず、焙煎の一枚に寄せました。",
-    href: `${basePath}/sites/01-asagiri-coffee/index.html`,
+    links: [{ label: "開く", href: `${basePath}/sites/01-asagiri-coffee/index.html` }],
     shots: [
       {
         src: "p-asagiri-1.webp",
@@ -118,6 +126,62 @@ export const picks: Pick[] = [
         caption: "朝霧の紹介文。縦組みの見出しと、ハンドドリップの写真",
       },
       { src: "p-asagiri-3.webp", caption: "朝霧の焙煎豆の節。豆の写真が並んでいる" },
+    ],
+  },
+  // ここから下の2件は、文を本人の言葉（就活の下書き）から取っている。
+  // 金額・学校名・取引先の名前は本人の確認待ちなので載せていない。
+  {
+    id: "nephelia",
+    name: "天空機関都市ネフェリア",
+    claim: "AIを使えて、マイクラの建築もできる人は？",
+    description:
+      "私にしかできないことって何だろうと考えたのが始まりです。AIを使える人も、マイクラの建築ができる人もたくさんいます。でも両方できる人は極端に少ない。この特性を活かして作品を一つ作ろうと考えました。",
+    note: "構想画と配置データの作成にはAIをツールとして使い、全体の構想と、どこを残しどこを直すかといった進行の判断は私が行っています。7,500 × 4,000 × 3,700 ブロック、置いたブロックは約3億5,300万。着手から完成まで約8日。",
+    // 冒頭35秒の動画（限定公開）を載せるかは本人が決める。それまで「開く」を出さない
+    links: [],
+    shots: [
+      {
+        src: "p-nephelia-1.webp",
+        caption: "天空機関都市ネフェリアの正面。中央の像と都市の全景",
+      },
+      {
+        src: "p-nephelia-2.webp",
+        caption: "ネフェリアの昼。大時計の塔と街並み",
+      },
+      {
+        src: "p-nephelia-3.webp",
+        caption: "ネフェリアの夕暮れ。街に灯りがともっている",
+      },
+    ],
+  },
+  {
+    id: "cadence",
+    name: "AIを使った動画制作の事業",
+    claim: "長期で目標を決めて、そこから逆算する",
+    description:
+      "まずYouTubeチャンネル「日本むかしぐらし」を、クラウドワークスで案件を勝ち取るための実績づくりとして始めました。そのチャンネルを実績として見せられるようになったことで、漫画動画をAIで作るパイプラインの案件が決まり、要件定義からテストまでを一人で担当しました。",
+    note: "その後、クラウドワークスでの受注の実績をもとに自分から営業をかけはじめました。自分のチャンネルの運営もAIに任せられる仕組みにして、手を空けたぶんを受託と営業に回しています。",
+    links: [
+      { label: "CADENCE を開く", href: "https://studio-cadence.github.io/" },
+      {
+        label: "クラウドワークスのページを開く",
+        href: "https://crowdworks.jp/public/employees/7167275",
+      },
+    ],
+    shots: [
+      {
+        src: "p-cadence-1.webp",
+        caption:
+          "動画制作 CADENCE のトップ。縦長の動画の画面が散らばり、中央にロゴ",
+      },
+      {
+        src: "p-cadence-2.webp",
+        caption: "CADENCE の作品の節。日本むかしぐらしなどの動画が並んでいる",
+      },
+      {
+        src: "p-cadence-3.webp",
+        caption: "CADENCE のつくり方の節。8つの工程と使っている道具",
+      },
     ],
   },
 ]

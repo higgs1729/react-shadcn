@@ -19,7 +19,7 @@
 - `components/portal-nav.tsx` / `mail-link.tsx` — ナビの開閉と現在地、メールアドレスの組み立て
 - `components/axis-figure.tsx` — ヒーローの座標系(SVG + GSAP)。`components/gravity-field.tsx` — 暗転帯の波紋(Canvas 2D)
 - `components/portal-motion.tsx` — 出現とタイプ表示。React の外から class と textContent を触る
-- `lib/works.ts` — 一覧の正本(ピックアップ3・アプリ4・サイト5)。href は basePath から組む
+- `lib/works.ts` — 一覧の正本(ピックアップ5・アプリ4・サイト5)。href は basePath から組む
 - `lib/asset-base.ts` — R2 で配信する画像の公開URL基点。`apps/team-t/lib/team-t-app/asset-base.ts` と同じバケット・公開URL
 - `scripts/upload-assets.mjs` — 画像を R2 へアップロード(`npm run upload:assets` / `upload:assets:check`)。核は共有モジュール `scripts/r2-assets.mjs`(リポジトリルート、team-t と共有)
 - `public/portal-previews/` — 08 の画像18枚の staging。R2 送信後は git に乗らない(`.gitignore` 済み)

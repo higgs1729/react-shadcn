@@ -497,6 +497,8 @@ a { color: inherit; }
 }
 .pick__go::after { content: "→"; transition: transform 0.2s; }
 .pick__go:hover::after { transform: translateX(3px); }
+/* 公開先が2つある作品だけ。右に間を取り、折り返しても行頭がそろう */
+.pick__go:not(:last-child) { margin-right: var(--sp-l); }
 
 @media (min-width: 60em) {
   .pick { grid-template-columns: 1.25fr 1fr; gap: var(--sp-xl); }

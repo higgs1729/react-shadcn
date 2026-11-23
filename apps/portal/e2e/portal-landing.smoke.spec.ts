@@ -17,7 +17,7 @@ test("swaps the panel for each kind of work", async ({ page }) => {
   const siteList = page.locator("#panel-site")
 
   await expect(picks).toBeVisible()
-  await expect(picks.locator(".pick")).toHaveCount(3)
+  await expect(picks.locator(".pick")).toHaveCount(5)
   await expect(appList).toBeHidden()
 
   await page.getByRole("tab", { name: "アプリ" }).click()
