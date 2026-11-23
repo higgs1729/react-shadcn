@@ -9,14 +9,18 @@ import { HeroScene } from "./hero-scene"
 import { MailLink } from "./mail-link"
 import { PortalMotion } from "./portal-motion"
 import { PortalNav } from "./portal-nav"
+import { SoundToggle } from "./sound-toggle"
 import { WorksTabs } from "./works-tabs"
 
 export function PortalLanding() {
   return (
     <>
       {/* 3D のヒーローを読み込む間だけ被せる。html に hero-3d が無ければ出ない。
-          曲線が引かれる長さで進み具合を見せる（座標系の演出と同じ意味の図） */}
+          曲線が引かれる長さで進み具合を見せる（座標系の演出と同じ意味の図）。
+          左右の端はフィルムの送り穴の帯で、進み具合に合わせてフィルムが送られる */}
       <div className="loader" aria-hidden="true">
+        <span className="loader__film loader__film--l" />
+        <span className="loader__film loader__film--r" />
         <svg className="loader__fig" viewBox="0 0 240 120">
           <path className="loader__axis" d="M 20 10 V 104 M 12 100 H 232" />
           <path
@@ -28,7 +32,9 @@ export function PortalLanding() {
         <p className="loader__t">
           読み込み中 <span className="loader__n">0</span>%
         </p>
+        <p className="loader__sound">このサイトは音が出ます。右下のボタンで切り替えられます</p>
       </div>
+      <SoundToggle />
 
       <a className="skip" href="#main">
         本文へスキップ

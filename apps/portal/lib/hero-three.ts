@@ -132,7 +132,7 @@ function baselineOffset(el: Element) {
   return offset
 }
 
-type Spot = { ch: string; x: number; baseline: number; size: number }
+type Spot = { ch: string; x: number; baseline: number; size: number; accent: boolean }
 
 function measureText(el: HTMLElement): Spot[] {
   const size = parseFloat(getComputedStyle(el).fontSize) || 16
@@ -154,7 +154,8 @@ function measureText(el: HTMLElement): Spot[] {
       range.setEnd(node, i + 1)
       const rect = range.getClientRects()[0]
       if (!rect) continue
-      spots.push({ ch, x: rect.left, baseline: rect.top + offset, size })
+      const accent = Boolean(node.parentElement?.closest(".brand__number"))
+      spots.push({ ch, x: rect.left, baseline: rect.top + offset, size, accent })
     }
   }
   range.detach()
@@ -207,20 +208,28 @@ export function startHeroScene({
     scene.add(key)
   }
 
-  /* ---- 鋼 ----
-     明るい鋼: 短冊の側面と上面・軸・曲線・点・字の縁。
-     暗い鋼: 字の面。白い地の上で字として読めるよう、映り込みを残したまま暗くする */
-  const steel = keep(
-    new THREE.MeshStandardMaterial({ color: 0xeef1f5, metalness: 1, roughness: 0.07 }),
-  )
-  const darkSteel = keep(
-    new THREE.MeshStandardMaterial({
-      color: 0x8b939d,
-      metalness: 1,
-      roughness: 0.2,
-      envMapIntensity: 0.85,
-    }),
-  )
+  /* ---- 色のついた鋼 ----
+     質感は磨いた鋼のまま（金属度 1・映り込み）、色はサイトの配色のオレンジと黒に戻す
+     （本人 2026-11-23）。色は CSS の変数から読み、数値を二か所に持たない。
+       黒の鋼: 軸・枕木・ラベル・字の面
+       オレンジの鋼: レール・点・字の縁と側面・ロゴの数字
+       短冊: 左（古い）の黒から右（新しい）のオレンジへ、1本ずつ濃さを変える */
+  const css = getComputedStyle(document.documentElement)
+  const cssColor = (name: string, fallback: string) =>
+    new THREE.Color(css.getPropertyValue(name).trim() || fallback)
+  const ink = cssColor("--grey-1100", "#18191d")
+  const orange = cssColor("--red-500", "#ea4b17")
+  const deepOrange = cssColor("--red-600", "#c63307")
+  // 金属は色が映り込みの色になるので、真っ黒にすると何も映らない。黒は少し持ち上げる
+  const blackMetal = ink.clone().lerp(new THREE.Color("#ffffff"), 0.12)
+  const metal = (color: THREE.Color, roughness: number) =>
+    keep(new THREE.MeshStandardMaterial({ color, metalness: 1, roughness }))
+  const blackSteel = metal(blackMetal, 0.16)
+  const orangeSteel = metal(orange, 0.12)
+  const deepOrangeSteel = metal(deepOrange, 0.14)
+  // 字の面。白い地の上で字として読めるよう、黒の鋼を少し粗くして映り込みを和らげる
+  const faceSteel = metal(blackMetal, 0.24)
+  const accentFace = metal(deepOrange, 0.2)
 
   /* ---- 映像 ---- */
   const videoTexture = keep(new THREE.VideoTexture(video))
@@ -258,7 +267,14 @@ export function startHeroScene({
     }
     uv.needsUpdate = true
 
-    const mesh = new THREE.Mesh(geometry, [steel, steel, steel, steel, videoMaterial, steel])
+    // 黒 → 濃いオレンジ → オレンジ。前半で黒から濃いオレンジ、後半で明るいオレンジへ
+    const k = rects.length > 1 ? index / (rects.length - 1) : 1
+    const tone =
+      k < 0.5
+        ? blackMetal.clone().lerp(deepOrange, k / 0.5)
+        : deepOrange.clone().lerp(orange, (k - 0.5) / 0.5)
+    const side = metal(tone, 0.12)
+    const mesh = new THREE.Mesh(geometry, [side, side, side, side, videoMaterial, side])
     mesh.position.set(toX(x + w / 2), toY(y + h), 0)
     mesh.scale.y = 0.0001
     chartScene.add(mesh)
@@ -289,7 +305,7 @@ export function startHeroScene({
     }
     const geometry = keep(new THREE.TubeGeometry(path, tubeSegments, RAIL_RADIUS, RADIAL, false))
     geometry.setDrawRange(0, 0)
-    chartScene.add(new THREE.Mesh(geometry, steel))
+    chartScene.add(new THREE.Mesh(geometry, orangeSteel))
     return geometry
   })
   const curveIndexCount = rails[0]?.index?.count ?? 0
@@ -316,7 +332,7 @@ export function startHeroScene({
     const t = (length - lengths[i - 1]) / (lengths[i] - lengths[i - 1] || 1)
     return out.lerpVectors(curve3d[i - 1], curve3d[i], clamp01(t))
   }
-  const dot = new THREE.Mesh(keep(new THREE.SphereGeometry(9, 32, 20)), steel)
+  const dot = new THREE.Mesh(keep(new THREE.SphereGeometry(9, 32, 20)), orangeSteel)
   chartScene.add(dot)
 
   // 枕木。弧長で等間隔に置き、曲線が引かれたところまでだけ見せる
@@ -328,7 +344,7 @@ export function startHeroScene({
     let i = 1
     while (i < lengths.length - 1 && lengths[i] < at) i++
     tangent.subVectors(curve3d[i], curve3d[i - 1]).normalize()
-    const mesh = new THREE.Mesh(sleeperGeometry, darkSteel)
+    const mesh = new THREE.Mesh(sleeperGeometry, blackSteel)
     pointAt(at, mesh.position)
     mesh.position.y -= RAIL_RADIUS + 0.6
     mesh.rotation.z = Math.atan2(tangent.y, tangent.x)
@@ -349,12 +365,12 @@ export function startHeroScene({
     const length = from.distanceTo(to)
     const rod = new THREE.Mesh(
       keep(new THREE.CylinderGeometry(AXIS_RADIUS, AXIS_RADIUS, length, 24)),
-      steel,
+      blackSteel,
     )
     rod.position.copy(from).add(to).multiplyScalar(0.5)
     rod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), to.clone().sub(from).normalize())
     chartScene.add(rod)
-    const cap = new THREE.Mesh(keep(new THREE.SphereGeometry(AXIS_RADIUS, 20, 12)), steel)
+    const cap = new THREE.Mesh(keep(new THREE.SphereGeometry(AXIS_RADIUS, 20, 12)), blackSteel)
     cap.position.copy(from)
     chartScene.add(cap)
   }
@@ -370,7 +386,7 @@ export function startHeroScene({
     const dir = tip3.clone().sub(base3).normalize()
     const height = Math.max(tip3.distanceTo(base3) * 1.6, AXIS_RADIUS * 6)
     const radius = Math.max((p1.distanceTo(p2) / 2) * 1.6, AXIS_RADIUS * 2.4)
-    const cone = new THREE.Mesh(keep(new THREE.ConeGeometry(radius, height, 32)), steel)
+    const cone = new THREE.Mesh(keep(new THREE.ConeGeometry(radius, height, 32)), blackSteel)
     cone.position.copy(base3).addScaledVector(dir, height / 2)
     cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir)
     chartScene.add(cone)
@@ -408,7 +424,7 @@ export function startHeroScene({
   for (const text of svg.querySelectorAll<SVGTextElement>(".axis__labels text")) {
     const geometry = glyphGeometry(text.textContent ?? "")
     if (!geometry) continue
-    const mesh = new THREE.Mesh(geometry, [darkSteel, steel])
+    const mesh = new THREE.Mesh(geometry, [faceSteel, blackSteel])
     const s = 20 / GLYPH_UNIT
     mesh.scale.set(s, s, s)
     mesh.position.set(toX(Number(text.getAttribute("x"))), toY(Number(text.getAttribute("y"))), 0)
@@ -437,10 +453,10 @@ export function startHeroScene({
       const path = new THREE.CurvePath<THREE.Vector3>()
       const v = pts.map((p) => new THREE.Vector3(p.x - 50, 50 - p.y, 0))
       for (let i = 1; i < v.length; i++) path.add(new THREE.LineCurve3(v[i - 1], v[i]))
-      markGroup.add(new THREE.Mesh(keep(new THREE.TubeGeometry(path, 32, 5.5, 10, false)), darkSteel))
+      markGroup.add(new THREE.Mesh(keep(new THREE.TubeGeometry(path, 32, 5.5, 10, false)), faceSteel))
       // 角と端を丸める（2D の round の継ぎと端）
       for (const corner of v) {
-        const ball = new THREE.Mesh(keep(new THREE.SphereGeometry(5.5, 12, 8)), darkSteel)
+        const ball = new THREE.Mesh(keep(new THREE.SphereGeometry(5.5, 12, 8)), faceSteel)
         ball.position.copy(corner)
         markGroup.add(ball)
       }
@@ -476,7 +492,10 @@ export function startHeroScene({
       for (const spot of measureText(el)) {
         const geometry = glyphGeometry(spot.ch)
         if (!geometry) continue
-        const mesh = new THREE.Mesh(geometry, [darkSteel, steel])
+        const mesh = new THREE.Mesh(
+          geometry,
+          spot.accent ? [accentFace, orangeSteel] : [faceSteel, deepOrangeSteel],
+        )
         const s = spot.size / GLYPH_UNIT
         mesh.scale.set(s, s, s)
         mesh.position.set(toWorldX(spot.x), toWorldY(spot.baseline), 0)

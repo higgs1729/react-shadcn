@@ -374,6 +374,25 @@ a { color: inherit; }
   stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p, 0));
 }
 .loader__t { color: var(--on-surface-variant); font-size: var(--step--1); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.loader__sound { color: var(--on-surface-variant); font-size: var(--step--1); margin-top: var(--sp-s); text-align: center; padding-inline: var(--sp-xl); }
+/* フィルムの送り穴の帯（左右の端）。黒い帯に地の色の四角い穴を一定の間隔で抜く。
+   読み込みが進むと（--p）、フィルムが下へ送られる。曲線を引く量と同じ値で動かす */
+.loader__film {
+  position: absolute; top: 0; bottom: 0; width: var(--film-w);
+  background-color: var(--grey-1200);
+  background-image: linear-gradient(to bottom, var(--surface) 0 0.875rem, transparent 0.875rem 1.75rem);
+  background-size: 0.875rem 1.75rem;
+  background-repeat: repeat-y;
+  background-position: 50% calc(var(--p, 0) * 28rem);
+  transition: background-position 0.25s linear;
+}
+.loader__film--l { left: 0; }
+.loader__film--r { right: 0; }
+/* 音を出すかの入口（components/sound-toggle.tsx）。右下に固定。読み込み画面より上に出す */
+.sound { position: fixed; right: var(--sp-m); bottom: var(--sp-m); z-index: 110; transition: right 0.4s; }
+:root { --film-w: clamp(1.75rem, 4vw, 2.75rem); }
+/* 読み込み画面が出ている間は、右のフィルムの帯に重ならないよう内側へ寄せる */
+.hero-3d:not(.hero-3d-ready):not([data-hero3d="off"]) .sound { right: calc(var(--film-w) + var(--sp-m)); }
 
 .hero__inner { position: relative; z-index: 1; width: min(100% - var(--sp-m) * 2, 54rem); margin-inline: auto; }
 .hero__mark {
