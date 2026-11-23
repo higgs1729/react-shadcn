@@ -11,7 +11,7 @@
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Guard"] }],
   "vars": {
-    "ALLOWED_ORIGINS": "https://higgs1729.github.io,http://localhost:3000",
+    "ALLOWED_ORIGINS": "https://higgs1729.github.io",
     // 1 日(日本時間)の OpenAI の使用額の上限。超える見込みの回は有料を呼ばず、無料のモデルだけで答える
     "DAILY_BUDGET_USD": "1.00",
     "IP_PER_10MIN": "10",

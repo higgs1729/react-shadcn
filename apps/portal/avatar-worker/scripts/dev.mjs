@@ -34,7 +34,7 @@ for (const k of ["OPENAI_API_KEY", "OPENROUTER_API_KEY", "ZAI_API_KEY"]) {
 }
 
 const port = opt("--port", "8788")
-const child = spawn("npx", ["-y", "wrangler@4", "dev", "--config", join(root, "wrangler.jsonc"), "--port", port, "--ip", "127.0.0.1", "--persist-to", opt("--persist-to", join(tmpdir(), "avatar-brain-state")), ...passthrough], {
+const child = spawn("npx", ["-y", "wrangler@4", "dev", "--config", join(root, "wrangler.jsonc"), "--port", port, "--ip", "127.0.0.1", "--persist-to", opt("--persist-to", join(tmpdir(), "avatar-brain-state")), "--var", "ALLOWED_ORIGINS:http://localhost:3000", ...passthrough], {
   cwd: root,
   env,
   stdio: "inherit",
