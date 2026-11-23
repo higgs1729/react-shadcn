@@ -52,6 +52,8 @@ apps/team-t/public/api-page-previews/
 apps/portal/public/portal-previews/
 apps/gamehub/public/gamehub-previews/
 apps/gamehub/stats-worker/.wrangler/
+apps/portal/.wrangler/
+apps/portal/avatar-worker/.wrangler/
 
 # debug
 npm-debug.log*

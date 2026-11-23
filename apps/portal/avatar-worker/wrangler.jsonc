@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "react-shadcn-avatar-brain",
+  "main": "src/index.ts",
+  "workers_dev": true,
+  "compatibility_date": "2025-04-01",
+  // persona.md・knowledge.md を文字列として取り込む
+  "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
+  "durable_objects": {
+    "bindings": [{ "name": "GUARD", "class_name": "Guard" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Guard"] }],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://higgs1729.github.io,http://localhost:3000",
+    // 1 日(日本時間)の OpenAI の使用額の上限。超える見込みの回は有料を呼ばず、無料のモデルだけで答える
+    "DAILY_BUDGET_USD": "1.00",
+    "IP_PER_10MIN": "10",
+    "IP_PER_DAY": "40",
+    // 全体の 1 日の回数の上限。超えたら無料のモデルも呼ばずに止まる
+    "DAILY_MAX_REQUESTS": "500",
+    "MAX_OUTPUT_TOKENS": "600",
+    "MAX_ANSWER_CHARS": "700"
+  }
+  // 鍵は secret: wrangler secret put OPENAI_API_KEY / OPENROUTER_API_KEY / ZAI_API_KEY / IP_SALT
+}
