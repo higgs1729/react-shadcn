@@ -475,16 +475,28 @@ a { color: inherit; }
 .item__a:hover .item__go::after { transform: translateX(3px); }
 
 /* --- ピックアップ -------------------------------------------------------
-   厳選3つ。左右を交互に入れ替える。--dir が重ねをずらす向き（外側へ）。 */
-.picks { display: grid; gap: var(--sp-2xl); }
+   画像が主役。重ねを幅いっぱいに置き、文は下。--dir が重ねをずらす向きと傾く向きで、1件ごとに入れ替える。 */
+.picks { display: grid; gap: calc(var(--sp-2xl) * 1.6); }
 .picks[hidden], .list[hidden] { display: none; }
 
-.pick { --dir: -1; display: grid; gap: var(--sp-l); align-items: center; }
+/* 画像が主役。重ねを本文の幅いっぱい（素材の 1000px 前後）に置き、文は下に組む */
+.pick { --dir: -1; display: grid; gap: var(--sp-l); }
 .pick--flip { --dir: 1; }
 
 /* 重ね。3枚とも同じ枡に置いて、奥の2枚をずらす。
    ずらした分だけ内側に余白を取る。取らないと枠外へ出て横あふれになる。 */
 .pick__stack { display: grid; padding: 7% 7% 0; }
+/* 斜めから正面へ起きる。ヒーローの 3D（正面の図が斜めに起きる）と逆向きの同じ動き。
+   --tilt は 1 が斜め・0 が正面。初期値は 0 なので、JS が無ければ正面のまま */
+.pick__stage {
+  width: 100%; max-width: 64rem; margin-inline: auto;
+  transform:
+    perspective(1400px)
+    rotateY(calc(var(--dir) * 16deg * var(--tilt, 0)))
+    rotateX(calc(9deg * var(--tilt, 0)))
+    scale(calc(1 - 0.1 * var(--tilt, 0)));
+  transform-origin: 50% 70%;
+}
 /* 押せる見た目は、JS が role を付けてから */
 .pick__stack[role="button"] { cursor: pointer; }
 .pick__stack:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: var(--r-m); }
@@ -528,10 +540,15 @@ a { color: inherit; }
 .pick__go:not(:last-child) { margin-right: var(--sp-l); }
 
 @media (min-width: 60em) {
-  .pick { grid-template-columns: 1.25fr 1fr; gap: var(--sp-xl); }
-  /* 画像の側をいつも広いほうに。列の比も一緒に入れ替える */
-  .pick--flip { grid-template-columns: 1fr 1.25fr; }
-  .pick--flip .pick__stack { order: 2; }
+  /* 文は画像の下で2列。左に名前と一言、右に説明とリンク */
+  .pick__body {
+    display: grid; grid-template-columns: 1.25fr 1fr; column-gap: var(--sp-xl);
+    align-content: start; width: 100%; max-width: 56rem; margin-inline: auto;
+  }
+  .pick__t { grid-column: 1; grid-row: 1 / span 6; align-self: start; }
+  .pick__body > :not(.pick__t) { grid-column: 2; justify-self: start; }
+  .pick__body > .pick__d:first-of-type { margin-top: 0; }
+  .pick__go:not(:last-child) { margin-right: 0; }
 }
 
 @media (min-width: 44em) { .list { grid-template-columns: repeat(2, 1fr); } }

@@ -148,7 +148,37 @@ export function PortalMotion() {
       }
     }, 2500)
 
+    /* --------------------------------------------------- 重ねが起きる
+       画面の下から入るとき斜めで、真ん中より少し上に来たら正面。スクロールに
+       合わせて --tilt を書くだけで、時間で動くものは足さない。隠れたパネル（高さ 0）は飛ばす */
+    const stages = [...document.querySelectorAll<HTMLElement>(".pick__stage")]
+    let tiltFrame = 0
+    const tilt = () => {
+      tiltFrame = 0
+      const vh = window.innerHeight
+      for (const el of stages) {
+        const r = el.getBoundingClientRect()
+        if (!r.height) continue
+        const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.45 + r.height / 2)))
+        const eased = 1 - (1 - p) ** 2
+        el.style.setProperty("--tilt", (1 - eased).toFixed(3))
+      }
+    }
+    const requestTilt = () => {
+      if (!tiltFrame) tiltFrame = requestAnimationFrame(tilt)
+    }
+    window.addEventListener("scroll", requestTilt, { passive: true })
+    window.addEventListener("resize", requestTilt)
+    // タブで重ねのパネルに戻ったときも、その位置で一度測る
+    document.addEventListener("click", requestTilt)
+    tilt()
+
     return () => {
+      cancelAnimationFrame(tiltFrame)
+      window.removeEventListener("scroll", requestTilt)
+      window.removeEventListener("resize", requestTilt)
+      document.removeEventListener("click", requestTilt)
+      for (const el of stages) el.style.removeProperty("--tilt")
       for (const timer of timers) clearTimeout(timer)
       for (const { el, out, text } of typed) {
         out.textContent = text
