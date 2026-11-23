@@ -131,7 +131,11 @@ function baselineOffset(el: Element) {
   return offset
 }
 
-type Spot = { ch: string; x: number; baseline: number; size: number; accent: boolean }
+/** 字の色の役。3D にする前の HTML（globals.css）の配分をそのまま写す:
+ *  ink = 見出し・ロゴ行（--on-surface）、muted = 小見出し（--on-surface-variant）、
+ *  accent = ロゴの数字（.brand__number、--accent） */
+type Tint = "ink" | "muted" | "accent"
+type Spot = { ch: string; x: number; baseline: number; size: number; tint: Tint }
 
 function measureText(el: HTMLElement): Spot[] {
   const size = parseFloat(getComputedStyle(el).fontSize) || 16
@@ -153,8 +157,13 @@ function measureText(el: HTMLElement): Spot[] {
       range.setEnd(node, i + 1)
       const rect = range.getClientRects()[0]
       if (!rect) continue
-      const accent = Boolean(node.parentElement?.closest(".brand__number"))
-      spots.push({ ch, x: rect.left, baseline: rect.top + offset, size, accent })
+      const parent = node.parentElement
+      const tint: Tint = parent?.closest(".brand__number")
+        ? "accent"
+        : parent?.closest(".hero__lead")
+          ? "muted"
+          : "ink"
+      spots.push({ ch, x: rect.left, baseline: rect.top + offset, size, tint })
     }
   }
   range.detach()
@@ -245,8 +254,16 @@ export function startHeroScene({
         envMapIntensity: 1,
       }),
     )
-  const faceSteel = glow(orange, deepOrange, 0.8)
+  // 地が暗いので、元の配色の暗い地の側（--inverse-on-surface・--accent-on-inverse）を使う。
+  // 黒の字は明るい無彩色の鋼、小見出しはそれより一段暗い鋼、数字だけ明るいオレンジ
+  const inkFace = glow(cssColor("--grey-10", "#f8f9fc"), cssColor("--grey-300", "#b2bbc5"), 0.55, 0.22)
+  const mutedFace = glow(cssColor("--grey-300", "#b2bbc5"), cssColor("--grey-800", "#45474d"), 0.6, 0.26)
   const accentFace = glow(lightOrange, orange, 0.8)
+  const tintFace: Record<Tint, THREE.MeshStandardMaterial> = {
+    ink: inkFace,
+    muted: mutedFace,
+    accent: accentFace,
+  }
   // 縁と側面はオレンジを使わない（本人 2026-11-23 の訂正）。色の無い鋼にして、
   // 光の向きに沿った明暗（光の側は明るい灰、陰の側は黒）で字の厚みを見せる
   const edgeSteel = keep(
@@ -470,10 +487,10 @@ export function startHeroScene({
       const path = new THREE.CurvePath<THREE.Vector3>()
       const v = pts.map((p) => new THREE.Vector3(p.x - 50, 50 - p.y, 0))
       for (let i = 1; i < v.length; i++) path.add(new THREE.LineCurve3(v[i - 1], v[i]))
-      markGroup.add(new THREE.Mesh(keep(new THREE.TubeGeometry(path, 32, 5.5, 10, false)), faceSteel))
+      markGroup.add(new THREE.Mesh(keep(new THREE.TubeGeometry(path, 32, 5.5, 10, false)), inkFace))
       // 角と端を丸める（2D の round の継ぎと端）
       for (const corner of v) {
-        const ball = new THREE.Mesh(keep(new THREE.SphereGeometry(5.5, 12, 8)), faceSteel)
+        const ball = new THREE.Mesh(keep(new THREE.SphereGeometry(5.5, 12, 8)), inkFace)
         ball.position.copy(corner)
         markGroup.add(ball)
       }
@@ -511,7 +528,7 @@ export function startHeroScene({
         if (!geometry) continue
         const mesh = new THREE.Mesh(
           geometry,
-          spot.accent ? [accentFace, edgeSteel] : [faceSteel, edgeSteel],
+          [tintFace[spot.tint], edgeSteel],
         )
         const s = spot.size / GLYPH_UNIT
         mesh.scale.set(s, s, s)

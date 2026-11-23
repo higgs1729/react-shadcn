@@ -357,7 +357,7 @@ a { color: inherit; }
 
 /* 3D のヒーローの地は暗い（光の粒が漂う奥行き、lib/hero-backdrop.ts。本人 2026-11-23）。
    2D のまま残すボタンは、暗い地で読めるよう反転する。2D に戻ったときは白の地のまま */
-.hero-3d-ready .hero { background: var(--hero-deep, #141821); }
+.hero-3d-ready .hero { background: var(--hero-deep, #0f1218); }
 .hero-3d-ready .hero .btn--primary { background: var(--inverse-on-surface); color: var(--inverse-surface); }
 .hero-3d-ready .hero .btn--primary:hover { background: var(--grey-0); }
 .hero-3d-ready .hero .btn--tonal { background: var(--grey-1000); color: var(--inverse-on-surface); border-color: var(--grey-800); }
@@ -370,7 +370,7 @@ a { color: inherit; }
 .hero-3d .loader {
   position: fixed; inset: 0; z-index: 100;
   display: grid; place-content: center; justify-items: center; gap: var(--sp-s);
-  background: var(--hero-deep, #141821); pointer-events: none;
+  background: var(--hero-deep, #0f1218); pointer-events: none;
   transition: opacity 0.4s, visibility 0s 0.4s;
   animation: loader-giveup 0s 9s forwards;
 }
@@ -389,7 +389,7 @@ a { color: inherit; }
 .loader__film {
   position: absolute; top: 0; bottom: 0; width: var(--film-w);
   background-color: var(--grey-900);
-  background-image: linear-gradient(to bottom, var(--hero-deep, #141821) 0 0.875rem, transparent 0.875rem 1.75rem);
+  background-image: linear-gradient(to bottom, var(--hero-deep, #0f1218) 0 0.875rem, transparent 0.875rem 1.75rem);
   background-size: 0.875rem 1.75rem;
   background-repeat: repeat-y;
   background-position: 50% calc(var(--p, 0) * 28rem);

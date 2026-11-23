@@ -52,20 +52,9 @@ const VERTEX = /* glsl */ `
 `
 
 // 地の明るさ。黒いヘッダーとの境目が見えるよう、上端をヘッダーより明るい灰青にし、
-// 下へ濃紺に沈める（本人 2026-11-23「暗すぎて境目が分からない」）。
-// 3 段を ?tone=1〜3 で見比べる。選ばれたら 1 段だけ残す。値は表示の sRGB のまま
-export const TONES = {
-  1: { top: "#262c39", bottom: "#0f1218", glow: "#323a4a" },
-  2: { top: "#323c50", bottom: "#141821", glow: "#414b60" },
-  3: { top: "#43506a", bottom: "#1a1f2b", glow: "#55627c" },
-} as const
-export type Tone = keyof typeof TONES
-export const DEFAULT_TONE: Tone = 2
-
-export function readTone(): Tone {
-  const value = Number(new URLSearchParams(window.location.search).get("tone"))
-  return value === 1 || value === 2 || value === 3 ? value : DEFAULT_TONE
-}
+// 下へ濃紺に沈める（本人 2026-11-23「暗すぎて境目が分からない」→ 3 段から 1 段目に決めた）。
+// 値は表示の sRGB のまま
+const TONE = { top: "#262c39", bottom: "#0f1218", glow: "#323a4a" }
 
 const FRAGMENT = /* glsl */ `
     uniform float uTime; uniform vec2 uResolution;
@@ -111,7 +100,7 @@ const POINT_FRAGMENT = /* glsl */ `
 `
 
 export function createBackdrop(renderer: THREE.WebGLRenderer, narrow: boolean): Backdrop {
-  const tone = TONES[readTone()]
+  const tone = TONE
   // 2D の地（CSS）とヒーローの下の境目を合わせるため、選ばれた段の色を html に書く
   document.documentElement.style.setProperty("--hero-deep", tone.bottom)
   const disposables: { dispose: () => void }[] = []
