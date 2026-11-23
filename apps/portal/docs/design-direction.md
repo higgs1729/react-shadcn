@@ -84,11 +84,11 @@
 
 | 列 | 素材(作った時期) | ファイル(切り出した秒) |
 | --- | --- | --- |
-| 1〜4 | 日本むかしぐらし『関ヶ原 敗軍の足軽の1日』(2026-10) | `C:/dev/video/short-video-lab/channels/edo-kurashi/sekigahara-ashigaru/direction-brief/r43-small.mp4`(0・12・24・44 秒から 10 秒) |
-| 5・6 | 天空機関都市ネフェリアの映像(2026-11 初め)。冒頭 35 秒の内だけ(本人が使ってよいと言った範囲)。2 本に絞った(本人 2026-11-23)。6 列目は天使の像 | `D:/toofar-proto3/video/final/nephelia_v3.mp4`(10・25 秒から 10 秒) |
-| 7・8 | 地理動画の立体の場面(鹿児島湾・桜島。2026-11-10 の地図の型の見本。納品物ではない) | `C:/dev/earn-money/image-gen-monetization/commissions/inbound/13533871/production/map-sample/keep/map/blender/s05-e2f6ef24c88a.mp4`(0・16 秒から) |
-| 9〜11 | 存在しない町の営業用の試作(架空の港町。2026-11-16) | `C:/dev/earn-money/revshare-partners/samples/minato-asa/minato-asa_v3.mp4`(0・12・20 秒から) |
-| 12〜14 | 画風が 2 秒ごとに切り替わるデモ(写真→油彩→アニメ→水彩。2026-11-22。先方へは未送付の PoC) | `C:/dev/earn-money/image-gen-monetization/commissions/inbound/13608209/production/poc/keep/i2v/k{1_photo,2_oil,3_anime,4_water}_veo.mp4`(各 0〜2 秒。13 列目は油彩、14 列目はアニメから始める) |
+| 1〜6 | 日本むかしぐらし『関ヶ原 敗軍の足軽の1日』(2026-10)。左端の短冊は低くて見えにくいので、6 本に広げて 5・6 列目まで届かせた(本人 2026-11-23) | `C:/dev/video/short-video-lab/channels/edo-kurashi/sekigahara-ashigaru/direction-brief/r43-small.mp4`(0・5・20・28・36・44 秒から 10 秒。16〜20 秒の黒い字幕だけの場面は避ける) |
+| 7・8 | 天空機関都市ネフェリアの映像(2026-11 初め)。冒頭 35 秒の内だけ(本人が使ってよいと言った範囲)。2 本に絞った(本人 2026-11-23)。8 列目は天使の像 | `D:/toofar-proto3/video/final/nephelia_v3.mp4`(10・25 秒から 10 秒) |
+| 9・10 | 地理動画の立体の場面(鹿児島湾・桜島。2026-11-10 の地図の型の見本。納品物ではない) | `C:/dev/earn-money/image-gen-monetization/commissions/inbound/13533871/production/map-sample/keep/map/blender/s05-e2f6ef24c88a.mp4`(0・16 秒から) |
+| 11・12 | 存在しない町の営業用の試作(架空の港町。2026-11-16) | `C:/dev/earn-money/revshare-partners/samples/minato-asa/minato-asa_v3.mp4`(0・12 秒から) |
+| 13・14 | 画風が 2 秒ごとに切り替わるデモ(写真→油彩→アニメ→水彩。2026-11-22。先方へは未送付の PoC) | `C:/dev/earn-money/image-gen-monetization/commissions/inbound/13608209/production/poc/keep/i2v/k{1_photo,2_oil,3_anime,4_water}_veo.mp4`(各 0〜2 秒。14 列目は油彩から始める) |
 
 作り直すときは、この並びで ffmpeg の hstack にかけ、10 秒・24fps・CRF 30 で書き出す(列は 96×384、1:4 の中央切り出し)。
 
