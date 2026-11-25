@@ -35,7 +35,7 @@
   依存は Next・React と、演出に使う GSAP、ヒーローの 3D に使う three だけ。three は `lib/hero-three.ts` だけが読み、動的 import で遅延させる
 - **演出は隔離する。** 動くのはヒーローの座標系と暗転帯の重力場、それに出現とタイプ表示だけ。
   文書側の部品を動かさない(08 の規律。理由は `docs/design-direction.md`)
-- **3D は試せる環境だけ。** `app/layout.tsx` の head のスクリプトが、WebGL があるときだけ html に `hero-3d` を付ける(動きを減らす設定でも 3D を出す。本人 2026-11-23)。付かなければ three も映像も読まず、今までの 2D が出る。8 秒で最初の1枚が出なければ 2D に戻す
+- **3D は試せる環境だけ。** `app/layout.tsx` の head のスクリプトが、WebGL2 があるときだけ html に `hero-3d` を付ける(three r163 以降は WebGL2 必須。動きを減らす設定でも 3D を出す。本人 2026-11-23)。付かなければ three も映像も読まず、今までの 2D が出る。8 秒で読み込み(three・止め絵・字形)が揃わなければ 2D に戻す。短冊は止め絵(`public/hero/hero-reel-poster.webp`)で先に出し、映像が回りだしたら差し替える。映像を待たない(iOS は低電力モードや preload の無視で映像が回らないことがある。本人 2026-11-25)
 - **JS が無い・動きを減らす設定でも、図と文字が完成形で出ること。**
   `axis-figure.tsx` の `settle()` と保険タイマー、`pick-stack.tsx` の初期状態を消さない
 - アプリ間リンクは素の `<a>` と `NEXT_PUBLIC_BASE_PATH` で組み立てる。Next は `<a>` の href に basePath を付けないため、リンク先は兄弟アプリの basePath を含めて自分で書く

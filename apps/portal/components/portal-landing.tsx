@@ -8,9 +8,11 @@ import { BrandMark } from "./brand-mark"
 import { GravityField } from "./gravity-field"
 import { HeroScene } from "./hero-scene"
 import { MailLink } from "./mail-link"
+import { MethodFlow } from "./method-flow"
 import { PortalMotion } from "./portal-motion"
 import { PortalNav } from "./portal-nav"
 import { SoundToggle } from "./sound-toggle"
+import { ViewportVars } from "./viewport-vars"
 import { WorksTabs } from "./works-tabs"
 
 export function PortalLanding() {
@@ -38,6 +40,7 @@ export function PortalLanding() {
       <SoundToggle />
       {/* 分身の案内役。Works から下で画面の端に立つ */}
       <AvatarGuide />
+      <ViewportVars />
 
       <a className="skip" href="#main">
         本文へスキップ
@@ -102,33 +105,13 @@ export function PortalLanding() {
                 <span className="typewrite__text">制作の手順</span>
                 <span className="typewrite__caret" aria-hidden="true" />
               </h2>
+              {/* 今の制作の流れに直した(本人 2026-11-25)。動画と Web で共通の6段。中身は method-flow.tsx */}
               <p className="sec__lead">
-                考えたことを、設計して、実装して、検証します。
+                動画もWebも、同じ6つの工程で作ります。実例をほどいて設計し、組み立てて、機械と目で確かめてから納める。1本ごとに分かったことを道具に戻し、次の1本に生かします。
               </p>
             </header>
 
-            <ol className="cards">
-              <li className="mcard">
-                <p className="mcard__n">01</p>
-                <h3>コンセプトを決定</h3>
-                <p>何を伝え、誰に向けてどう動いてほしいかを定めます。</p>
-              </li>
-              <li className="mcard">
-                <p className="mcard__n">02</p>
-                <h3>デザインシステムの構築</h3>
-                <p>色・文字・余白・部品を、繰り返し使える形に揃えます。</p>
-              </li>
-              <li className="mcard">
-                <p className="mcard__n">03</p>
-                <h3>実装とテストの設計</h3>
-                <p>動く画面に落とし込み、幅や操作の違いを確かめます。</p>
-              </li>
-              <li className="mcard">
-                <p className="mcard__n">04</p>
-                <h3>部分最適化</h3>
-                <p>見落としやすい点を一つずつ見直し、全体の質を上げます。</p>
-              </li>
-            </ol>
+            <MethodFlow />
           </div>
         </section>
 

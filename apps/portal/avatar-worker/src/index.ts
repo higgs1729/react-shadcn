@@ -2,7 +2,7 @@
 import persona from "./persona.md"
 import knowledge from "./knowledge.md"
 import { Guard, type GuardLimits } from "./guard"
-import { synthesize, takeSentences, type TtsAudio } from "./tts"
+import { synthesizeStream, takeLead, takeSentences } from "./tts"
 import {
   CHAIN,
   costUsd,
@@ -204,47 +204,65 @@ export default {
         outputTokens: Math.min(maxOutputTokens, Math.ceil(chars * 1.2) + 20),
       })
 
-    // 文が 1 つ終わるたびに合成を始め、届いた順でなく文の順に audio を送る
-    let ttsChain: Promise<void> = Promise.resolve()
+    // 文が 1 つ終わるたびに合成を始める(本人 2026-11-25「喋り始めが遅い」で stream に替えた)。
+    // 合成は並べて走らせ、届いた断片をすぐ voice_chunk { seq, text(その文の最初の 1 つだけ), mime, data: base64[] } で流す。
+    // 文の順に鳴らすのはブラウザ(seq の順に並べる)。文の終わりは voice_end { seq, text }、1 つも声が出なければ audio_skip { seq, text }
+    const ttsJobs: Promise<void>[] = []
     let ttsSeq = 0
     let ttsBuffer = ""
     let ttsStopped = !voiceOn
-    const ttsAbort = new AbortController()
     const speak = (sentence: string) => {
       if (ttsStopped) return
       const seq = ttsSeq++
-      const job: Promise<TtsAudio | null> = (async () => {
-        const ok = await guard.reserveTts(admission.day, sentence.length, dailyTtsChars)
-        if (!ok) {
-          ttsStopped = true
-          return null
-        }
-        const timer = setTimeout(() => ttsAbort.abort("tts_timeout"), 30_000)
+      const job = (async () => {
+        let chunks = 0
         try {
-          return await synthesize(sentence, {
-            apiKey: env.GEMINI_API_KEY!,
-            voice: env.TTS_VOICE!,
-            model: env.TTS_MODEL ?? "gemini-3.8-flash-tts",
-            signal: ttsAbort.signal,
-          })
+          const ok = await guard.reserveTts(admission.day, sentence.length, dailyTtsChars)
+          if (!ok) {
+            ttsStopped = true
+            return
+          }
+          const abort = new AbortController()
+          const timer = setTimeout(() => abort.abort("tts_timeout"), 30_000)
+          try {
+            await synthesizeStream(
+              sentence,
+              {
+                apiKey: env.GEMINI_API_KEY!,
+                voice: env.TTS_VOICE!,
+                model: env.TTS_MODEL ?? "gemini-3.8-flash-tts",
+                signal: abort.signal,
+              },
+              async (mime, data) => {
+                await send("voice_chunk", chunks === 0 ? { seq, text: sentence, mime, data } : { seq, mime, data })
+                chunks++
+              }
+            )
+          } finally {
+            clearTimeout(timer)
+          }
         } catch (err) {
-          console.log(JSON.stringify({ at: "tts", error: String(err).slice(0, 120) }))
-          return null
+          console.log(JSON.stringify({ at: "tts", seq, chunks, error: String(err).slice(0, 120) }))
         } finally {
-          clearTimeout(timer)
+          await send(chunks ? "voice_end" : "audio_skip", { seq, text: sentence })
         }
       })()
-      ttsChain = ttsChain.then(async () => {
-        const audio = await job
-        if (audio) await send("audio", { seq, text: sentence, ...audio })
-        else await send("audio_skip", { seq, text: sentence })
-      })
+      ttsJobs.push(job)
     }
+    const ttsDone = () => Promise.all(ttsJobs)
     const feedVoice = (text: string, flush = false) => {
       if (ttsStopped) return
       ttsBuffer += text
       const { sentences, rest } = takeSentences(ttsBuffer)
       ttsBuffer = rest
+      // 最初の 1 本は読点で先に切って合成に回す(文の終わりを待たない)
+      if (ttsSeq === 0 && !sentences.length) {
+        const lead = takeLead(ttsBuffer)
+        if (lead) {
+          ttsBuffer = lead.rest
+          sentences.push(lead.lead)
+        }
+      }
       for (const s of sentences) speak(s)
       if (flush && ttsBuffer.trim()) {
         speak(ttsBuffer.trim())
@@ -277,7 +295,7 @@ export default {
               if (firstMs === null) {
                 clearTimeout(timer)
                 firstMs = Date.now() - started
-                await send("meta", { provider: spec.id, model: spec.model })
+                await send("meta", { provider: spec.id, model: spec.model, voice: voiceOn })
               }
               let text = ev.text
               if (chars + text.length > maxAnswerChars) {
@@ -298,7 +316,7 @@ export default {
             const cost = usage ? costUsd(spec.model, usage) : spec.paid ? estimateCut(spec.model, chars) : 0
             actualUsd += cost
             feedVoice("", true)
-            await ttsChain
+            await ttsDone()
             await send("done", {
               provider: spec.id,
               model: resolvedModel,
@@ -315,7 +333,7 @@ export default {
               // 途中まで流した後に切れたら、次へは回さずに終える
               if (spec.paid) actualUsd += usage ? costUsd(spec.model, usage) : estimateCut(spec.model, chars)
               feedVoice("", true)
-              await ttsChain
+              await ttsDone()
               await send("done", {
                 provider: spec.id,
                 model: resolvedModel,

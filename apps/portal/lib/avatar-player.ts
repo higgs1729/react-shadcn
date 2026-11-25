@@ -2,8 +2,26 @@
 // <video> 2 枚の重ね替えでつなぎ、WebGL で緑を抜いて canvas に描く。
 // 透過の動画(WebM の alpha と Safari の HEVC alpha の 2 本)を持たずに済み、どのブラウザでも同じに見える。
 // 口は後から重ねない(本人 2026-11-24「後付けでは絶対合わない」)。話す間は、口も体も動画の中で動いている talk_1 の型を流す。
+// talk_1 は Flow の talk_m2(手を下ろしたまま話す方)を 640x660 に切った物。前の talk_m1 は i2v が元の絵に無い
+// パーカーの紐を描き足し、手を胸の前で大きく動かすので、話している間に紐が出て、途中で待機へ溶かすと腕が二重に残った(本人 2026-11-25)。
 
 export type ClipId = "idle_1" | "talk_1" | "point_l_2" | "point_r_2" | "bow_1"
+
+// 各型で、中立の姿勢(idle_1 の最初のコマ)に近いコマの範囲(秒)。緑を抜いたアルファで片方にだけ人がいる所を、
+// 幅 7px の開きで細い縁のずれを落として数え、全画素の 0.3% 以下のコマが 3 つ以上続く所(2026-11-25 実測)。
+// 型の動画を差し替えたら測り直す。ここに無い型は、どこで切っても待たない
+const NEAR: Partial<Record<ClipId, [number, number][]>> = {
+  idle_1: [[0, 1.58], [3.67, 7.96]],
+  talk_1: [[0, 0.25], [2.5, 2.96], [5.12, 7.96]],
+  point_l_2: [[0, 0.29], [3.96, 5.96]],
+  point_r_2: [[0, 0.33], [4.25, 5.96]],
+  bow_1: [[0, 0.54], [3.58, 5.96]],
+}
+/**
+ * 離れるときに待たない型。待機から話す・指すへ移るのを遅らせると、声が先に出て口が閉じたままになる。
+ * 待機の揺れ(1.6〜3.7 秒で少し傾く)は腕ほど離れないので、そこで切るときは短く溶かして二重に見える時間を縮める
+ */
+const NO_WAIT: ClipId[] = ["idle_1"]
 
 const VERT = `
 attribute vec2 p;
@@ -52,8 +70,16 @@ export class AvatarPlayer {
 
   /** 重ね替えにかける時間。中立の姿勢どうしなので短くてよい */
   static FADE_MS = 280
-  /** 途中で切り上げるとき(話し終えたのに話す型が長く残る)は長めに溶かす */
-  static CUT_FADE_MS = 520
+  /**
+   * 途中で切り上げるとき、中立に近いコマまで待つ上限(秒、ふつうの速さで)。これより遠ければ速く回して届かせる。
+   * 違う姿勢どうしを溶かすと、片方にだけ在る腕や頭が半分透けて二重に見える(残像。本人 2026-11-25)ので、溶かさずに待つ。
+   * 1.2 秒は guide が話し終えた後に話す型を最後まで流す長さと同じ
+   */
+  static CUT_WAIT_S = 1.2
+  /** 待つ間に速く回すときの上限の倍率 */
+  static CUT_MAX_RATE = 2
+  /** 待たない型を中立から離れたコマで切るときの溶かし(3 コマ) */
+  static QUICK_FADE_MS = 120
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -139,6 +165,7 @@ export class AvatarPlayer {
         resolve()
       }
       s.video.addEventListener("canplay", done)
+      s.video.playbackRate = 1
       s.video.src = this.src(clip)
       s.video.currentTime = 0
       s.video.load()
@@ -148,7 +175,13 @@ export class AvatarPlayer {
   /** 今の型の途中でも次へ移る(話し終えたとき)。残りが短ければ終わりまで待つ */
   private pending: ClipId | null = null
   private switching = false
+  /** 途中で切り上げる先と、そこへ移る今の型の時刻(中立に近いコマの始まり) */
+  private cutAt: { clip: ClipId; t: number } | null = null
 
+  /**
+   * cut は今の型の途中でも移る。ただし今の型が中立から離れたコマなら、近いコマまで待ってから溶かす
+   * (待つ間は戻り値を待たせない。呼ぶ側は声などを先に進めてよい)
+   */
   async switchTo(clip: ClipId, opts: { cut?: boolean } = {}) {
     if (this.switching) {
       this.pending = clip
@@ -158,9 +191,36 @@ export class AvatarPlayer {
     const left = cur.video.duration - cur.video.currentTime
     if (!opts.cut && Number.isFinite(left) && left > AvatarPlayer.FADE_MS / 1000 + 0.05) {
       this.pending = clip
+      if (this.cutAt) this.cutAt.clip = clip
       return
     }
-    await this.crossfade(clip, opts.cut ? AvatarPlayer.CUT_FADE_MS : AvatarPlayer.FADE_MS)
+    let ms = AvatarPlayer.FADE_MS
+    if (opts.cut && cur.clip) {
+      const t = this.nearFrom(cur.clip, cur.video.currentTime)
+      if (t !== null && NO_WAIT.includes(cur.clip)) ms = AvatarPlayer.QUICK_FADE_MS
+      else if (t !== null) {
+        const wait = t - cur.video.currentTime
+        this.cutAt = { clip, t }
+        // 型の終わりが先に来ても同じ先へ移る
+        this.pending = clip
+        cur.video.playbackRate = Math.min(AvatarPlayer.CUT_MAX_RATE, Math.max(1, wait / AvatarPlayer.CUT_WAIT_S))
+        return
+      }
+    }
+    this.cutAt = null
+    await this.crossfade(clip, ms)
+  }
+
+  /** clip の時刻 now から見て、中立に近いコマの始まり(秒)。今が近いか、表に無い型なら null */
+  private nearFrom(clip: ClipId, now: number): number | null {
+    const spans = NEAR[clip]
+    if (!spans) return null
+    for (const [a, b] of spans) {
+      // 次の型を読み込む間(手元で 0.1〜0.15 秒)と溶かし終えるまで範囲の中に居られるなら、今すぐでよい
+      if (now >= a && now <= b - (AvatarPlayer.FADE_MS + 150) / 1000) return null
+      if (a > now) return a
+    }
+    return null
   }
 
   get current(): ClipId | null {
@@ -175,6 +235,7 @@ export class AvatarPlayer {
 
   private async crossfade(clip: ClipId, ms: number) {
     this.switching = true
+    this.cutAt = null
     const back = this.slots[1 - this.front]
     await this.load(back, clip)
     await back.video.play().catch(() => {})
@@ -190,12 +251,21 @@ export class AvatarPlayer {
     if (this.disposed) return
     this.raf = requestAnimationFrame(this.loop)
     const cur = this.slots[this.front]
+    // 途中で切り上げる先があり、中立に近いコマまで来たら移る
+    if (!this.switching && this.cutAt && cur.video.currentTime >= this.cutAt.t) {
+      const { clip } = this.cutAt
+      this.cutAt = null
+      this.pending = null
+      cur.video.playbackRate = 1
+      void this.crossfade(clip, AvatarPlayer.FADE_MS)
+    }
     // 終わりが近づいたら次の型へ(指示が無ければ同じ型を頭から)
     if (!this.switching && cur.clip && Number.isFinite(cur.video.duration)) {
       const left = cur.video.duration - cur.video.currentTime
       if (left <= AvatarPlayer.FADE_MS / 1000 + 0.04) {
         const next = this.pending ?? this.hooks.next(cur.clip) ?? cur.clip
         this.pending = null
+        cur.video.playbackRate = 1
         void this.crossfade(next, AvatarPlayer.FADE_MS)
       }
     }

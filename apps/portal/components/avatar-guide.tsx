@@ -5,12 +5,17 @@
 // 質問すると頭脳の Worker(avatar-worker)が答えを流し、音がオンなら文ごとに本人の声で読む。
 // 口は重ねない。話す間は口も体も動画の中で動いている talk_1 の型を流す。
 // 音は「音を出す」がオンのときだけ。AudioContext は押した操作(呼ぶ・聞く・音をオン)の中で起こす。
-// 話し終えたら・「止める」・次の質問で、必ず待機に戻る(声の 1 本ごとに時間の上限がある。lib/avatar-voice.ts)
+// 話し終えたら・「止める」・次の質問で、必ず待機に戻る(声の時計が止まったら終わった扱い。lib/avatar-voice.ts)
+// 声を待っている間は口を動かさない。話す型は声が実際に鳴っている間だけ(本人 2026-11-25)。
+// 音がオンのときは、答えの字を全部薄く出し、鳴った所まで濃くして、吹き出しをそこへ送る(本人 2026-11-25)。
+// TTS は字ごとの時刻を返さないので、文ごとの声の「声の出ている時間」を、その文の字に読みの重さ(漢字は重く、
+// 句読点は 0)で割り振る。文の頭で必ず合い直すので、ずれは 1 文の中だけ(数字の読み・英字で数字ほど先走る)。
+// 音がオフのときは今まで通り、字はすぐ濃く出し、字の長さ(1 字 110 ms)だけ話す型を流す
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react"
 
 import lines from "../lib/avatar-lines.json"
 import { AvatarPlayer, type ClipId } from "../lib/avatar-player"
-import { AvatarVoice } from "../lib/avatar-voice"
+import { AvatarVoice, type VoiceTrack } from "../lib/avatar-voice"
 import { picks } from "../lib/works"
 import styles from "./avatar-guide.module.css"
 import { SOUND_EVENT } from "./sound-toggle"
@@ -43,6 +48,36 @@ const MENTION: Record<string, string[]> = {
 const SUGGEST = ["ネフェリアはどうやって作ったの？", "AIをどう使っていますか？"]
 
 type Turn = { role: "user" | "assistant"; content: string }
+/** 声 1 本(seq)が受け持つ答えの字の範囲 */
+type Range = { start: number; end: number; text: string }
+
+/** 読みの重さ。漢字は 1 字でおよそ 2 拍、小さい「ゃ」などは前の字と 1 拍、句読点・括弧・空白は声に出ない */
+function weight(c: string): number {
+  if (/[\s、。，．,.!?！？「」『』（）()・…—:：〜~]/.test(c)) return 0
+  if (/[ぁぃぅぇぉゃゅょゎァィゥェォャュョヮ]/.test(c)) return 0.3
+  if (/[一-鿿々]/.test(c)) return 1.7
+  if (/[0-9０-９]/.test(c)) return 1.5
+  return 1
+}
+
+/** 文の frac(0〜1)まで鳴ったとき、濃くする字の数。字の半ばまで鳴ったらその字を濃くする */
+function charAt(text: string, frac: number): number {
+  if (frac >= 1) return text.length
+  const ws = [...text].map(weight)
+  const total = ws.reduce((a, b) => a + b, 0)
+  if (!total) return frac > 0 ? text.length : 0
+  const target = frac * total
+  let acc = 0
+  let i = 0
+  // サロゲートペアを分けないよう、字の単位で数えて UTF-16 の位置を返す
+  let pos = 0
+  for (const ch of text) {
+    acc += ws[i++]
+    if (acc - ws[i - 1] / 2 > target) return pos
+    pos += ch.length
+  }
+  return text.length
+}
 /** 立つ所。x は姿の中心の画面上の横位置(px)。null は既定(広い画面は右、狭い画面は左)。bubble は吹き出しを出す側 */
 type Spot = { x: number | null; bubble: "left" | "right" }
 const HOME: Spot = { x: null, bubble: "left" }
@@ -121,6 +156,10 @@ export function AvatarGuide() {
   const [thinking, setThinking] = useState(false)
   /** 話している(声か、声が無ければ字幕の長さだけ) */
   const [talking, setTalking] = useState(false)
+  /** 声に合わせて濃くした字の数。null は全部濃い(音がオフ・話し終えた) */
+  const [spoken, setSpoken] = useState<number | null>(null)
+  const bubbleRef = useRef<HTMLParagraphElement>(null)
+  const pendingRef = useRef<HTMLSpanElement>(null)
   const sound = useSyncExternalStore(subscribeSound, soundIsOn, () => false)
   const [turns, setTurns] = useState<Turn[]>([])
 
@@ -224,6 +263,91 @@ export function AvatarGuide() {
   /** 声を鳴らせるか(音がオンで AudioContext が動いている) */
   const canSpeak = useCallback(async () => soundIsOn() && (await voiceRef.current.ready()), [])
 
+  /** 作品を指している間は、声が鳴っても話す型へ替えない(指し終えると next で話す型へ続く) */
+  const pointing = useCallback(() => playerRef.current?.current?.startsWith("point") ?? false, [])
+
+  /** 話す型へ。keepClip のとき(作品を指している間)は型を替えず、指し終えたら話す型へ続く */
+  const beginTalk = useCallback((keepClip: boolean) => {
+    if (speakingRef.current) return
+    speakingRef.current = true
+    setTalking(true)
+    const player = playerRef.current
+    if (player && !keepClip && player.current !== "talk_1") void player.switchTo("talk_1", { cut: true })
+  }, [])
+
+  /**
+   * 声の並び(track)に字幕と口を合わせる。鳴っている文の範囲の字を、鳴った割合まで濃くする。
+   * 鳴っている間だけ話す型、0.6 秒より長く鳴らなければ待機へ(文の間で口を開け閉めしない)。
+   * 全部鳴り終えるか、次の話・「止める」で token が変わったら終わる
+   */
+  const follow = useCallback(
+    (track: VoiceTrack, ranges: Range[], token: number, keepClip: () => boolean) =>
+      new Promise<void>((resolve) => {
+        let last = 0
+        let quietSince = 0
+        let heard = false
+        let ended = false
+        let nudged = 0
+        const end = () => {
+          ended = true
+          resolve()
+        }
+        void track.finished.then(end)
+        const tick = () => {
+          if (ended || token !== tokenRef.current) return end()
+          const st = track.now()
+          let idx = last
+          if (st.playing !== null) {
+            const r = ranges[st.playing]
+            if (r) idx = r.start + charAt(r.text, st.frac)
+          } else if (st.done > 0) {
+            const r = ranges[st.done - 1]
+            if (r) idx = r.end
+          }
+          if (idx > last) {
+            last = idx
+            setSpoken(idx)
+          }
+          if (st.playing !== null) {
+            quietSince = 0
+            if (!heard) {
+              heard = true
+              setThinking(false)
+            }
+            const keep = keepClip()
+            beginTalk(keep)
+            // 型の切り替えの最中に頼んだ話す型は、player が今の型の終わりまで後回しにする。鳴っている間は頼み直す
+            const player = playerRef.current
+            const now = performance.now()
+            if (player && !keep && player.current !== "talk_1" && now - nudged > 400) {
+              nudged = now
+              void player.switchTo("talk_1", { cut: true })
+            }
+          } else if (speakingRef.current) {
+            const now = performance.now()
+            if (!quietSince) quietSince = now
+            else if (now - quietSince > 600) toIdle()
+          }
+          if (st.finished) return end()
+          requestAnimationFrame(tick)
+        }
+        tick()
+      }),
+    [beginTalk, toIdle]
+  )
+
+  // 濃くした所(薄い字の始まり)の行が、吹き出しの上から 1/3 あたりに来るよう送る。行が変わったときだけ動く
+  useEffect(() => {
+    const box = bubbleRef.current
+    const mark = pendingRef.current
+    if (!box || !mark || spoken === null) return
+    const r = mark.getClientRects()[0]
+    if (!r) return
+    const lineTop = r.top - box.getBoundingClientRect().top + box.scrollTop
+    const want = Math.max(0, Math.min(box.scrollHeight - box.clientHeight, lineTop - box.clientHeight * 0.34))
+    if (Math.abs(box.scrollTop - want) > r.height * 0.6) box.scrollTo({ top: want, behavior: "smooth" })
+  }, [spoken, bubble])
+
   /** 前もって合成した台詞を言う。point を渡すとその方を指してから話す */
   const say = useCallback(
     async (lineId: string, opts: { point?: ClipId; bowAfter?: boolean } = {}) => {
@@ -233,26 +357,35 @@ export function AvatarGuide() {
       const token = ++tokenRef.current
       const voice = voiceRef.current
       voice.stop()
-      setBubble(line.text)
       afterRef.current = opts.bowAfter ? ["bow_1"] : []
-      speakingRef.current = true
-      setTalking(true)
+      const withVoice = await canSpeak()
+      if (token !== tokenRef.current) return
+      setBubble(line.text)
+      setSpoken(withVoice ? 0 : null)
       if (opts.point) {
         await player.switchTo(opts.point, { cut: true })
         // 腕が上がり始めてから話す
         await sleep(700)
-      } else if (player.current !== "talk_1") {
-        await player.switchTo("talk_1", { cut: true })
+        if (token !== tokenRef.current) return
+      }
+      const track = withVoice ? voice.track() : null
+      const buf = track ? await voice.load(`${ASSETS}/voice/${lineId}.m4a`) : null
+      if (token !== tokenRef.current) return track?.kill()
+      if (track) {
+        if (buf) track.buffer(0, buf, line.text)
+        else track.skip(0, line.text, (line.text.length * MS_PER_CHAR) / 1000)
+        track.close()
+        await follow(track, [{ start: 0, end: line.text.length, text: line.text }], token, pointing)
+      } else {
+        setSpoken(null)
+        beginTalk(Boolean(opts.point))
+        await sleep(line.text.length * MS_PER_CHAR)
       }
       if (token !== tokenRef.current) return
-      const buf = (await canSpeak()) ? await voice.load(`${ASSETS}/voice/${lineId}.m4a`) : null
-      if (token !== tokenRef.current) return
-      if (buf) await voice.enqueue(buf)
-      else await sleep(line.text.length * MS_PER_CHAR)
-      if (token !== tokenRef.current) return
+      setSpoken(null)
       finishSpeaking()
     },
-    [finishSpeaking, canSpeak]
+    [finishSpeaking, canSpeak, follow, beginTalk, pointing]
   )
 
   /** 立つ所を替える(消えて、別の所に出る) */
@@ -352,7 +485,6 @@ export function AvatarGuide() {
       silence()
       voiceRef.current.unlock()
       const voice = voiceRef.current
-      const player = playerRef.current
       const history: Turn[] = [...turns, { role: "user" as const, content: q }].slice(-8)
       setTurns(history)
       setInput("")
@@ -369,13 +501,29 @@ export function AvatarGuide() {
       let pointed = false
       let audioChain: Promise<void> = Promise.resolve()
       const plays: Promise<void>[] = []
-      const withVoice = await canSpeak()
-      const startTalk = () => {
-        if (speakingRef.current) return
-        speakingRef.current = true
-        setTalking(true)
-        if (player && player.current !== "talk_1" && !pointed) void player.switchTo("talk_1", { cut: true })
+      // 音がオンなら声の並びを作り、字は薄く出して声に合わせて濃くする。作れなければ声なし
+      let track = (await canSpeak()) ? voice.track() : null
+      const withVoice = track !== null
+      if (!live()) return track?.kill()
+      const ranges: Range[] = []
+      /** seq の声が受け持つ字の範囲を、前の文の終わりから探して決める(文は届く順が前後することがある) */
+      const place = (seq: number, text: string) => {
+        if (ranges[seq] || !text) return
+        const from = ranges.slice(0, seq).reduce((n, r) => (r ? Math.max(n, r.end) : n), 0)
+        let at = answer.indexOf(text, from)
+        if (at < 0) at = from
+        const end = Math.min(answer.length, at + text.length)
+        ranges[seq] = { start: at, end, text: answer.slice(at, end) }
       }
+      const following = track ? follow(track, ranges, token, pointing) : null
+      /** 声を付けない答え(音がオフ・Worker が声を付けないと言った)は、字の長さだけ話す型 */
+      const dropVoice = () => {
+        track?.kill()
+        track = null
+        setSpoken(null)
+        setThinking(false)
+      }
+      if (track) setSpoken(0)
 
       try {
         const res = await fetch(`${BRAIN_URL}/chat`, {
@@ -402,12 +550,18 @@ export function AvatarGuide() {
             const raw = /^data: (.+)$/m.exec(block)?.[1]
             if (!event || !raw || !live()) continue
             const data = JSON.parse(raw)
-            if (event === "delta") {
+            const t = track
+            if (event === "meta") {
+              // 声の鍵が無い・1 日の字数を使い切った Worker は voice: false を返す(返さない旧版は今まで通り)
+              if (t && data.voice === false) dropVoice()
+            } else if (event === "delta") {
               answer += data.text
-              setThinking(false)
               setBubble(answer)
-              startTalk()
-              if (!withVoice) plays.push(sleep(String(data.text).length * MS_PER_CHAR))
+              if (!t) {
+                setThinking(false)
+                beginTalk(pointed)
+                plays.push(sleep(String(data.text).length * MS_PER_CHAR))
+              }
               if (!pointed) {
                 const hit = Object.entries(MENTION).find(([, words]) => words.some((w) => answer.includes(w)))
                 if (hit) {
@@ -418,25 +572,52 @@ export function AvatarGuide() {
                   void guideTo(hit[0], false)
                 }
               }
+            } else if (!t) {
+              continue
+            } else if (event === "voice_chunk") {
+              // stream の声の断片(文の最初の 1 つだけ text が付く)
+              if (data.text) place(data.seq, data.text)
+              t.chunk(data.seq, data.mime, data.data, data.text)
+            } else if (event === "voice_end") {
+              place(data.seq, data.text)
+              t.end(data.seq, data.text)
             } else if (event === "audio") {
+              // 旧形式(1 文まるごと)。deploy 前の Worker のため
+              place(data.seq, data.text)
               audioChain = audioChain.then(async () => {
                 const b = await voice.decode(data.mime, data.data)
-                if (b && live()) plays.push(voice.enqueue(b, { normalize: true }))
+                if (b) t.buffer(data.seq, b, data.text, { normalize: true })
+                else t.skip(data.seq, data.text, (String(data.text).length * MS_PER_CHAR) / 1000)
               })
             } else if (event === "audio_skip") {
-              audioChain = audioChain.then(() => {
-                plays.push(sleep(String(data.text ?? "").length * MS_PER_CHAR))
-              })
+              place(data.seq, data.text)
+              t.skip(data.seq, data.text ?? "", (String(data.text ?? "").length * MS_PER_CHAR) / 1000)
             } else if (event === "error") {
               answer = data.message
               setBubble(answer)
+              dropVoice()
             }
           }
         }
         await audioChain
+        const t = track
+        if (t && live()) {
+          // 声の付かなかった残り(1 日の字数の上限に当たった後など)は、字の速さで濃くする
+          const covered = ranges.reduce((n, r) => (r ? Math.max(n, r.end) : n), 0)
+          const rest = answer.slice(covered)
+          if (rest.trim()) {
+            const seq = t.nextSeq
+            ranges[seq] = { start: covered, end: answer.length, text: rest }
+            t.skip(seq, rest, (rest.trim().length * MS_PER_CHAR) / 1000)
+          }
+          t.close()
+          await following
+        }
         await Promise.all(plays)
       } catch (e) {
         if (!live()) return // 次の質問か「止める」で捨てた
+        track?.kill()
+        setSpoken(null)
         answer =
           e instanceof Error && /[ぁ-ん]/.test(e.message)
             ? e.message
@@ -449,11 +630,12 @@ export function AvatarGuide() {
           abortRef.current = null
           chattingRef.current = false
           setThinking(false)
+          setSpoken(null)
           finishSpeaking()
         }
       }
     },
-    [turns, finishSpeaking, guideTo, silence, canSpeak]
+    [turns, finishSpeaking, guideTo, silence, canSpeak, follow, beginTalk, pointing]
   )
 
   const cls = [
@@ -487,8 +669,21 @@ export function AvatarGuide() {
 
         <div className={styles.talk}>
           {bubble ? (
-            <p className={styles.bubble} aria-live="polite">
-              {bubble}
+            <p className={styles.bubble} ref={bubbleRef}>
+              {/* 読み上げには字だけを渡す(濃さの切り替えで同じ文を何度も読ませない) */}
+              <span className="visually-hidden" aria-live="polite">
+                {bubble}
+              </span>
+              {spoken === null ? (
+                <span aria-hidden="true">{bubble}</span>
+              ) : (
+                <>
+                  <span aria-hidden="true">{bubble.slice(0, spoken)}</span>
+                  <span aria-hidden="true" className={styles.pending} ref={pendingRef}>
+                    {bubble.slice(spoken)}
+                  </span>
+                </>
+              )}
             </p>
           ) : null}
           {!sound ? <p className={styles.hint}>右下の「音を出す」をオンにすると、声も聞けます</p> : null}

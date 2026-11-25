@@ -26,7 +26,10 @@ export type HeroSceneOptions = {
   hero: HTMLElement
   stage: HTMLElement
   svg: SVGSVGElement
+  /** 短冊の映像。回りだすまでは poster を貼っておき、回りだしたら差し替える */
   video: HTMLVideoElement
+  /** 映像と同じ並び（14 列のアトラス）の止め絵。映像が回らない環境ではこれのまま */
+  poster: HTMLImageElement
   /** three の typeface JSON（scripts/build-hero-font.py が書き出す） */
   fontData: unknown
   /** 3D にできた行。呼んだ側が HTML の文字を透明にする */
@@ -176,6 +179,7 @@ export function startHeroScene({
   stage,
   svg,
   video,
+  poster,
   fontData,
   textElements,
   onReady,
@@ -277,12 +281,27 @@ export function startHeroScene({
   // 軸のラベル（O・x・y）は図の一部なので、字より控えめな明るい鋼
   const labelSteel = glow(new THREE.Color("#c9ced6"), new THREE.Color("#7d838d"), 0.6, 0.2)
 
-  /* ---- 映像 ---- */
+  /* ---- 映像 ----
+     先に止め絵を貼って出し、映像が回りだしたら（再生中で最初のコマがある）差し替える。
+     iOS の低電力モードなどで映像が回らなくても、短冊は止め絵のまま 3D で出る（本人 2026-11-25） */
+  const posterTexture = keep(new THREE.Texture(poster))
+  posterTexture.colorSpace = THREE.SRGBColorSpace
+  posterTexture.minFilter = THREE.LinearFilter
+  posterTexture.generateMipmaps = false
+  posterTexture.needsUpdate = true
   const videoTexture = keep(new THREE.VideoTexture(video))
   videoTexture.colorSpace = THREE.SRGBColorSpace
   videoTexture.minFilter = THREE.LinearFilter
   videoTexture.generateMipmaps = false
-  const videoMaterial = keep(new THREE.MeshBasicMaterial({ map: videoTexture, toneMapped: false }))
+  const videoMaterial = keep(new THREE.MeshBasicMaterial({ map: posterTexture, toneMapped: false }))
+  let videoLive = false
+  canvas.dataset.reel = "poster"
+  const swapToVideo = () => {
+    if (videoLive || video.paused || video.readyState < video.HAVE_CURRENT_DATA) return
+    videoLive = true
+    videoMaterial.map = videoTexture
+    canvas.dataset.reel = "video"
+  }
 
   /* ================================================================ 図の層 */
   const chartCamera = new THREE.PerspectiveCamera(FOV, VB_W / VB_H, 10, 6000)
@@ -671,6 +690,7 @@ export function startHeroScene({
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame)
     if (start < 0) start = now
+    if (!videoLive) swapToVideo()
     const t = (now - start) / 1000
 
     // 字

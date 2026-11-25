@@ -284,7 +284,10 @@ a { color: inherit; }
   background: var(--inverse-surface);
   border-bottom: 1px solid var(--inverse-outline);
 }
+/* 開いたメニューは縦に並ぶ。項目を字の幅にして、線が画面の端まで伸びないようにする(本人 2026-11-25) */
+.nav__links.is-open { justify-items: start; }
 .nav__links.is-open a { padding: 0.6em 0; }
+@media (max-width: 51.99em) { .nav__links.is-open a::before { bottom: 0.3em; } }
 
 @media (min-width: 52em) {
   .nav { padding-inline: var(--sp-l); }
@@ -623,19 +626,197 @@ a { color: inherit; }
    ========================================================================= */
 
 .method { padding: var(--sp-2xl) 0; }
+
+/* --- 制作の手順の図(本人 2026-11-25「今の流れに直し、図解で分かりやすく」) ------------
+   08 には無い部品。08 の正本は手元にも GitHub にも見つからず(2026-11-25)、揃える相手が無い。
+   斜めに寝かせた床に 6 つの箱を立て、線路で 1 周させる。手本と写した所:
+   - CADENCE のリールの図 flow3d.tsx: 板を rotateX で寝かせ rotateZ で振り、その上に節を立てる
+   - Linear のトップの「Fig 0.1」: 図に番号の札を付け、無彩色の細い線で描く
+   - Vercel の "How agentic infrastructure works": 最後の段が「直し続ける」で、流れが閉じない
+   - isostate: 工程を等角の床に置き、点線の線路と向きで流れを見せる
+   動かさない(演出は座標系と重力場に隔離する規律)。JS も要らない。大きさは図の幅(cqi)で決める。
+   広い図は 3 列×2 段、狭い図(図の幅 40rem 未満)は 2 列×3 段。床の縦横比を固定して、
+   線路の SVG の viewBox(760×440 / 640×1120)と同じ比にする */
+.mflow {
+  container-type: inline-size;
+  max-width: 60rem;
+  margin: 0 auto var(--sp-xl);
+}
+.mflow__scene {
+  position: relative;
+  height: 94cqi;
+  perspective: 2400px;
+  perspective-origin: 50% 50%;
+}
+.mflow__floor {
+  --W: 64cqi; --H: 112cqi;
+  --b: 18cqi;              /* 箱の幅 */
+  --h: 7cqi;               /* 箱の高さ */
+  --t: 2.2cqi;             /* 床の厚み */
+  --fs: 5cqi;            /* 箱の前の面の字 */
+  position: absolute; left: 50%; top: 47%;
+  width: var(--W); height: var(--H);
+  margin: calc(var(--H) / -2) 0 0 calc(var(--W) / -2);
+  transform-style: preserve-3d;
+  /* 狭い図は縦に長いので、寝かせを浅くして奥の段まで読ませる */
+  transform: rotateX(46deg) rotateZ(-16deg);
+  background:
+    linear-gradient(var(--outline-variant) 1px, transparent 1px) 0 0 / 100% calc(var(--H) / 14),
+    linear-gradient(90deg, var(--outline-variant) 1px, transparent 1px) 0 0 / calc(var(--W) / 8) 100%,
+    var(--surface-container);
+  box-shadow: inset 0 0 0 1px var(--outline);
+}
+/* 床の厚み。手前の縁(+y)と左の縁(-x)だけが見える */
+.mflow__floor::before,
+.mflow__floor::after { content: ""; position: absolute; background: var(--surface-container-higher); }
+.mflow__floor::before { left: 0; top: 100%; width: 100%; height: var(--t); transform-origin: top; transform: rotateX(-90deg); }
+.mflow__floor::after { right: 100%; top: 0; width: var(--t); height: 100%; transform-origin: right; transform: rotateY(-90deg); background: var(--outline); }
+
+.mflow__track { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.mflow__track--wide { display: none; }
+.mflow__loop { fill: none; stroke: var(--grey-300); stroke-width: 3; stroke-dasharray: 2 9; stroke-linecap: round; }
+.mflow__return { fill: none; stroke: var(--red-500); stroke-width: 4; stroke-linecap: round; }
+.mflow__chev { fill: none; stroke: var(--grey-600); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.mflow__chev--accent { stroke: var(--red-500); }
+.mflow__note { fill: var(--accent); font-size: 36px; font-weight: var(--w-medium); letter-spacing: 0.08em; }
+
+/* 箱。床の上の位置は --x・--y(床の割合)。上の面・前の面・左の面の 3 枚 */
+.mflow__st {
+  position: absolute;
+  left: var(--x); top: var(--y);
+  width: var(--b); height: var(--b);
+  margin: calc(var(--b) / -2) 0 0 calc(var(--b) / -2);
+  transform-style: preserve-3d;
+}
+.mflow__st--1 { --x: 26%; --y: 22%; }
+.mflow__st--2 { --x: 26%; --y: 52.5%; }
+.mflow__st--3 { --x: 26%; --y: 83%; }
+.mflow__st--4 { --x: 74%; --y: 83%; }
+.mflow__st--5 { --x: 74%; --y: 52.5%; }
+.mflow__st--6 { --x: 74%; --y: 22%; }
+
+.mflow__top {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  transform: translateZ(var(--h));
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 3px;
+  color: var(--on-surface);
+}
+.mflow__top svg {
+  width: 56%; height: 56%;
+  fill: none; stroke: currentColor; stroke-width: 1.5;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.mflow__n {
+  position: absolute; left: 7%; top: 4%;
+  font-size: calc(var(--fs) * 0.62);
+  font-weight: var(--w-medium);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+/* 前の面: 箱の下の辺を軸に起こす。字は正立する */
+.mflow__front {
+  position: absolute; left: 0; top: calc(100% - var(--h));
+  width: 100%; height: var(--h);
+  display: grid; place-items: center;
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+  background: var(--surface-container-high);
+  border: 1px solid var(--outline);
+  font-size: var(--fs);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--on-surface);
+}
+.mflow__side {
+  position: absolute; left: 0; top: 0;
+  width: var(--h); height: 100%;
+  transform-origin: left;
+  transform: rotateY(-90deg);
+  background: var(--surface-container-higher);
+  border: 1px solid var(--outline);
+}
+/* 設計の後の「確認」。床に立てた札 */
+.mflow__sign {
+  position: absolute;
+  left: 50%; top: 68%;
+  width: calc(var(--b) * 0.9); height: calc(var(--h) * 1.15);
+  margin: calc(var(--h) * -1.15) 0 0 calc(var(--b) * -0.45);
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+  display: grid; place-items: center;
+}
+.mflow__sign span {
+  padding: 0.25em 0.7em;
+  border-radius: var(--r-pill);
+  background: var(--inverse-surface);
+  color: var(--inverse-on-surface);
+  font-size: calc(var(--fs) * 0.72);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+}
+
+.mflow__cap {
+  margin-top: var(--sp-s);
+  text-align: center;
+  color: var(--on-surface-variant);
+  font-size: var(--step--1);
+}
+.mflow__fig { margin-right: 0.8em; color: var(--accent); font-weight: var(--w-medium); letter-spacing: 0.06em; }
+
+@container (min-width: 40rem) {
+  .mflow__scene { height: 43cqi; }
+  .mflow__floor {
+    --W: 76cqi; --H: 44cqi;
+    --b: 10.5cqi; --h: 3.8cqi; --t: 1.3cqi; --fs: 1.9cqi;
+    top: 45%;
+    transform: rotateX(56deg) rotateZ(-24deg);
+    background-size: 100% calc(var(--H) / 6), calc(var(--W) / 12) 100%, auto;
+  }
+  .mflow__track--wide { display: block; }
+  .mflow__track--narrow { display: none; }
+  .mflow__note { font-size: 20px; }
+  .mflow__st--1 { --x: 26%; --y: 30%; }
+  .mflow__st--2 { --x: 54%; --y: 30%; }
+  .mflow__st--3 { --x: 82%; --y: 30%; }
+  .mflow__st--4 { --x: 82%; --y: 72%; }
+  .mflow__st--5 { --x: 54%; --y: 72%; }
+  .mflow__st--6 { --x: 26%; --y: 72%; }
+  .mflow__sign { left: 68%; top: 30%; }
+}
+
+/* --- 6 段のカード。字で読む本体(図はこの要約) --------------------------- */
 .cards { display: grid; gap: var(--sp-m); grid-template-columns: 1fr; }
 .mcard {
+  display: flex; flex-direction: column;
   padding: var(--sp-l) var(--sp-m);
   border: 1px solid var(--outline-variant);
   border-radius: var(--r-l);
   background: var(--surface-container);
 }
 .mcard__n { font-size: var(--step--1); color: var(--accent); font-weight: var(--w-medium); font-variant-numeric: tabular-nums; }
+.mcard__w { margin-left: 0.8em; color: var(--on-surface-variant); letter-spacing: 0.12em; }
 .mcard h3 { margin-top: var(--sp-xs); font-size: var(--step-2); font-weight: var(--w-display); line-height: 1.35; letter-spacing: -0.015em; }
 .mcard p { margin-top: var(--sp-xs); color: var(--on-surface-variant); font-size: var(--step--1); }
+/* 動画と Web の実例。同じ段が両方に当てはまることを見せる */
+.mcard__eg {
+  display: grid; gap: var(--sp-2xs);
+  margin-top: auto; padding-top: var(--sp-m);
+  font-size: var(--step--2);
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+.mcard__eg > div { display: grid; grid-template-columns: 3.4em 1fr; gap: 0.6em; align-items: baseline; border-top: 1px solid var(--outline-variant); padding-top: var(--sp-2xs); }
+.mcard__eg dt { font-weight: var(--w-medium); color: var(--on-surface); letter-spacing: 0.06em; }
 
 @media (min-width: 44em) { .cards { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 68em) { .cards { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 68em) { .cards { grid-template-columns: repeat(3, 1fr); } }
 
 /* =========================================================================
    暗転。1回だけ、最後に

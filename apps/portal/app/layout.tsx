@@ -42,9 +42,12 @@ const face = Noto_Sans_JP({
 //
 // 同じ場所で、ヒーローを 3D で出すかも決める（hero-3d）。読み込み画面を最初の描画から
 // 被せるには、描画より前に決まっている必要があるため。2D に戻すのは環境の上で 3D が
-// 無理なとき（WebGL が無い）だけ。動きを減らす設定の人にも 3D を出す（本人 2026-11-23）。
+// 無理なとき（WebGL2 が無い）だけ。動きを減らす設定の人にも 3D を出す（本人 2026-11-23）。
+// 見るのは webgl2 だけ。three は r163 で WebGL1 を外しており（r185 の WebGLRenderer は
+// webgl2 しか取らない）、webgl だけの端末で 3D を試すと three と映像を落としてから失敗する
+// （本人のスマホで 3D が出ない件を調べて直した。本人 2026-11-25）。
 // 読み込みに失敗したときの 2D への戻りは hero-scene.tsx が受け持つ。
-const enableMotion = `(function(){var d=document.documentElement;d.classList.add('js-anim');try{var c=document.createElement('canvas');if(!(c.getContext('webgl2')||c.getContext('webgl')))return;d.classList.add('hero-3d')}catch(e){}})()`
+const enableMotion = `(function(){var d=document.documentElement;d.classList.add('js-anim');try{if(!document.createElement('canvas').getContext('webgl2'))return;d.classList.add('hero-3d')}catch(e){}})()`
 
 export default function RootLayout({
   children,

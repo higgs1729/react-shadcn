@@ -26,8 +26,13 @@ persona と knowledge は Responses API の **developer の発言**として先�
 - `meta` `{ provider, model }` — 最初の字の直前
 - `delta` `{ text }` — 答えの断片
 - `done` `{ provider, model, firstTokenMs, totalMs, usage, costUsd, truncated, fallbacks }`
-- `audio` `{ seq, text, mime, data }` — voice が true のとき、文ごとの声(base64。`audio/wav` か 24kHz・mono・16bit の PCM)。末尾に長い無音が付くことがあるので、ブラウザ側で切って音量をそろえる(`lib/avatar-voice.ts`)
+- `meta` の `voice` — この答えに声を付けるか(音がオンでも、鍵が無ければ false)
+- `voice_chunk` `{ seq, text?, mime, data: string[] }` — voice が true のとき、文(seq)ごとの声の断片。Gemini TTS を stream で受け、届いたそばから流す(base64 の 24kHz・mono・16bit の PCM を並べた物。`text` はその文の最初の断片だけ)。文どうしは並べて合成するので、seq の違う断片が混ざって届く。鳴らす順はブラウザが seq で決める(`lib/avatar-voice.ts`)。最初の 1 本は、文の終わりを待たずに 10 字目以降の最初の読点で切る
+- `voice_end` `{ seq, text }` — その文の声は全部送った
 - `audio_skip` `{ seq, text }` — その文は声にできなかった(1 日の字数の上限・合成の失敗)。画面は字だけで続ける
+- (旧形式)`audio` `{ seq, text, mime, data }` — 2026-11-26 より前の版が送った、1 文まるごとの声。ブラウザは今も受けられる
+
+最初の声までの時間(手元の wrangler dev、gpt-6.2-astra、同じ質問の 1 回ずつ、2026-11-26): 一括の合成で 11.96 秒 → stream で 5.5〜6.0 秒。Gemini TTS の stream は最初の断片まで約 3.2〜3.8 秒で、文の長さでほとんど変わらない(一括は 45 字で 6.3 秒、22 字でも 5.5 秒)。字ごとの時刻は返さない
 - `error` `{ code: "all_providers_failed", message, fallbacks }` — 全部だめなとき。`message` はそのまま画面に出せる文
 
 上限に当たると 429 の JSON `{ error: "rate_limited", reason, message }` と `Retry-After`。

@@ -52,6 +52,8 @@
   box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
   white-space: pre-wrap;
 }
+/* 音がオンのとき、まだ声になっていない字(avatar-guide.tsx の spoken)。鳴った所から元の濃さに戻る(本人 2026-11-25) */
+.pending { color: color-mix(in srgb, currentColor 36%, transparent); }
 .hint { font-size: var(--step--2); color: var(--on-surface-variant); background: rgb(255 255 255 / 0.85); padding: 0.1em 0.5em; border-radius: var(--r-s, 6px); }
 
 .toggle,
@@ -109,12 +111,44 @@
 }
 .note { font-size: var(--step--2); color: var(--on-surface-variant); line-height: 1.6; }
 
+/* 入力欄の字は 16px 以上にする。iOS の Safari は 16px 未満の入力欄に触れると画面を拡大し、
+   固定した欄が画面の外へずれて崩れる(本人 2026-11-25)。指で触る端末だけ。PC の見た目は変えない */
+@media (pointer: coarse) {
+  .input, .send { font-size: 16px; }
+}
+
 /* 狭い画面: 左下に小さく。吹き出しは右へ横いっぱいに近く */
 @media (max-width: 74.99em) {
   .dock { --h: min(30vh, 13.5rem); }
   .home { left: calc(var(--w) * -0.18); right: auto; }
   .home .talk { left: 64%; right: auto; justify-items: start; bottom: 30%; }
   .bubble { max-height: 8.5em; }
+}
+
+/* スマホ: 姿は左下に全身で立ち、話す欄はその頭の上に画面の幅いっぱいで出す(横に並べると幅が足りず、
+   姿が欄の裏に隠れた)。欄は見えている高さ(キーボードを除く)に必ず収める(本人 2026-11-25「チャット欄が見切れる」)。
+   上端はナビの下で止め、入り切らないときは吹き出しだけが縮んで中でスクロールし、入力欄と「閉じる」は常に見える。
+   キーボードが出たら、その高さ(--kb)だけ全体を持ち上げる。--kb と --vvh は viewport-vars.tsx が visualViewport から書く */
+@media (max-width: 40em) {
+  .dock { --h: min(22vh, 10rem); bottom: var(--kb, 0px); }
+  .home { left: calc(var(--w) * -0.1); }
+  .home .talk {
+    /* 姿の箱(左へ 0.1 はみ出している)から見て、画面の左右に 0.75rem ずつ空ける */
+    left: calc(0.75rem + var(--w) * 0.1);
+    width: calc(100vw - 1.5rem);
+    bottom: 90%;
+    max-height: calc(var(--vvh, 100dvh) - var(--h) * 0.9 - 4.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .home .talk > * { flex: none; }
+  .home .talk > .bubble { flex: 0 1 auto; min-height: 3.5em; max-height: none; }
+  .home .talk > .panel { align-self: stretch; }
+  /* 打っている間は、候補と注意書きを畳んで吹き出しに高さを回す */
+  .talk:focus-within .hint,
+  .panel:focus-within .chips,
+  .panel:focus-within .note { display: none; }
 }
 
 /* 呼び出し。右下の「音を出す」(.sound)の真上 */
