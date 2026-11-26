@@ -447,6 +447,9 @@ a { color: inherit; }
   margin-bottom: var(--sp-m);
 }
 .hero__t {
+  /* 句の途中で折らない。折れるのは「、」の後だけにして、狭い画面でも 1 字だけ次の行へ落ちないようにする
+     (390px で「い」だけ落ちた。本人 2026-11-26)。それでも入らない幅では anywhere で折る */
+  word-break: keep-all; overflow-wrap: anywhere;
   font-size: var(--step-5);
   font-weight: var(--w-display);
   line-height: 1.18;
