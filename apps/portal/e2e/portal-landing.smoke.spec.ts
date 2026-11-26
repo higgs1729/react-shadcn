@@ -54,7 +54,8 @@ test("assembles the mail address once scripts run", async ({ page }) => {
 })
 
 // Reduce Motion の設定に関係なく、演出を見せる（Google Antigravity と同じ方針）。
-// ヒーローは世界の背景（本人 2026-11-26。積分の図は一旦外した）。止め絵が先に出て、映像は縦横で版を選ぶ
+// ヒーローは世界の背景（本人 2026-11-26。積分の図は一旦外した）。映像は動きを減らす設定でも自動再生で流す
+// （本人 2026-11-26）。止め絵が先に出て、映像は縦横で版を選ぶ
 test("shows the hero world when motion is reduced", async ({ browser }) => {
   const page = await browser.newPage({ reducedMotion: "reduce" })
   await page.goto("/")
@@ -67,6 +68,8 @@ test("shows the hero world when motion is reduced", async ({ browser }) => {
   const world = page.locator(".hero__world")
   await expect(world.locator("img")).toHaveJSProperty("complete", true)
   await expect(world.locator("video")).toHaveAttribute("src", /\/hero\/hero-world(-portrait)?\.mp4$/)
+  await expect(world.locator("video")).toHaveClass(/is-playing/, { timeout: 15_000 })
+  await expect(world.locator("video")).toHaveJSProperty("paused", false)
 
   await page.close()
 })

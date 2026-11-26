@@ -59,6 +59,7 @@
 
 Hero の背景は、デモリール(studio-cadence-demo の reel-v1)冒頭の世界(夕暮れの雲海に、積み石の石碑と画面の列。逆光の太陽が大通りの奥)を、Hero 用に描き直した 8 秒の輪にした。リールの書き出しをそのまま使わない: 営業用の宣言の字・MG・CADENCE の札・オーブ・突き当たりの円盤は載せない(本人「一応私のポートフォリオだから」)。積分の図(下の 3D と 2D の `AxisFigure`)は Hero から一旦外した。部品と素材は消さずに残してある。
 
+- 映像は「動きを減らす」設定(prefers-reduced-motion)を見ずに、常に自動再生で流す。止め絵は読み込み中の poster と、iOS の低電力モードなどで自動再生が止められたときの表示にだけ使う(本人 2026-11-26)
 - 部品は `components/hero-world.tsx`。止め絵(`public/hero/hero-world.webp`、縦の画面は `hero-world-portrait.webp`)を先に出し、映像(`hero-world.mp4`・`hero-world-portrait.mp4`)が回りだしたら重ねる。縦か横かは `(orientation: portrait)` で選ぶ。画面外・裏のタブでは止める。three も読み込み画面も読まない(`app/layout.tsx` は `hero-3d` を付けない)
 - 字は明るくし、真ん中に暗がり(`.hero__world::after`)を敷いて夕景の上で読ませる。ボタンは暗い地の側の色
 - 描き方: `C:/dev/video/studio-cadence-demo/production/reel-v1/keep/opening/`。石碑に映す物は `hero_screens.json`(手前から奥。偶数が左)で、`prep_hero_tex.py` が 8 秒・24 fps の輪に切る(頭の 0.5 秒に続きを溶かして継ぎ目を消す)。`world.py --hero --tex D:/cadence-reel/opening/hero/tex.json`(横 1920×1080、レンズ 30)と `--portrait --lens 30 --eye 0,-115,6`(縦 720×1280)で 192 コマずつ描く。カメラは 192 コマで元へ戻る揺れ、雲の塊・鳥・後ろの大通りの列は消す
