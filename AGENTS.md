@@ -49,16 +49,7 @@ npm -w apps/python-test run dev   # → http://localhost:3000/python-test/
 npm -w apps/gamehub run dev       # → http://localhost:3001/gamehub/
 ```
 
-**dev の URL は本番と同じ route 形になるが、`portal` だけ例外**:
-
-| workspace | dev の basePath | dev の URL |
-| --- | --- | --- |
-| `apps/portal` | **空** | **`localhost:3000/`** |
-| `apps/studio` | `/studio` | `localhost:3000/studio/` |
-| `apps/team-t` | `/team-t` | `localhost:3000/team-t/` |
-| `apps/python-test` | `/python-test` | `localhost:3000/python-test/` |
-| `apps/gamehub` | `/gamehub` | `localhost:3001/gamehub/` |
-
+dev の URL は本番と同じ route 形になるが、`portal` だけ例外。
 `portal` はサイトのルートを所有するため `basePath = PAGES_BASE_PATH ?? ""` となり、
 dev では空になる(他アプリは `${PAGES_BASE_PATH ?? ""}/<name>`)。
 **`localhost:3000/portal/` は存在しない。**
@@ -67,46 +58,20 @@ dev では空になる(他アプリは `${PAGES_BASE_PATH ?? ""}/<name>`)。
   GAMEHUBだけはポータルと同時に確認できるよう `next dev -p 3001` に固定している。
   その他を同時に起動すると空きポートへずれるため、起動時のログで実ポートを確認する
 - **ポータルからのアプリ間リンクは dev では解決しない。** ポート違いになるため。
-  ただしGAMEHUBだけはdev時に `http://localhost:3001/gamehub/` を指す。
   全アプリの導線が同一originで繋がるのは合成後の本番だけ
-
-### GAMEHUB
-
-`apps/gamehub` は他アプリと同じnpm workspaceで、Next.jsの静的exportを
-`/react-shadcn/gamehub/` に合成してGitHub Pagesへ公開する。
-
-ポータルのカードのリンクは環境で切り替わる(`apps/portal/lib/works.ts`):
-
-| 環境 | リンク先 |
-| --- | --- |
-| dev | `http://localhost:3001/gamehub/` |
-| 本番ビルド | `${PAGES_BASE_PATH}/gamehub/` |
-
-`NEXT_PUBLIC_GAMEHUB_URL` を設定した場合だけ、明示した別URLで上書きする。
-
-起動:
-
-```powershell
-npm -w apps/gamehub run dev
-```
+- 例外はGAMEHUBのカードで、リンク先を `apps/portal/lib/works.ts` が環境で切り替える
+  (dev は `http://localhost:3001/gamehub/`、本番ビルドは `${PAGES_BASE_PATH}/gamehub/`)。
+  `NEXT_PUBLIC_GAMEHUB_URL` を設定した場合だけ、明示した別URLで上書きする
 
 ### 本番(GitHub Pages)の見え方を手元で確認する
 
 `output: "export"` の静的サイトなので、本番は Node サーバーを持たない。
-`PAGES_BASE_PATH` を与えてビルドし、**その prefix の下に置いて**配信する。
+`PAGES_BASE_PATH=/react-shadcn` を与えてビルドし、**その prefix の下に置いて**配信する。
+`out/` をそのまま root で配信すると、アセットが `/react-shadcn/...` を指すため 404 になる。
+PowerShell の手順は `docs/publishing-guide.md` の「3. 公開前のローカル確認」。Git Bash では:
 
 ```bash
 PAGES_BASE_PATH=/react-shadcn npm -w apps/portal run build   # → apps/portal/out/
-```
-
-```powershell
-$env:PAGES_BASE_PATH="/react-shadcn"; npm -w apps/portal run build
-```
-
-`out/` をそのまま root で配信すると、アセットが `/react-shadcn/...` を指すため 404 になる。
-prefix を再現してから配信する:
-
-```bash
 mkdir -p /tmp/pages/react-shadcn && cp -r apps/portal/out/* /tmp/pages/react-shadcn/
 npx serve /tmp/pages    # → http://localhost:3000/react-shadcn/
 ```
@@ -115,38 +80,18 @@ npx serve /tmp/pages    # → http://localhost:3000/react-shadcn/
 
 ### GitHub Pagesへ公開する
 
-正規の公開経路は `.github/workflows/deploy-pages.yml` だけ。`main` へのpushで起動し、
-次の順に検査・ビルド・合成・公開を行う。
-
-1. `npm ci`
-2. `npm -w apps/studio run checks -- --only contracts,lint,typecheck`
-3. `npm -w apps/team-t run validate`
-4. `PAGES_BASE_PATH=/react-shadcn` を設定した状態で `npm run build --workspaces --if-present`
-5. `npm -w apps/studio run build-storybook`
-6. portalを配信ルート、studio・team-t・python-test・gamehubを同名サブディレクトリ、
-   Storybookを `storybook/` に合成
-7. GitHub Pagesへデプロイ
-
-公開操作はリポジトリルートから行う。
-
-```powershell
-git status --short
-git push origin main
-```
-
-push後はActionsの `deploy-pages` で `build` と `deploy` の成功を確認し、
-`https://higgs1729.github.io/react-shadcn/` と変更対象アプリの実URLを確認する。
+正規の公開経路は `.github/workflows/deploy-pages.yml` だけ(`main` へのpushで検査・ビルド・合成・公開)。
 各アプリの `out/` や手作業で作った `dist/` を直接Pagesへアップロードしない。
+workflow の順、push の操作、push後に Actions と実URLで確かめることは `docs/publishing-guide.md` の 2・4・5。
 
 ### どこで実行するか
 
 ローカル操作はWindowsホストの `C:\dev\react-shadcn` で実行する。
 GitHub Actionsのビルド・デプロイ環境はUbuntuで、Node.js 22を使用する。
 
-## 移行状況(2026-08-03 時点)
+## 移行状況
 
-- 完了: Phase 1(workspaces 化)・Phase 2(`apps/team-t`)・Phase 3(`apps/portal`・`apps/python-test`)・
-  Phase 4(`packages/shadcn-kit` 抽出)
+<!-- 2026-08-03 時点で Phase 1(workspaces 化)・2(apps/team-t)・3(apps/portal・apps/python-test)・4(packages/shadcn-kit 抽出)が完了(apps/studio/docs/STATUS.md も 2026-08-06 に完了と記す)。2026-11-26 に Phase 5 の行と複製の行だけ残した -->
 - 未着手: GoldenFlow の CI ゲート解除(Phase 5)
 - 残る複製は `apps/team-t/components/blocks/` の3ファイルのみ。studio の registry が
   `files[].path` で在庫 block を追跡しているため、パッケージ化すると契約が壊れる。

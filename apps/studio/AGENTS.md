@@ -35,8 +35,7 @@ shadcn/ui 上で、AI がアプリを brief→JTBD→flow→選定→実装 に�
 
 ## Do
 
-- Stop hook が `npm run validate` を実行するので実行は不要。本体は `scripts/stop-validate.mjs` で、
-  Claude Code(`.claude/settings.json`)と Codex(`.codex/hooks.json`)の両方に登録済み
+- Stop hook がルートの `npm run validate` を実行するので実行は不要(本体と登録はルートの `AGENTS.md` の `scripts/`)
 - `npm run checks` は BuildReport 検証時に手動実行
 - `@react-shadcn/shadcn-kit/ui/*` の primitive を import・組み合わせるコードを書く前に、そのファイルのソース(`packages/shadcn-kit/components/ui/`)を読む(base-ui。合成は `render={<.../>}`)
 - 契約・生成・検証・複数階層などを横断して別executorへ渡す実行単位だけをtaskとし、`docs/task/template.md` から自己完結briefを生成する。現在のチャットで連続して設計・実装する工程や単一領域の逐次作業にはtaskを作らない。反復利用が実証済みの手順だけを `docs/tasks/` のplaybookとして参照し、具体値をactive taskへ展開する
