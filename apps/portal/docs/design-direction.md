@@ -57,12 +57,12 @@
 
 ## ヒーローの背景(世界。2026-11-26、本人の決定)
 
-Hero の背景は、デモリール(studio-cadence-demo の reel-v1)冒頭の世界(夕暮れの雲海に、積み石の石碑と画面の列。逆光の太陽が大通りの奥)を、Hero 用に描き直した 8 秒の輪にした。リールの書き出しをそのまま使わない: 営業用の宣言の字・MG・CADENCE の札・オーブ・突き当たりの円盤は載せない(本人「一応私のポートフォリオだから」)。積分の図(下の 3D と 2D の `AxisFigure`)は Hero から一旦外した。部品と素材は消さずに残してある。
+Hero の背景は、デモリール(studio-cadence-demo の reel-v1)の頭と同じ流れを Hero 用に描き直した約 12.8 秒の輪にした: 世界(雲を抜けて、積み石の石碑と画面の列が逆光の大通りに開ける)2.1 秒 → オーブの突進 2.2 秒 → 鳥の目で石碑の間を抜ける 2.5 秒 →(白)→ 円盤 2.4 秒 → 殺陣 3.97 秒 → 頭の雲へ 0.4 秒で溶かす。リールの書き出しをそのまま使わない: 営業用の宣言の字・MG・CADENCE の札は載せない(本人「一応私のポートフォリオだから」)。最初は世界の画角から揺れるだけの 8 秒だったが、本人が「オーブの突進、殺陣、ぐらいまではいってもいい」と広げた(控え d-20261126-f6d55e)。積分の図(下の 3D と 2D の `AxisFigure`)は Hero から一旦外した。部品と素材は消さずに残してある。
 
 - 映像は「動きを減らす」設定(prefers-reduced-motion)を見ずに、常に自動再生で流す。止め絵は読み込み中の poster と、iOS の低電力モードなどで自動再生が止められたときの表示にだけ使う(本人 2026-11-26)
 - 部品は `components/hero-world.tsx`。止め絵(`public/hero/hero-world.webp`、縦の画面は `hero-world-portrait.webp`)を先に出し、映像(`hero-world.mp4`・`hero-world-portrait.mp4`)が回りだしたら重ねる。縦か横かは `(orientation: portrait)` で選ぶ。画面外・裏のタブでは止める。three も読み込み画面も読まない(`app/layout.tsx` は `hero-3d` を付けない)
-- 字は明るくし、真ん中に暗がり(`.hero__world::after`)を敷いて夕景の上で読ませる。ボタンは暗い地の側の色
-- 描き方: `C:/dev/video/studio-cadence-demo/production/reel-v1/keep/opening/`。石碑に映す物は `hero_screens.json`(手前から奥。偶数が左)で、`prep_hero_tex.py` が 8 秒・24 fps の輪に切る(頭の 0.5 秒に続きを溶かして継ぎ目を消す)。`world.py --hero --tex D:/cadence-reel/opening/hero/tex.json`(横 1920×1080、レンズ 30)と `--portrait --lens 30 --eye 0,-115,6`(縦 720×1280)で 192 コマずつ描く。カメラは 192 コマで元へ戻る揺れ、雲の塊・鳥・後ろの大通りの列は消す
+- 字は明るくし、真ん中に暗がり(`.hero__world::after`)を敷いて夕景の上で読ませる。ボタンは暗い地の側の色。映像は白に近い所だけを寄せてある(オーブと白の閃光でも白は 0.84 まで)
+- 描き方: `C:/dev/video/studio-cadence-demo/production/reel-v1/keep/opening/`。石碑に映す物は `hero_screens.json`(手前から奥。偶数が左)で、`prep_hero_tex.py` が切る。リールの世界・オーブ・鳥の目の 3 つを `--tex D:/cadence-reel/opening/hero/tex_flow.json`(突き当たりの 1 枚は円盤へ継ぐためリールと同じ絵)で描き直し(gpu.py の記録で 8.9・3.6・2.7 分)、`make_orb.py`、`make_hero_flow.py` で継ぐ(円盤と殺陣はリールの素材のまま)。横は 1600×900・30 fps・CRF 29 で 3.6 MB、縦は真ん中を 608×1080 で切って 1.7 MB。止め絵は世界が開けた 1.2 秒のコマ
 - 映す物の候補と番号は `C:/dev/earn-money/image-gen-monetization/commissions/desk/_review/hero-bg/candidates.jpg`。受託の納品物・他人の映像(配信者の切り抜き)・営業用の画面は入れない。ネフェリアは冒頭 35 秒の内だけ
 
 ## ヒーローの 3D(2026-11-23、本人の注文。2026-11-26 に Hero から一旦外した)

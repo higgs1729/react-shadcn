@@ -18,7 +18,7 @@
 - `components/pick-stack.tsx` — 重ねた3枚の画像。押すと順番が入れ替わる
 - `components/portal-nav.tsx` / `mail-link.tsx` — ナビの開閉と現在地、メールアドレスの組み立て
 - `components/axis-figure.tsx` — (2026-11-26 から Hero で使っていない)ヒーローの座標系(SVG + GSAP)。3D が出たときは完成形で置いて隠れ、2D に戻ったときだけ動く
-- `components/hero-world.tsx` — ヒーローの背景。デモリール冒頭の世界を Hero 用に描き直した 8 秒の輪(`public/hero/hero-world*.mp4|webp`)。止め絵を先に出し、映像が回ったら重ねる。描き方は `docs/design-direction.md` の「ヒーローの背景(世界)」(本人 2026-11-26)
+- `components/hero-world.tsx` — ヒーローの背景。デモリールの頭(世界→オーブの突進→殺陣)を Hero 用に描き直した約 12.8 秒の輪(`public/hero/hero-world*.mp4|webp`)。止め絵を先に出し、映像が回ったら重ねる。描き方は `docs/design-direction.md` の「ヒーローの背景(世界)」(本人 2026-11-26)
 - `components/hero-scene.tsx` / `lib/hero-three.ts` — (2026-11-26 から Hero で使っていない。部品は残す)ヒーローの 3D 版(three)と読み込み画面の進み具合。形は SVG から読み、数値を持たない。短冊の前の面に `public/hero/hero-reel*.mp4`(14 列のアトラス)を貼る。図と 3 行の字は磨いた鋼。字形は `public/hero/hero-text.json` で、文言を変えたら `scripts/build-hero-font.py` を打ち直す
 - `public/hero/` — 3D の映像。R2 に置かないのは、R2 が CORS の見出しを返さず WebGL のテクスチャに使えないため(2026-11-23 に curl で確認)。作り方と素材は `docs/design-direction.md` の「ヒーローの 3D」
 - `components/gravity-field.tsx` — 暗転帯の波紋(Canvas 2D)
