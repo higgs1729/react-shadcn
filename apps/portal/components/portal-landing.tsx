@@ -3,10 +3,9 @@
 // この component は server のまま保つ。
 import { closingHref } from "../lib/works"
 import { AvatarGuide } from "./avatar-guide"
-import { AxisFigure } from "./axis-figure"
 import { BrandMark } from "./brand-mark"
 import { GravityField } from "./gravity-field"
-import { HeroScene } from "./hero-scene"
+import { HeroWorld } from "./hero-world"
 import { MailLink } from "./mail-link"
 import { MethodFlow } from "./method-flow"
 import { PortalMotion } from "./portal-motion"
@@ -50,10 +49,10 @@ export function PortalLanding() {
 
       <main id="main">
         {/* ===== ヒーロー。演出はここに集中させる ===== */}
-        <section className="hero" id="top">
-          <AxisFigure />
-          {/* 3D 版。ヒーロー全体に1枚。読み込めたときだけ、図と 3 行の文字を鋼の 3D に替える */}
-          <HeroScene />
+        {/* 背景はデモリール冒頭の世界を Hero 用に描き直した輪（本人 2026-11-26）。
+            積分の図（AxisFigure・3D の HeroScene）は一旦外した。部品は残してある */}
+        <section className="hero hero--world" id="top">
+          <HeroWorld />
 
           <div className="hero__inner">
             <p className="hero__mark">

@@ -47,7 +47,9 @@ const face = Noto_Sans_JP({
 // webgl2 しか取らない）、webgl だけの端末で 3D を試すと three と映像を落としてから失敗する
 // （本人のスマホで 3D が出ない件を調べて直した。本人 2026-11-25）。
 // 読み込みに失敗したときの 2D への戻りは hero-scene.tsx が受け持つ。
-const enableMotion = `(function(){var d=document.documentElement;d.classList.add('js-anim');try{if(!document.createElement('canvas').getContext('webgl2'))return;d.classList.add('hero-3d')}catch(e){}})()`
+// 2026-11-26 本人: ヒーローを世界の背景（components/hero-world.tsx）に替え、3D を一旦外したので hero-3d は付けない。
+// 戻すときは下の行の代わりに、webgl2 があるときだけ hero-3d を足す元の形にする（git の 5cfc09d の版）。
+const enableMotion = `(function(){document.documentElement.classList.add('js-anim')})()`
 
 export default function RootLayout({
   children,

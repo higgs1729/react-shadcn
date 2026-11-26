@@ -54,7 +54,8 @@ test("assembles the mail address once scripts run", async ({ page }) => {
 })
 
 // Reduce Motion の設定に関係なく、演出を見せる（Google Antigravity と同じ方針）。
-test("keeps the figure animated when motion is reduced", async ({ browser }) => {
+// ヒーローは世界の背景（本人 2026-11-26。積分の図は一旦外した）。止め絵が先に出て、映像は縦横で版を選ぶ
+test("shows the hero world when motion is reduced", async ({ browser }) => {
   const page = await browser.newPage({ reducedMotion: "reduce" })
   await page.goto("/")
 
@@ -63,11 +64,9 @@ test("keeps the figure animated when motion is reduced", async ({ browser }) => 
     page.getByRole("heading", { name: "常に、学びを止めない", level: 1 })
   ).toBeVisible()
 
-  const curve = page.locator("#curve")
-  await expect(curve).toHaveJSProperty("style.strokeDashoffset", "0")
-  // 点は5本目の短冊の真ん中で止まる。左端(110)から動いていることを見る
-  const dotX = await page.locator("#dot").getAttribute("cx")
-  expect(Number(dotX)).toBeGreaterThan(400)
+  const world = page.locator(".hero__world")
+  await expect(world.locator("img")).toHaveJSProperty("complete", true)
+  await expect(world.locator("video")).toHaveAttribute("src", /\/hero\/hero-world(-portrait)?\.mp4$/)
 
   await page.close()
 })

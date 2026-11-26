@@ -411,6 +411,34 @@ a { color: inherit; }
 /* 読み込み画面が出ている間は、右のフィルムの帯に重ならないよう内側へ寄せる */
 .hero-3d:not(.hero-3d-ready):not([data-hero3d="off"]) .sound { right: calc(var(--film-w) + var(--sp-m)); }
 
+/* 世界の背景（components/hero-world.tsx。本人 2026-11-26）。止め絵の上に映像を重ね、回りだしたら見せる。
+   夕景の上で字を読ませるため、字は明るくし、真ん中に暗がりを敷く。2D の図は出さないので下の余白は取らない */
+.hero--world {
+  display: grid; align-content: center;
+  min-height: clamp(34rem, calc(100svh - 3.9rem), 60rem);
+  padding: var(--sp-2xl) 0;
+  background: #2a1b24;
+  color: var(--inverse-on-surface);
+}
+.hero__world { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero__world img, .hero__world video {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover;
+}
+.hero__world video { opacity: 0; transition: opacity 0.6s; }
+.hero__world video.is-playing { opacity: 1; }
+.hero__world::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 62% 48% at 50% 48%, rgb(14 9 18 / 0.62), rgb(14 9 18 / 0.18) 100%);
+}
+.hero--world .hero__glyph { color: var(--inverse-on-surface); }
+.hero--world .brand__number { color: var(--accent-on-inverse); }
+.hero--world .hero__lead { color: var(--grey-100); }
+.hero--world .hero__mark, .hero--world .hero__t, .hero--world .hero__lead { text-shadow: 0 1px 20px rgb(0 0 0 / 0.5); }
+.hero--world .btn--primary { background: var(--inverse-on-surface); color: var(--inverse-surface); }
+.hero--world .btn--primary:hover { background: var(--grey-0); }
+.hero--world .btn--tonal { background: rgb(24 25 29 / 0.72); color: var(--inverse-on-surface); border-color: var(--grey-800); }
+.hero--world .btn--tonal:hover { background: var(--grey-900); }
+
 .hero__inner { position: relative; z-index: 1; width: min(100% - var(--sp-m) * 2, 54rem); margin-inline: auto; }
 .hero__mark {
   display: inline-flex; align-items: center; gap: 0.45em;
