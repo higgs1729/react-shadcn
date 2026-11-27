@@ -277,17 +277,22 @@ a { color: inherit; }
   transform: scaleX(1);
 }
 .nav__links a[aria-current="location"] { color: var(--inverse-on-surface); }
-.nav__links.is-open {
-  position: absolute; top: 100%; left: 0; right: 0;
-  display: grid; gap: 0;
-  padding: var(--sp-xs) var(--sp-m) var(--sp-s);
-  background: var(--inverse-surface);
-  border-bottom: 1px solid var(--inverse-outline);
+/* 開いたメニューは、ハンバーガーの下に右端を揃えて浮くパネル。帯とは色・枠・影で分ける(本人 2026-11-27)。
+   項目は字の幅にして、線が端まで伸びないようにする(本人 2026-11-25) */
+@media (max-width: 51.99em) {
+  .nav__links.is-open {
+    position: absolute; top: calc(100% + var(--sp-xs)); right: var(--sp-m);
+    display: grid; gap: 0; justify-items: end;
+    min-width: 11rem;
+    padding: var(--sp-xs) var(--sp-m) var(--sp-s);
+    background: var(--grey-1000);
+    border: 1px solid var(--grey-800);
+    border-radius: var(--r-m);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+  }
+  .nav__links.is-open a { padding: 0.6em 0; }
+  .nav__links.is-open a::before { bottom: 0.3em; }
 }
-/* 開いたメニューは縦に並ぶ。項目を字の幅にして、線が画面の端まで伸びないようにする(本人 2026-11-25) */
-.nav__links.is-open { justify-items: start; }
-.nav__links.is-open a { padding: 0.6em 0; }
-@media (max-width: 51.99em) { .nav__links.is-open a::before { bottom: 0.3em; } }
 
 @media (min-width: 52em) {
   .nav { padding-inline: var(--sp-l); }

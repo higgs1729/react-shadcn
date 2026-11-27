@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { BrandMark } from "./brand-mark"
 
@@ -13,6 +13,8 @@ const links = [
 export function PortalNav() {
   const [open, setOpen] = useState(false)
   const [current, setCurrent] = useState<string>(links[0].id)
+  const toggle = useRef<HTMLButtonElement>(null)
+  const menu = useRef<HTMLElement>(null)
 
   // 現在地。節の上端が画面の 28% を越えたところで切り替える。
   // タブを切り替えても印は Works のまま。行き先が節である以上、節で決める。
@@ -48,6 +50,28 @@ export function PortalNav() {
     return () => wide.removeEventListener("change", close)
   }, [])
 
+  // 開いている間だけ、パネルとボタンの外を押すか Esc で閉じる
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node
+      if (toggle.current?.contains(target) || menu.current?.contains(target)) return
+      setOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return
+      // 閉じると項目が消えるので、中にあったフォーカスはボタンへ戻す
+      if (menu.current?.contains(document.activeElement)) toggle.current?.focus()
+      setOpen(false)
+    }
+    document.addEventListener("pointerdown", onPointerDown)
+    document.addEventListener("keydown", onKeyDown)
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown)
+      document.removeEventListener("keydown", onKeyDown)
+    }
+  }, [open])
+
   return (
     <header className="nav" id="nav">
       <a className="nav__brand" href="#top">
@@ -57,6 +81,7 @@ export function PortalNav() {
         higgs<span className="brand__number">1729</span>
       </a>
       <button
+        ref={toggle}
         className="nav__toggle"
         type="button"
         aria-expanded={open}
@@ -73,6 +98,7 @@ export function PortalNav() {
         </span>
       </button>
       <nav
+        ref={menu}
         className={open ? "nav__links is-open" : "nav__links"}
         id="nav-menu"
         aria-label="メインナビゲーション"
